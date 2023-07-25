@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.hcode.hoj.mapper.UserRecordMapper">
+    <select id="getACMRankList" resultType="top.hcode.hoj.pojo.vo.ACMRankVO" useCache="true">
+        SELECT u.uuid as uid,u.nickname,u.username,left(u.signature,100) as signature,u.avatar,
+        u.title_name,u.title_color,
+        (SELECT COUNT( DISTINCT pid ) FROM judge WHERE status = 0 AND ( cid = 0 || (SELECT status FROM contest WHERE contest.id = judge.cid ) = 1) AND judge.uid = u.uuid) AS ac,
+        (SELECT COUNT( pid ) FROM judge WHERE ( cid = 0 OR (SELECT status FROM contest WHERE contest.id = judge.cid ) = 1) AND judge.uid = u.uuid) AS total
+        FROM user_info u
+        <where>
+            u.status = 0
+            <if test="uidList!=null">
+                AND u.uuid in
+                <foreach collection="uidList" item="uid" open="(" separator="," close=")">
+                    #{uid}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY ac DESC,total ASC
+    </select>
+
+    <select id="getRecent7ACRank" resultType="top.hcode.hoj.pojo.vo.ACMRankVO">
+        SELECT u.uuid as uid,u.nickname,u.username,u.avatar,u.title_name,u.title_color,
+        (SELECT COUNT( DISTINCT pid ) FROM user_acproblem WHERE uid =u.uuid
+        and DATE(gmt_create) >= DATE_SUB(CURDATE(),INTERVAL 7 DAY)) AS ac
+        FROM user_info u WHERE u.status = 0
+        ORDER BY ac DESC,u.gmt_create DESC LIMIT 10
+    </select>
+
+    <select id="getOIRankList" resultType="top.hcode.hoj.pojo.vo.OIRankVO" useCache="true">
+        SELECT ui.uuid AS uid, ui.nickname, ui.username, left(ui.signature,100) as signature, ui.avatar,
+            ui.title_name,ui.title_color
+            , (
+                SELECT COUNT(DISTINCT pid)
+                FROM user_acproblem
+                WHERE uid = ui.uuid
+            ) AS ac
+            , (
+                SELECT COUNT(uid)
+                FROM judge
+                WHERE uid = ui.uuid
+            ) AS total, ss.score AS score
+        FROM user_info ui, (
+                SELECT u.uuid AS uid, COALESCE(SUM(s.score),0) AS score
+                FROM user_info u left join (
+                        SELECT MAX(oi_rank_score) AS score, uid, pid
+                        FROM judge
+                        WHERE gid is null
+                        GROUP BY pid, uid
+                    ) s
+                ON s.uid = u.uuid
+                WHERE u.status = 0
+                GROUP BY u.uuid
+            ) ss
+        <where>
+            ss.uid = ui.uuid
+            <if test="uidList!=null">
+                AND ui.uuid in
+                <foreach collection="uidList" item="uid" open="(" separator="," close=")">
+                    #{uid}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY score DESC, ac DESC
+    </select>
+
+    <resultMap id="map_UserHomeVo" type="top.hcode.hoj.pojo.vo.UserHomeVO">
+        <id column="uid" property="uid"></id>
+        <result column="username" property="username"></result>
+        <result column="school" property="school"></result>
+        <result column="signature" property="signature"></result>
+        <result column="nickname" property="nickname"></result>
+        <result column="github" property="github"></result>
+        <result column="blog" property="blog"></result>
+        <result column="avatar" property="avatar"></result>
+        <result column="title_name" property="titleName"></result>
+        <result column="title_color" property="titleColor"></result>
+        <result column="rating" property="rating"></result>
+        <result column="total" property="total"></result>
+        <collection property="scoreList" ofType="java.lang.Integer" select="getProblemScore" column="uid">
+        </collection>
+    </resultMap>
+
+    <select id="getUserHomeInfo" resultMap="map_UserHomeVo">
+        SELECT u.uuid as uid,u.username,u.nickname,u.gender,u.signature,u.school,u.github,u.blog,
+        u.avatar,u.title_name,u.title_color,ur.rating,
+        (SELECT COUNT(uid) FROM judge WHERE uid=u.uuid) AS total,
+        (SELECT COUNT( DISTINCT pid ) FROM judge WHERE status = 0 AND ( cid = 0 || (SELECT status FROM contest WHERE contest.id = judge.cid ) = 1) AND judge.uid = u.uuid) AS ac
+        FROM user_info u,user_record ur
+        <where>
+         u.uuid = ur.uid AND u.status = 0
+         <if test="uid!=null">
+             AND u.uuid = #{uid}
+         </if>
+         <if test="username!=null">
+             AND u.username = #{username}
+         </if>
+        </where>
+    </select>
+
+    <!-- 子查询-->
+    <select id="getProblemScore" resultType="java.lang.Integer">
+        SELECT MAX(oi_rank_score) AS sum_score FROM judge
+        WHERE uid=#{uid} AND cid=0 AND gid is null AND score IS NOT NULL GROUP BY pid
+    </select>
+
+
+    <select id="getGroupRankList" resultType="top.hcode.hoj.pojo.vo.OIRankVO" useCache="true">
+        SELECT ui.uuid AS uid, ui.nickname, ui.username, ui.avatar,
+        ui.title_name,ui.title_color
+        , (
+        SELECT COUNT(DISTINCT pid)
+        FROM judge
+        WHERE uid = ui.uuid and gid = #{gid} and status = 0
+        ) AS ac
+        , (
+        SELECT COUNT(uid)
+        FROM judge
+        WHERE uid = ui.uuid and gid = #{gid}
+        ) AS total, ss.score AS score
+        FROM user_info ui
+        right join
+        (
+            SELECT u.uuid AS uid, COALESCE(SUM(s.score),0) AS score
+            FROM user_info u left join (
+            SELECT MAX(oi_rank_score) AS score, uid, pid
+            FROM judge
+            WHERE cid=0 AND gid = #{gid}
+            GROUP BY pid, uid
+            ) s
+            ON s.uid = u.uuid
+            <where>
+                u.status = 0
+                <if test="uidList!=null">
+                    AND u.uuid in
+                    <foreach collection="uidList" item="uid" open="(" separator="," close=")">
+                        #{uid}
+                    </foreach>
+                </if>
+            </where>
+            GROUP BY u.uuid
+        ) ss
+        on ss.uid = ui.uuid
+        <if test="rankType == 'ACM'">
+            ORDER BY ac DESC, total ASC
+        </if>
+        <if test="rankType == 'OI'">
+            ORDER BY score DESC, ac DESC
+        </if>
+    </select>
+
+</mapper>

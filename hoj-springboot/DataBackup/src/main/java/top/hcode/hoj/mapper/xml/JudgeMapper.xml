@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.hcode.hoj.mapper.JudgeMapper">
+    <select id="getCommonJudgeList" resultType="top.hcode.hoj.pojo.vo.JudgeVO" useCache="true">
+        select j.submit_id,j.submit_time,j.display_pid,j.username,j.uid,j.pid,j.status,j.share,
+            j.time,j.memory,j.score,j.oi_rank_score,j.length,j.language,j.cid,j.cpid,j.judger,j.is_manual
+            from judge j
+            <where>
+                j.cid = 0 AND j.cpid = 0
+                <if test="username!='' and username!=null">
+                    AND j.username like concat('%',#{username},'%')
+                </if>
+                <if test="status!=null">
+                    AND j.status = #{status}
+                </if>
+                <if test="uid!=null and uid!=''">
+                    AND j.uid = #{uid}
+                </if>
+                <if test="gid==null">
+                    AND j.gid is NULL
+                </if>
+                <if test="gid!=null">
+                    AND j.gid = #{gid}
+                </if>
+                <if test="searchPid!=null">
+                    <if test="completeProblemID != true">
+                        AND j.display_pid like concat('%',#{searchPid},'%')
+                    </if>
+                    <if test="completeProblemID">
+                        AND j.display_pid = #{searchPid}
+                    </if>
+                </if>
+            </where>
+        order by j.submit_time DESC,j.submit_id DESC
+    </select>
+
+
+    <select id="getContestJudgeList" resultType="top.hcode.hoj.pojo.vo.JudgeVO" useCache="true">
+        select j.submit_id,j.submit_time,j.uid,j.username,cp.display_id,cp.display_title as title,
+        j.status,j.share,j.time,j.memory,j.score,j.length,j.language,j.cid,j.cpid,j.judger,j.is_manual
+        from judge j right join
+        (
+            select display_title,display_id,cid,pid from contest_problem
+            <where>
+                cid = #{cid}
+                <if test="displayId!=null and displayId!=''">
+                    <if test="completeProblemID != true">
+                        AND display_id like concat('%',#{displayId},'%')
+                    </if>
+                    <if test="completeProblemID">
+                        AND display_id = #{displayId}
+                    </if>
+                </if>
+            </where>
+        ) cp
+        on j.pid = cp.pid AND j.cid = cp.cid
+        <where>
+            <if test="cid!=null">
+                AND j.cid = #{cid}
+            </if>
+            <if test="username!='' and username!=null">
+                AND j.username like concat('%',#{username},'%')
+            </if>
+            <if test="status!=null">
+                AND j.status = #{status}
+            </if>
+            <if test="uid!=null and uid!=''">
+                AND j.uid = #{uid}
+            </if>
+            <if test="beforeContestSubmit!=null and beforeContestSubmit==true">
+                AND #{startTime} > j.submit_time
+            </if>
+            <if test="beforeContestSubmit!=null and beforeContestSubmit==false">
+                AND j.submit_time >= #{startTime}
+            </if>
+            <choose>
+                <when test="sealRankTime!=null and rule=='ACM'">
+                    AND (#{sealRankTime} > j.submit_time OR j.uid=#{sealTimeUid})
+                </when>
+                <when test="sealRankTime!=null and rule=='OI'">
+                    AND #{sealRankTime} > j.submit_time
+                </when>
+            </choose>
+        </where>
+        order by j.submit_time DESC,j.submit_id DESC
+    </select>
+
+    <select id="getTodayJudgeNum" resultType="int">
+        SELECT count(*) FROM judge WHERE DATE(gmt_create) = CURDATE();
+    </select>
+
+    <select id="getContestProblemCount" resultType="top.hcode.hoj.pojo.vo.ProblemCountVO">
+        SELECT COUNT(IF(status=-3,status,NULL)) AS pe,
+        COUNT(IF(status=-2,status,NULL)) AS ce,
+        COUNT(IF(status=-1,status,NULL)) AS wa,
+        COUNT(IF(status=0,status,NULL)) AS ac,
+        COUNT(IF(status=1,status,NULL)) AS tle,
+        COUNT(IF(status=2,status,NULL)) AS mle,
+        COUNT(IF(status=3,status,NULL)) AS re,
+        COUNT(IF(status=4,status,NULL)) AS se,
+        COUNT(IF(status=8,status,NULL)) AS pa,
+        COUNT(*) AS total
+        FROM judge
+        <where>
+            pid=#{pid} and cpid = #{cpid} and cid = #{cid}
+            <if test="startTime!=null">
+                and submit_time >= #{startTime}
+            </if>
+            <if test="sealRankTime!=null">
+                and #{sealRankTime} > submit_time
+            </if>
+            <if test="adminList!=null and adminList.size>0">
+                and uid NOT IN
+                <foreach collection="adminList" index="index" item="item"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getProblemCount" resultType="top.hcode.hoj.pojo.vo.ProblemCountVO">
+        SELECT pid,COUNT(IF(status=-3,status,NULL)) AS pe,
+        COUNT(IF(status=-2,status,NULL)) AS ce,
+        COUNT(IF(status=-1,status,NULL)) AS wa,
+        COUNT(IF(status=0,status,NULL)) AS ac,
+        COUNT(IF(status=1,status,NULL)) AS tle,
+        COUNT(IF(status=2,status,NULL)) AS mle,
+        COUNT(IF(status=3,status,NULL)) AS re,
+        COUNT(IF(status=4,status,NULL)) AS se,
+        COUNT(IF(status=8,status,NULL)) AS pa,
+        COUNT(*) AS total
+        FROM judge
+        <where>
+            pid=#{pid} AND cid=0
+            <if test="gid!=null">
+                AND gid = #{gid}
+            </if>
+            <if test="gid==null">
+                AND gid is null
+            </if>
+        </where>
+    </select>
+
+    <select id="getProblemListCount" resultType="top.hcode.hoj.pojo.vo.ProblemCountVO">
+        SELECT pid,COUNT(IF(STATUS=-3,STATUS,NULL)) AS pe,
+        COUNT(IF(STATUS=-2,STATUS,NULL)) AS ce,
+        COUNT(IF(STATUS=-1,STATUS,NULL)) AS wa,
+        COUNT(IF(STATUS=0,STATUS,NULL)) AS ac,
+        COUNT(IF(STATUS=1,STATUS,NULL)) AS tle,
+        COUNT(IF(STATUS=2,STATUS,NULL)) AS mle,
+        COUNT(IF(STATUS=3,STATUS,NULL)) AS re,
+        COUNT(IF(STATUS=4,STATUS,NULL)) AS se,
+        COUNT(IF(STATUS=8,STATUS,NULL)) AS pa,
+        COUNT(*) AS total
+        FROM judge
+        <where>
+            cid=0 AND gid is null
+            <if test="pidList!=null and pidList.size > 0">
+                AND pid in
+                <foreach collection="pidList" item="pid" open="(" separator="," close=")">
+                    #{pid}
+                </foreach>
+            </if>
+        </where>
+        GROUP BY pid
+    </select>
+
+    <select id="getLastYearUserJudgeList" resultType="top.hcode.hoj.pojo.entity.judge.Judge">
+        select submit_time from judge
+        <where>
+            gmt_create >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+            <if test="uid!=null">
+                AND uid = #{uid}
+            </if>
+            <if test="username!=null">
+                AND username = #{username}
+            </if>
+        </where>
+    </select>
+
+    <select id="getContestScrollBoardSubmission" resultType="top.hcode.hoj.pojo.vo.ContestScrollBoardSubmissionVO" useCache="true">
+        select ju.submit_id,ju.submit_time, ju.uid, ju.username, ju.status, ju.nickname, ju.realname, ju.gender, ju.school,
+        cp.display_id
+        from
+        (
+            select j.submit_id, j.submit_time, j.status,j.cpid, u.uuid as uid, u.username, u.nickname, u.realname, u.gender, u.school
+            from judge j, user_info u
+            where j.cid = #{cid}
+            and j.uid = u.uuid
+            and j.status != -4
+            and j.uid not in
+            <foreach collection="uidList" item="uid" open="(" separator="," close=")">
+                #{uid}
+            </foreach>
+        )  ju
+        right join
+        (
+            select cp_.id, cp_.display_id from contest_problem cp_, problem p
+            where cp_.cid = #{cid} and cp_.pid = p.id and p.auth != 2
+        ) cp
+        on ju.cpid = cp.id
+        where ju.submit_id is not null
+        order by ju.submit_id DESC
+    </select>
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.hcode.hoj.mapper.ContestProblemMapper">
+    <select id="getContestProblemList" resultType="top.hcode.hoj.pojo.vo.ContestProblemVO">
+        select cp.id,cp.display_id,cp.cid,cp.pid,cp.display_title,cp.color,
+        (select count(*) from judge
+        <where>
+            cpid=cp.id and cid=cp.cid and pid=cp.pid
+            <if test="adminList!=null and adminList.size>0">
+                and uid NOT IN
+                <foreach collection="adminList" index="index" item="item"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            AND submit_time >= #{startTime}
+            <choose>
+                <when test="isAdmin">
+                    <if test="isHideContestEndJudge">
+                        AND #{endTime}>submit_time
+                    </if>
+                </when>
+                <when test="sealTime!=null">
+                    AND #{sealTime}>submit_time
+                </when>
+                <otherwise>
+                    <if test="isHideContestEndJudge">
+                        AND #{endTime}>submit_time
+                    </if>
+                </otherwise>
+            </choose>
+        </where>
+        ) as total,
+        (select count(*) from judge
+        <where>
+             cpid=cp.id and cid=cp.cid and pid =cp.pid and status=0
+            <if test="adminList!=null and adminList.size>0">
+                and uid NOT IN
+                <foreach collection="adminList" index="index" item="item"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            AND submit_time >= #{startTime}
+            <choose>
+                <when test="isAdmin">
+                    <if test="isHideContestEndJudge">
+                        AND #{endTime}>submit_time
+                    </if>
+                </when>
+                <when test="sealTime!=null">
+                    AND #{sealTime}>submit_time
+                </when>
+                <otherwise>
+                    <if test="isHideContestEndJudge">
+                        AND #{endTime}>submit_time
+                    </if>
+                </otherwise>
+            </choose>
+        </where>
+        ) as ac
+        from contest_problem cp,problem p
+        where cp.cid = #{cid} and cp.pid=p.id and p.auth!=2 order by cp.display_id asc
+    </select>
+
+    <select id="getContestFullScreenProblemList" resultType="top.hcode.hoj.pojo.vo.ProblemFullScreenListVO">
+        select cp.display_id as problem_id,cp.pid,cp.display_title as title
+        from contest_problem cp,problem p
+        where cp.cid = #{cid} and cp.pid = p.id and p.auth != 2
+        order by cp.display_id asc
+    </select>
+
+</mapper>
