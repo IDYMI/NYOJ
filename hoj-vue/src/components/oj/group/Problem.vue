@@ -651,8 +651,8 @@
                   auto-resize
                   :data="problem.testCaseScore"
                   align="center"
-                  :sort-config="{trigger: 'cell', 
-                  defaultSort: {field: 'groupNum', order: 'asc'}, 
+                  :sort-config="{trigger: 'cell',
+                  defaultSort: {field: 'groupNum', order: 'asc'},
                   orders: ['desc', 'asc', null],
                   sortMethod: customSortMethod}"
                 >
@@ -675,7 +675,7 @@
                   >
                   </vxe-table-column>
                   <vxe-table-column
-                  v-if="problem.judgeCaseMode == JUDGE_CASE_MODE.SUBTASK_LOWEST 
+                  v-if="problem.judgeCaseMode == JUDGE_CASE_MODE.SUBTASK_LOWEST
                     || problem.judgeCaseMode == JUDGE_CASE_MODE.SUBTASK_AVERAGE"
                     field="groupNum"
                     :title="$t('m.Sample_Group_Num')"
@@ -782,7 +782,7 @@
                     </el-col>
                     <el-col
                       :span="24"
-                      v-show="problem.judgeCaseMode == JUDGE_CASE_MODE.SUBTASK_LOWEST 
+                      v-show="problem.judgeCaseMode == JUDGE_CASE_MODE.SUBTASK_LOWEST
                     || problem.judgeCaseMode == JUDGE_CASE_MODE.SUBTASK_AVERAGE"
                     >
                       <el-form-item :label="$t('m.Sample_Group_Num')">
@@ -1540,7 +1540,7 @@ export default {
                 return;
               }
               if (
-                (this.problem.judgeCaseMode == this.JUDGE_CASE_MODE.SUBTASK_LOWEST 
+                (this.problem.judgeCaseMode == this.JUDGE_CASE_MODE.SUBTASK_LOWEST
                   || this.problem.judgeCaseMode == this.JUDGE_CASE_MODE.SUBTASK_AVERAGE
                 ) && this.problemSamples[i].groupNum == ""
               ) {
@@ -1592,7 +1592,7 @@ export default {
                 return;
               }
               if (
-                (this.problem.judgeCaseMode == this.JUDGE_CASE_MODE.SUBTASK_LOWEST 
+                (this.problem.judgeCaseMode == this.JUDGE_CASE_MODE.SUBTASK_LOWEST
                   || this.problem.judgeCaseMode == this.JUDGE_CASE_MODE.SUBTASK_AVERAGE
                 ) && problemSamples[i].groupNum == ""
               ) {
@@ -1681,7 +1681,7 @@ export default {
           if (problemLanguageList[i].name == lang.name) {
             problemLanguageList[i] = lang;
             if (this.codeTemplate[lang.name].status) {
-              if(this.codeTemplate[lang.name].code == null 
+              if(this.codeTemplate[lang.name].code == null
                 || this.codeTemplate[lang.name].code.length == 0){
                   mMessage.error(
                     lang.name +

@@ -31,7 +31,7 @@
         v-if="!needVerify"
         @click="handleLogin"
         :loading="btnLoginLoading"
-        >{{ $t('m.Login_Btn') }}</el-button
+        >{{ $t("m.Login_Btn") }}</el-button
       >
       <el-popover
         placement="bottom"
@@ -41,7 +41,7 @@
         v-else
       >
         <el-button type="primary" :loading="btnLoginLoading" slot="reference">{{
-          $t('m.Login_Btn')
+          $t("m.Login_Btn")
         }}</el-button>
         <slide-verify
           :l="42"
@@ -70,66 +70,80 @@
         v-if="websiteConfig.register"
         type="primary"
         @click="switchMode('Register')"
-        >{{ $t('m.Login_No_Account') }}</el-link
+        >{{ $t("m.Login_No_Account") }}</el-link
       >
       <el-link
         type="primary"
         @click="switchMode('ResetPwd')"
         style="float: right"
-        >{{ $t('m.Login_Forget_Password') }}</el-link
+        >{{ $t("m.Login_Forget_Password") }}</el-link
       >
     </div>
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import api from '@/common/api';
-import mMessage from '@/common/message';
+import { mapGetters, mapActions } from "vuex";
+import api from "@/common/api";
+import mMessage from "@/common/message";
+import storage from "@/common/storage";
+
 export default {
   data() {
     return {
+      formProfile: {
+        uiLanguage: "",
+      },
       btnLoginLoading: false,
       verify: {
         loginSuccess: false,
-        loginMsg: '',
+        loginMsg: "",
       },
       needVerify: false,
       formLogin: {
-        username: '',
-        password: '',
+        username: "",
+        password: "",
       },
       loginSlideBlockVisible: false,
       rules: {
         username: [
           {
             required: true,
-            message: this.$i18n.t('m.Username_Check_Required'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Username_Check_Required"),
+            trigger: "blur",
           },
           {
             max: 20,
-            message: this.$i18n.t('m.Username_Check_Max'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Username_Check_Max"),
+            trigger: "blur",
           },
         ],
         password: [
           {
             required: true,
-            message: this.$i18n.t('m.Password_Check_Required'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Password_Check_Required"),
+            trigger: "blur",
           },
           {
             min: 6,
             max: 20,
-            message: this.$i18n.t('m.Password_Check_Between'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Password_Check_Between"),
+            trigger: "blur",
           },
         ],
       },
     };
   },
+  mounted() {
+    let profile = this.$store.getters.userInfo;
+    Object.keys(this.formProfile).forEach((element) => {
+      if (profile[element] !== undefined) {
+        this.formProfile[element] = profile[element];
+      }
+    });
+    this.autoChangeLanguge();
+  },
   methods: {
-    ...mapActions(['changeModalStatus']),
+    ...mapActions(["changeModalStatus"]),
     switchMode(mode) {
       this.changeModalStatus({
         mode,
@@ -147,13 +161,13 @@ export default {
       if (this.needVerify) {
         this.verify.loginSuccess = true;
         let time = (times / 1000).toFixed(1);
-        this.verify.loginMsg = 'Total time ' + time + 's';
+        this.verify.loginMsg = "Total time " + time + "s";
         setTimeout(() => {
           this.loginSlideBlockVisible = false;
           this.verify.loginSuccess = false;
         }, 1000);
       }
-      this.$refs['formLogin'].validate((valid) => {
+      this.$refs["formLogin"].validate((valid) => {
         if (valid) {
           this.btnLoginLoading = true;
           let formData = Object.assign({}, this.formLogin);
@@ -161,23 +175,64 @@ export default {
             (res) => {
               this.btnLoginLoading = false;
               this.changeModalStatus({ visible: false });
-              const jwt = res.headers['authorization'];
-              this.$store.commit('changeUserToken', jwt);
-              this.$store.dispatch('setUserInfo', res.data.data);
-              this.$store.dispatch('incrLoginFailNum', true);
-              mMessage.success(this.$i18n.t('m.Welcome_Back'));
+              const jwt = res.headers["authorization"];
+              this.$store.commit("changeUserToken", jwt);
+              this.$store.dispatch("setUserInfo", res.data.data);
+              this.$store.dispatch("incrLoginFailNum", true);
+              if (this.formProfile.uiLanguage != this.webLanguage ) {
+                this.changeWebLanguage(this.formProfile.uiLanguage);
+              }
+              mMessage.success(this.$i18n.t("m.Welcome_Back"));
             },
             (_) => {
-              this.$store.dispatch('incrLoginFailNum', false);
+              this.$store.dispatch("incrLoginFailNum", false);
               this.btnLoginLoading = false;
             }
           );
         }
       });
     },
+    changeWebLanguage(language) {
+      this.$store.commit("changeWebLanguage", { language: language });
+      this.formProfile.uiLanguage = language;
+    },
+    autoChangeLanguge() {
+      /**
+       * 语言自动转换优先级：路径参数 > 本地存储 > 浏览器自动识别
+       */
+
+      let lang = this.$route.query.l;
+      if (lang) {
+        lang = lang.toLowerCase();
+        if (lang == "zh-cn") {
+          this.$store.commit("changeWebLanguage", { language: "zh-CN" });
+        } else {
+          this.$store.commit("changeWebLanguage", { language: "en-US" });
+        }
+        return;
+      }
+
+      lang = storage.get("Web_Language");
+      if (lang) {
+        return;
+      }
+
+      lang = navigator.userLanguage || window.navigator.language;
+      lang = lang.toLowerCase();
+      if (lang == "zh-cn") {
+        this.$store.commit("changeWebLanguage", { language: "zh-CN" });
+      } else {
+        this.$store.commit("changeWebLanguage", { language: "en-US" });
+      }
+    },
   },
   computed: {
-    ...mapGetters(['modalStatus', 'loginFailNum','websiteConfig']),
+    ...mapGetters([
+      "webLanguage",
+      "modalStatus",
+      "loginFailNum",
+      "websiteConfig",
+    ]),
     visible: {
       get() {
         return this.modalStatus.visible;

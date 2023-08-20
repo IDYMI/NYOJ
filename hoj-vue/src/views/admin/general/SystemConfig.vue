@@ -2,7 +2,7 @@
   <div>
     <el-card>
       <div slot="header">
-        <span class="panel-title home-title">{{ $t('m.Website_Config') }}</span>
+        <span class="panel-title home-title">{{ $t("m.Website_Config") }}</span>
       </div>
       <el-form
         label-position="left"
@@ -96,14 +96,14 @@
         type="primary"
         @click.native="saveWebsiteConfig"
         size="small"
-        >{{ $t('m.Save') }}</el-button
+        >{{ $t("m.Save") }}</el-button
       >
     </el-card>
 
-    <el-card style="margin-top:15px">
+    <el-card style="margin-top: 15px">
       <div slot="header">
         <span class="panel-title home-title">{{
-          $t('m.Home_Rotation_Chart')
+          $t("m.Home_Rotation_Chart")
         }}</span>
       </div>
 
@@ -118,9 +118,17 @@
             <img
               :src="img.url"
               alt="load faild"
-              style="height:146px;width:146x"
+              style="height: 146px; width: 146x"
               class="el-upload-list__item-thumbnail"
             /><span class="el-upload-list__item-actions">
+              <!-- @click="handleEdit(img, index)" -->
+              <!-- <span
+                class="el-upload-list__item-edit"
+                @click="handleEditInfo(img)"
+              >
+                <i class="el-icon-edit"></i>
+              </span> -->
+
               <span
                 class="el-upload-list__item-preview"
                 @click="handlePictureCardPreview(img)"
@@ -129,7 +137,7 @@
               </span>
               <span
                 v-if="!disabled"
-                class="el-upload-list__item-delete"
+                class="el-upload-list__item-download"
                 @click="handleDownload(img)"
               >
                 <i class="el-icon-download"></i>
@@ -150,23 +158,52 @@
         action="/api/file/upload-carouse-img"
         list-type="picture-card"
         accept="image/gif,image/jpeg,image/jpg,image/png,image/svg,image/jfif,image/webp"
+        :on-edit="handleEdit"
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
-        style="display: inline;"
+        style="display: inline"
       >
         <i class="el-icon-plus"></i>
       </el-upload>
+
       <el-dialog :visible.sync="dialogVisible">
         <img width="100%" :src="dialogImageUrl" alt="" />
       </el-dialog>
       <el-dialog :visible.sync="dialogVisible">
         <img width="100%" :src="dialogImageUrl" alt="" />
+      </el-dialog>
+
+      <el-dialog
+        :title="$t('m.Edit_Home_Rotation_Chart')"
+        width="350px"
+        :visible.sync="HandleEditVisible"
+        :close-on-click-modal="false"
+      >
+        <el-form>
+          <el-form-item :label="$t('m.Add_Url')" required>
+            <el-input v-model="addLink" size="small"></el-input>
+          </el-form-item>
+
+          <el-form-item :label="$t('m.Add_Hint')" required>
+            <el-input v-model="addHint" size="small"></el-input>
+          </el-form-item>
+
+          <el-form-item style="text-align: center">
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              @click="handleEdit(addLink, addHint)"
+              :loading="handleEditLoading"
+              >{{ $t("m.Add") }}
+            </el-button>
+          </el-form-item>
+        </el-form>
       </el-dialog>
     </el-card>
 
-    <el-card style="margin-top:15px">
+    <el-card style="margin-top: 15px">
       <div slot="header">
-        <span class="panel-title home-title">{{ $t('m.SMTP_Config') }}</span>
+        <span class="panel-title home-title">{{ $t("m.SMTP_Config") }}</span>
       </div>
       <el-form label-position="left" label-width="80px" :model="smtp">
         <el-row :gutter="20">
@@ -220,7 +257,7 @@
         </el-row>
       </el-form>
       <el-button type="primary" @click.native="saveSMTPConfig" size="small">{{
-        $t('m.Save')
+        $t("m.Save")
       }}</el-button>
       <el-button
         type="warning"
@@ -228,14 +265,14 @@
         v-if="saved"
         :loading="loadingBtnTest"
         size="small"
-        >{{ $t('m.Send_Test_Email') }}</el-button
+        >{{ $t("m.Send_Test_Email") }}</el-button
       >
     </el-card>
 
-    <el-card style="margin-top:15px">
+    <el-card style="margin-top: 15px">
       <div slot="header">
         <span class="panel-title home-title">{{
-          $t('m.DataSource_Config')
+          $t("m.DataSource_Config")
         }}</span>
       </div>
       <el-form label-position="top" :model="databaseConfig">
@@ -334,37 +371,42 @@
         type="primary"
         @click.native="saveDataBaseConfig"
         size="small"
-        >{{ $t('m.Save') }}</el-button
+        >{{ $t("m.Save") }}</el-button
       >
     </el-card>
   </div>
 </template>
 
 <script>
-import api from '@/common/api';
-import myMessage from '@/common/message';
-import utils from '@/common/utils';
+import api from "@/common/api";
+import myMessage from "@/common/message";
+import utils from "@/common/utils";
 export default {
-  name: 'SystemConfig',
+  name: "SystemConfig",
   data() {
     return {
       init: false,
       saved: false,
       loadingBtnTest: false,
       smtp: {
-        emailHost: 'smtp.example.com',
-        emailPassword: '',
+        emailHost: "smtp.example.com",
+        emailPassword: "",
         emailPort: 587,
-        emailBGImg: '',
-        emailUsername: 'email@example.com',
+        emailBGImg: "",
+        emailUsername: "email@example.com",
         emailSsl: true,
       },
       websiteConfig: {},
       databaseConfig: {},
-      dialogImageUrl: '',
+      dialogImageUrl: "",
       dialogVisible: false,
       disabled: false,
       carouselImgList: [],
+      EditImgId: "",
+      addLink: "",
+      addHint: "",
+      handleEditLoading: false,
+      HandleEditVisible: false,
     };
   },
   mounted() {
@@ -373,7 +415,7 @@ export default {
         this.smtp = res.data.data;
       } else {
         this.init = true;
-        myMessage.warning('No STMP Config');
+        myMessage.warning("No STMP Config");
       }
     });
 
@@ -401,12 +443,39 @@ export default {
         id = file.response.data.id;
       }
       api.admin_deleteHomeCarousel(id).then((res) => {
-        myMessage.success(this.$i18n.t('m.Delete_successfully'));
+        myMessage.success(this.$i18n.t("m.Delete_successfully"));
         if (index != undefined) {
           this.carouselImgList.splice(index, 1);
         }
       });
     },
+    handleEditInfo(file) {
+      let id = file.id;
+      if (file.response != null && index != undefined) {
+        this.EditImgId = file.response.data.id;
+        this.HandleEditVisible = true;
+      }
+    },
+    handleEdit(addLink = undefined, addHint = undefined) {
+      this.handleEditLoading = true;
+
+      let id = this.EditImgId;
+
+      api.admin_editHomeCarousel(id, addLink, addHint).then(
+        (res) => {
+          myMessage.success(this.$i18n.t("m.Edit_successfully"));
+          this.HandleEditVisible = false;
+          this.handleEditLoading = false;
+        },
+        (err) => {
+          this.handleEditLoading = false;
+        }
+      );
+      this.EditImgId = "";
+      this.addLink = "";
+      this.addHint = "";
+    },
+
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
@@ -417,7 +486,7 @@ export default {
     saveSMTPConfig() {
       api.admin_editSMTPConfig(this.smtp).then(
         (res) => {
-          myMessage.success(this.$i18n.t('m.Update_Successfully'));
+          myMessage.success(this.$i18n.t("m.Update_Successfully"));
           this.saved = true;
         },
         () => {
@@ -426,15 +495,16 @@ export default {
       );
     },
     testSMTPConfig() {
-      this.$prompt(this.$i18n.t('m.Please_input_your_email'), '', {
-        inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-        inputErrorMessage: this.$i18n.t('m.Email_Check_Format'),
+      this.$prompt(this.$i18n.t("m.Please_input_your_email"), "", {
+        inputPattern:
+          /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+        inputErrorMessage: this.$i18n.t("m.Email_Check_Format"),
       })
         .then(({ value }) => {
           this.loadingBtnTest = true;
           api.admin_testSMTPConfig(value).then(
             (res) => {
-              myMessage.success(this.$i18n.t('m.Send_successfully'));
+              myMessage.success(this.$i18n.t("m.Send_successfully"));
               this.loadingBtnTest = false;
             },
             () => {
@@ -446,18 +516,21 @@ export default {
     },
     saveWebsiteConfig() {
       for (var key in this.websiteConfig) {
-        if (key == 'register') {
+        if (key == "register") {
           continue;
         } else {
-          if (this.websiteConfig[key] == null || !this.websiteConfig[key].replace(/(^\s*)|(\s*$)/g, '')) {
-            this.websiteConfig[key] = 'None';
+          if (
+            this.websiteConfig[key] == null ||
+            !this.websiteConfig[key].replace(/(^\s*)|(\s*$)/g, "")
+          ) {
+            this.websiteConfig[key] = "None";
           }
         }
       }
       api
         .admin_editWebsiteConfig(this.websiteConfig)
         .then((res) => {
-          myMessage.success(this.$i18n.t('m.Update_Successfully'));
+          myMessage.success(this.$i18n.t("m.Update_Successfully"));
         })
         .catch(() => {});
     },
@@ -465,7 +538,7 @@ export default {
       api
         .admin_editDataBaseConfig(this.databaseConfig)
         .then((res) => {
-          myMessage.success(this.$i18n.t('m.Update_Successfully'));
+          myMessage.success(this.$i18n.t("m.Update_Successfully"));
         })
         .catch(() => {});
     },

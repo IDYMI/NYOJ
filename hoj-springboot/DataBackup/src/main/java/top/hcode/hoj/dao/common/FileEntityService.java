@@ -19,10 +19,12 @@ public interface FileEntityService extends IService<File> {
     List<List<String>> getContestRankExcelHead(List<String> contestProblemDisplayIDList, Boolean isACM);
 
     List<List<Object>> changeACMContestRankToExcelRowList(List<ACMContestRankVO> acmContestRankVOList,
-                                                          List<String> contestProblemDisplayIDList,
-                                                          String rankShowName);
+            List<String> contestProblemDisplayIDList,
+            String rankShowName);
 
     List<List<Object>> changOIContestRankToExcelRowList(List<OIContestRankVO> oiContestRankVOList,
-                                                        List<String> contestProblemDisplayIDList,
-                                                        String rankShowName);
+            List<String> contestProblemDisplayIDList,
+            String rankShowName);
+
+    // boolean editHomeCarousel(Long id, String addUrl, String addHint);
 }

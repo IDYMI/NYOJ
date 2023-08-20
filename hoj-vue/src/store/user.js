@@ -52,6 +52,10 @@ const mutations = {
     state.userInfo = userInfo
     storage.set('userInfo',userInfo)
   },
+  changeUserPreferences(state, {userInfo}) {
+    state.userInfo = userInfo
+    storage.set('userInfo',userInfo)
+  },
   changeUserToken(state,token){
     state.token = token
     localStorage.setItem("token",token)
@@ -63,7 +67,7 @@ const mutations = {
       state.loginFailNum = 0
     }
   },
-  
+
   clearUserInfoAndToken(state){
     state.token = ''
     state.userInfo = {}
@@ -89,6 +93,11 @@ const actions = {
         userInfo: userInfo
       })
   },
+  setUserPreferences ({commit},userInfo) {
+    commit('changeUserPreferences', {
+      userInfo: userInfo
+    })
+},
   incrLoginFailNum({commit},success){
     commit('incrLoginFailNum',{success:success})
   },

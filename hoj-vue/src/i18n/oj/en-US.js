@@ -18,6 +18,8 @@ export const m = {
   NavBar_Contest: 'Contest',
   NavBar_Status: 'Status',
   NavBar_Rank: 'Rank',
+  NEWNavBar_Rank: 'New Rank',
+
   NavBar_ACM_Rank: 'ACM Rank',
   NavBar_OI_Rank: 'OI Rank',
   NavBar_Discussion: 'Discussion',
@@ -35,7 +37,8 @@ export const m = {
   Dialog_Login: 'Login',
   Dialog_Register: 'Register',
   Dialog_Reset_Password: 'Reset Password',
-  Click_To_Change_Web_Language: 'Click to change web language',
+  Click_To_Home: 'Click to Home',
+  Click_To_Change_Web_Language: 'Click To Change Web Language',
   NavBar_Back_Home: 'Back Home',
   NavBar_Training_Home: 'Training Home',
   NavBar_Contest_Home: 'Contest Home',
@@ -129,7 +132,6 @@ export const m = {
 
   // /components/oj/setting/UserInfo.vue
   Avatar_Setting: 'Avatar Setting',
-  UserInfo_Setting: 'User Info Setting',
   Upload_avatar_hint: 'Drag and drop the avatar here, or click here.',
   CF_Username: 'Codeforces Username',
   School: 'School',
@@ -150,6 +152,18 @@ export const m = {
   File_Exceed_Tips: ' file size is wrong, you can upload a image up to 2MB in size',
   Cancel_Avater_Tips: 'Are you sure you want to cancel the capture of this image?',
 
+  // /components/oj/setting/Preferences.vue
+  Display_Preference: 'Display Preference',
+  Usage_Preference :'Usage Preference',
+  UI_Language: 'UI Language',
+  Font_Family: 'Font Family',
+  Code_FontFamily: 'Code Font Family',
+  Code_Language: 'Code Language',
+  Code_Size:'Code Size',
+  IDE_Theme: 'IDE Theme',
+  Default_Code_Template: 'Default Code Template',
+  Theme: 'Theme',
+
   // /views/oj/user/UserHome.vue
   Recent_login_time: 'Recently launched：',
   Not_set_yet: 'This guy is lazy. He doesn\'t write anything.',
@@ -158,9 +172,12 @@ export const m = {
   UserHome_Score: 'Score',
   UserHome_Rating: 'Rating',
   List_Solved_Problems: 'List of solved problems',
+  List_Participated_Contests : 'List of participated contests',
   UserHome_Not_Data: 'The guy is so lazy that has not solved any problem yet.',
+  UserHome_Not_Contest: 'The guy is so lazy that has not participated contests yet.',
   Personal_Profile: 'Persion Profile',
   UserHome_Solved_Problems: 'Solved Problems',
+  UserHome_Participated_Contests :'Participated Contests',
   Thermal_energy_table_submitted_in_the_last_year: 'Thermal energy table submitted in the last year',
   Difficulty_Statistics: 'Difficulty Statistics',
   Problems: 'Problems',
@@ -190,6 +207,9 @@ export const m = {
 
   // /views/oj/user/Setting.vue
   Account_Setting: 'Account Setting',
+  UserInfo_Setting: 'User Info Setting',
+  Preferences_Setting: 'Preferences Setting',
+
 
   // App.vue 底部文案
   Service: 'Service',
@@ -297,6 +317,7 @@ export const m = {
 
   // /views/oj/status/SubmissionList.vue
   Mine: 'Mine',
+  New: 'New',
   Time: 'Time',
   Memory: 'Memory',
   Length: 'Length',
@@ -338,6 +359,7 @@ export const m = {
   Subtask: 'Subtask',
 
   // /views/oj/rank/ACMRank.vue
+  NEW_ACM_Ranklist: 'NEW ACM Ranklist',
   ACM_Ranklist: 'ACM Ranklist',
   User: 'User',
   Nickname: 'Nickname',
@@ -346,6 +368,7 @@ export const m = {
   Rank_Search_Placeholder: 'Please enter username, nickname or real name.',
 
   // /views/oj/rank/OIRank.vue
+  NEW_OI_Ranklist: 'NEW OI Ranklist',
   OI_Ranklist: 'OI Ranklist',
 
   // /views/oj/discussion/discussionList.vue
@@ -373,6 +396,7 @@ export const m = {
   Edit_Discussion: 'Edit Discussion',
   Delete_Discussion_Tips: 'This operation will delete the discussion, including the associated comments and replies. Do you want to continue?',
   Delete_successfully: 'Delete Successfully',
+  Edit_successfully: 'Edit Successfully',
   Post_successfully: 'Post Successfully',
   Send_successfully: 'Send Successfully',
   Can_not_exceed_255: 'length cannot exceed 255',
@@ -751,5 +775,10 @@ export const m = {
   Already_Public_Problem: 'Already in the public problem bank',
   Applying_for_Publicity: 'Applying for publicity',
   Group_Problem_Apply_Public_Tips: 'Are you sure you want to apply for this problem to be added to the public bank?',
-  Cancel_Group_Problem_Apply_Public_Tips: 'Do you want to cancel the application for this problem to be added to the public bank?'
+  Cancel_Group_Problem_Apply_Public_Tips: 'Do you want to cancel the application for this problem to be added to the public bank?',
+
+  // /views/admin/general/SystemConfig.vue
+  Add_Url: 'Add Url',
+  Add_Hint: 'Add Hint',
+  Edit_Home_Rotation_Chart: 'Edit Home Rotation Chart'
 }

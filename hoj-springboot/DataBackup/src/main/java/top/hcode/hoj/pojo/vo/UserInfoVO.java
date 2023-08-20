@@ -61,6 +61,18 @@ public class UserInfoVO {
     @ApiModelProperty(value = "cf的username")
     private String cfUsername;
 
+    @ApiModelProperty(value = "界面语言")
+    private String uiLanguage;
+
+    @ApiModelProperty(value = "代码语言")
+    private String codeLanguage;
+
+    @ApiModelProperty(value = "字体大小")
+    private String codeSize;
+
+    @ApiModelProperty(value = "编译器主题")
+    private String ideTheme;
+
     @ApiModelProperty(value = "角色列表")
     private List<String> roleList;
 

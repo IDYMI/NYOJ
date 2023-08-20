@@ -18,6 +18,7 @@ export const m = {
   NavBar_Contest: '比赛',
   NavBar_Status: '评测',
   NavBar_Rank: '排名',
+  NEWNavBar_Rank: '新生排名',
   NavBar_ACM_Rank: 'ACM 排名',
   NavBar_OI_Rank: 'OI 排名',
   NavBar_Discussion: '讨论',
@@ -35,7 +36,8 @@ export const m = {
   Dialog_Login: '登录',
   Dialog_Register: '注册',
   Dialog_Reset_Password: '重置密码',
-  Click_To_Change_Web_Language: '点击切换网站语言',
+  Click_To_Home: '点击返回首页',
+  Click_To_Change_Web_Language: '点击切换网络语言',
   NavBar_Back_Home: '前往首页',
   NavBar_Training_Home: '训练主页',
   NavBar_Contest_Home: '比赛主页',
@@ -149,17 +151,33 @@ export const m = {
   File_Exceed_Tips: '文件大小错误, 您只能上传不大于2MB的图片文件！',
   Cancel_Avater_Tips: '您确定取消该图像的截取？',
 
+  // /components/oj/setting/Preferences.vue
+  Display_Preference: '显示偏好',
+  Usage_Preference :'使用偏好',
+  UI_Language: '界面语言',
+  Font_Family: '界面字体',
+  Code_FontFamily: '代码字体',
+  Code_Language: '代码语言',
+  Code_Size:'字体大小',
+  IDE_Theme: '编译器主题',
+  Default_Code_Template: '默认代码模板',
+  Theme: '界面主题',
+
   // /views/oj/user/UserHome.vue
   Recent_login_time: '最近上线时间：',
   Not_set_yet: '这个家伙很懒，什么也没写…',
   UserHome_Solved: '已解决',
   UserHome_Submissions: '总交题数',
+  UserHome_Contests: '参与比赛',
   UserHome_Score: 'OI分数',
   UserHome_Rating: 'CF分数',
   List_Solved_Problems: '全部已解决问题列表',
+  List_Participated_Contests : '全部已参加比赛',
   UserHome_Not_Data: '这家伙太懒了，还没有做过题...',
+  UserHome_Not_Contest: '这家伙太懒了，还没有参加过比赛...',
   Personal_Profile: '个人简介',
   UserHome_Solved_Problems: '做题情况',
+  UserHome_Participated_Contests :'参与比赛',
   Thermal_energy_table_submitted_in_the_last_year: '最近一年提交热力表',
   Difficulty_Statistics: '难度统计',
   Problems: '题',
@@ -190,6 +208,7 @@ export const m = {
   // /views/oj/user/Setting.vue
   Account_Setting: '账户设置',
   UserInfo_Setting: '资料设置',
+  Preferences_Setting: '偏好设置',
 
   // App.vue 底部文案
   Service: '服务',
@@ -298,6 +317,7 @@ export const m = {
 
   // /views/oj/status/SubmissionList.vue
   Mine: '我的',
+  New: '新生',
   ID: 'ID',
   Time: '运行时间',
   Memory: '运行内存',
@@ -341,6 +361,7 @@ export const m = {
   Subtask: '子任务',
 
   // /views/oj/rank/ACMRank.vue
+  NEW_ACM_Ranklist: '新生 ACM 排行榜',
   ACM_Ranklist: 'ACM 排行榜',
   User: '用户',
   Nickname: '昵称',
@@ -349,6 +370,7 @@ export const m = {
   Rank_Search_Placeholder: '请输入查询的用户名、昵称或真实姓名',
 
   // /views/oj/rank/OIRank.vue
+  NEW_OI_Ranklist: '新生 OI 排行榜',
   OI_Ranklist: 'OI 排行榜',
 
   // /views/oj/discussion/discussionList.vue
@@ -376,6 +398,7 @@ export const m = {
   Edit_Discussion: '编辑',
   Delete_Discussion_Tips: '此操作将删除讨论，包括相关的评论和回复。你要继续吗？',
   Delete_successfully: '删除成功',
+  Edit_successfully: '编辑成功',
   Post_successfully: '发布成功',
   Send_successfully: '发送成功',
   Can_not_exceed_255: '的长度不能超过255',
@@ -754,5 +777,10 @@ export const m = {
   Already_Public_Problem: '已在公开题库中',
   Applying_for_Publicity: '申请公开中',
   Group_Problem_Apply_Public_Tips: '您是否确定要申请该题目加入公开题库？',
-  Cancel_Group_Problem_Apply_Public_Tips: '您是否要取消申请该题目加入公开题库？'
+  Cancel_Group_Problem_Apply_Public_Tips: '您是否要取消申请该题目加入公开题库？',
+
+  // /views/admin/general/SystemConfig.vue
+  Add_Url: '添加链接',
+  Add_Hint: '添加描述',
+  Edit_Home_Rotation_Chart: '编辑 首页轮播图 信息'
 }

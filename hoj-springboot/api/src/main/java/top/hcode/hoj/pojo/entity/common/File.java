@@ -47,6 +47,12 @@ public class File {
     @ApiModelProperty(value = "文件绝对路径")
     private String filePath;
 
+    @ApiModelProperty(value = "图片对应的跳转链接")
+    private String link;
+
+    @ApiModelProperty(value = "图片对应的文字描述")
+    private String hint;
+
     @ApiModelProperty(value = "是否删除")
     @TableField("`delete`")
     private Boolean delete;

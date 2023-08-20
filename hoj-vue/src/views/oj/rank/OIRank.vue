@@ -3,7 +3,20 @@
     <el-col :span="24">
       <el-card :padding="10">
         <div slot="header">
-          <span class="panel-title">{{ $t('m.OI_Ranklist') }}</span>
+          <ul class="nav-list">
+            <li>
+              <router-link to="/oi-rank" exact-active-class="selected">
+                <span class="panel-title-oi">{{ $t("m.OI_Ranklist") }}</span>
+              </router-link>
+            </li>
+            <li>
+              <router-link to="/new-oi-rank" exact-active-class="selected">
+                <span class="panel-title-oi">{{
+                  $t("m.NEW_OI_Ranklist")
+                }}</span>
+              </router-link>
+            </li>
+          </ul>
         </div>
         <div class="echarts">
           <ECharts :options="options" ref="chart" auto-resize></ECharts>
@@ -299,6 +312,28 @@ export default {
 </script>
 
 <style scoped>
+.nav-list {
+  display: flex;
+  /* justify-content: center;
+  align-items: center; */
+  list-style: none;
+}
+
+.nav-list li {
+  display: inline-block;
+  margin-right: 100px;
+}
+
+.selected {
+  color: #409eff;
+}
+
+.panel-title-oi {
+  font-size: 2em;
+  font-weight: 500;
+  line-height: 30px;
+}
+
 .echarts {
   margin: 0 auto;
   width: 100%;

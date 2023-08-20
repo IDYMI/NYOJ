@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="section-title">{{ $t('m.Avatar_Setting') }}</div>
+    <div class="section-title">{{ $t("m.Avatar_Setting") }}</div>
     <div class="section-main">
       <avatar
         :username="formProfile.username"
         :inline="true"
         :size="130"
         color="#FFF"
-        style="margin-bottom:15px"
+        style="margin-bottom: 15px"
         :src="avatar"
       ></avatar>
       <template v-if="!avatarOption.imgSrc">
@@ -18,8 +18,11 @@
           :before-upload="handleSelectFile"
         >
           <div style="padding: 20px 0">
-            <i class="el-icon-upload" style="color: #3399ff;font-size:52px"></i>
-            <p>{{ $t('m.Upload_avatar_hint') }}</p>
+            <i
+              class="el-icon-upload"
+              style="color: #3399ff; font-size: 52px"
+            ></i>
+            <p>{{ $t("m.Upload_avatar_hint") }}</p>
           </div>
         </el-upload>
       </template>
@@ -112,7 +115,7 @@
         width="350px"
       >
         <div class="upload-modal">
-          <p class="notice">{{ $t('m.Your_new_avatar') + ':' }}</p>
+          <p class="notice">{{ $t("m.Your_new_avatar") + ":" }}</p>
           <img :src="uploadImgSrc" />
         </div>
         <div slot="footer">
@@ -120,13 +123,13 @@
             @click="uploadAvatar"
             :loading="loadingUploadBtn"
             type="primary"
-            >{{ $t('m.Upload') }}</el-button
+            >{{ $t("m.Upload") }}</el-button
           >
         </div>
       </el-dialog>
     </div>
 
-    <div class="section-title">{{ $t('m.UserInfo_Setting') }}</div>
+    <div class="section-title">{{ $t("m.UserInfo_Setting") }}</div>
     <el-form ref="formProfile" :model="formProfile">
       <el-row :gutter="30" justify="space-around">
         <el-col :md="10" :xs="24">
@@ -160,13 +163,13 @@
           <el-form-item :label="$t('m.Gender')">
             <el-radio-group v-model="formProfile.gender">
               <el-radio label="male" border size="small">{{
-                $t('m.Male')
+                $t("m.Male")
               }}</el-radio>
               <el-radio label="female" border size="small">{{
-                $t('m.Female')
+                $t("m.Female")
               }}</el-radio>
               <el-radio label="secrecy" border size="small">{{
-                $t('m.Secrecy')
+                $t("m.Secrecy")
               }}</el-radio>
             </el-radio-group>
           </el-form-item>
@@ -174,35 +177,35 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <label class="el-form-item__label" style="float: none;">{{
-            $t('m.Signature')
+          <label class="el-form-item__label" style="float: none">{{
+            $t("m.Signature")
           }}</label>
           <Editor
             :value.sync="formProfile.signature"
-            style="padding: 5px;"
+            style="padding: 5px"
           ></Editor>
         </el-col>
       </el-row>
     </el-form>
-    <div style="text-align:center;margin-top:10px">
+    <div style="text-align: center; margin-top: 10px">
       <el-button
         type="primary"
         @click="updateUserInfo"
         :loading="loadingSaveBtn"
-        >{{ $t('m.Save') }}</el-button
+        >{{ $t("m.Save") }}</el-button
       >
     </div>
   </div>
 </template>
 
 <script>
-import api from '@/common/api';
-import utils from '@/common/utils';
-import myMessage from '@/common/message';
-import { VueCropper } from 'vue-cropper';
-import Avatar from 'vue-avatar';
-import 'element-ui/lib/theme-chalk/display.css';
-const Editor = () => import('@/components/admin/Editor.vue');
+import api from "@/common/api";
+import utils from "@/common/utils";
+import myMessage from "@/common/message";
+import { VueCropper } from "vue-cropper";
+import Avatar from "vue-avatar";
+import "element-ui/lib/theme-chalk/display.css";
+const Editor = () => import("@/components/admin/Editor.vue");
 export default {
   components: {
     Avatar,
@@ -215,24 +218,24 @@ export default {
       loadingUploadBtn: false,
       uploadModalVisible: false,
       preview: {},
-      uploadImgSrc: '',
+      uploadImgSrc: "",
       avatarOption: {
-        imgSrc: '',
+        imgSrc: "",
         size: 0.8,
-        outputType: 'png',
+        outputType: "png",
       },
 
       formProfile: {
-        realname: '',
-        username: '',
-        cfUsername: '',
-        gender: '',
-        nickname: '',
-        signature: '',
-        number: '',
-        blog: '',
-        school: '',
-        github: '',
+        realname: "",
+        username: "",
+        cfUsername: "",
+        gender: "",
+        nickname: "",
+        signature: "",
+        number: "",
+        blog: "",
+        school: "",
+        github: "",
       },
     };
   },
@@ -248,8 +251,8 @@ export default {
     checkFileType(file) {
       if (!/\.(gif|jpg|jpeg|png|bmp|webp|GIF|JPG|PNG|WEBP)$/.test(file.name)) {
         this.$notify.warning({
-          title: this.$i18n.t('m.File_type_not_support'),
-          message: file.name + this.$i18n.t('m.is_incorrect_format_file'),
+          title: this.$i18n.t("m.File_type_not_support"),
+          message: file.name + this.$i18n.t("m.is_incorrect_format_file"),
         });
         return false;
       }
@@ -259,8 +262,8 @@ export default {
       // max size is 2MB
       if (file.size > 2 * 1024 * 1024) {
         this.$notify.warning({
-          title: this.$i18n.t('m.Exceed_max_size_limit'),
-          message: file.name + this.$i18n.t('m.File_Exceed_Tips'),
+          title: this.$i18n.t("m.Exceed_max_size_limit"),
+          message: file.name + this.$i18n.t("m.File_Exceed_Tips"),
         });
         return false;
       }
@@ -282,19 +285,19 @@ export default {
       this.preview = data;
     },
     rotate(direction) {
-      if (direction === 'left') {
+      if (direction === "left") {
         this.$refs.cropper.rotateLeft();
       } else {
         this.$refs.cropper.rotateRight();
       }
     },
     reselect() {
-      this.$confirm(this.$i18n.t('m.Cancel_Avater_Tips'), 'Tips', {
-        confirmButtonText: this.$i18n.t('m.OK'),
-        cancelButtonText: this.$i18n.t('m.Cancel'),
-        type: 'warning',
+      this.$confirm(this.$i18n.t("m.Cancel_Avater_Tips"), "Tips", {
+        confirmButtonText: this.$i18n.t("m.OK"),
+        cancelButtonText: this.$i18n.t("m.Cancel"),
+        type: "warning",
       }).then(() => {
-        this.avatarOption.imgSrc = '';
+        this.avatarOption.imgSrc = "";
       });
     },
     finishCrop() {
@@ -308,22 +311,22 @@ export default {
         let form = new window.FormData();
         let file = new window.File(
           [blob],
-          'avatar.' + this.avatarOption.outputType
+          "avatar." + this.avatarOption.outputType
         );
-        form.append('image', file);
+        form.append("image", file);
         this.loadingUploadBtn = true;
         this.$http({
-          method: 'post',
-          url: '/api/file/upload-avatar',
+          method: "post",
+          url: "/api/file/upload-avatar",
           data: form,
-          headers: { 'content-type': 'multipart/form-data' },
+          headers: { "content-type": "multipart/form-data" },
         }).then(
           (res) => {
             this.loadingUploadBtn = false;
-            myMessage.success(this.$i18n.t('m.Upload_Avatar_Successfully'));
+            myMessage.success(this.$i18n.t("m.Upload_Avatar_Successfully"));
             this.uploadModalVisible = false;
-            this.avatarOption.imgSrc = '';
-            this.$store.dispatch('setUserInfo', res.data.data);
+            this.avatarOption.imgSrc = "";
+            this.$store.dispatch("setUserInfo", res.data.data);
           },
           () => {
             this.loadingUploadBtn = false;
@@ -336,13 +339,14 @@ export default {
       let updateData = utils.filterEmptyValue(
         Object.assign({}, this.formProfile)
       );
-      if(!updateData.gender){
-        updateData.gender = 'secrecy';
+      console.log(updateData);
+      if (!updateData.gender) {
+        updateData.gender = "secrecy";
       }
       api.changeUserInfo(updateData).then(
         (res) => {
-          myMessage.success(this.$i18n.t('m.Update_Successfully'));
-          this.$store.dispatch('setUserInfo', res.data.data);
+          myMessage.success(this.$i18n.t("m.Update_Successfully"));
+          this.$store.dispatch("setUserInfo", res.data.data);
           this.loadingSaveBtn = false;
         },
         (_) => {
@@ -357,9 +361,9 @@ export default {
     },
     previewStyle() {
       return {
-        width: this.preview.w + 'px',
-        height: this.preview.h + 'px',
-        overflow: 'hidden',
+        width: this.preview.w + "px",
+        height: this.preview.h + "px",
+        overflow: "hidden",
       };
     },
   },

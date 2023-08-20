@@ -68,6 +68,18 @@ public class UserRolesVO implements Serializable {
     @ApiModelProperty(value = "头衔背景颜色")
     private String titleColor;
 
+    @ApiModelProperty(value = "界面语言")
+    private String uiLanguage;
+
+    @ApiModelProperty(value = "代码语言")
+    private String codeLanguage;
+
+    @ApiModelProperty(value = "字体大小")
+    private String codeSize;
+
+    @ApiModelProperty(value = "编译器主题")
+    private String ideTheme;
+
     @ApiModelProperty(value = "个性签名")
     private String signature;
 

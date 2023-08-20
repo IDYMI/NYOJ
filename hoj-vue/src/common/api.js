@@ -27,7 +27,7 @@ axios.interceptors.request.use(
     // 如果存在，则统一在http请求的header都加上token，这样后台根据token判断你的登录情况
     // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
     const token = localStorage.getItem('token')
-    if(config.url != '/api/login' && config.url != '/api/admin/login'){
+    if (config.url != '/api/login' && config.url != '/api/admin/login') {
       token && (config.headers.Authorization = token);
     }
     let type = config.url.split("/")[2];
@@ -105,12 +105,15 @@ axios.interceptors.response.use(
           if (error.response.config.headers['Url-Type'] === 'admin') {
             router.push("/admin/login")
           } else {
-            store.commit('changeModalStatus', { mode: 'Login', visible: true });
+            store.commit('changeModalStatus', {
+              mode: 'Login',
+              visible: true
+            });
           }
           store.commit('clearUserInfoAndToken');
           break;
-        // 403
-        // 无权限访问或操作的请求
+          // 403
+          // 无权限访问或操作的请求
         case 403:
           if (error.response.data.msg) {
             mMessage.error(error.response.data.msg);
@@ -124,17 +127,17 @@ axios.interceptors.response.use(
             }
           }
           let isAdminApi = error.response.config.url.startsWith('/api/admin');
-          store.dispatch('refreshUserAuthInfo').then((res)=>{
-            if(isAdminApi){
+          store.dispatch('refreshUserAuthInfo').then((res) => {
+            if (isAdminApi) {
               router.push("/admin")
             }
           })
           break;
-        // 404请求不存在
+          // 404请求不存在
         case 404:
           mMessage.error(i18n.t('m.Query_error_unable_to_find_the_resource_to_request'));
           break;
-        // 其他错误，直接抛出错误提示
+          // 其他错误，直接抛出错误提示
         default:
           if (error.response.data) {
             if (error.response.data.msg) {
@@ -170,20 +173,16 @@ axios.interceptors.response.use(
 const ojApi = {
   // Home页的请求
   getWebsiteConfig() {
-    return ajax('/api/get-website-config', 'get', {
-    })
+    return ajax('/api/get-website-config', 'get', {})
   },
   getHomeCarousel() {
-    return ajax('/api/home-carousel', 'get', {
-    })
+    return ajax('/api/home-carousel', 'get', {})
   },
   getRecentContests() {
-    return ajax('/api/get-recent-contest', 'get', {
-    })
+    return ajax('/api/get-recent-contest', 'get', {})
   },
   getRecentOtherContests() {
-    return ajax('/api/get-recent-other-contest', 'get', {
-    })
+    return ajax('/api/get-recent-other-contest', 'get', {})
   },
   getAnnouncementList(currentPage, limit) {
     let params = {
@@ -195,10 +194,9 @@ const ojApi = {
     })
   },
   getRecent7ACRank() {
-    return ajax('/api/get-recent-seven-ac-rank', 'get', {
-    })
+    return ajax('/api/get-recent-seven-ac-rank', 'get', {})
   },
-  getLastWeekSubmissionStatistics(forceRefresh){
+  getLastWeekSubmissionStatistics(forceRefresh) {
     let params = {
       forceRefresh
     }
@@ -207,9 +205,8 @@ const ojApi = {
     })
   },
 
-  getRecentUpdatedProblemList(){
-    return ajax('/api/get-recent-updated-problem', 'get', {
-    })
+  getRecentUpdatedProblemList() {
+    return ajax('/api/get-recent-updated-problem', 'get', {})
   },
 
   // 用户账户的相关请求
@@ -359,11 +356,11 @@ const ojApi = {
     })
   },
   // 获取最近一次通过的代码
-  getUserLastAccepetedCode(pid, cid){
+  getUserLastAccepetedCode(pid, cid) {
     let params = {
       pid
     }
-    if(cid){
+    if (cid) {
       params.cid = cid
     }
     return ajax('/api/get-last-ac-code', 'get', {
@@ -371,8 +368,11 @@ const ojApi = {
     })
   },
   // 获取题目专注模式底部题目列表
-  getFullScreenProblemList(tid, cid){
-    let params = {tid, cid}
+  getFullScreenProblemList(tid, cid) {
+    let params = {
+      tid,
+      cid
+    }
     return ajax('/api/get-full-screen-problem-list', 'get', {
       params: params
     })
@@ -407,12 +407,18 @@ const ojApi = {
   },
   checkSubmissonsStatus(submitIds, cid) {
     return ajax('/api/check-submissions-status', 'post', {
-      data: { submitIds, cid }
+      data: {
+        submitIds,
+        cid
+      }
     })
   },
   checkContestSubmissonsStatus(submitIds, cid) {
     return ajax('/api/check-contest-submissions-status', 'post', {
-      data: { submitIds, cid }
+      data: {
+        submitIds,
+        cid
+      }
     })
   },
 
@@ -471,7 +477,9 @@ const ojApi = {
   // 获取训练详情
   getTraining(tid) {
     return ajax('/api/get-training-detail', 'get', {
-      params: { tid }
+      params: {
+        tid
+      }
     })
   },
   // 注册私有训练
@@ -486,19 +494,26 @@ const ojApi = {
   // 获取注册训练权限
   getTrainingAccess(tid) {
     return ajax('/api/get-training-access', 'get', {
-      params: { tid }
+      params: {
+        tid
+      }
     })
   },
   // 获取训练题目列表
   getTrainingProblemList(tid) {
     return ajax('/api/get-training-problem-list', 'get', {
-      params: { tid }
+      params: {
+        tid
+      }
     })
   },
   // 获取训练题目详情
   getTrainingProblem(displayId, cid) {
     return ajax('/api/get-training-problem-details', 'get', {
-      params: { displayId, cid }
+      params: {
+        displayId,
+        cid
+      }
     })
   },
   // 获取训练记录榜单
@@ -534,13 +549,17 @@ const ojApi = {
   // 比赛详情的请求
   getContest(cid) {
     return ajax('/api/get-contest-info', 'get', {
-      params: { cid }
+      params: {
+        cid
+      }
     })
   },
   // 获取赛外榜单比赛的信息
   getScoreBoardContestInfo(cid) {
     return ajax('/api/get-contest-outsize-info', 'get', {
-      params: { cid }
+      params: {
+        cid
+      }
     })
   },
   // 提供比赛外榜排名数据
@@ -561,19 +580,28 @@ const ojApi = {
   // 获取注册比赛权限
   getContestAccess(cid) {
     return ajax('/api/get-contest-access', 'get', {
-      params: { cid }
+      params: {
+        cid
+      }
     })
   },
   // 获取比赛题目列表
   getContestProblemList(cid, containsEnd = false) {
     return ajax('/api/get-contest-problem', 'get', {
-      params: { cid, containsEnd }
+      params: {
+        cid,
+        containsEnd
+      }
     })
   },
   // 获取比赛题目详情
   getContestProblem(displayId, cid, gid, containsEnd = false) {
     return ajax('/api/get-contest-problem-details', 'get', {
-      params: { displayId, cid, containsEnd}
+      params: {
+        displayId,
+        cid,
+        containsEnd
+      }
     })
   },
   // 获取比赛提交列表
@@ -674,13 +702,19 @@ const ojApi = {
   // userhome页的请求
   getUserInfo(uid, username) {
     return ajax("/api/get-user-home-info", 'get', {
-      params: { uid, username }
+      params: {
+        uid,
+        username
+      }
     })
   },
 
   getUserCalendarHeatmap(uid, username) {
     return ajax("/api/get-user-calendar-heatmap", 'get', {
-      params: { uid, username }
+      params: {
+        uid,
+        username
+      }
     })
   },
 
@@ -691,8 +725,10 @@ const ojApi = {
     })
   },
   getChangeEmailCode(email) {
-    return ajax("/api/get-change-email-code", 'get',  {
-      params: { email }
+    return ajax("/api/get-change-email-code", 'get', {
+      params: {
+        email
+      }
     })
   },
   changeEmail(data) {
@@ -702,6 +738,11 @@ const ojApi = {
   },
   changeUserInfo(data) {
     return ajax("/api/change-userInfo", 'post', {
+      data
+    })
+  },
+  changeUserPreferences(data) {
+    return ajax("/api/change-userPreferences", 'post', {
       data
     })
   },
@@ -825,7 +866,10 @@ const ojApi = {
 
   // Group
   getGroupList(currentPage, limit, query) {
-    let params = { currentPage, limit }
+    let params = {
+      currentPage,
+      limit
+    }
     Object.keys(query).forEach((element) => {
       if (query[element] !== '' && query[element] !== null && query[element] !== undefined) {
         params[element] = query[element]
@@ -838,7 +882,9 @@ const ojApi = {
 
   getGroup(gid) {
     return ajax('/api/get-group-detail', 'get', {
-      params: { gid }
+      params: {
+        gid
+      }
     })
   },
 
@@ -856,38 +902,56 @@ const ojApi = {
 
   deleteGroup(gid) {
     return ajax("/api/group", 'delete', {
-      params: { gid }
+      params: {
+        gid
+      }
     })
   },
 
   getGroupAccess(gid) {
     return ajax('/api/get-group-access', 'get', {
-      params: { gid }
+      params: {
+        gid
+      }
     })
   },
 
   getGroupAuth(gid) {
     return ajax('/api/get-group-auth', 'get', {
-      params: { gid }
+      params: {
+        gid
+      }
     })
   },
 
   // Group Member
   getGroupMemberList(currentPage, limit, gid) {
     return ajax('/api/group/get-member-list', 'get', {
-      params: { currentPage, limit, gid }
+      params: {
+        currentPage,
+        limit,
+        gid
+      }
     })
   },
 
   getGroupApplyList(currentPage, limit, gid) {
     return ajax('/api/group/get-apply-list', 'get', {
-      params: { currentPage, limit, gid }
+      params: {
+        currentPage,
+        limit,
+        gid
+      }
     })
   },
 
   addGroupMember(gid, code, reason) {
     return ajax("/api/group/member", 'post', {
-      params: { gid, code, reason }
+      params: {
+        gid,
+        code,
+        reason
+      }
     })
   },
 
@@ -900,26 +964,39 @@ const ojApi = {
 
   deleteGroupMember(uid, gid) {
     return ajax("/api/group/member", 'delete', {
-      params: { uid, gid }
+      params: {
+        uid,
+        gid
+      }
     })
   },
 
   exitGroup(gid) {
     return ajax("/api/group/member/exit", 'delete', {
-      params: { gid }
+      params: {
+        gid
+      }
     })
   },
 
   // Group Announcement
   getGroupAnnouncementList(currentPage, limit, gid) {
     return ajax('/api/group/get-announcement-list', 'get', {
-      params: { currentPage, limit, gid }
+      params: {
+        currentPage,
+        limit,
+        gid
+      }
     })
   },
 
   getGroupAdminAnnouncementList(currentPage, limit, gid) {
     return ajax('/api/group/get-admin-announcement-list', 'get', {
-      params: { currentPage, limit, gid }
+      params: {
+        currentPage,
+        limit,
+        gid
+      }
     })
   },
 
@@ -937,26 +1014,38 @@ const ojApi = {
 
   deleteGroupAnnouncement(aid) {
     return ajax("/api/group/announcement", 'delete', {
-      params: { aid }
+      params: {
+        aid
+      }
     })
   },
 
   // Group Problem
   getGroupProblemList(currentPage, limit, gid) {
     return ajax('/api/group/get-problem-list', 'get', {
-      params: { currentPage, limit, gid }
+      params: {
+        currentPage,
+        limit,
+        gid
+      }
     })
   },
 
   getGroupAdminProblemList(currentPage, limit, gid) {
     return ajax('/api/group/get-admin-problem-list', 'get', {
-      params: { currentPage, limit, gid }
+      params: {
+        currentPage,
+        limit,
+        gid
+      }
     })
   },
 
   getGroupProblem(pid) {
     return ajax("/api/group/problem", 'get', {
-      params: { pid }
+      params: {
+        pid
+      }
     })
   },
 
@@ -974,13 +1063,18 @@ const ojApi = {
 
   deleteGroupProblem(pid) {
     return ajax("/api/group/problem", 'delete', {
-      params: { pid }
+      params: {
+        pid
+      }
     })
   },
 
   getGroupProblemCases(pid, isUpload) {
     return ajax("/api/group/get-problem-cases", 'get', {
-      params: { pid, isUpload }
+      params: {
+        pid,
+        isUpload
+      }
     })
   },
   getGroupProblemTags(pid) {
@@ -1002,39 +1096,56 @@ const ojApi = {
   groupCompileSpj(data, gid) {
     return ajax("/api/group/compile-spj", 'post', {
       data: data,
-      params: { gid }
+      params: {
+        gid
+      }
     })
   },
 
   groupCompileInteractive(data, gid) {
     return ajax("/api/group/compile-interactive", 'post', {
       data: data,
-      params: { gid }
+      params: {
+        gid
+      }
     })
   },
 
   changeGroupProblemAuth(pid, auth) {
     return ajax("/api/group/change-problem-auth", 'put', {
-      params: { pid, auth }
+      params: {
+        pid,
+        auth
+      }
     })
   },
 
   // Group Training
   getGroupTrainingList(currentPage, limit, gid) {
     return ajax('/api/group/get-training-list', 'get', {
-      params: { currentPage, limit, gid }
+      params: {
+        currentPage,
+        limit,
+        gid
+      }
     })
   },
 
   getGroupAdminTrainingList(currentPage, limit, gid) {
     return ajax('/api/group/get-admin-training-list', 'get', {
-      params: { currentPage, limit, gid }
+      params: {
+        currentPage,
+        limit,
+        gid
+      }
     })
   },
 
   getGroupTraining(tid) {
     return ajax("/api/group/training", 'get', {
-      params: { tid }
+      params: {
+        tid
+      }
     })
   },
 
@@ -1052,18 +1163,26 @@ const ojApi = {
 
   deleteGroupTraining(tid) {
     return ajax("/api/group/training", 'delete', {
-      params: { tid }
+      params: {
+        tid
+      }
     })
   },
 
   changeGroupTrainingStatus(tid, status) {
     return ajax("/api/group/change-training-status", 'put', {
-      params: { tid, status }
+      params: {
+        tid,
+        status
+      }
     })
   },
 
   getGroupTrainingProblemList(currentPage, limit, query) {
-    let params = { currentPage, limit }
+    let params = {
+      currentPage,
+      limit
+    }
     Object.keys(query).forEach((element) => {
       if (query[element] !== '' && query[element] !== null && query[element] !== undefined) {
         params[element] = query[element]
@@ -1082,7 +1201,10 @@ const ojApi = {
 
   deleteGroupTrainingProblem(pid, tid) {
     return ajax("/api/group/training-problem", 'delete', {
-      params: { pid, tid }
+      params: {
+        pid,
+        tid
+      }
     })
   },
 
@@ -1094,26 +1216,39 @@ const ojApi = {
 
   addGroupTrainingProblemFromGroup(problemId, tid) {
     return ajax("/api/group/add-training-problem-from-group", 'post', {
-      params: { problemId, tid }
+      params: {
+        problemId,
+        tid
+      }
     })
   },
 
   //Group Contest
   getGroupContestList(currentPage, limit, gid) {
     return ajax('/api/group/get-contest-list', 'get', {
-      params: { currentPage, limit, gid }
+      params: {
+        currentPage,
+        limit,
+        gid
+      }
     })
   },
 
   getGroupAdminContestList(currentPage, limit, gid) {
     return ajax('/api/group/get-admin-contest-list', 'get', {
-      params: { currentPage, limit, gid }
+      params: {
+        currentPage,
+        limit,
+        gid
+      }
     })
   },
 
   getGroupContest(cid) {
     return ajax("/api/group/contest", 'get', {
-      params: { cid }
+      params: {
+        cid
+      }
     })
   },
 
@@ -1131,18 +1266,26 @@ const ojApi = {
 
   deleteGroupContest(cid) {
     return ajax("/api/group/contest", 'delete', {
-      params: { cid }
+      params: {
+        cid
+      }
     })
   },
 
   changeGroupContestVisible(cid, visible) {
     return ajax("/api/group/change-contest-visible", 'put', {
-      params: { cid, visible }
+      params: {
+        cid,
+        visible
+      }
     })
   },
 
   getGroupContestProblemList(currentPage, limit, query) {
-    let params = { currentPage, limit }
+    let params = {
+      currentPage,
+      limit
+    }
     Object.keys(query).forEach((element) => {
       if (query[element] !== '' && query[element] !== null && query[element] !== undefined) {
         params[element] = query[element]
@@ -1161,7 +1304,10 @@ const ojApi = {
 
   getGroupContestProblem(pid, cid) {
     return ajax("/api/group/contest-problem", 'get', {
-      params: { pid, cid }
+      params: {
+        pid,
+        cid
+      }
     })
   },
 
@@ -1173,13 +1319,19 @@ const ojApi = {
 
   applyGroupProblemPublic(pid, isApplied) {
     return ajax("/api/group/apply-public", 'put', {
-      params: { pid, isApplied }
+      params: {
+        pid,
+        isApplied
+      }
     })
   },
 
   deleteGroupContestProblem(pid, cid) {
     return ajax("/api/group/contest-problem", 'delete', {
-      params: { pid, cid }
+      params: {
+        pid,
+        cid
+      }
     })
   },
 
@@ -1191,13 +1343,21 @@ const ojApi = {
 
   addGroupContestProblemFromGroup(problemId, cid, displayId) {
     return ajax("/api/group/add-contest-problem-from-group", 'post', {
-      params: { problemId, cid, displayId }
+      params: {
+        problemId,
+        cid,
+        displayId
+      }
     })
   },
 
   getGroupContestAnnouncementList(currentPage, limit, cid) {
     return ajax('/api/group/get-contest-announcement-list', 'get', {
-      params: { currentPage, limit, cid }
+      params: {
+        currentPage,
+        limit,
+        cid
+      }
     })
   },
 
@@ -1215,20 +1375,32 @@ const ojApi = {
 
   deleteGroupContestAnnouncement(aid, cid) {
     return ajax("/api/group/contest-announcement", 'delete', {
-      params: { aid, cid }
+      params: {
+        aid,
+        cid
+      }
     })
   },
 
   // Group Discussion
   getGroupDiscussionList(currentPage, limit, gid, pid) {
     return ajax('/api/group/get-discussion-list', 'get', {
-      params: { currentPage, limit, gid, pid }
+      params: {
+        currentPage,
+        limit,
+        gid,
+        pid
+      }
     })
   },
 
   getGroupAdminDiscussionList(currentPage, limit, gid) {
     return ajax('/api/group/get-admin-discussion-list', 'get', {
-      params: { currentPage, limit, gid }
+      params: {
+        currentPage,
+        limit,
+        gid
+      }
     })
   },
 
@@ -1246,7 +1418,9 @@ const ojApi = {
 
   deleteGroupDiscussion(did) {
     return ajax("/api/group/discussion", 'delete', {
-      params: { did }
+      params: {
+        did
+      }
     })
   },
 
@@ -1361,7 +1535,10 @@ const adminApi = {
 
   // 获取用户列表
   admin_getUserList(currentPage, limit, keyword, onlyAdmin) {
-    let params = { currentPage, limit }
+    let params = {
+      currentPage,
+      limit
+    }
     if (keyword) {
       params.keyword = keyword
     }
@@ -1378,7 +1555,9 @@ const adminApi = {
   },
   admin_deleteUsers(ids) {
     return ajax('/api/admin/user/delete-user', 'delete', {
-      data: { ids }
+      data: {
+        ids
+      }
     })
   },
   admin_importUsers(users) {
@@ -1469,6 +1648,16 @@ const adminApi = {
     return ajax('/api/admin/config/home-carousel', 'delete', {
       params: {
         id
+      }
+    })
+  },
+
+  admin_editHomeCarousel(id, addLink, addHint) {
+    return ajax('/api/admin/config/home-carousel', 'post', {
+      params: {
+        id,
+        addLink,
+        addHint
       }
     })
   },
@@ -1676,7 +1865,10 @@ const adminApi = {
   },
 
   admin_getTrainingList(currentPage, limit, keyword) {
-    let params = { currentPage, limit }
+    let params = {
+      currentPage,
+      limit
+    }
     if (keyword) {
       params.keyword = keyword
     }
@@ -1870,7 +2062,10 @@ const adminApi = {
     })
   },
   admin_getContestList(currentPage, limit, keyword) {
-    let params = { currentPage, limit }
+    let params = {
+      currentPage,
+      limit
+    }
     if (keyword) {
       params.keyword = keyword
     }
@@ -1943,7 +2138,9 @@ export default api
  */
 function ajax(url, method, options) {
   if (options !== undefined) {
-    var { params = {}, data = {} } = options
+    var {
+      params = {}, data = {}
+    } = options
   } else {
     params = data = {}
   }
@@ -1960,4 +2157,3 @@ function ajax(url, method, options) {
     })
   })
 }
-

@@ -3,6 +3,7 @@ package top.hcode.hoj.controller.oj;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,8 @@ import top.hcode.hoj.service.oj.HomeService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.PostConstruct;
 
 ;
 
@@ -43,7 +46,6 @@ public class HomeController {
         return homeService.getRecentContest();
     }
 
-
     /**
      * @MethodName getHomeCarousel
      * @Params
@@ -56,6 +58,19 @@ public class HomeController {
         return homeService.getHomeCarousel();
     }
 
+    // /**
+    //  * @MethodName editHomeCarousel
+    //  * @Params
+    //  * @Description 修改主页轮播图
+    //  * @Return
+    //  * @Since 2023/8/12
+    //  */
+    // @PostMapping("/home-carousel")
+    // public CommonResult<List<HashMap<String, Object>>> editHomeCarousel(@RequestParam("id") Long id,
+    //         @RequestParam("addUrl") String addUrl,
+    //         @RequestParam("addHint") String addHint) {
+    //     return homeService.editHomeCarousel(id, addUrl, addHint);
+    // }
 
     /**
      * @MethodName getRecentSevenACRank
@@ -69,7 +84,6 @@ public class HomeController {
         return homeService.getRecentSevenACRank();
     }
 
-
     /**
      * @MethodName getRecentOtherContest
      * @Params
@@ -82,7 +96,6 @@ public class HomeController {
         return homeService.getRecentOtherContest();
     }
 
-
     /**
      * @MethodName getCommonAnnouncement
      * @Params
@@ -91,8 +104,9 @@ public class HomeController {
      * @Since 2020/12/29
      */
     @GetMapping("/get-common-announcement")
-    public CommonResult<IPage<AnnouncementVO>> getCommonAnnouncement(@RequestParam(value = "limit", required = false) Integer limit,
-                                                                     @RequestParam(value = "currentPage", required = false) Integer currentPage) {
+    public CommonResult<IPage<AnnouncementVO>> getCommonAnnouncement(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage) {
         return homeService.getCommonAnnouncement(limit, currentPage);
     }
 
@@ -107,7 +121,6 @@ public class HomeController {
     public CommonResult<Map<Object, Object>> getWebConfig() {
         return homeService.getWebConfig();
     }
-
 
     /**
      * @MethodName getRecentUpdatedProblemList

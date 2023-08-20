@@ -62,6 +62,12 @@ public class UserHomeVO {
     @ApiModelProperty(value = "已解决题目列表")
     private List<String> solvedList;
 
+    // @ApiModelProperty(value = "已参加比赛")
+    // private List<String> contestedList;
+
+    @ApiModelProperty(value = "已参加比赛id")
+    private List<Long> contestPidList;
+
     @ApiModelProperty(value = "难度=>[P1000,P1001]")
     private Map<Integer, List<UserHomeProblemVO>> solvedGroupByDifficulty;
 

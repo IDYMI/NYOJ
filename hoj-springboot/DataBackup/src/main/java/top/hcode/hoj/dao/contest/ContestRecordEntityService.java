@@ -20,16 +20,17 @@ import java.util.List;
 public interface ContestRecordEntityService extends IService<ContestRecord> {
 
     IPage<ContestRecord> getACInfo(Integer currentPage,
-                                   Integer limit,
-                                   Integer status,
-                                   Long cid,
-                                   String contestCreatorId,
-                                   Date startTime,
-                                   Date endTime);
+            Integer limit,
+            Integer status,
+            Long cid,
+            String contestCreatorId,
+            Date startTime,
+            Date endTime);
 
     List<ContestRecordVO> getOIContestRecord(Contest contest, List<Integer> externalCidList,
-                                             Boolean isOpenSealRank, Boolean isContainsAfterContestJudge);
+            Boolean isOpenSealRank, Boolean isContainsAfterContestJudge);
 
-    List<ContestRecordVO> getACMContestRecord(String contestCreatorUid, Long cid, List<Integer> externalCidList, Date startTime);
+    List<ContestRecordVO> getACMContestRecord(String contestCreatorUid, Long cid, List<Integer> externalCidList,
+            Date startTime);
 
 }

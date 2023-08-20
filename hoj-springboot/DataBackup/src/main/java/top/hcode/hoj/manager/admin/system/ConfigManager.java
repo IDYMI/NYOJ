@@ -144,12 +144,12 @@ public class ConfigManager {
                 jsonObject.put("service", serviceInstance);
                 serviceInfoList.add(jsonObject);
             } catch (Exception e) {
-                log.error("[Admin Dashboard] get judge service info error, uri={}, error={}", serviceInstance.getUri(), e);
+                log.error("[Admin Dashboard] get judge service info error, uri={}, error={}", serviceInstance.getUri(),
+                        e);
             }
         }
         return serviceInfoList;
     }
-
 
     public WebConfigDTO getWebConfig() {
         WebConfig webConfig = nacosSwitchConfig.getWebConfig();
@@ -165,7 +165,6 @@ public class ConfigManager {
                 .projectUrl(UnicodeUtil.toString(webConfig.getProjectUrl()))
                 .build();
     }
-
 
     public void deleteHomeCarousel(Long id) throws StatusFailException {
 
@@ -230,7 +229,6 @@ public class ConfigManager {
                 .build();
     }
 
-
     public void setEmailConfig(EmailConfigDTO config) throws StatusFailException {
         WebConfig webConfig = nacosSwitchConfig.getWebConfig();
         if (!StringUtils.isEmpty(config.getEmailHost())) {
@@ -262,7 +260,6 @@ public class ConfigManager {
         }
     }
 
-
     public void testEmail(TestEmailDTO testEmailDto) throws StatusFailException {
         String email = testEmailDto.getEmail();
         if (StringUtils.isEmpty(email)) {
@@ -288,7 +285,6 @@ public class ConfigManager {
                 .redisPassword(configVo.getRedisPassword())
                 .build();
     }
-
 
     public void setDBAndRedisConfig(DBAndRedisConfigDTO config) throws StatusFailException {
 
@@ -452,12 +448,13 @@ public class ConfigManager {
     }
 
     private void changeRemoteJudgeAccount(List<String> usernameList,
-                                          List<String> passwordList,
-                                          String oj) {
+            List<String> passwordList,
+            String oj) {
 
-        if (CollectionUtils.isEmpty(usernameList) || CollectionUtils.isEmpty(passwordList) || usernameList.size() != passwordList.size()) {
+        if (CollectionUtils.isEmpty(usernameList) || CollectionUtils.isEmpty(passwordList)
+                || usernameList.size() != passwordList.size()) {
             log.error("[Change by Switch] [{}]: There is no account or password configured for remote judge, " +
-                            "username list:{}, password list:{}", oj, Arrays.toString(usernameList.toArray()),
+                    "username list:{}, password list:{}", oj, Arrays.toString(usernameList.toArray()),
                     Arrays.toString(passwordList.toArray()));
         }
 
@@ -479,11 +476,12 @@ public class ConfigManager {
         if (newRemoteJudgeAccountList.size() > 0) {
             boolean addOk = remoteJudgeAccountEntityService.saveOrUpdateBatch(newRemoteJudgeAccountList);
             if (!addOk) {
-                log.error("Remote judge initialization failed. Failed to add account for: [{}]. Please check the configuration file and restart!", oj);
+                log.error(
+                        "Remote judge initialization failed. Failed to add account for: [{}]. Please check the configuration file and restart!",
+                        oj);
             }
         }
     }
-
 
     public boolean sendNewConfigToNacos() {
 
@@ -498,7 +496,8 @@ public class ConfigManager {
         boolean isOK = false;
         try {
             configService = NacosFactory.createConfigService(properties);
-            isOK = configService.publishConfig(prefix + "-" + active + "." + fileExtension, GROUP, configUtils.getConfigContent(), TYPE);
+            isOK = configService.publishConfig(prefix + "-" + active + "." + fileExtension, GROUP,
+                    configUtils.getConfigContent(), TYPE);
         } catch (NacosException e) {
             log.error("通过nacos修改网站配置异常--------------->{}", e.getMessage());
         }

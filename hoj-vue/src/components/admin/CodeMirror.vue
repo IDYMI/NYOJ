@@ -6,40 +6,40 @@
   ></codemirror>
 </template>
 <script>
-import { codemirror, CodeMirror } from 'vue-codemirror-lite';
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/mode/clike/clike.js';
-import 'codemirror/mode/python/python.js';
-import 'codemirror/theme/solarized.css';
+import { codemirror, CodeMirror } from "vue-codemirror-lite";
+import "codemirror/mode/javascript/javascript";
+import "codemirror/mode/clike/clike.js";
+import "codemirror/mode/python/python.js";
+import "codemirror/theme/solarized.css";
 // active-line.js
-import 'codemirror/addon/selection/active-line.js';
+import "codemirror/addon/selection/active-line.js";
 // foldGutter
-import 'codemirror/addon/fold/foldgutter.css';
-import 'codemirror/addon/fold/foldgutter.js';
-import 'codemirror/addon/fold/brace-fold.js';
-import 'codemirror/addon/fold/indent-fold.js';
-import 'codemirror/addon/edit/matchbrackets.js';
-import 'codemirror/addon/edit/matchtags.js';
-import 'codemirror/addon/edit/closetag.js';
-import 'codemirror/addon/edit/closebrackets.js';
-import 'codemirror/addon/hint/show-hint.css';
-import 'codemirror/addon/hint/show-hint.js';
-import 'codemirror/addon/hint/anyword-hint.js';
+import "codemirror/addon/fold/foldgutter.css";
+import "codemirror/addon/fold/foldgutter.js";
+import "codemirror/addon/fold/brace-fold.js";
+import "codemirror/addon/fold/indent-fold.js";
+import "codemirror/addon/edit/matchbrackets.js";
+import "codemirror/addon/edit/matchtags.js";
+import "codemirror/addon/edit/closetag.js";
+import "codemirror/addon/edit/closebrackets.js";
+import "codemirror/addon/hint/show-hint.css";
+import "codemirror/addon/hint/show-hint.js";
+import "codemirror/addon/hint/anyword-hint.js";
 
 export default {
-  name: 'CodeMirror',
+  name: "CodeMirror",
   data() {
     return {
-      currentValue: '',
+      currentValue: "",
       options: {
-        mode: 'text/x-c++src',
+        mode: "text/x-c++src",
         lineNumbers: true,
         lineWrapping: false,
-        theme: 'solarized',
+        theme: "solarized",
         tabSize: 4,
         line: true,
         foldGutter: true,
-        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         indentUnit: 4, //一个块（编辑语言中的含义）应缩进多少个空格
         styleActiveLine: true,
         autofocus: false,
@@ -47,6 +47,52 @@ export default {
         styleActiveLine: true,
         autoCloseBrackets: true,
         autoCloseTags: true,
+        extraKeys: {
+          "Ctrl-/": function (cm) {
+            let startLine = cm.getCursor("start").line;
+            let endLine = cm.getCursor("end").line;
+            for (let i = startLine; i <= endLine; i++) {
+              let origin = cm.getLine(i);
+              if (!origin.startsWith("// ")) {
+                cm.replaceRange(
+                  "// " + origin,
+                  { ch: 0, line: i },
+                  { ch: origin.length, line: i },
+                  null
+                );
+              } else {
+                cm.replaceRange(
+                  origin.substr(3),
+                  { ch: 0, line: i },
+                  { ch: origin.length, line: i },
+                  null
+                );
+              }
+            }
+          },
+          "Ctrl-;": function (cm) {
+            // console.log(
+            //   "current range:",
+            //   cm.getCursor("start"),
+            //   "-",
+            //   cm.getCursor("end")
+            // );
+
+            // 获取选中区域的范围
+            let from = cm.getCursor("start");
+            let to = cm.getCursor("end");
+
+            // 获取选中区域的内容并添加或去掉注释
+            let content = cm.getRange(from, to);
+            let note = "/*" + content.replace(/(\n|\r\n)/g, "$&") + "*/";
+            if (content.startsWith("/*") && content.endsWith("*/")) {
+              note = content.substr(2, content.length - 4);
+            }
+
+            // 将注释后的内容替换选中区域
+            cm.replaceRange(note, from, to, null);
+          },
+        },
       },
     };
   },
@@ -56,18 +102,18 @@ export default {
   props: {
     value: {
       type: String,
-      default: '',
+      default: "",
     },
     mode: {
       type: String,
-      default: 'text/x-c++src',
+      default: "text/x-c++src",
     },
   },
   mounted() {
     this.currentValue = this.value;
-    this.$refs.editor.editor.setOption('mode', this.mode);
-    this.$refs.editor.editor.on('inputRead', (instance, changeObj) => {
-      if (/\w|\./g.test(changeObj.text[0]) && changeObj.origin !== 'complete') {
+    this.$refs.editor.editor.setOption("mode", this.mode);
+    this.$refs.editor.editor.on("inputRead", (instance, changeObj) => {
+      if (/\w|\./g.test(changeObj.text[0]) && changeObj.origin !== "complete") {
         instance.showHint({
           hint: CodeMirror.hint.anyword,
           completeSingle: false,
@@ -84,12 +130,12 @@ export default {
     },
     currentValue(newVal, oldVal) {
       if (newVal !== oldVal) {
-        this.$emit('change', newVal);
-        this.$emit('input', newVal);
+        this.$emit("change", newVal);
+        this.$emit("input", newVal);
       }
     },
     mode(newVal) {
-      this.$refs.editor.editor.setOption('mode', newVal);
+      this.$refs.editor.editor.setOption("mode", newVal);
     },
   },
 };
