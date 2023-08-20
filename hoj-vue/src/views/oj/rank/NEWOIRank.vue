@@ -22,7 +22,7 @@
           <ECharts :options="options" ref="chart" auto-resize></ECharts>
         </div>
       </el-card>
-      <el-card :padding="10" style="text-align: center;">
+      <el-card :padding="10" style="text-align: center">
         <el-input
           :placeholder="$t('m.Rank_Search_Placeholder')"
           v-model="searchUser"
@@ -43,7 +43,7 @@
         highlight-hover-row
         auto-resize
         :seq-config="{ seqMethod }"
-        style="font-weight: 500;"
+        style="font-weight: 500"
       >
         <vxe-table-column type="seq" min-width="50"></vxe-table-column>
         <vxe-table-column
@@ -64,10 +64,10 @@
             ></avatar>
             <a
               @click="getInfoByUsername(row.uid, row.username)"
-              style="color:#2d8cf0;"
+              style="color: #2d8cf0"
               >{{ row.username }}</a
             >
-            <span style="margin-left:2px" v-if="row.titleName">
+            <span style="margin-left: 2px" v-if="row.titleName">
               <el-tag effect="dark" size="small" :color="row.titleColor">
                 {{ row.titleName }}
               </el-tag>
@@ -103,7 +103,7 @@
             <span>
               <a
                 @click="goUserACStatus(row.username)"
-                style="color:rgb(87, 163, 243);"
+                style="color: rgb(87, 163, 243)"
                 >{{ row.ac }}</a
               >
               <span>/{{ row.total }}</span>
@@ -142,14 +142,14 @@
 </template>
 
 <script>
-import api from '@/common/api';
-import utils from '@/common/utils';
-import { RULE_TYPE } from '@/common/constants';
-import { mapGetters } from 'vuex';
-import Avatar from 'vue-avatar';
-const Pagination = () => import('@/components/oj/common/Pagination');
+import api from "@/common/api";
+import utils from "@/common/utils";
+import { RULE_TYPE } from "@/common/constants";
+import { mapGetters } from "vuex";
+import Avatar from "vue-avatar";
+const Pagination = () => import("@/components/oj/common/Pagination");
 export default {
-  name: 'acm-rank',
+  name: "acm-rank",
   components: {
     Pagination,
     Avatar,
@@ -165,44 +165,44 @@ export default {
       screenWidth: 768,
       options: {
         tooltip: {
-          trigger: 'axis',
+          trigger: "axis",
         },
         legend: {
-          data: ['Score'],
+          data: ["Score"],
         },
         grid: {
-          x: '3%',
-          x2: '3%',
-          left: '8%',
-          right: '8%',
+          x: "3%",
+          x2: "3%",
+          left: "8%",
+          right: "8%",
         },
         toolbox: {
           show: true,
           feature: {
             dataView: { show: true, readOnly: true },
-            magicType: { show: true, type: ['line', 'bar'] },
+            magicType: { show: true, type: ["line", "bar"] },
             saveAsImage: { show: true },
           },
-          right: '8%',
-          top: '5%',
+          right: "8%",
+          top: "5%",
         },
         calculable: true,
         xAxis: [
           {
-            type: 'category',
-            data: ['root'],
+            type: "category",
+            data: ["root"],
             boundaryGap: true,
             axisLabel: {
               interval: 0,
               showMinLabel: true,
               showMaxLabel: true,
-              align: 'center',
+              align: "center",
               formatter: (value, index) => {
                 if (this.screenWidth < 768) {
                   if (this.isAuthenticated && this.userInfo.username == value) {
                     return utils.breakLongWords(value, 14);
                   } else {
-                    return '';
+                    return "";
                   }
                 } else {
                   return utils.breakLongWords(value, 14);
@@ -216,23 +216,23 @@ export default {
         ],
         yAxis: [
           {
-            type: 'value',
+            type: "value",
             axisLabel: {
               rotate: 50,
               textStyle: {
-                fontSize: '12em',
+                fontSize: "12em",
               },
             },
           },
         ],
         series: [
           {
-            name: this.$i18n.t('m.Score'),
-            type: 'bar',
+            name: this.$i18n.t("m.Score"),
+            type: "bar",
             data: [0],
-            barMaxWidth: '80',
+            barMaxWidth: "80",
             markPoint: {
-              data: [{ type: 'max', name: 'max' }],
+              data: [{ type: "max", name: "max" }],
             },
           },
         ],
@@ -254,9 +254,9 @@ export default {
   methods: {
     getRankData(page) {
       let bar = this.$refs.chart;
-      bar.showLoading({ maskColor: 'rgba(250, 250, 250, 0.8)' });
+      bar.showLoading({ maskColor: "rgba(250, 250, 250, 0.8)" });
       this.loadingTable = true;
-      api.getUserRank(page, this.limit, RULE_TYPE.OI, this.searchUser).then(
+      api.getUserRank(page, this.limit, RULE_TYPE.NewOI, this.searchUser).then(
         (res) => {
           if (page === 1) {
             this.changeCharts(res.data.data.records.slice(0, 10));
@@ -286,13 +286,13 @@ export default {
     },
     getInfoByUsername(uid, username) {
       this.$router.push({
-        path: '/user-home',
+        path: "/user-home",
         query: { uid, username },
       });
     },
     goUserACStatus(username) {
       this.$router.push({
-        path: '/status',
+        path: "/status",
         query: { username, status: 0 },
       });
     },
@@ -300,13 +300,13 @@ export default {
       return utils.getACRate(ac, total);
     },
     nicknameColor(nickname) {
-      let typeArr = ['', 'success', 'info', 'danger', 'warning'];
+      let typeArr = ["", "success", "info", "danger", "warning"];
       let index = nickname.length % 5;
       return typeArr[index];
     },
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'userInfo']),
+    ...mapGetters(["isAuthenticated", "userInfo"]),
   },
 };
 </script>

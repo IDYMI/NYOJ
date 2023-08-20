@@ -42,7 +42,6 @@ import java.util.*;
 @Slf4j(topic = "hoj")
 public class ImportHydroProblemManager {
 
-
     @Resource
     private TagEntityService tagEntityService;
 
@@ -114,7 +113,8 @@ public class ImportHydroProblemManager {
         for (File dir : files) {
             if (dir.isDirectory()) {
                 String rootDirPath = fileDir + File.separator + dir.getName();
-                ProblemDTO problemDto = buildProblemDto(userRolesVo.getUsername(), rootDirPath, tagMap, languageMap, languageList);
+                ProblemDTO problemDto = buildProblemDto(userRolesVo.getUsername(), rootDirPath, tagMap, languageMap,
+                        languageList);
                 problemDTOList.add(problemDto);
             }
         }
@@ -154,10 +154,10 @@ public class ImportHydroProblemManager {
     }
 
     private ProblemDTO buildProblemDto(String author,
-                                       String rootDirPath,
-                                       HashMap<String, Tag> tagMap,
-                                       HashMap<String, Long> languageMap,
-                                       List<Language> languageList) {
+            String rootDirPath,
+            HashMap<String, Tag> tagMap,
+            HashMap<String, Long> languageMap,
+            List<Language> languageList) {
         ProblemDTO dto = new ProblemDTO();
         Problem problem = new Problem();
         problem.setIsGroup(false)
@@ -172,7 +172,8 @@ public class ImportHydroProblemManager {
                 .setIsUploadCase(true);
 
         String testDataDirPath = rootDirPath + File.separator + "testdata";
-        String configYaml = FileUtil.readString(testDataDirPath + File.separator + "config.yaml", StandardCharsets.UTF_8);
+        String configYaml = FileUtil.readString(testDataDirPath + File.separator + "config.yaml",
+                StandardCharsets.UTF_8);
         parseConfigYaml(configYaml, dto, problem, testDataDirPath, languageMap, languageList);
         // config配置文件没有配置cases，则去遍历testdata文件夹获取
         if (CollectionUtils.isEmpty(dto.getSamples())) {
@@ -238,11 +239,11 @@ public class ImportHydroProblemManager {
     }
 
     private void parseConfigYaml(String configYaml,
-                                 ProblemDTO dto,
-                                 Problem problem,
-                                 String testDataDirPath,
-                                 HashMap<String, Long> languageMap,
-                                 List<Language> languageList) {
+            ProblemDTO dto,
+            Problem problem,
+            String testDataDirPath,
+            HashMap<String, Long> languageMap,
+            List<Language> languageList) {
         Yaml yaml = new Yaml();
         HydroConfigYamlBO hydroConfigYamlBO = yaml.loadAs(configYaml, HydroConfigYamlBO.class);
         if (hydroConfigYamlBO != null) {
@@ -251,7 +252,8 @@ public class ImportHydroProblemManager {
 
                 if (hydroConfigYamlBO.getChecker() != null) {
                     problem.setJudgeMode(Constants.JudgeMode.SPJ.getMode());
-                    String code = FileUtil.readString(testDataDirPath + File.separator + hydroConfigYamlBO.getChecker(), StandardCharsets.UTF_8);
+                    String code = FileUtil.readString(testDataDirPath + File.separator + hydroConfigYamlBO.getChecker(),
+                            StandardCharsets.UTF_8);
                     problem.setSpjCode(code);
                     if (hydroConfigYamlBO.getChecker().endsWith("cc")) {
                         problem.setSpjLanguage("C++");
@@ -262,7 +264,8 @@ public class ImportHydroProblemManager {
 
             } else if (Objects.equals(hydroConfigYamlBO.getType(), "interactive")) {
                 problem.setJudgeMode(Constants.JudgeMode.INTERACTIVE.getMode());
-                String code = FileUtil.readString(testDataDirPath + File.separator + hydroConfigYamlBO.getInteractor(), StandardCharsets.UTF_8);
+                String code = FileUtil.readString(testDataDirPath + File.separator + hydroConfigYamlBO.getInteractor(),
+                        StandardCharsets.UTF_8);
                 problem.setSpjCode(code);
                 if (hydroConfigYamlBO.getInteractor().endsWith("cc")) {
                     problem.setSpjLanguage("C++");
@@ -274,7 +277,8 @@ public class ImportHydroProblemManager {
             if (!CollectionUtils.isEmpty(hydroConfigYamlBO.getJudge_extra_files())) {
                 JSONObject jsonObject = new JSONObject();
                 for (String fileName : hydroConfigYamlBO.getJudge_extra_files()) {
-                    String code = FileUtil.readString(testDataDirPath + File.separator + fileName, StandardCharsets.UTF_8);
+                    String code = FileUtil.readString(testDataDirPath + File.separator + fileName,
+                            StandardCharsets.UTF_8);
                     jsonObject.set(fileName, code);
                 }
                 problem.setJudgeExtraFile(jsonObject.toString());
@@ -283,7 +287,8 @@ public class ImportHydroProblemManager {
             if (!CollectionUtils.isEmpty(hydroConfigYamlBO.getUser_extra_files())) {
                 JSONObject jsonObject = new JSONObject();
                 for (String fileName : hydroConfigYamlBO.getUser_extra_files()) {
-                    String code = FileUtil.readString(testDataDirPath + File.separator + fileName, StandardCharsets.UTF_8);
+                    String code = FileUtil.readString(testDataDirPath + File.separator + fileName,
+                            StandardCharsets.UTF_8);
                     jsonObject.set(fileName, code);
                 }
                 problem.setUserExtraFile(jsonObject.toString());
@@ -317,8 +322,7 @@ public class ImportHydroProblemManager {
                 for (HashMap<String, String> map : hydroConfigYamlBO.getCases()) {
                     samples.add(new ProblemCase()
                             .setInput(map.get("input"))
-                            .setOutput(map.get("output"))
-                    );
+                            .setOutput(map.get("output")));
                 }
                 dto.setSamples(samples);
             } else if (hydroConfigYamlBO.getSubtasks() != null) {
@@ -349,9 +353,9 @@ public class ImportHydroProblemManager {
     }
 
     private void parseProblemYaml(String problemYaml,
-                                  ProblemDTO dto,
-                                  Problem problem,
-                                  HashMap<String, Tag> tagMap) {
+            ProblemDTO dto,
+            Problem problem,
+            HashMap<String, Tag> tagMap) {
         Yaml yaml = new Yaml();
         Map<String, Object> map = yaml.load(problemYaml);
 
@@ -398,13 +402,15 @@ public class ImportHydroProblemManager {
         // 处理题面中的图片等文件
         // file://0eoF-SShe0X83tQXNw1mb.png
         List<String> fileNameList = ReUtil.findAll("\\(file://([\\s\\S]*?)\\)", md, 1);
-        //将文件保存指定目录
+        // 将文件保存指定目录
         String additionalFilePath = rootDirPath + File.separator + "additional_file";
         if (!CollectionUtils.isEmpty(fileNameList) && FileUtil.exist(additionalFilePath)) {
             for (String filename : fileNameList) {
                 String filePath = additionalFilePath + File.separator + filename;
                 if (FileUtil.exist(filePath)) {
-                    FileUtil.copyFile(filePath, Constants.File.MARKDOWN_FILE_FOLDER.getPath() + File.separator + filename, StandardCopyOption.REPLACE_EXISTING);
+                    FileUtil.copyFile(filePath,
+                            Constants.File.MARKDOWN_FILE_FOLDER.getPath() + File.separator + filename,
+                            StandardCopyOption.REPLACE_EXISTING);
                     String lowerName = filename.toLowerCase();
                     if (lowerName.endsWith(".png")
                             || lowerName.equals(".jpg")

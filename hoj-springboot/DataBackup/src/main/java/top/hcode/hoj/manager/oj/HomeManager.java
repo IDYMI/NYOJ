@@ -26,7 +26,7 @@ import top.hcode.hoj.pojo.entity.problem.Problem;
 import top.hcode.hoj.pojo.vo.*;
 import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.utils.RedisUtils;
-
+import top.hcode.hoj.common.exception.StatusFailException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,7 +79,6 @@ public class HomeManager {
         return contestEntityService.getWithinNext14DaysContests();
     }
 
-
     /**
      * @MethodName getHomeCarousel
      * @Params
@@ -93,11 +92,26 @@ public class HomeManager {
             HashMap<String, Object> param = new HashMap<>(2);
             param.put("id", f.getId());
             param.put("url", Constants.File.IMG_API.getPath() + f.getName());
+            param.put("link", f.getLink());
+            param.put("hint", f.getHint());
             return param;
         }).collect(Collectors.toList());
         return apiList;
     }
 
+    // /**
+    //  * @MethodName editHomeCarousel
+    //  * @Params
+    //  * @Description 修改主页轮播图
+    //  * @Return
+    //  * @Since 2023/8/12
+    //  */
+    // public void editHomeCarousel(Long id, String addUrl, String addHint) throws StatusFailException {
+    //     boolean isOk = fileEntityService.editHomeCarousel(id, addUrl, addHint);
+    //     if (!isOk) {
+    //         throw new StatusFailException("更新失败");
+    //     }
+    // }
 
     /**
      * @MethodName getRecentSevenACRank
@@ -109,7 +123,6 @@ public class HomeManager {
     public List<ACMRankVO> getRecentSevenACRank() {
         return userRecordEntityService.getRecent7ACRank();
     }
-
 
     /**
      * @MethodName getRecentOtherContest
@@ -125,7 +138,6 @@ public class HomeManager {
         return (ArrayList<HashMap<String, Object>>) redisUtils.get(redisKey);
     }
 
-
     /**
      * @MethodName getCommonAnnouncement
      * @Params
@@ -134,8 +146,10 @@ public class HomeManager {
      * @Since 2020/12/29
      */
     public IPage<AnnouncementVO> getCommonAnnouncement(Integer limit, Integer currentPage) {
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
         return announcementEntityService.getAnnouncementList(limit, currentPage, true);
     }
 
@@ -180,7 +194,7 @@ public class HomeManager {
         problemQueryWrapper.orderByDesc("gmt_create");
         problemQueryWrapper.last("limit 10");
         List<Problem> problemList = problemEntityService.list(problemQueryWrapper);
-        if (!CollectionUtils.isEmpty(problemList)){
+        if (!CollectionUtils.isEmpty(problemList)) {
             return problemList.stream()
                     .map(this::convertUpdatedProblemVO)
                     .collect(Collectors.toList());
@@ -201,13 +215,16 @@ public class HomeManager {
 
     /**
      * 获取网站最近一周的提交状态（ac总量、提交总量）
+     *
      * @param forceRefresh
      * @return
      */
     public SubmissionStatisticsVO getLastWeekSubmissionStatistics(Boolean forceRefresh) {
-        SubmissionStatisticsVO submissionStatisticsVO = (SubmissionStatisticsVO) redisUtils.get(SUBMISSION_STATISTICS_KEY);
+        SubmissionStatisticsVO submissionStatisticsVO = (SubmissionStatisticsVO) redisUtils
+                .get(SUBMISSION_STATISTICS_KEY);
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin");
         forceRefresh = forceRefresh && isRoot;
 
         if (submissionStatisticsVO == null || forceRefresh) {
@@ -240,7 +257,6 @@ public class HomeManager {
         long totalFiveDaysAgoCount = 0;
         long totalSixDaysAgoCount = 0;
 
-
         Date date = new Date();
         String todayStr = DateUtil.format(date, "MM-dd");
         String oneDayAgoStr = DateFormatUtils.format(DateUtil.offsetDay(date, -1), "MM-dd");
@@ -254,56 +270,62 @@ public class HomeManager {
             Map<String, List<Judge>> map = judgeList.stream()
                     .collect(
                             Collectors.groupingBy(
-                                    o -> DateUtil.format(o.getGmtCreate(), "MM-dd"))
-                    );
+                                    o -> DateUtil.format(o.getGmtCreate(), "MM-dd")));
             for (Map.Entry<String, List<Judge>> entry : map.entrySet()) {
                 if (Objects.equals(entry.getKey(), todayStr)) {
                     totalTodayCount += entry.getValue().size();
                     long count = entry.getValue()
                             .parallelStream()
-                            .filter(judge -> Objects.equals(judge.getStatus(), Constants.Judge.STATUS_ACCEPTED.getStatus()))
+                            .filter(judge -> Objects.equals(judge.getStatus(),
+                                    Constants.Judge.STATUS_ACCEPTED.getStatus()))
                             .count();
                     acTodayCount += count;
                 } else if (Objects.equals(entry.getKey(), oneDayAgoStr)) {
                     totalOneDayAgoCount += entry.getValue().size();
                     long count = entry.getValue()
                             .parallelStream()
-                            .filter(judge -> Objects.equals(judge.getStatus(), Constants.Judge.STATUS_ACCEPTED.getStatus()))
+                            .filter(judge -> Objects.equals(judge.getStatus(),
+                                    Constants.Judge.STATUS_ACCEPTED.getStatus()))
                             .count();
                     acOneDayAgoCount += count;
                 } else if (Objects.equals(entry.getKey(), twoDaysAgoStr)) {
                     totalTwoDaysAgoCount += entry.getValue().size();
                     long count = entry.getValue()
                             .parallelStream()
-                            .filter(judge -> Objects.equals(judge.getStatus(), Constants.Judge.STATUS_ACCEPTED.getStatus()))
+                            .filter(judge -> Objects.equals(judge.getStatus(),
+                                    Constants.Judge.STATUS_ACCEPTED.getStatus()))
                             .count();
                     acTwoDaysAgoCount += count;
                 } else if (Objects.equals(entry.getKey(), threeDaysAgoStr)) {
                     totalThreeDaysAgoCount += entry.getValue().size();
                     long count = entry.getValue()
                             .parallelStream()
-                            .filter(judge -> Objects.equals(judge.getStatus(), Constants.Judge.STATUS_ACCEPTED.getStatus()))
+                            .filter(judge -> Objects.equals(judge.getStatus(),
+                                    Constants.Judge.STATUS_ACCEPTED.getStatus()))
                             .count();
                     acThreeDaysAgoCount += count;
                 } else if (Objects.equals(entry.getKey(), fourDaysAgoStr)) {
                     totalFourDaysAgoCount += entry.getValue().size();
                     long count = entry.getValue()
                             .parallelStream()
-                            .filter(judge -> Objects.equals(judge.getStatus(), Constants.Judge.STATUS_ACCEPTED.getStatus()))
+                            .filter(judge -> Objects.equals(judge.getStatus(),
+                                    Constants.Judge.STATUS_ACCEPTED.getStatus()))
                             .count();
                     acFourDaysAgoCount += count;
                 } else if (Objects.equals(entry.getKey(), fiveDaysAgoStr)) {
                     totalFiveDaysAgoCount += entry.getValue().size();
                     long count = entry.getValue()
                             .parallelStream()
-                            .filter(judge -> Objects.equals(judge.getStatus(), Constants.Judge.STATUS_ACCEPTED.getStatus()))
+                            .filter(judge -> Objects.equals(judge.getStatus(),
+                                    Constants.Judge.STATUS_ACCEPTED.getStatus()))
                             .count();
                     acFiveDaysAgoCount += count;
                 } else if (Objects.equals(entry.getKey(), sixDaysAgoStr)) {
                     totalSixDaysAgoCount += entry.getValue().size();
                     long count = entry.getValue()
                             .parallelStream()
-                            .filter(judge -> Objects.equals(judge.getStatus(), Constants.Judge.STATUS_ACCEPTED.getStatus()))
+                            .filter(judge -> Objects.equals(judge.getStatus(),
+                                    Constants.Judge.STATUS_ACCEPTED.getStatus()))
                             .count();
                     acSixDaysAgoCount += count;
                 }

@@ -4,11 +4,29 @@
     <select id="getACMRankList" resultType="top.hcode.hoj.pojo.vo.ACMRankVO" useCache="true">
         SELECT u.uuid as uid,u.nickname,u.username,left(u.signature,100) as signature,u.avatar,
         u.title_name,u.title_color,
-        (SELECT COUNT( DISTINCT pid ) FROM judge WHERE status = 0 AND ( cid = 0 || (SELECT status FROM contest WHERE contest.id = judge.cid ) = 1) AND judge.uid = u.uuid) AS ac,
-        (SELECT COUNT( pid ) FROM judge WHERE ( cid = 0 OR (SELECT status FROM contest WHERE contest.id = judge.cid ) = 1) AND judge.uid = u.uuid) AS total
+        (SELECT COUNT( DISTINCT pid ) FROM judge WHERE status = 0 and uid = u.uuid) AS ac,
+        (SELECT COUNT( pid ) FROM judge WHERE uid=u.uuid) AS total
         FROM user_info u
         <where>
             u.status = 0
+            <if test="uidList!=null">
+                AND u.uuid in
+                <foreach collection="uidList" item="uid" open="(" separator="," close=")">
+                    #{uid}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY ac DESC,total ASC
+    </select>
+
+    <select id="getNewACMRankList" resultType="top.hcode.hoj.pojo.vo.ACMRankVO" useCache="true">
+        SELECT u.uuid as uid,u.nickname,u.username,left(u.signature,100) as signature,u.avatar,
+        u.title_name,u.title_color,
+        (SELECT COUNT( DISTINCT pid ) FROM judge WHERE status = 0 and uid = u.uuid) AS ac,
+        (SELECT COUNT( pid ) FROM judge WHERE uid=u.uuid) AS total
+        FROM user_info u
+        <where>
+            u.status = 0 and u.gmt_create > CONVERT_TZ(DATE_FORMAT(CONCAT(YEAR(NOW()), '-06-01 00:00:00'), '%Y-%m-%d %H:%i:%s'), '+00:00', '+08:00')
             <if test="uidList!=null">
                 AND u.uuid in
                 <foreach collection="uidList" item="uid" open="(" separator="," close=")">
@@ -64,6 +82,43 @@
         ORDER BY score DESC, ac DESC
     </select>
 
+    <select id="getNewOIRankList" resultType="top.hcode.hoj.pojo.vo.OIRankVO" useCache="true">
+        SELECT ui.uuid AS uid, ui.nickname, ui.username, left(ui.signature,100) as signature, ui.avatar,
+            ui.title_name,ui.title_color
+            , (
+                SELECT COUNT(DISTINCT pid)
+                FROM user_acproblem
+                WHERE uid = ui.uuid
+            ) AS ac
+            , (
+                SELECT COUNT(uid)
+                FROM judge
+                WHERE uid = ui.uuid
+            ) AS total, ss.score AS score
+        FROM user_info ui, (
+                SELECT u.uuid AS uid, COALESCE(SUM(s.score),0) AS score
+                FROM user_info u left join (
+                        SELECT MAX(oi_rank_score) AS score, uid, pid
+                        FROM judge
+                        WHERE gid is null
+                        GROUP BY pid, uid
+                    ) s
+                ON s.uid = u.uuid
+                WHERE u.status = 0
+                GROUP BY u.uuid
+            ) ss
+        <where>
+            ss.uid = ui.uuid  and ui.gmt_create > CONVERT_TZ(DATE_FORMAT(CONCAT(YEAR(NOW()), '-06-01 00:00:00'), '%Y-%m-%d %H:%i:%s'), '+00:00', '+08:00')
+            <if test="uidList!=null">
+                AND ui.uuid in
+                <foreach collection="uidList" item="uid" open="(" separator="," close=")">
+                    #{uid}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY score DESC, ac DESC
+    </select>
+
     <resultMap id="map_UserHomeVo" type="top.hcode.hoj.pojo.vo.UserHomeVO">
         <id column="uid" property="uid"></id>
         <result column="username" property="username"></result>
@@ -84,8 +139,7 @@
     <select id="getUserHomeInfo" resultMap="map_UserHomeVo">
         SELECT u.uuid as uid,u.username,u.nickname,u.gender,u.signature,u.school,u.github,u.blog,
         u.avatar,u.title_name,u.title_color,ur.rating,
-        (SELECT COUNT(uid) FROM judge WHERE uid=u.uuid) AS total,
-        (SELECT COUNT( DISTINCT pid ) FROM judge WHERE status = 0 AND ( cid = 0 || (SELECT status FROM contest WHERE contest.id = judge.cid ) = 1) AND judge.uid = u.uuid) AS ac
+        (SELECT COUNT( pid ) FROM judge WHERE uid = u.uuid) AS total
         FROM user_info u,user_record ur
         <where>
          u.uuid = ur.uid AND u.status = 0

@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import top.hcode.hoj.common.exception.StatusFailException;
 import top.hcode.hoj.common.exception.StatusSystemErrorException;
 import top.hcode.hoj.dao.problem.ProblemEntityService;
+import top.hcode.hoj.dao.contest.ContestEntityService;
 import top.hcode.hoj.dao.user.*;
 import top.hcode.hoj.manager.email.EmailManager;
 import top.hcode.hoj.pojo.dto.ChangeEmailDTO;
@@ -22,9 +23,11 @@ import top.hcode.hoj.pojo.dto.ChangePasswordDTO;
 import top.hcode.hoj.pojo.dto.CheckUsernameOrEmailDTO;
 import top.hcode.hoj.pojo.entity.judge.Judge;
 import top.hcode.hoj.pojo.entity.problem.Problem;
+import top.hcode.hoj.pojo.entity.contest.Contest;
 import top.hcode.hoj.pojo.entity.user.Role;
 import top.hcode.hoj.pojo.entity.user.Session;
 import top.hcode.hoj.pojo.entity.user.UserAcproblem;
+import top.hcode.hoj.pojo.entity.contest.ContestRecord;
 import top.hcode.hoj.pojo.entity.user.UserInfo;
 import top.hcode.hoj.pojo.vo.*;
 import top.hcode.hoj.shiro.AccountProfile;
@@ -60,7 +63,13 @@ public class AccountManager {
     private UserAcproblemEntityService userAcproblemEntityService;
 
     @Autowired
+    private UserContestEntityService userContestEntityService;
+
+    @Autowired
     private ProblemEntityService problemEntityService;
+
+    @Autowired
+    private ContestEntityService contestEntityService;
 
     @Autowired
     private SessionEntityService sessionEntityService;
@@ -166,6 +175,30 @@ public class AccountManager {
             disPlayIdList = problems.stream().map(Problem::getProblemId).collect(Collectors.toList());
         }
         userHomeInfo.setSolvedList(disPlayIdList);
+
+        QueryWrapper<ContestRecord> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("uid", userHomeInfo.getUid())
+                .select("distinct cid");
+
+        List<ContestRecord> contestList = userContestEntityService.list(queryWrapper2);
+        List<Long> pidList2 = contestList.stream().map(ContestRecord::getCid).collect(Collectors.toList());
+
+        // List<HashMap<String, String>> contestsList = new LinkedList<>();
+        List<Long> contestsPidList = new LinkedList<>();
+        // List<String> contestsTitleList = new LinkedList<>();
+
+        if (pidList2.size() > 0) {
+            QueryWrapper<Contest> contestQueryWrapper = new QueryWrapper<>();
+            contestQueryWrapper.select("id", "title");
+            contestQueryWrapper.in("id", pidList2);
+            List<Contest> contests = contestEntityService.list(contestQueryWrapper);
+            contestsPidList = contests.stream().map(Contest::getId).collect(Collectors.toList());
+            // contestsTitleList =
+            // contests.stream().map(Contest::getTitle).collect(Collectors.toList());
+        }
+        userHomeInfo.setContestPidList(contestsPidList);
+        // userHomeInfo.setContestedList(contestsTitleList);
+
         QueryWrapper<Session> sessionQueryWrapper = new QueryWrapper<>();
         sessionQueryWrapper.eq("uid", userHomeInfo.getUid())
                 .orderByDesc("gmt_create")
@@ -225,14 +258,14 @@ public class AccountManager {
         return userCalendarHeatmapVo;
     }
 
-
     /**
      * @MethodName changePassword
      * @Description 修改密码的操作，连续半小时内修改密码错误5次，则需要半个小时后才可以再次尝试修改密码
      * @Return
      * @Since 2021/1/8
      */
-    public ChangeAccountVO changePassword(ChangePasswordDTO changePasswordDto) throws StatusSystemErrorException, StatusFailException {
+    public ChangeAccountVO changePassword(ChangePasswordDTO changePasswordDto)
+            throws StatusSystemErrorException, StatusFailException {
         String oldPassword = changePasswordDto.getOldPassword();
         String newPassword = changePasswordDto.getNewPassword();
 
@@ -260,7 +293,8 @@ public class AccountManager {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             resp.setCode(403);
             Date afterDate = new Date(now.getTime() + expire * 1000);
-            String msg = "由于您多次修改密码失败，修改密码功能已锁定，请在" + minute + "分" + second + "秒后(" + formatter.format(afterDate) + ")再进行尝试！";
+            String msg = "由于您多次修改密码失败，修改密码功能已锁定，请在" + minute + "分" + second + "秒后(" + formatter.format(afterDate)
+                    + ")再进行尝试！";
             resp.setMsg(msg);
             return resp;
         }
@@ -302,7 +336,6 @@ public class AccountManager {
         }
     }
 
-
     public void getChangeEmailCode(String email) throws StatusFailException {
 
         String lockKey = Constants.Email.CHANGE_EMAIL_LOCK + email;
@@ -327,11 +360,10 @@ public class AccountManager {
         }
 
         String numbers = RandomUtil.randomNumbers(6); // 随机生成6位数字的组合
-        redisUtils.set(Constants.Email.CHANGE_EMAIL_KEY_PREFIX.getValue() + email, numbers, 10 * 60); //默认验证码有效10分钟
+        redisUtils.set(Constants.Email.CHANGE_EMAIL_KEY_PREFIX.getValue() + email, numbers, 10 * 60); // 默认验证码有效10分钟
         emailManager.sendChangeEmailCode(email, userRolesVo.getUsername(), numbers);
         redisUtils.set(lockKey, 0, 30);
     }
-
 
     /**
      * @MethodName changeEmail
@@ -339,7 +371,8 @@ public class AccountManager {
      * @Return
      * @Since 2021/1/9
      */
-    public ChangeAccountVO changeEmail(ChangeEmailDTO changeEmailDto) throws StatusSystemErrorException, StatusFailException {
+    public ChangeAccountVO changeEmail(ChangeEmailDTO changeEmailDto)
+            throws StatusSystemErrorException, StatusFailException {
 
         String password = changeEmailDto.getPassword();
         String newEmail = changeEmailDto.getNewEmail();
@@ -369,7 +402,8 @@ public class AccountManager {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             resp.setCode(403);
             Date afterDate = new Date(now.getTime() + expire * 1000);
-            String msg = "由于您多次修改邮箱失败，修改邮箱功能已锁定，请在" + minute + "分" + second + "秒后(" + formatter.format(afterDate) + ")再进行尝试！";
+            String msg = "由于您多次修改邮箱失败，修改邮箱功能已锁定，请在" + minute + "分" + second + "秒后(" + formatter.format(afterDate)
+                    + ")再进行尝试！";
             resp.setMsg(msg);
             return resp;
         }
@@ -464,12 +498,11 @@ public class AccountManager {
         }
     }
 
-
     public UserInfoVO changeUserInfo(UserInfoVO userInfoVo) throws StatusFailException {
 
-        commonValidator.validateContentLength(userInfoVo.getRealname(), "真实姓名",50);
-        commonValidator.validateContentLength(userInfoVo.getNickname(), "昵称",20);
-        commonValidator.validateContentLength(userInfoVo.getSignature(), "个性简介",65535);
+        commonValidator.validateContentLength(userInfoVo.getRealname(), "真实姓名", 50);
+        commonValidator.validateContentLength(userInfoVo.getNickname(), "昵称", 20);
+        commonValidator.validateContentLength(userInfoVo.getSignature(), "个性简介", 65535);
         commonValidator.validateContentLength(userInfoVo.getBlog(), "博客", 255);
         commonValidator.validateContentLength(userInfoVo.getGithub(), "Github", 255);
         commonValidator.validateContentLength(userInfoVo.getSchool(), "学校", 100);
@@ -507,10 +540,42 @@ public class AccountManager {
 
     }
 
-    public UserAuthInfoVO getUserAuthInfo(){
+    public UserInfoVO changeUserPreferences(UserInfoVO userInfoVo) throws StatusFailException {
+        // commonValidator.validateContentLength(userInfoVo.getUiLanguage(), "界面语言", 255);
+        // commonValidator.validateContentLength(userInfoVo.getCodeLanguage(), "代码语言", 255);
+        // commonValidator.validateContentLength(userInfoVo.getCodeSize(), "字体大小", 255);
+        // commonValidator.validateContentLength(userInfoVo.getIdeTheme(), "编译器主题", 255);
+
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        //获取该用户角色所有的权限
+
+        UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("uuid", userRolesVo.getUid())
+                .set("ui_language", userInfoVo.getUiLanguage())
+                .set("code_language", userInfoVo.getCodeLanguage())
+                .set("code_size", userInfoVo.getCodeSize())
+                .set("ide_theme", userInfoVo.getIdeTheme());
+
+        boolean isOk = userInfoEntityService.update(updateWrapper);
+
+        if (isOk) {
+            UserRolesVO userRoles = userRoleEntityService.getUserRoles(userRolesVo.getUid(), null);
+            // 更新session
+            BeanUtil.copyProperties(userRoles, userRolesVo);
+            UserInfoVO userInfoVO = new UserInfoVO();
+            BeanUtil.copyProperties(userRoles, userInfoVO, "roles");
+            userInfoVO.setRoleList(userRoles.getRoles().stream().map(Role::getRole).collect(Collectors.toList()));
+            return userInfoVO;
+        } else {
+            throw new StatusFailException("更新个人信息失败！");
+        }
+
+    }
+
+    public UserAuthInfoVO getUserAuthInfo() {
+        // 获取当前登录的用户
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        // 获取该用户角色所有的权限
         List<Role> roles = userRoleEntityService.getRolesByUid(userRolesVo.getUid());
         UserAuthInfoVO authInfoVO = new UserAuthInfoVO();
         authInfoVO.setRoles(roles.stream().map(Role::getRole).collect(Collectors.toList()));

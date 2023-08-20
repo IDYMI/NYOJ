@@ -125,6 +125,8 @@ public class Constants {
     public enum Contest {
         TYPE_ACM(0, "ACM"),
         TYPE_OI(1, "OI"),
+        TYPE_NEWACM(2,"NEWACM"),
+        TYPE_NEWOI(3, "NEWOI"),
 
         STATUS_SCHEDULED(-1, "Scheduled"),
         STATUS_RUNNING(0, "Running"),
@@ -178,6 +180,9 @@ public class Constants {
 
         ACM_RANK_CACHE("acm_rank_cache"),
         OI_RANK_CACHE("oi_rank_cache"),
+
+        NEW_ACM_RANK_CACHE("new_acm_rank_cache"),
+        NEW_OI_RANK_CACHE("new_oi_rank_cache"),
 
         GROUP_RANK_CACHE("group_rank_cache"),
 

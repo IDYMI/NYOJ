@@ -8,24 +8,121 @@
               >{{ $t("m.Welcome_to") }}{{ websiteConfig.shortName }}</span
             >
           </div>
+
           <el-carousel
             :interval="interval"
             :height="srcHight"
             class="img-carousel"
+            ref="carousel"
+            align="center"
+            style="background-color: #fff"
+          >
+            <el-carousel-item v-for="item in carouselImgList" :key="item.url">
+              <!-- <el-image
+                :title="newsize"
+                :src="item.url"
+                class="image"
+              ></el-image> -->
+
+              <div v-if="item.hint">
+                <el-tooltip
+                  content="Bottom Center 提示文字"
+                  placement="bottom"
+                  effect="light"
+                >
+                  <div
+                    slot="content"
+                    style="
+                      text-align: center;
+                      min-width: 180px;
+                      font-size: 15px;
+                    "
+                  >
+                    {{ item.hint }}
+                  </div>
+                  <div>
+                    <el-image
+                      fit="contain"
+                      :src="item.url"
+                      :alt="item.url"
+
+                      :style="{
+                        cursor:
+                          isActive(item) && item.link ? 'pointer' : 'auto',
+                      }"
+                      @click="linkTo"
+                      class="normal-image"
+                    ></el-image>
+                  </div>
+                </el-tooltip>
+              </div>
+              <div v-else>
+                <el-image
+                  fit="contain"
+                  :src="item.url"
+                  :alt="item.url"
+                  :style="{
+                    cursor: isActive(item) && item.link ? 'pointer' : 'auto',
+                  }"
+                  @click="linkTo"
+                  class="normal-image"
+                ></el-image>
+              </div>
+
+              <!-- <div slot="default" class="text">{{ item.hint }}</div> -->
+
+              <!-- <el-popover
+                v-if="item.link"
+                placement="right"
+                :title="item.hint"
+                trigger="hover"
+                :style="{
+                  cursor: isActive(item) && item.link ? 'pointer' : 'auto',
+                }"
+                @click.native="linkTo"
+              >
+                <el-image
+                  slot="reference"
+                  :src="item.url"
+                  :alt="item.url"
+                  class="image"
+                  fit="contain"
+                ></el-image>
+                <el-image
+                  :src="item.url"
+                  class="preview-image"
+                  fit="contain"
+                ></el-image>
+              </el-popover>
+              <el-image
+                v-else
+                fit="contain"
+                :src="item.url"
+                :alt="item.url"
+                :style="{
+                  cursor: isActive(item) && item.link ? 'pointer' : 'auto',
+                }"
+                @click="linkTo"
+                class="normal-image"
+              ></el-image> -->
+            </el-carousel-item>
+          </el-carousel>
+          <!-- <el-carousel
+            :interval="interval"
+            :height="srcHight"
+            @click.native="linkTo"
+            class="img-carousel"
             arrow="always"
             indicator-position="outside"
           >
-            <el-carousel-item
-              v-for="(item, index) in carouselImgList"
-              :key="index"
-            >
+            <el-carousel-item v-for="item in carouselImgList" :key="item.url">
               <el-image :src="item.url" fit="fill">
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline"></i>
                 </div>
               </el-image>
             </el-carousel-item>
-          </el-carousel>
+          </el-carousel> -->
         </el-card>
         <SubmissionStatistic class="card-top"></SubmissionStatistic>
         <el-card class="card-top">
@@ -308,6 +405,7 @@
 <script>
 import time from "@/common/time";
 import api from "@/common/api";
+import { getResizedSize } from "@/common/image";
 import {
   CONTEST_STATUS_REVERSE,
   CONTEST_TYPE_REVERSE,
@@ -336,15 +434,30 @@ export default {
         recentUpdatedProblemsLoading: false,
         recentContests: false,
       },
+      newsize: "fasdfasdfasdf",
       carouselImgList: [
         {
           url: "https://s1.ax1x.com/2022/05/15/ORSjyT.jpg",
+          // link: "",
+          // hint: "",
         },
         {
           url: "https://s1.ax1x.com/2022/05/15/ORp86f.jpg",
+          link: "/developer",
+          hint: "系统信息",
         },
+        // {
+        //   url: require("@/assets/招新.jpg"),
+        //   link: "http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=mSpJ4rr0ZIrn308IpPi8fszXKLr53_Oc&authKey=wi4nYdURUgOncLPzZtJDxb6oWXU5rTebZYCAXFlU40bz%2BUruk76ZRLnvAXd7MSY2&noverify=0&group_code=762817640",
+        //   hint: "南阳理工ACM招新群,点击跳转了解更多详情",
+        // },
+        // {
+        //   url: require("@/assets/海报.png"),
+        //   // link: "",
+        //   // hint: "",
+        // },
       ],
-      srcHight: "440px",
+      srcHight: "600px",
       remoteJudgeList: [
         {
           url: "http://acm.hdu.edu.cn",
@@ -388,9 +501,9 @@ export default {
   mounted() {
     let screenWidth = window.screen.width;
     if (screenWidth < 768) {
-      this.srcHight = "200px";
+      this.srcHight = "400px";
     } else {
-      this.srcHight = "440px";
+      this.srcHight = "600px";
     }
     this.CONTEST_STATUS_REVERSE = Object.assign({}, CONTEST_STATUS_REVERSE);
     this.CONTEST_TYPE_REVERSE = Object.assign({}, CONTEST_TYPE_REVERSE);
@@ -400,6 +513,32 @@ export default {
     this.getRecentUpdatedProblemList();
   },
   methods: {
+    handleImageLoad(event) {
+      const image = event.target; // 获取图片对象
+      this.newsize = image;
+      const { width, height } = getResizedSize(image, 400, srcHight); // 计算图片缩放后的大小
+      this.newsize = width + height;
+      // console.log(`缩放后的宽度为${width}px，高度为${height}px`);
+      // 在这里可以设置图片的宽度和高度，例如：
+      // image.width = width;
+      // image.height = height;
+    },
+    linkTo() {
+      const activeIndex = this.$refs.carousel.activeIndex;
+      if (activeIndex !== undefined && this.carouselImgList[activeIndex].link) {
+        window.open(this.carouselImgList[activeIndex].link, "_blank");
+      }
+    },
+
+    isActive(item) {
+      const activeIndex =
+        this.$refs.carousel && this.$refs.carousel.activeIndex;
+      return (
+        activeIndex !== undefined &&
+        item.url === this.carouselImgList[activeIndex].url
+      );
+    },
+
     getHomeCarousel() {
       api.getHomeCarousel().then((res) => {
         if (res.data.data != null && res.data.data.length > 0) {
@@ -499,6 +638,33 @@ export default {
 }
 </style>
 <style scoped>
+.image {
+  /* width: auto;
+  height: 100%; */
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  /*不定宽高的图片居中显示*/
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.preview-image,
+.normal-image {
+  width: auto;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 600px;
+  max-height: 600px;
+  object-fit: contain;
+}
+
 /deep/.el-card__header {
   padding: 0.6rem 1.25rem !important;
 }
@@ -524,14 +690,6 @@ export default {
 }
 .oj-error {
   border-color: #e65c47;
-}
-
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 200px;
-  margin: 0;
 }
 
 .contest-card {
@@ -597,7 +755,7 @@ li {
   float: right;
 }
 .img-carousel {
-  height: 490px;
+  height: 640px;
 }
 
 @media screen and (max-width: 768px) {

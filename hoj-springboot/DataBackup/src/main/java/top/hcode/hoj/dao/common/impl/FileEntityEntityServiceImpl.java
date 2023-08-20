@@ -91,8 +91,8 @@ public class FileEntityEntityServiceImpl extends ServiceImpl<FileMapper, File> i
 
     @Override
     public List<List<Object>> changeACMContestRankToExcelRowList(List<ACMContestRankVO> acmContestRankVOList,
-                                                                 List<String> contestProblemDisplayIDList,
-                                                                 String rankShowName) {
+            List<String> contestProblemDisplayIDList,
+            String rankShowName) {
         List<List<Object>> allRowDataList = new LinkedList<>();
         for (ACMContestRankVO acmContestRankVo : acmContestRankVOList) {
             List<Object> rowData = new LinkedList<>();
@@ -127,7 +127,7 @@ public class FileEntityEntityServiceImpl extends ServiceImpl<FileMapper, File> i
                         } else {
                             info = "+(" + (errorNum + 1) + ")";
                         }
-                        if (isAfterContest){
+                        if (isAfterContest) {
                             info += "*";
                         }
                     } else {
@@ -151,8 +151,8 @@ public class FileEntityEntityServiceImpl extends ServiceImpl<FileMapper, File> i
 
     @Override
     public List<List<Object>> changOIContestRankToExcelRowList(List<OIContestRankVO> oiContestRankVOList,
-                                                               List<String> contestProblemDisplayIDList,
-                                                               String rankShowName) {
+            List<String> contestProblemDisplayIDList,
+            String rankShowName) {
         List<List<Object>> allRowDataList = new LinkedList<>();
         for (OIContestRankVO oiContestRankVo : oiContestRankVOList) {
             List<Object> rowData = new LinkedList<>();
@@ -183,6 +183,4 @@ public class FileEntityEntityServiceImpl extends ServiceImpl<FileMapper, File> i
         }
         return allRowDataList;
     }
-
-
 }

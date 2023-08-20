@@ -13,21 +13,30 @@
         </template>
         <component :is="UserInfo"></component>
       </el-collapse-item>
+      <el-collapse-item name="Preferences">
+        <template slot="title">
+          <i class="fa fa-gear"> {{ $t('m.Preferences_Setting') }}</i>
+        </template>
+        <component :is="Preferences"></component>
+      </el-collapse-item>
     </el-collapse>
   </el-card>
 </template>
 <script>
 const Account = () => import('@/components/oj/setting/Account');
 const UserInfo = () => import('@/components/oj/setting/UserInfo');
+const Preferences = () => import('@/components/oj/setting/Preferences');
 export default {
   components: {
     Account,
     UserInfo,
+    Preferences
   },
   data() {
     return {
       Account: 'Account',
       UserInfo: 'UserInfo',
+      Preferences:'Preferences',
       activeName: 'Account',
     };
   },

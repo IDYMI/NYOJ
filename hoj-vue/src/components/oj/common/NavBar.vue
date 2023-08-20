@@ -10,18 +10,19 @@
           text-color="#495060"
         >
           <div class="logo">
-            <el-tooltip
-              :content="$t('m.Click_To_Change_Web_Language')"
-              placement="bottom"
-              effect="dark"
-            >
-              <el-image
-                style="width: 139px; height: 50px"
-                :src="imgUrl"
-                fit="scale-down"
-                @click="changeWebLanguage"
-              ></el-image>
-            </el-tooltip>
+            <router-link to="/home">
+              <el-tooltip
+                :content="$t('m.Click_To_Home')"
+                placement="bottom"
+                effect="dark"
+              >
+                <el-image
+                  style="width: 139px; height: 50px"
+                  :src="imgUrl"
+                  fit="scale-down"
+                ></el-image>
+              </el-tooltip>
+            </router-link>
           </div>
           <template v-if="mode == 'defalut'">
             <el-menu-item index="/home"
@@ -69,7 +70,25 @@
               <el-menu-item index="/oi-rank">{{
                 $t("m.NavBar_OI_Rank")
               }}</el-menu-item>
+              <!-- <el-menu-item index="/new-acm-rank">{{
+                $t("m.NavBar_ACM_Rank")
+              }}</el-menu-item>
+              <el-menu-item index="/new-oi-rank">{{
+                $t("m.NavBar_OI_Rank")
+              }}</el-menu-item> -->
             </el-submenu>
+            <!-- <el-submenu index="newrank">
+              <template slot="title"
+                ><i class="el-icon-s-data"></i
+                >{{ $t("m.NEWNavBar_Rank") }}</template
+              >
+              <el-menu-item index="/new-acm-rank">{{
+                $t("m.NavBar_ACM_Rank")
+              }}</el-menu-item>
+              <el-menu-item index="/new-oi-rank">{{
+                $t("m.NavBar_OI_Rank")
+              }}</el-menu-item>
+            </el-submenu> -->
             <!-- <el-submenu index="about">
               <template slot="title"
                 ><i class="el-icon-info"></i>{{ $t('m.NavBar_About') }}</template
@@ -183,9 +202,9 @@
                 <el-dropdown-item command="/user-home">{{
                   $t("m.NavBar_UserHome")
                 }}</el-dropdown-item>
-                <el-dropdown-item command="/status?onlyMine=true">{{
+                <!-- <el-dropdown-item command="/status?onlyMine=true">{{
                   $t("m.NavBar_Submissions")
-                }}</el-dropdown-item>
+                }}</el-dropdown-item> -->
                 <el-dropdown-item command="/setting">{{
                   $t("m.NavBar_Setting")
                 }}</el-dropdown-item>
@@ -277,13 +296,13 @@
             <i class="el-icon-s-unfold"></i>
           </mu-button>
           <el-tooltip
-            :content="$t('m.Click_To_Change_Web_Language')"
+            :content="$t('m.Click_To_Home')"
             placement="bottom"
             effect="dark"
           >
-            <span @click="changeWebLanguage">
+            <router-link to="/home">
               {{ websiteConfig.shortName ? websiteConfig.shortName : "OJ" }}
-            </span>
+            </router-link>
           </el-tooltip>
           <mu-button
             flat
@@ -409,14 +428,14 @@
                 </mu-list-item-content>
               </mu-list-item>
               <mu-divider></mu-divider>
-              <mu-list-item button value="/status?onlyMine=true">
+              <!-- <mu-list-item button value="/status?onlyMine=true">
                 <mu-list-item-content>
                   <mu-list-item-title>{{
                     $t("m.NavBar_Submissions")
                   }}</mu-list-item-title>
                 </mu-list-item-content>
               </mu-list-item>
-              <mu-divider></mu-divider>
+              <mu-divider></mu-divider> -->
               <mu-list-item button value="/setting">
                 <mu-list-item-content>
                   <mu-list-item-title>{{
@@ -575,6 +594,52 @@
                 }}</mu-list-item-title>
               </mu-list-item>
             </mu-list-item>
+
+            <!-- <mu-list-item
+              button
+              :ripple="false"
+              nested
+              :open="openSideMenu === 'newrank'"
+              @toggle-nested="openSideMenu = arguments[0] ? 'newrank' : ''"
+            >
+              <mu-list-item-action>
+                <mu-icon value=":el-icon-s-data" size="24"></mu-icon>
+              </mu-list-item-action>
+              <mu-list-item-title>{{
+                $t("m.NEWNavBar_Rank")
+              }}</mu-list-item-title>
+              <mu-list-item-action>
+                <mu-icon
+                  class="toggle-icon"
+                  size="24"
+                  value=":el-icon-arrow-down"
+                ></mu-icon>
+              </mu-list-item-action>
+              <mu-list-item
+                button
+                :ripple="false"
+                slot="nested"
+                to="/new-acm-rank"
+                @click="opendrawer = !opendrawer"
+                active-class="mobile-menu-active"
+              >
+                <mu-list-item-title>{{
+                  $t("m.NavBar_ACM_Rank")
+                }}</mu-list-item-title>
+              </mu-list-item>
+              <mu-list-item
+                button
+                :ripple="false"
+                slot="nested"
+                to="/new-oi-rank"
+                @click="opendrawer = !opendrawer"
+                active-class="mobile-menu-active"
+              >
+                <mu-list-item-title>{{
+                  $t("m.NavBar_OI_Rank")
+                }}</mu-list-item-title>
+              </mu-list-item>
+            </mu-list-item> -->
 
             <mu-list-item
               v-if="websiteConfig.openPublicDiscussion"

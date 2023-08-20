@@ -5,21 +5,21 @@
         <div slot="header">
           <ul class="nav-list">
             <li>
-              <router-link to="/oi-rank" exact-active-class="selected">
-                <span class="panel-title-oi">{{ $t("m.OI_Ranklist") }}</span>
+              <router-link to="/acm-rank" exact-active-class="selected">
+                <span class="panel-title-acm">{{ $t("m.ACM_Ranklist") }}</span>
               </router-link>
             </li>
             <li>
-              <router-link to="/new-oi-rank" exact-active-class="selected">
-                <span class="panel-title-oi">{{
-                  $t("m.NEW_OI_Ranklist")
+              <router-link to="/new-acm-rank" exact-active-class="selected">
+                <span class="panel-title-acm">{{
+                  $t("m.NEW_ACM_Ranklist")
                 }}</span>
               </router-link>
             </li>
           </ul>
         </div>
         <div class="echarts">
-          <ECharts :options="options" ref="chart" auto-resize></ECharts>
+          <ECharts :options="options" ref="chart" :autoresize="true"></ECharts>
         </div>
       </el-card>
       <el-card :padding="10" style="text-align: center;">
@@ -41,8 +41,8 @@
         :loading="loadingTable"
         align="center"
         highlight-hover-row
-        auto-resize
         :seq-config="{ seqMethod }"
+        auto-resize
         style="font-weight: 500;"
       >
         <vxe-table-column type="seq" min-width="50"></vxe-table-column>
@@ -90,15 +90,7 @@
             </el-tag>
           </template>
         </vxe-table-column>
-        <vxe-table-column :title="$t('m.Score')" min-width="80">
-          <template v-slot="{ row }">
-            <span>{{ row.score }}</span>
-          </template>
-        </vxe-table-column>
-        <vxe-table-column
-          :title="$t('m.AC') + '/' + $t('m.Total')"
-          min-width="100"
-        >
+        <vxe-table-column field="ac" :title="$t('m.AC')" min-width="80">
           <template v-slot="{ row }">
             <span>
               <a
@@ -106,9 +98,10 @@
                 style="color:rgb(87, 163, 243);"
                 >{{ row.ac }}</a
               >
-              <span>/{{ row.total }}</span>
             </span>
           </template>
+        </vxe-table-column>
+        <vxe-table-column :title="$t('m.Total')" min-width="100" field="total">
         </vxe-table-column>
         <vxe-table-column :title="$t('m.Rating')" min-width="80">
           <template v-slot="{ row }">
@@ -116,6 +109,7 @@
           </template>
         </vxe-table-column>
         <vxe-table-column
+          field="signature"
           :title="$t('m.Signature')"
           min-width="300"
           show-overflow="ellipsis"
@@ -128,6 +122,7 @@
           </template>
         </vxe-table-column>
       </vxe-table>
+
       <Pagination
         :total="total"
         :page-size.sync="limit"
@@ -160,15 +155,15 @@ export default {
       limit: 30,
       total: 0,
       searchUser: null,
-      dataRank: [],
       loadingTable: false,
       screenWidth: 768,
+      dataRank: [],
       options: {
         tooltip: {
           trigger: 'axis',
         },
         legend: {
-          data: ['Score'],
+          data: ['AC', 'Total'],
         },
         grid: {
           x: '3%',
@@ -180,7 +175,7 @@ export default {
           show: true,
           feature: {
             dataView: { show: true, readOnly: true },
-            magicType: { show: true, type: ['line', 'bar'] },
+            magicType: { show: true, type: ['line', 'bar', 'stack'] },
             saveAsImage: { show: true },
           },
           right: '8%',
@@ -191,7 +186,6 @@ export default {
           {
             type: 'category',
             data: ['root'],
-            boundaryGap: true,
             axisLabel: {
               interval: 0,
               showMinLabel: true,
@@ -209,9 +203,6 @@ export default {
                 }
               },
             },
-            axisTick: {
-              alignWithLabel: true,
-            },
           },
         ],
         yAxis: [
@@ -227,10 +218,23 @@ export default {
         ],
         series: [
           {
-            name: this.$i18n.t('m.Score'),
+            name: this.$i18n.t('m.AC'),
             type: 'bar',
             data: [0],
-            barMaxWidth: '80',
+            itemStyle: {
+              color: '#91c7ae',
+            },
+            markPoint: {
+              data: [{ type: 'max', name: 'max' }],
+            },
+          },
+          {
+            name: this.$i18n.t('m.Total'),
+            type: 'bar',
+            data: [0],
+            itemStyle: {
+              color: '#6ab0b8',
+            },
             markPoint: {
               data: [{ type: 'max', name: 'max' }],
             },
@@ -256,33 +260,35 @@ export default {
       let bar = this.$refs.chart;
       bar.showLoading({ maskColor: 'rgba(250, 250, 250, 0.8)' });
       this.loadingTable = true;
-      api.getUserRank(page, this.limit, RULE_TYPE.OI, this.searchUser).then(
-        (res) => {
+      api
+        .getUserRank(page, this.limit, RULE_TYPE.NewACM, this.searchUser)
+        .then((res) => {
+          this.loadingTable = false;
           if (page === 1) {
             this.changeCharts(res.data.data.records.slice(0, 10));
           }
           this.total = res.data.data.total;
           this.dataRank = res.data.data.records;
+          bar.hideLoading();
+        })
+        .catch(() => {
           this.loadingTable = false;
           bar.hideLoading();
-        },
-        (err) => {
-          this.loadingTable = false;
-          bar.hideLoading();
-        }
-      );
+        });
     },
     seqMethod({ rowIndex }) {
       return this.limit * (this.page - 1) + rowIndex + 1;
     },
     changeCharts(rankData) {
-      let [usernames, scores] = [[], []];
+      let [usernames, acData, totalData] = [[], [], []];
       rankData.forEach((ele) => {
         usernames.push(ele.username);
-        scores.push(ele.score);
+        acData.push(ele.ac);
+        totalData.push(ele.total);
       });
       this.options.xAxis[0].data = usernames;
-      this.options.series[0].data = scores;
+      this.options.series[0].data = acData;
+      this.options.series[1].data = totalData;
     },
     getInfoByUsername(uid, username) {
       this.$router.push({
@@ -328,7 +334,7 @@ export default {
   color: #409eff;
 }
 
-.panel-title-oi {
+.panel-title-acm {
   font-size: 2em;
   font-weight: 500;
   line-height: 30px;
@@ -344,10 +350,6 @@ export default {
     padding: 0 !important;
   }
 }
-.user-avatar {
-  margin-right: 5px !important;
-  vertical-align: middle;
-}
 @media screen and (min-width: 768px) {
   .el-input-group {
     width: 50%;
@@ -357,5 +359,24 @@ export default {
   .el-input-group {
     width: 30%;
   }
+}
+</style>
+<style>
+.rank-signature-body img {
+  height: 50px !important;
+  width: 50px !important;
+}
+.rank-signature-body p {
+  margin: 0;
+  padding: 0;
+}
+.user-avatar {
+  margin-right: 5px !important;
+  vertical-align: middle;
+}
+.search-btn {
+  color: #fff !important;
+  background-color: #409eff !important;
+  border-color: #409eff !important;
 }
 </style>

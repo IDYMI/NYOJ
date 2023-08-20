@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.admin;
 
-
 import cn.hutool.json.JSONObject;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -13,7 +12,6 @@ import top.hcode.hoj.pojo.dto.EmailConfigDTO;
 import top.hcode.hoj.pojo.dto.TestEmailDTO;
 import top.hcode.hoj.pojo.dto.WebConfigDTO;
 import top.hcode.hoj.service.admin.system.ConfigService;
-
 
 import java.util.List;
 
@@ -36,13 +34,13 @@ public class ConfigController {
      * @Return CommonResult
      * @Since 2020/12/3
      */
-    @RequiresRoles(value = {"root", "admin", "problem_admin"}, logical = Logical.OR)
+    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     @RequestMapping("/get-service-info")
     public CommonResult<JSONObject> getServiceInfo() {
         return configService.getServiceInfo();
     }
 
-    @RequiresRoles(value = {"root", "admin", "problem_admin"}, logical = Logical.OR)
+    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     @RequestMapping("/get-judge-service-info")
     public CommonResult<List<JSONObject>> getJudgeServiceInfo() {
         return configService.getJudgeServiceInfo();
@@ -54,9 +52,8 @@ public class ConfigController {
         return configService.getWebConfig();
     }
 
-
     @RequiresPermissions("system_info_admin")
-    @DeleteMapping("/home-carousel")
+    @RequestMapping(value = "/home-carousel", method = RequestMethod.DELETE)
     public CommonResult<Void> deleteHomeCarousel(@RequestParam("id") Long id) {
 
         return configService.deleteHomeCarousel(id);
