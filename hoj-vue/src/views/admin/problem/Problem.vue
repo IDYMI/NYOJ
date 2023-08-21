@@ -1066,7 +1066,7 @@ export default {
           this.contest = res.data.data;
         });
       }
-      this.problem.spjLanguage = "C++";
+      this.problem.spjLanguage = "C";
       this.init();
     });
   },
@@ -1156,7 +1156,7 @@ export default {
           if (!data.spjCode) {
             data.spjCode = "";
           }
-          data.spjLanguage = data.spjLanguage || "C++";
+          data.spjLanguage = data.spjLanguage || "C";
           this.spjRecord.spjLanguage = data.spjLanguage;
           this.spjRecord.spjCode = data.spjCode;
           this.judgeCaseModeRecord = data.judgeCaseModeRecord;

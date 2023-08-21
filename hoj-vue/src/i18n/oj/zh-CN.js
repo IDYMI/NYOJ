@@ -161,6 +161,7 @@ export const m = {
   Code_Size:'字体大小',
   IDE_Theme: '编译器主题',
   Default_Code_Template: '默认代码模板',
+  Your_Code_Template: '代码模板将在每次编程时显示，若留空，则将使用对应语言的内置代码模板。',
   Theme: '界面主题',
 
   // /views/oj/user/UserHome.vue

@@ -541,10 +541,6 @@ public class AccountManager {
     }
 
     public UserInfoVO changeUserPreferences(UserInfoVO userInfoVo) throws StatusFailException {
-        // commonValidator.validateContentLength(userInfoVo.getUiLanguage(), "界面语言", 255);
-        // commonValidator.validateContentLength(userInfoVo.getCodeLanguage(), "代码语言", 255);
-        // commonValidator.validateContentLength(userInfoVo.getCodeSize(), "字体大小", 255);
-        // commonValidator.validateContentLength(userInfoVo.getIdeTheme(), "编译器主题", 255);
 
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
@@ -554,7 +550,8 @@ public class AccountManager {
                 .set("ui_language", userInfoVo.getUiLanguage())
                 .set("code_language", userInfoVo.getCodeLanguage())
                 .set("code_size", userInfoVo.getCodeSize())
-                .set("ide_theme", userInfoVo.getIdeTheme());
+                .set("ide_theme", userInfoVo.getIdeTheme())
+                .set("code_template", userInfoVo.getUsercodeTemplate());
 
         boolean isOk = userInfoEntityService.update(updateWrapper);
 

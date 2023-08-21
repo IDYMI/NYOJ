@@ -17,6 +17,7 @@
         <result column="code_language" property="codeLanguage"></result>
         <result column="code_size" property="codeSize"></result>
         <result column="ide_theme" property="ideTheme"></result>
+        <result column="code_template" property="usercodeTemplate"></result>
         <result column="blog" property="blog"></result>
         <result column="email" property="email"></result>
         <result column="signature" property="signature"></result>
@@ -73,6 +74,7 @@
         <result column="code_language" property="codeLanguage"></result>
         <result column="code_size" property="codeSize"></result>
         <result column="ide_theme" property="ideTheme"></result>
+        <result column="code_template" property="usercodeTemplate"></result>
         <result column="blog" property="blog"></result>
         <result column="email" property="email"></result>
         <result column="signature" property="signature"></result>

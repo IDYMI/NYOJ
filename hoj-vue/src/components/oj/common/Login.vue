@@ -133,15 +133,6 @@ export default {
       },
     };
   },
-  mounted() {
-    let profile = this.$store.getters.userInfo;
-    Object.keys(this.formProfile).forEach((element) => {
-      if (profile[element] !== undefined) {
-        this.formProfile[element] = profile[element];
-      }
-    });
-    this.autoChangeLanguge();
-  },
   methods: {
     ...mapActions(["changeModalStatus"]),
     switchMode(mode) {
@@ -179,9 +170,13 @@ export default {
               this.$store.commit("changeUserToken", jwt);
               this.$store.dispatch("setUserInfo", res.data.data);
               this.$store.dispatch("incrLoginFailNum", true);
-              if (this.formProfile.uiLanguage != this.webLanguage ) {
-                this.changeWebLanguage(this.formProfile.uiLanguage);
-              }
+              let profile = this.$store.getters.userInfo;
+              Object.keys(this.formProfile).forEach((element) => {
+                if (profile[element] !== undefined) {
+                  this.formProfile[element] = profile[element];
+                  this.autoChangeLanguge(this.formProfile.uiLanguage);
+                }
+              });
               mMessage.success(this.$i18n.t("m.Welcome_Back"));
             },
             (_) => {
@@ -192,14 +187,16 @@ export default {
         }
       });
     },
-    changeWebLanguage(language) {
-      this.$store.commit("changeWebLanguage", { language: language });
-      this.formProfile.uiLanguage = language;
-    },
-    autoChangeLanguge() {
+    autoChangeLanguge(user_lang) {
       /**
-       * 语言自动转换优先级：路径参数 > 本地存储 > 浏览器自动识别
+       * 语言自动转换优先级：配置 > 路径参数 > 本地存储 > 浏览器自动识别
        */
+
+      if (user_lang) {
+        this.$store.commit("changeWebLanguage", { language: user_lang });
+        // mMessage.success(user_lang);
+        return;
+      }
 
       let lang = this.$route.query.l;
       if (lang) {

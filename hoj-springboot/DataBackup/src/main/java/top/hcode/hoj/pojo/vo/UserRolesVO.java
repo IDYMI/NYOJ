@@ -14,7 +14,7 @@ import java.util.List;
  * @Date: 2020/12/5 13:30
  * @Description:
  */
-@ApiModel(value="用户信息以及其对应的角色", description="")
+@ApiModel(value = "用户信息以及其对应的角色", description = "")
 @Data
 public class UserRolesVO implements Serializable {
 
@@ -79,6 +79,9 @@ public class UserRolesVO implements Serializable {
 
     @ApiModelProperty(value = "编译器主题")
     private String ideTheme;
+
+    @ApiModelProperty(value = "个人代码模板")
+    private String usercodeTemplate;
 
     @ApiModelProperty(value = "个性签名")
     private String signature;

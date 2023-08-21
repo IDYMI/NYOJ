@@ -32,21 +32,32 @@ export default {
     return {
       currentValue: "",
       options: {
-        mode: "text/x-c++src",
-        lineNumbers: true,
-        lineWrapping: false,
-        theme: "solarized",
+        // codemirror options
         tabSize: 4,
+        mode: "text/x-csrc",
+        theme: "solarized",
+        // 显示行号
+        lineNumbers: true,
         line: true,
+        // 代码折叠
         foldGutter: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-        indentUnit: 4, //一个块（编辑语言中的含义）应缩进多少个空格
-        styleActiveLine: true,
-        autofocus: false,
+        lineWrapping: true,
+        // 自动对焦
+        autofocus: true,
+        // 选中文本自动高亮，及高亮方式
+        styleSelectedText: true,
+        showCursorWhenSelecting: true,
+        highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
         matchBrackets: true, //括号匹配
+        indentUnit: 4, //一个块（编辑语言中的含义）应缩进多少个空格
         styleActiveLine: true,
         autoCloseBrackets: true,
         autoCloseTags: true,
+        hintOptions: {
+          // 当匹配只有一项的时候是否自动补全
+          completeSingle: false,
+        },
         extraKeys: {
           "Ctrl-/": function (cm) {
             let startLine = cm.getCursor("start").line;
@@ -71,13 +82,6 @@ export default {
             }
           },
           "Ctrl-;": function (cm) {
-            // console.log(
-            //   "current range:",
-            //   cm.getCursor("start"),
-            //   "-",
-            //   cm.getCursor("end")
-            // );
-
             // 获取选中区域的范围
             let from = cm.getCursor("start");
             let to = cm.getCursor("end");
@@ -92,6 +96,15 @@ export default {
             // 将注释后的内容替换选中区域
             cm.replaceRange(note, from, to, null);
           },
+          // "Alt-Shift-f": function (cm) {
+          //   CodeMirror.commands["selectAll"](cm);
+          //   var range = {
+	        //     from: editor.getCursor(true),
+	        //     to: editor.getCursor(false)
+	        // }
+          //   cm.autoFormatRange(range.from, range.to);
+          //   cm.commentRange(false, range.from, range.to);
+          // },
         },
       },
     };

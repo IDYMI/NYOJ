@@ -104,6 +104,10 @@ public class UserInfo implements Serializable {
     @ApiModelProperty(value = "编译器主题")
     private String ideTheme;
 
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
+    @ApiModelProperty(value = "个人代码模板")
+    private String usercodeTemplate;
+
     @ApiModelProperty(value = "0可用，-1不可用")
     private int status;
 
