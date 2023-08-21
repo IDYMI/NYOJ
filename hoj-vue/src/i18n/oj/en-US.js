@@ -162,6 +162,7 @@ export const m = {
   Code_Size:'Code Size',
   IDE_Theme: 'IDE Theme',
   Default_Code_Template: 'Default Code Template',
+  Your_Code_Template: 'The code template will be displayed each time you program, and if left blank, the built-in code template for the corresponding language will be used.',
   Theme: 'Theme',
 
   // /views/oj/user/UserHome.vue

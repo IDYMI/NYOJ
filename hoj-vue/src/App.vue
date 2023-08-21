@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider abstract="" :theme="darkTheme">
+  <!-- <n-config-provider abstract="" :theme="darkTheme"> -->
     <div id="app">
       <el-backtop :right="10"></el-backtop>
       <div v-if="!isAdminView" class="full-height flex-column">
@@ -114,21 +114,12 @@
         </div>
       </div>
     </div>
-    <n-global-style />
-  </n-config-provider>
+    <!-- <n-global-style /> -->
+  <!-- </n-config-provider> -->
 </template>
 
 <script>
-import {
-  darkTheme,
-  NConfigProvider,
-  NDialogProvider,
-  NGi,
-  NGrid,
-  NCard,
-  NLoadingBarProvider,
-  NMessageProvider,
-} from "naive-ui";
+import { darkTheme } from "naive-ui";
 import NavBar from "@/components/oj/common/NavBar";
 import { mapActions, mapState, mapGetters } from "vuex";
 import { LOGO, MOTTO } from "@/common/logo";
@@ -138,6 +129,7 @@ export default {
   name: "app-content",
   components: {
     NavBar,
+    darkTheme,
   },
   data() {
     return {

@@ -202,9 +202,6 @@
                 <el-dropdown-item command="/user-home">{{
                   $t("m.NavBar_UserHome")
                 }}</el-dropdown-item>
-                <!-- <el-dropdown-item command="/status?onlyMine=true">{{
-                  $t("m.NavBar_Submissions")
-                }}</el-dropdown-item> -->
                 <el-dropdown-item command="/setting">{{
                   $t("m.NavBar_Setting")
                 }}</el-dropdown-item>
@@ -428,14 +425,6 @@
                 </mu-list-item-content>
               </mu-list-item>
               <mu-divider></mu-divider>
-              <!-- <mu-list-item button value="/status?onlyMine=true">
-                <mu-list-item-content>
-                  <mu-list-item-title>{{
-                    $t("m.NavBar_Submissions")
-                  }}</mu-list-item-title>
-                </mu-list-item-content>
-              </mu-list-item>
-              <mu-divider></mu-divider> -->
               <mu-list-item button value="/setting">
                 <mu-list-item-content>
                   <mu-list-item-title>{{

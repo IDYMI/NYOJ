@@ -1,86 +1,102 @@
 <template>
-  <div class="setting-main">
-    <el-row :gutter="20">
-      <!-- <el-col :sm="24" :md="10" :lg="10">
+  <el-form ref="formProfile" :model="formProfile">
+    <el-row :gutter="30" justify="space-around">
+      <el-col :md="10" :xs="24">
         <div class="left">
           <p class="section-title">{{ $t("m.Display_Preference") }}</p>
-          <el-form ref="formProfile" :model="formProfile">
-            <el-form-item :label="$t('m.UI_Language')" prop="oldPassword">
-              <el-select
-                :value="findLabelByValue(formProfile.uiLanguage)"
-                @change="changeWebLanguage"
-                class="left-adjust"
-                size="small"
-                style="width: 100%"
-              >
-                <el-option
-                  v-for="item in webLanguages"
-                  :key="item"
-                  :value="item.value"
-                  >{{ item.label }}
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
+        </div>
+      </el-col>
+      <el-col :md="4" :lg="4">
+        <!-- <div class="separator hidden-md-and-down"></div> -->
+        <p></p>
+      </el-col>
+      <el-col :md="10" :xs="24">
+        <div class="right">
+          <p class="section-title">{{ $t("m.Usage_Preference") }}</p>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="30" justify="space-around">
+      <el-col :md="10" :xs="24">
+        <div class="left">
+          <el-form-item :label="$t('m.UI_Language')" prop="oldPassword">
+            <el-select
+              :value="findLabelByValue(formProfile.uiLanguage)"
+              @change="changeWebLanguage"
+              class="left-adjust"
+              size="small"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in webLanguages"
+                :key="item"
+                :value="item.value"
+                >{{ item.label }}
+              </el-option>
+            </el-select>
+          </el-form-item>
         </div>
       </el-col>
       <el-col :md="4" :lg="4">
         <div class="separator hidden-md-and-down"></div>
         <p></p>
-      </el-col> -->
-      <!-- <el-col :sm="24" :md="10" :lg="10"> -->
-      <el-col>
+      </el-col>
+      <el-col :md="10" :xs="24">
         <div class="right">
-          <p class="section-title">{{ $t("m.Usage_Preference") }}</p>
-          <el-form ref="formProfile" :model="formProfile">
-            <el-form-item :label="$t('m.Code_Language')">
-              <el-select
-                :value="formProfile.codeLanguage"
-                @change="changeCodeLanguage"
-                class="left-adjust"
-                size="small"
-                style="width: 100%"
-              >
-                <el-option v-for="item in languages" :key="item" :value="item"
-                  >{{ item }}
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('m.IDE_Theme')" prop="code">
-              <el-select
-                :value="formProfile.ideTheme"
-                @change="changeIdeTheme"
-                size="small"
-                style="width: 100%"
-              >
-                <el-option
-                  v-for="item in themes"
-                  :key="item.label"
-                  :label="$t('m.' + item.label)"
-                  :value="item.value"
-                  >{{ $t("m." + item.label) }}
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('m.Code_Size')" prop="password">
-              <el-select
-                :value="formProfile.codeSize"
-                @change="changeCodeSize"
-                size="small"
-                style="width: 100%"
-              >
-                <el-option v-for="item in fontSizes" :key="item" :value="item"
-                  >{{ item }}
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <!-- <el-form-item :label="$t('m.Default_Code_Template')" prop="code">
-              <code-mirror></code-mirror>
-            </el-form-item> -->
-          </el-form>
+          <el-form-item :label="$t('m.Code_Language')">
+            <el-select
+              :value="formProfile.codeLanguage"
+              @change="changeCodeLanguage"
+              class="left-adjust"
+              size="small"
+              style="width: 100%"
+            >
+              <el-option v-for="item in languages" :key="item" :value="item"
+                >{{ item }}
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$t('m.IDE_Theme')" prop="code">
+            <el-select
+              :value="formProfile.ideTheme"
+              @change="changeIdeTheme"
+              size="small"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in themes"
+                :key="item.label"
+                :label="$t('m.' + item.label)"
+                :value="item.value"
+                >{{ $t("m." + item.label) }}
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$t('m.Code_Size')" prop="password">
+            <el-select
+              :value="formProfile.codeSize"
+              @change="changeCodeSize"
+              size="small"
+              style="width: 100%"
+            >
+              <el-option v-for="item in fontSizes" :key="item" :value="item"
+                >{{ item }}
+              </el-option>
+            </el-select>
+          </el-form-item>
         </div>
       </el-col>
     </el-row>
+    <label class="el-form-item__label" style="float: none">{{
+      $t("m.Default_Code_Template")
+    }}</label>
+    <div>
+      <code-mirror
+        v-model="formProfile.usercodeTemplate"
+        class="template_code"
+      ></code-mirror>
+    </div>
+    <label style="float: none">{{ $t("m.Your_Code_Template") }}</label>
     <div style="text-align: center; margin-top: 10px">
       <el-button
         type="primary"
@@ -89,7 +105,7 @@
         >{{ $t("m.Save") }}</el-button
       >
     </div>
-  </div>
+  </el-form>
 </template>
 
 <script>
@@ -98,7 +114,6 @@ import myMessage from "@/common/message";
 import "element-ui/lib/theme-chalk/display.css";
 import CodeMirror from "@/components/admin/CodeMirror.vue";
 import { mapGetters } from "vuex";
-import storage from "@/common/storage";
 import utils from "@/common/utils";
 
 // 风格对应的样式
@@ -204,81 +219,7 @@ export default {
         codeLanguage: "",
         codeSize: "",
         ideTheme: "",
-      },
-      options: {
-        // codemirror options
-        tabSize: this.tabSize,
-        mode: "text/x-csrc",
-        theme: "solarized",
-        // 显示行号
-        lineNumbers: true,
-        line: true,
-        // 代码折叠
-        foldGutter: true,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-        lineWrapping: true,
-        // 选中文本自动高亮，及高亮方式
-        styleSelectedText: true,
-        showCursorWhenSelecting: true,
-        highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
-        matchBrackets: true, //括号匹配
-        indentUnit: this.tabSize, //一个块（编辑语言中的含义）应缩进多少个空格
-        styleActiveLine: true,
-        autoCloseBrackets: true,
-        autoCloseTags: true,
-        hintOptions: {
-          // 当匹配只有一项的时候是否自动补全
-          completeSingle: false,
-        },
-        extraKeys: {
-          "Ctrl-/": function (cm) {
-            let startLine = cm.getCursor("start").line;
-            let endLine = cm.getCursor("end").line;
-            for (let i = startLine; i <= endLine; i++) {
-              let origin = cm.getLine(i);
-              if (!origin.startsWith("// ")) {
-                cm.replaceRange(
-                  "// " + origin,
-                  { ch: 0, line: i },
-                  { ch: origin.length, line: i },
-                  null
-                );
-              } else {
-                cm.replaceRange(
-                  origin.substr(3),
-                  { ch: 0, line: i },
-                  { ch: origin.length, line: i },
-                  null
-                );
-              }
-            }
-          },
-          "Ctrl-;": function (cm) {
-            // console.log(
-            //   "current range:",
-            //   cm.getCursor("start"),
-            //   "-",
-            //   cm.getCursor("end")
-            // );
-
-            // 获取选中区域的范围
-            let from = cm.getCursor("start");
-            let to = cm.getCursor("end");
-
-            // 获取选中区域的内容并添加或去掉注释
-            let content = cm.getRange(from, to);
-            let note = "/*" + content.replace(/(\n|\r\n)/g, "$&") + "*/";
-            if (content.startsWith("/*") && content.endsWith("*/")) {
-              note = content.substr(2, content.length - 4);
-            }
-
-            // 将注释后的内容替换选中区域
-            cm.replaceRange(note, from, to, null);
-          },
-        },
-      },
-      mode: {
-        C: "text/x-csrc",
+        usercodeTemplate: "",
       },
       themes: [
         { label: "monokai", value: "monokai" },
@@ -302,6 +243,7 @@ export default {
     Object.keys(this.formProfile).forEach((element) => {
       if (profile[element] !== undefined) {
         this.formProfile[element] = profile[element];
+        this.$emit("usercodeTemplate", this.formProfile.usercodeTemplate);
       }
     });
     utils.getLanguages().then((languages) => {
@@ -310,10 +252,6 @@ export default {
         mode[lang.name] = lang.contentType;
       });
     });
-    this.autoChangeLanguge();
-    // if (this.formProfile.uiLanguage != this.webLanguage) {
-    //   this.changeWebLanguage(this.formProfile.uiLanguage);
-    // }
   },
   methods: {
     findLabelByValue(value) {
@@ -334,35 +272,6 @@ export default {
     },
     changeCodeSize(codesize) {
       this.formProfile.codeSize = codesize;
-    },
-    autoChangeLanguge() {
-      /**
-       * 语言自动转换优先级：路径参数 > 本地存储 > 浏览器自动识别
-       */
-
-      let lang = this.$route.query.l;
-      if (lang) {
-        lang = lang.toLowerCase();
-        if (lang == "zh-cn") {
-          this.$store.commit("changeWebLanguage", { language: "zh-CN" });
-        } else {
-          this.$store.commit("changeWebLanguage", { language: "en-US" });
-        }
-        return;
-      }
-
-      lang = storage.get("Web_Language");
-      if (lang) {
-        return;
-      }
-
-      lang = navigator.userLanguage || window.navigator.language;
-      lang = lang.toLowerCase();
-      if (lang == "zh-cn") {
-        this.$store.commit("changeWebLanguage", { language: "zh-CN" });
-      } else {
-        this.$store.commit("changeWebLanguage", { language: "en-US" });
-      }
     },
     updateUserPreferences() {
       // console.log(this.formProfile);
@@ -427,5 +336,9 @@ export default {
   bottom: 0;
   left: 50%;
   border: 1px dashed #eee;
+}
+.template_code {
+  text-align: left;
+  margin-left: 10px;
 }
 </style>

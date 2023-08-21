@@ -617,6 +617,8 @@ export default {
         foldGutter: true,
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
         lineWrapping: true,
+        // 自动对焦
+        autofocus: true,
         // 选中文本自动高亮，及高亮方式
         styleSelectedText: true,
         showCursorWhenSelecting: true,
