@@ -80,8 +80,9 @@ public class ContestFileManager {
     @Autowired
     private GroupValidator groupValidator;
 
-    public void downloadContestRank(Long cid, Boolean forceRefresh, Boolean removeStar, Boolean isContainsAfterContestJudge,
-                                    HttpServletResponse response) throws IOException, StatusFailException, StatusForbiddenException {
+    public void downloadContestRank(Long cid, Boolean forceRefresh, Boolean removeStar,
+            Boolean isContainsAfterContestJudge,
+            HttpServletResponse response) throws IOException, StatusFailException, StatusForbiddenException {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
@@ -93,7 +94,8 @@ public class ContestFileManager {
         }
 
         // 是否为超级管理员或者题目管理
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin");
 
         Long gid = contest.getGid();
 
@@ -131,7 +133,8 @@ public class ContestFileManager {
             EasyExcel.write(response.getOutputStream())
                     .head(fileEntityService.getContestRankExcelHead(contestProblemDisplayIDList, true))
                     .sheet("rank")
-                    .doWrite(fileEntityService.changeACMContestRankToExcelRowList(acmContestRankVOList, contestProblemDisplayIDList, contest.getRankShowName()));
+                    .doWrite(fileEntityService.changeACMContestRankToExcelRowList(acmContestRankVOList,
+                            contestProblemDisplayIDList, contest.getRankShowName()));
         } else {
             List<OIContestRankVO> oiContestRankVOList = contestCalculateRankManager.calcOIRank(
                     isOpenSealRank,
@@ -144,11 +147,13 @@ public class ContestFileManager {
             EasyExcel.write(response.getOutputStream())
                     .head(fileEntityService.getContestRankExcelHead(contestProblemDisplayIDList, false))
                     .sheet("rank")
-                    .doWrite(fileEntityService.changOIContestRankToExcelRowList(oiContestRankVOList, contestProblemDisplayIDList, contest.getRankShowName()));
+                    .doWrite(fileEntityService.changOIContestRankToExcelRowList(oiContestRankVOList,
+                            contestProblemDisplayIDList, contest.getRankShowName()));
         }
     }
 
-    public void downloadContestACSubmission(Long cid, Boolean excludeAdmin, String splitType, HttpServletResponse response) throws StatusForbiddenException, StatusFailException {
+    public void downloadContestACSubmission(Long cid, Boolean excludeAdmin, String splitType,
+            HttpServletResponse response) throws StatusForbiddenException, StatusFailException {
 
         Contest contest = contestEntityService.getById(cid);
 
@@ -159,7 +164,8 @@ public class ContestFileManager {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         // 是否为超级管理员或者题目管理
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin");
 
         Long gid = contest.getGid();
         if (!isRoot
@@ -174,11 +180,7 @@ public class ContestFileManager {
         contestProblemQueryWrapper.eq("cid", contest.getId());
         List<ContestProblem> contestProblemList = contestProblemEntityService.list(contestProblemQueryWrapper);
 
-        List<String> superAdminUidList = userInfoEntityService.getSuperAdminUidList();
-        List<String> problemAdminUidList = userInfoEntityService.getProblemAdminUidList();
-        if (!CollectionUtils.isEmpty(problemAdminUidList)) {
-            superAdminUidList.addAll(problemAdminUidList);
-        }
+        List<String> AdminUidList = userInfoEntityService.getNowContestAdmin(contest.getId());
 
         QueryWrapper<Judge> judgeQueryWrapper = new QueryWrapper<>();
         judgeQueryWrapper.eq("cid", cid)
@@ -186,13 +188,14 @@ public class ContestFileManager {
                 .isNotNull(!isACM, "score") // OI模式取得分不为null的
                 .between("submit_time", contest.getStartTime(), contest.getEndTime())
                 .ne(excludeAdmin, "uid", contest.getUid()) // 排除比赛创建者和root
-                .notIn(excludeAdmin && superAdminUidList.size() > 0, "uid", superAdminUidList)
+                .notIn(excludeAdmin && AdminUidList.size() > 0, "uid", AdminUidList)
                 .orderByDesc("submit_time");
 
         List<Judge> judgeList = judgeEntityService.list(judgeQueryWrapper);
 
         // 打包文件的临时路径 -> username为文件夹名字
-        String tmpFilesDir = Constants.File.CONTEST_AC_SUBMISSION_TMP_FOLDER.getPath() + File.separator + IdUtil.fastSimpleUUID();
+        String tmpFilesDir = Constants.File.CONTEST_AC_SUBMISSION_TMP_FOLDER.getPath() + File.separator
+                + IdUtil.fastSimpleUUID();
         FileUtil.mkdir(tmpFilesDir);
 
         HashMap<String, Boolean> recordMap = new HashMap<>();
@@ -203,7 +206,6 @@ public class ContestFileManager {
             List<String> usernameList = judgeList.stream()
                     .filter(distinctByKey(Judge::getUsername)) // 根据用户名过滤唯一
                     .map(Judge::getUsername).collect(Collectors.toList()); // 映射出用户名列表
-
 
             HashMap<Long, String> cpIdMap = new HashMap<>();
             for (ContestProblem contestProblem : contestProblemList) {
@@ -228,7 +230,8 @@ public class ContestFileManager {
                     if (!isACM) {
                         String key = judge.getUsername() + "_" + judge.getPid();
                         if (!recordMap.containsKey(key)) {
-                            filePath += "_" + judge.getScore() + "_(" + threadLocalTime.get().format(judge.getSubmitTime()) + ")."
+                            filePath += "_" + judge.getScore() + "_("
+                                    + threadLocalTime.get().format(judge.getSubmitTime()) + ")."
                                     + languageToFileSuffix(judge.getLanguage().toLowerCase());
                             FileWriter fileWriter = new FileWriter(filePath);
                             fileWriter.write(judge.getCode());
@@ -266,7 +269,8 @@ public class ContestFileManager {
                         String key = judge.getUsername() + "_" + contestProblem.getDisplayId();
                         // OI模式只取最后一次提交
                         if (!recordMap.containsKey(key)) {
-                            filePath += "_" + judge.getScore() + "_(" + threadLocalTime.get().format(judge.getSubmitTime()) + ")."
+                            filePath += "_" + judge.getScore() + "_("
+                                    + threadLocalTime.get().format(judge.getSubmitTime()) + ")."
                                     + languageToFileSuffix(judge.getLanguage().toLowerCase());
                             FileWriter fileWriter = new FileWriter(filePath);
                             fileWriter.write(judge.getCode());
@@ -287,8 +291,8 @@ public class ContestFileManager {
         ZipUtil.zip(tmpFilesDir, zipPath);
         // 将zip变成io流返回给前端
         FileReader zipFileReader = new FileReader(zipPath);
-        BufferedInputStream bins = new BufferedInputStream(zipFileReader.getInputStream());//放到缓冲流里面
-        OutputStream outs = null;//获取文件输出IO流
+        BufferedInputStream bins = new BufferedInputStream(zipFileReader.getInputStream());// 放到缓冲流里面
+        OutputStream outs = null;// 获取文件输出IO流
         BufferedOutputStream bouts = null;
         try {
             outs = response.getOutputStream();
@@ -297,7 +301,7 @@ public class ContestFileManager {
             response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(zipFileName, "UTF-8"));
             int bytesRead = 0;
             byte[] buffer = new byte[1024 * 10];
-            //开始向网络传输文件流
+            // 开始向网络传输文件流
             while ((bytesRead = bins.read(buffer, 0, 1024 * 10)) != -1) {
                 bouts.write(buffer, 0, bytesRead);
             }
@@ -340,7 +344,8 @@ public class ContestFileManager {
         ContestPrint contestPrint = contestPrintEntityService.getById(id);
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         // 是否为超级管理员或者题目管理
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin");
 
         Long cid = contestPrint.getCid();
 
@@ -354,7 +359,8 @@ public class ContestFileManager {
         }
 
         String filename = contestPrint.getUsername() + "_Contest_Print.txt";
-        String filePath = Constants.File.CONTEST_TEXT_PRINT_FOLDER.getPath() + File.separator + id + File.separator + filename;
+        String filePath = Constants.File.CONTEST_TEXT_PRINT_FOLDER.getPath() + File.separator + id + File.separator
+                + filename;
         if (!FileUtil.exist(filePath)) {
 
             FileWriter fileWriter = new FileWriter(filePath);
@@ -362,8 +368,8 @@ public class ContestFileManager {
         }
 
         FileReader zipFileReader = new FileReader(filePath);
-        BufferedInputStream bins = new BufferedInputStream(zipFileReader.getInputStream());//放到缓冲流里面
-        OutputStream outs = null;//获取文件输出IO流
+        BufferedInputStream bins = new BufferedInputStream(zipFileReader.getInputStream());// 放到缓冲流里面
+        OutputStream outs = null;// 获取文件输出IO流
         BufferedOutputStream bouts = null;
         try {
             outs = response.getOutputStream();
@@ -372,7 +378,7 @@ public class ContestFileManager {
             response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(filename, "UTF-8"));
             int bytesRead = 0;
             byte[] buffer = new byte[1024 * 10];
-            //开始向网络传输文件流
+            // 开始向网络传输文件流
             while ((bytesRead = bins.read(buffer, 0, 1024 * 10)) != -1) {
                 bouts.write(buffer, 0, bytesRead);
             }
@@ -406,7 +412,6 @@ public class ContestFileManager {
             }
         }
     }
-
 
     private static final ThreadLocal<SimpleDateFormat> threadLocalTime = new ThreadLocal<SimpleDateFormat>() {
         @Override

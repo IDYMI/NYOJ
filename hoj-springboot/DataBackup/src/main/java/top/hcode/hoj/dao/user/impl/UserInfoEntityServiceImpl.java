@@ -51,4 +51,13 @@ public class UserInfoEntityServiceImpl extends ServiceImpl<UserInfoMapper, UserI
         return userInfoMapper.getProblemAdminUidList();
     }
 
+    @Override
+    public List<String> getNowContestAdmin(Long cid) {
+        return userInfoMapper.getNowContestAdmin(cid);
+    }
+
+    @Override
+    public List<String> getNowGroupAdmin(Long gid) {
+        return userInfoMapper.getNowGroupAdmin(gid);
+    }
 }

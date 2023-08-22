@@ -5,8 +5,8 @@
         <el-col :md="5" :xs="24">
           <span class="title">{{
             this.problemID
-              ? this.problemID + ' ' + $t('m.Problem_Discussion')
-              : $t('m.Group_Discussion')
+              ? this.problemID + " " + $t("m.Problem_Discussion")
+              : $t("m.Group_Discussion")
           }}</span>
         </el-col>
         <el-col :md="15" :xs="24">
@@ -17,7 +17,7 @@
             icon="el-icon-plus"
           >
             {{
-              this.problemID ? $t('m.Post_problem_discussion') : $t('m.Create')
+              this.problemID ? $t("m.Post_problem_discussion") : $t("m.Create")
             }}</el-button
           >
           <el-button
@@ -26,16 +26,16 @@
             @click="goGroupAllDiscussion"
             size="small"
             icon="el-icon-back"
-            ><i class="el-icon-s-home"> {{ $t('m.Group_Discussion') }}</i>
+            ><i class="el-icon-s-home"> {{ $t("m.Group_Discussion") }}</i>
           </el-button>
           <el-button
-            v-if="isSuperAdmin || isGroupAdmin"
+            v-if="isSuperAdmin || isGroupAdmin || isProblemAdmin"
             :type="adminPage ? 'warning' : 'success'"
             size="small"
             @click="handleAdminPage"
             :icon="adminPage ? 'el-icon-back' : 'el-icon-s-opportunity'"
             >{{
-              adminPage ? $t('m.Back') : $t('m.Discussion_Admin')
+              adminPage ? $t("m.Back") : $t("m.Discussion_Admin")
             }}</el-button
           >
         </el-col>
@@ -86,10 +86,10 @@
             <el-button
               type="primary"
               size="mini"
-              style="margin-left:5px;"
+              style="margin-left: 5px"
               v-if="discussion.pid"
               @click="goGroupProblemDetails(discussion.pid)"
-              >{{ $t('m.Go_to_problem') }}</el-button
+              >{{ $t("m.Go_to_problem") }}</el-button
             >
           </h1>
           <a @click="goGroupDiscussion(discussion.id)" class="article-hlink2">
@@ -128,7 +128,7 @@
             <span class="pr pl"
               ><label class="fw"><i class="el-icon-chat-round"></i></label
               ><span>
-                <span class="hidden-xs-only"> {{ $t('m.Comment') }}:</span>
+                <span class="hidden-xs-only"> {{ $t("m.Comment") }}:</span>
                 {{ discussion.commentNum }}</span
               ></span
             >
@@ -136,14 +136,14 @@
             <span class="pr"
               ><label class="fw"><i class="fa fa-thumbs-o-up"></i></label
               ><span>
-                <span class="hidden-xs-only"> {{ $t('m.Likes') }}:</span>
+                <span class="hidden-xs-only"> {{ $t("m.Likes") }}:</span>
                 {{ discussion.likeNum }}</span
               ></span
             >
             <span class="pr"
               ><label class="fw"><i class="fa fa-eye"></i></label
               ><span>
-                <span class="hidden-xs-only"> {{ $t('m.Views') }}:</span>
+                <span class="hidden-xs-only"> {{ $t("m.Views") }}:</span>
                 {{ discussion.viewNum }}</span
               ></span
             >
@@ -156,7 +156,7 @@
             <span class="pr pl hidden-xs-only">
               <label class="fw"><i class="fa fa-clock-o"></i></label
               ><span>
-                {{ $t('m.Release_Time') }}：<el-tooltip
+                {{ $t("m.Release_Time") }}：<el-tooltip
                   :content="discussion.gmtCreate | localtime"
                   placement="top"
                 >
@@ -166,11 +166,11 @@
             </span>
 
             <el-dropdown
-              style="float:right;"
+              style="float: right"
               class="hidden-xs-only"
               v-show="
                 isAuthenticated &&
-                  (discussion.uid === userInfo.uid || isAdminRole)
+                (discussion.uid === userInfo.uid || isAdminRole)
               "
               @command="handleCommand"
             >
@@ -182,23 +182,23 @@
                   icon="el-icon-edit-outline"
                   :command="'edit:' + index"
                   v-show="discussion.uid === userInfo.uid"
-                  >{{ $t('m.Edit') }}</el-dropdown-item
+                  >{{ $t("m.Edit") }}</el-dropdown-item
                 >
                 <el-dropdown-item
                   icon="el-icon-delete"
                   :command="'delete:' + index"
                   v-show="discussion.uid === userInfo.uid || isAdminRole"
-                  >{{ $t('m.Delete') }}</el-dropdown-item
+                  >{{ $t("m.Delete") }}</el-dropdown-item
                 >
               </el-dropdown-menu>
             </el-dropdown>
 
             <div class="hidden-sm-and-up">
               <el-dropdown
-                style="float:right;margin-top:10px; "
+                style="float: right; margin-top: 10px"
                 v-show="
                   isAuthenticated &&
-                    (discussion.uid === userInfo.uid || isAdminRole)
+                  (discussion.uid === userInfo.uid || isAdminRole)
                 "
                 @command="handleCommand"
               >
@@ -210,18 +210,18 @@
                     icon="el-icon-edit-outline"
                     :command="'edit:' + index"
                     v-show="discussion.uid === userInfo.uid"
-                    >{{ $t('m.Edit') }}</el-dropdown-item
+                    >{{ $t("m.Edit") }}</el-dropdown-item
                   >
                   <el-dropdown-item
                     icon="el-icon-delete"
                     :command="'delete:' + index"
                     v-show="discussion.uid === userInfo.uid || isAdminRole"
-                    >{{ $t('m.Delete') }}</el-dropdown-item
+                    >{{ $t("m.Delete") }}</el-dropdown-item
                   >
                 </el-dropdown-menu>
               </el-dropdown>
 
-              <span class="pr" style="float:right;margin-top:10px; "
+              <span class="pr" style="float: right; margin-top: 10px"
                 ><label class="fw"><i class="fa fa-clock-o"></i></label
                 ><span> {{ discussion.gmtCreate | localtime }}</span></span
               >
@@ -292,10 +292,10 @@
         <el-button
           type="danger"
           @click.native="showEditDiscussionDialog = false"
-          >{{ $t('m.Cancel') }}</el-button
+          >{{ $t("m.Cancel") }}</el-button
         >
         <el-button type="primary" @click.native="submitDiscussion">{{
-          $t('m.OK')
+          $t("m.OK")
         }}</el-button>
       </span>
     </el-dialog>
@@ -303,15 +303,15 @@
 </template>
 
 <script>
-import Avatar from 'vue-avatar';
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import DiscussionList from '@/components/oj/group/DiscussionList';
-import Editor from '@/components/admin/Editor.vue';
-import api from '@/common/api';
-import mMessage from '@/common/message';
+import Avatar from "vue-avatar";
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import DiscussionList from "@/components/oj/group/DiscussionList";
+import Editor from "@/components/admin/Editor.vue";
+import api from "@/common/api";
+import mMessage from "@/common/message";
 export default {
-  name: 'GroupDiscussionList',
+  name: "GroupDiscussionList",
   components: {
     Pagination,
     DiscussionList,
@@ -327,23 +327,23 @@ export default {
       discussion: {
         id: null,
         pid: null,
-        title: '',
-        content: '',
-        description: '',
-        categoryId: '',
+        title: "",
+        content: "",
+        description: "",
+        categoryId: "",
         topPriority: false,
-        uid: '',
-        author: '',
-        avatar: '',
+        uid: "",
+        author: "",
+        avatar: "",
       },
       backupDiscussion: null,
       discussionList: [],
       categoryList: [],
-      cidMapName:{},
+      cidMapName: {},
       showTags: false,
       loading: false,
       adminPage: false,
-      title: '',
+      title: "",
       problemID: null,
       groupID: null,
     };
@@ -396,7 +396,7 @@ export default {
     },
     goGroupDiscussion(discussionId) {
       this.$router.push({
-        name: 'GroupDiscussionDetails',
+        name: "GroupDiscussionDetails",
         params: {
           discussionID: discussionId,
           groupID: this.groupID,
@@ -405,7 +405,7 @@ export default {
     },
     goGroupAllDiscussion() {
       this.$router.push({
-        name: 'GroupDiscussionList',
+        name: "GroupDiscussionList",
         params: {
           groupID: this.groupID,
         },
@@ -413,7 +413,7 @@ export default {
     },
     goGroupProblemDetails(pid) {
       this.$router.push({
-        name: 'GroupProblemDetails',
+        name: "GroupProblemDetails",
         params: {
           groupID: this.groupID,
           problemID: pid,
@@ -426,17 +426,17 @@ export default {
     onOpenEditDialog() {
       setTimeout(() => {
         if (document.createEvent) {
-          let event = document.createEvent('HTMLEvents');
-          event.initEvent('resize', true, true);
+          let event = document.createEvent("HTMLEvents");
+          event.initEvent("resize", true, true);
           window.dispatchEvent(event);
         } else if (document.createEventObject) {
-          window.fireEvent('onresize');
+          window.fireEvent("onresize");
         }
       }, 0);
     },
     goCreateDiscussion() {
       this.showEditDiscussionDialog = true;
-      this.title = this.$i18n.t('m.Create_Discussion');
+      this.title = this.$i18n.t("m.Create_Discussion");
     },
     submitDiscussion() {
       let discussion = Object.assign({}, this.discussion);
@@ -445,47 +445,47 @@ export default {
         discussion.pid = this.problemID;
       }
 
-      if (this.title == this.$i18n.t('m.Create_Discussion')) {
+      if (this.title == this.$i18n.t("m.Create_Discussion")) {
         if (discussion.pid) {
-          discussion.title = '[' + discussion.pid + '] ' + discussion.title;
+          discussion.title = "[" + discussion.pid + "] " + discussion.title;
         }
         discussion.gid = this.$route.params.groupID;
         api.addGroupDiscussion(discussion).then((res) => {
-          mMessage.success(this.$i18n.t('m.Post_successfully'));
+          mMessage.success(this.$i18n.t("m.Post_successfully"));
           this.showEditDiscussionDialog = false;
           this.currentChange(1);
         });
       } else {
         api.updateGroupDiscussion(discussion).then((res) => {
-          mMessage.success(this.$i18n.t('m.Update_Successfully'));
+          mMessage.success(this.$i18n.t("m.Update_Successfully"));
           this.showEditDiscussionDialog = false;
           this.currentChange(1);
         });
       }
     },
     handleCommand(command) {
-      let tmpArr = command.split(':');
+      let tmpArr = command.split(":");
       switch (tmpArr[0]) {
-        case 'edit':
-          this.title = this.$i18n.t('m.Edit_Discussion');
+        case "edit":
+          this.title = this.$i18n.t("m.Edit_Discussion");
           this.discussion = Object.assign(
             {},
             this.discussionList[parseInt(tmpArr[1])]
           );
           this.showEditDiscussionDialog = true;
           break;
-        case 'delete':
-          this.$confirm(this.$i18n.t('m.Delete_Discussion_Tips'), 'Tips', {
-            confirmButtonText: this.$i18n.t('m.OK'),
-            cancelButtonText: this.$i18n.t('m.Cancel'),
-            type: 'warning',
+        case "delete":
+          this.$confirm(this.$i18n.t("m.Delete_Discussion_Tips"), "Tips", {
+            confirmButtonText: this.$i18n.t("m.OK"),
+            cancelButtonText: this.$i18n.t("m.Cancel"),
+            type: "warning",
           }).then(() => {
             api
               .deleteGroupDiscussion(
                 this.discussionList[parseInt(tmpArr[1])].id
               )
               .then((res) => {
-                mMessage.success(this.$i18n.t('m.Delete_successfully'));
+                mMessage.success(this.$i18n.t("m.Delete_successfully"));
                 this.currentChange(1);
               });
           });
@@ -494,18 +494,19 @@ export default {
     },
     getInfoByUsername(uid, username) {
       this.$router.push({
-        path: '/user-home',
+        path: "/user-home",
         query: { uid, username },
       });
     },
   },
   computed: {
     ...mapGetters([
-      'isAuthenticated',
-      'isSuperAdmin',
-      'isGroupAdmin',
-      'userInfo',
-      'isAdminRole',
+      "isAuthenticated",
+      "isSuperAdmin",
+      "isProblemAdmin",
+      "isGroupAdmin",
+      "userInfo",
+      "isAdminRole",
     ]),
   },
   watch: {

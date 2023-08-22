@@ -46,12 +46,12 @@ public class ContestCalculateRankManager {
     private GroupMemberEntityService groupMemberEntityService;
 
     public List<ACMContestRankVO> calcACMRank(boolean isOpenSealRank,
-                                              boolean removeStar,
-                                              Contest contest,
-                                              String currentUserId,
-                                              List<String> concernedList,
-                                              List<Integer> externalCidList,
-                                              boolean isContainsAfterContestJudge) {
+            boolean removeStar,
+            Contest contest,
+            String currentUserId,
+            List<String> concernedList,
+            List<Integer> externalCidList,
+            boolean isContainsAfterContestJudge) {
         return calcACMRank(isOpenSealRank,
                 removeStar,
                 contest,
@@ -63,14 +63,13 @@ public class ContestCalculateRankManager {
                 isContainsAfterContestJudge);
     }
 
-
     public List<OIContestRankVO> calcOIRank(Boolean isOpenSealRank,
-                                            Boolean removeStar,
-                                            Contest contest,
-                                            String currentUserId,
-                                            List<String> concernedList,
-                                            List<Integer> externalCidList,
-                                            Boolean isContainsAfterContestJudge) {
+            Boolean removeStar,
+            Contest contest,
+            String currentUserId,
+            List<String> concernedList,
+            List<Integer> externalCidList,
+            Boolean isContainsAfterContestJudge) {
 
         return calcOIRank(isOpenSealRank,
                 removeStar,
@@ -83,31 +82,30 @@ public class ContestCalculateRankManager {
                 isContainsAfterContestJudge);
     }
 
-
     /**
-     * @param isOpenSealRank  是否是查询封榜后的数据
-     * @param removeStar      是否需要移除打星队伍
-     * @param contest         比赛实体信息
-     * @param currentUserId   当前查看榜单的用户uuid,不为空则将该数据复制一份放置列表最前
-     * @param concernedList   关注的用户（uuid）列表
-     * @param externalCidList 榜单额外显示的比赛列表
-     * @param useCache        是否对初始排序计算的结果进行缓存
-     * @param cacheTime       缓存的时间 单位秒
-     * @param isContainsAfterContestJudge   是否包含比赛结束后的提交
+     * @param isOpenSealRank              是否是查询封榜后的数据
+     * @param removeStar                  是否需要移除打星队伍
+     * @param contest                     比赛实体信息
+     * @param currentUserId               当前查看榜单的用户uuid,不为空则将该数据复制一份放置列表最前
+     * @param concernedList               关注的用户（uuid）列表
+     * @param externalCidList             榜单额外显示的比赛列表
+     * @param useCache                    是否对初始排序计算的结果进行缓存
+     * @param cacheTime                   缓存的时间 单位秒
+     * @param isContainsAfterContestJudge 是否包含比赛结束后的提交
      * @MethodName calcACMRank
      * @Description TODO
      * @Return
      * @Since 2021/12/10
      */
     public List<ACMContestRankVO> calcACMRank(boolean isOpenSealRank,
-                                              boolean removeStar,
-                                              Contest contest,
-                                              String currentUserId,
-                                              List<String> concernedList,
-                                              List<Integer> externalCidList,
-                                              boolean useCache,
-                                              Long cacheTime,
-                                              boolean isContainsAfterContestJudge) {
+            boolean removeStar,
+            Contest contest,
+            String currentUserId,
+            List<String> concernedList,
+            List<Integer> externalCidList,
+            boolean useCache,
+            Long cacheTime,
+            boolean isContainsAfterContestJudge) {
         List<ACMContestRankVO> orderResultList;
         Long minSealRankTime = null;
         Long maxSealRankTime = null;
@@ -115,16 +113,18 @@ public class ContestCalculateRankManager {
             String key = null;
             if (isContainsAfterContestJudge) {
                 key = Constants.Contest.CONTEST_RANK_CAL_RESULT_CACHE.getName() + "_" + contest.getId();
-            }else{
+            } else {
                 key = Constants.Contest.CONTEST_RANK_CAL_RESULT_CACHE.getName() + "_contains_after_" + contest.getId();
             }
             orderResultList = (List<ACMContestRankVO>) redisUtils.get(key);
             if (orderResultList == null) {
                 if (isOpenSealRank) {
-                    minSealRankTime = DateUtil.between(contest.getStartTime(), contest.getSealRankTime(), DateUnit.SECOND);
+                    minSealRankTime = DateUtil.between(contest.getStartTime(), contest.getSealRankTime(),
+                            DateUnit.SECOND);
                     maxSealRankTime = contest.getDuration();
                 }
-                orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime, externalCidList, isContainsAfterContestJudge);
+                orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime,
+                        externalCidList, isContainsAfterContestJudge);
                 redisUtils.set(key, orderResultList, cacheTime);
             }
         } else {
@@ -132,7 +132,8 @@ public class ContestCalculateRankManager {
                 minSealRankTime = DateUtil.between(contest.getStartTime(), contest.getSealRankTime(), DateUnit.SECOND);
                 maxSealRankTime = contest.getDuration();
             }
-            orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime, externalCidList, isContainsAfterContestJudge);
+            orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime,
+                    externalCidList, isContainsAfterContestJudge);
         }
 
         // 需要打星的用户名列表
@@ -144,15 +145,19 @@ public class ContestCalculateRankManager {
             // 如果选择了移除打星队伍，同时该用户属于打星队伍，则将其移除
             orderResultList.removeIf(acmContestRankVo -> starAccountMap.containsKey(acmContestRankVo.getUsername()));
             if (isNeedSetAward) {
-                awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(), orderResultList.size());
+                awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(),
+                        orderResultList.size());
             }
         } else {
             if (isNeedSetAward) {
                 if (contest.getAwardType() == 1) {
-                    long count = orderResultList.stream().filter(e -> !starAccountMap.containsKey(e.getUsername())).count();
-                    awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(), (int) count);
+                    long count = orderResultList.stream().filter(e -> !starAccountMap.containsKey(e.getUsername()))
+                            .count();
+                    awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(),
+                            (int) count);
                 } else {
-                    awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(), orderResultList.size());
+                    awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(),
+                            orderResultList.size());
                 }
             }
         }
@@ -232,21 +237,19 @@ public class ContestCalculateRankManager {
         return topACMRankVoList;
     }
 
-
     private List<ACMContestRankVO> getACMOrderRank(Contest contest,
-                                                   Boolean isOpenSealRank,
-                                                   Long minSealRankTime,
-                                                   Long maxSealRankTime,
-                                                   List<Integer> externalCidList,
-                                                   Boolean isContainsAfterContestJudge) {
-
+            Boolean isOpenSealRank,
+            Long minSealRankTime,
+            Long maxSealRankTime,
+            List<Integer> externalCidList,
+            Boolean isContainsAfterContestJudge) {
 
         List<ContestRecordVO> contestRecordList = contestRecordEntityService.getACMContestRecord(contest.getUid(),
                 contest.getId(),
                 externalCidList,
                 contest.getStartTime());
 
-        List<String> superAdminUidList = getSuperAdminUidList(contest.getGid());
+        List<String> superAdminUidList = getSuperAdminUidList(contest.getGid(), contest.getId());
 
         List<ACMContestRankVO> result = new ArrayList<>();
 
@@ -265,12 +268,12 @@ public class ContestCalculateRankManager {
             boolean isAfterContestJudge = contestRecord.getSubmitTime().getTime() >= contest.getEndTime().getTime();
             boolean isBeforeContestJudge = contestRecord.getSubmitTime().getTime() < contest.getStartTime().getTime();
 
-            if (isBeforeContestJudge){
+            if (isBeforeContestJudge) {
                 // 比赛开始前的提交记录不入排行榜，跳过
                 continue;
             }
 
-            if ((!isContainsAfterContestJudge || isOpenSealRank) && isAfterContestJudge){
+            if ((!isContainsAfterContestJudge || isOpenSealRank) && isAfterContestJudge) {
                 // 如果不包含比赛结束后的提交 或者 处于封榜状态，则跳过比赛后的提交
                 continue;
             }
@@ -301,7 +304,8 @@ public class ContestCalculateRankManager {
                 ACMContestRankVo = result.get(uidMapIndex.get(contestRecord.getUid())); // 根据记录的index进行获取
             }
 
-            HashMap<String, Object> problemSubmissionInfo = ACMContestRankVo.getSubmissionInfo().get(contestRecord.getDisplayId());
+            HashMap<String, Object> problemSubmissionInfo = ACMContestRankVo.getSubmissionInfo()
+                    .get(contestRecord.getDisplayId());
 
             if (problemSubmissionInfo == null) {
                 problemSubmissionInfo = new HashMap<>();
@@ -353,7 +357,8 @@ public class ContestCalculateRankManager {
                     }
 
                     // 同时计算总耗时，总耗时加上 该题目未AC前的错误次数*20*60+题目AC耗时
-                    ACMContestRankVo.setTotalTime(ACMContestRankVo.getTotalTime() + errorNumber * 20 * 60 + contestRecord.getTime());
+                    ACMContestRankVo.setTotalTime(
+                            ACMContestRankVo.getTotalTime() + errorNumber * 20 * 60 + contestRecord.getTime());
 
                     // 未通过同时需要记录罚时次数
                 } else if (contestRecord.getStatus().intValue() == Constants.Contest.RECORD_NOT_AC_PENALTY.getCode()) {
@@ -369,45 +374,45 @@ public class ContestCalculateRankManager {
             ACMContestRankVo.getSubmissionInfo().put(contestRecord.getDisplayId(), problemSubmissionInfo);
         }
 
-        List<ACMContestRankVO> orderResultList = result.stream().sorted(Comparator.comparing(ACMContestRankVO::getAc, Comparator.reverseOrder()) // 先以总ac数降序
-                .thenComparing(ACMContestRankVO::getTotalTime) //再以总耗时升序
-        ).collect(Collectors.toList());
+        List<ACMContestRankVO> orderResultList = result.stream()
+                .sorted(Comparator.comparing(ACMContestRankVO::getAc, Comparator.reverseOrder()) // 先以总ac数降序
+                        .thenComparing(ACMContestRankVO::getTotalTime) // 再以总耗时升序
+                ).collect(Collectors.toList());
 
         return orderResultList;
     }
 
-
     /**
-     * @param isOpenSealRank  是否是查询封榜后的数据
-     * @param removeStar      是否需要移除打星队伍
-     * @param contest         比赛实体信息
-     * @param currentUserId   当前查看榜单的用户uuid,不为空则将该数据复制一份放置列表最前
-     * @param concernedList   关注的用户（uuid）列表
-     * @param externalCidList 榜单额外显示比赛列表
-     * @param useCache        是否对初始排序计算的结果进行缓存
-     * @param cacheTime       缓存的时间 单位秒
-     * @param isContainsAfterContestJudge   是否包含比赛结束后的提交
+     * @param isOpenSealRank              是否是查询封榜后的数据
+     * @param removeStar                  是否需要移除打星队伍
+     * @param contest                     比赛实体信息
+     * @param currentUserId               当前查看榜单的用户uuid,不为空则将该数据复制一份放置列表最前
+     * @param concernedList               关注的用户（uuid）列表
+     * @param externalCidList             榜单额外显示比赛列表
+     * @param useCache                    是否对初始排序计算的结果进行缓存
+     * @param cacheTime                   缓存的时间 单位秒
+     * @param isContainsAfterContestJudge 是否包含比赛结束后的提交
      * @MethodName calcOIRank
      * @Description TODO
      * @Return
      * @Since 2021/12/10
      */
     public List<OIContestRankVO> calcOIRank(boolean isOpenSealRank,
-                                            boolean removeStar,
-                                            Contest contest,
-                                            String currentUserId,
-                                            List<String> concernedList,
-                                            List<Integer> externalCidList,
-                                            boolean useCache,
-                                            Long cacheTime,
-                                            boolean isContainsAfterContestJudge) {
+            boolean removeStar,
+            Contest contest,
+            String currentUserId,
+            List<String> concernedList,
+            List<Integer> externalCidList,
+            boolean useCache,
+            Long cacheTime,
+            boolean isContainsAfterContestJudge) {
 
         List<OIContestRankVO> orderResultList;
         if (useCache) {
             String key = null;
-            if (isContainsAfterContestJudge){
+            if (isContainsAfterContestJudge) {
                 key = Constants.Contest.CONTEST_RANK_CAL_RESULT_CACHE.getName() + "_contains_after_" + contest.getId();
-            }else{
+            } else {
                 key = Constants.Contest.CONTEST_RANK_CAL_RESULT_CACHE.getName() + "_" + contest.getId();
             }
             orderResultList = (List<OIContestRankVO>) redisUtils.get(key);
@@ -428,15 +433,19 @@ public class ContestCalculateRankManager {
             // 如果选择了移除打星队伍，同时该用户属于打星队伍，则将其移除
             orderResultList.removeIf(acmContestRankVo -> starAccountMap.containsKey(acmContestRankVo.getUsername()));
             if (isNeedSetAward) {
-                awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(), orderResultList.size());
+                awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(),
+                        orderResultList.size());
             }
         } else {
             if (isNeedSetAward) {
                 if (contest.getAwardType() == 1) {
-                    long count = orderResultList.stream().filter(e -> !starAccountMap.containsKey(e.getUsername())).count();
-                    awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(), (int) count);
+                    long count = orderResultList.stream().filter(e -> !starAccountMap.containsKey(e.getUsername()))
+                            .count();
+                    awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(),
+                            (int) count);
                 } else {
-                    awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(), orderResultList.size());
+                    awardConfigVoList = getContestAwardConfigList(contest.getAwardConfig(), contest.getAwardType(),
+                            orderResultList.size());
                 }
             }
         }
@@ -519,14 +528,14 @@ public class ContestCalculateRankManager {
     }
 
     private List<OIContestRankVO> getOIOrderRank(Contest contest,
-                                                 List<Integer> externalCidList,
-                                                 Boolean isOpenSealRank,
-                                                 Boolean isContainsAfterContestJudge) {
+            List<Integer> externalCidList,
+            Boolean isOpenSealRank,
+            Boolean isContainsAfterContestJudge) {
 
         List<ContestRecordVO> oiContestRecord = contestRecordEntityService.getOIContestRecord(contest,
                 externalCidList, isOpenSealRank, isContainsAfterContestJudge);
 
-        List<String> superAdminUidList = getSuperAdminUidList(contest.getGid());
+        List<String> superAdminUidList = getSuperAdminUidList(contest.getGid(), contest.getId());
 
         List<OIContestRankVO> result = new ArrayList<>();
 
@@ -534,7 +543,8 @@ public class ContestCalculateRankManager {
 
         HashMap<String, HashMap<String, Integer>> uidMapTime = new HashMap<>();
 
-        boolean isHighestRankScore = Constants.Contest.OI_RANK_HIGHEST_SCORE.getName().equals(contest.getOiRankScoreType());
+        boolean isHighestRankScore = Constants.Contest.OI_RANK_HIGHEST_SCORE.getName()
+                .equals(contest.getOiRankScoreType());
 
         int index = 0;
 
@@ -547,12 +557,12 @@ public class ContestCalculateRankManager {
             boolean isAfterContestJudge = contestRecord.getSubmitTime().getTime() >= contest.getEndTime().getTime();
             boolean isBeforeContestJudge = contestRecord.getSubmitTime().getTime() < contest.getStartTime().getTime();
 
-            if (isBeforeContestJudge){
+            if (isBeforeContestJudge) {
                 // 比赛开始前的提交记录不入排行榜，跳过
                 continue;
             }
 
-            if ((!isContainsAfterContestJudge || isOpenSealRank) && isAfterContestJudge){
+            if ((!isContainsAfterContestJudge || isOpenSealRank) && isAfterContestJudge) {
                 // 如果不包含比赛结束后的提交 或者 处于封榜状态，则跳过比赛后的提交
                 continue;
             }
@@ -562,7 +572,7 @@ public class ContestCalculateRankManager {
                 if (pidMapTime != null) {
                     Integer useTime = pidMapTime.get(contestRecord.getDisplayId());
                     if (useTime != null) {
-                        if (useTime > contestRecord.getUseTime()) {  // 如果时间消耗比原来的少
+                        if (useTime > contestRecord.getUseTime()) { // 如果时间消耗比原来的少
                             pidMapTime.put(contestRecord.getDisplayId(), contestRecord.getUseTime());
                         }
                     } else {
@@ -588,7 +598,6 @@ public class ContestCalculateRankManager {
                         .setNickname(contestRecord.getNickname())
                         .setTotalScore(0);
 
-
                 HashMap<String, Integer> submissionInfo = new HashMap<>();
                 oiContestRankVo.setSubmissionInfo(submissionInfo);
 
@@ -610,7 +619,8 @@ public class ContestCalculateRankManager {
             } else {
                 if (contestRecord.getScore() != null) {
                     if (score != null) { // 为了避免同个提交时间的重复计算
-                        oiContestRankVo.setTotalScore(oiContestRankVo.getTotalScore() - score + contestRecord.getScore());
+                        oiContestRankVo
+                                .setTotalScore(oiContestRankVo.getTotalScore() - score + contestRecord.getScore());
                     } else {
                         oiContestRankVo.setTotalScore(oiContestRankVo.getTotalScore() + contestRecord.getScore());
                     }
@@ -619,7 +629,6 @@ public class ContestCalculateRankManager {
             }
 
         }
-
 
         for (OIContestRankVO oiContestRankVo : result) {
             HashMap<String, Integer> pidMapTime = uidMapTime.get(oiContestRankVo.getUid());
@@ -642,14 +651,9 @@ public class ContestCalculateRankManager {
         return orderResultList;
     }
 
+    public List<String> getSuperAdminUidList(Long gid, Long cid) {
 
-    public List<String> getSuperAdminUidList(Long gid) {
-
-        List<String> superAdminUidList = userInfoEntityService.getSuperAdminUidList();
-        List<String> problemAdminUidList = userInfoEntityService.getProblemAdminUidList();
-        if (!CollectionUtils.isEmpty(problemAdminUidList)) {
-            superAdminUidList.addAll(problemAdminUidList);
-        }
+        List<String> superAdminUidList = userInfoEntityService.getNowContestAdmin(cid);
 
         if (gid != null) {
             QueryWrapper<GroupMember> groupMemberQueryWrapper = new QueryWrapper<>();
@@ -663,6 +667,7 @@ public class ContestCalculateRankManager {
         }
         return superAdminUidList;
     }
+
 
     private boolean isInSealTimeSubmission(Long minSealRankTime, Long maxSealRankTime, Long time) {
         return time >= minSealRankTime && time < maxSealRankTime;
@@ -683,7 +688,8 @@ public class ContestCalculateRankManager {
         return res;
     }
 
-    private Queue<ContestAwardConfigVO> getContestAwardConfigList(String awardConfig, Integer awardType, Integer totalUser) {
+    private Queue<ContestAwardConfigVO> getContestAwardConfigList(String awardConfig, Integer awardType,
+            Integer totalUser) {
         if (StringUtils.isEmpty(awardConfig)) {
             return new LinkedList<>();
         }

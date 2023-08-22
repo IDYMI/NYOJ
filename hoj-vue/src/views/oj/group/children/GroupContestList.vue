@@ -3,16 +3,16 @@
     <div class="filter-row">
       <el-row>
         <el-col :md="3" :xs="24">
-          <span class="title">{{ $t('m.Group_Contest') }}</span>
+          <span class="title">{{ $t("m.Group_Contest") }}</span>
         </el-col>
         <el-col
           :md="18"
           :xs="24"
           v-if="
-            (isSuperAdmin || isGroupAdmin) &&
-              !problemPage &&
-              !editProblemPage &&
-              !announcementPage
+            (isSuperAdmin || isGroupAdmin || isProblemAdmin) &&
+            !problemPage &&
+            !editProblemPage &&
+            !announcementPage
           "
         >
           <el-button
@@ -21,7 +21,9 @@
             size="small"
             @click="handleCreatePage"
             :icon="createPage ? 'el-icon-back' : 'el-icon-plus'"
-            >{{ createPage ? $t('m.Back_To_Admin_Contest_List') : $t('m.Create') }}</el-button
+            >{{
+              createPage ? $t("m.Back_To_Admin_Contest_List") : $t("m.Create")
+            }}</el-button
           >
           <el-button
             v-if="editPage && adminPage"
@@ -29,26 +31,28 @@
             size="small"
             @click="handleEditPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_To_Admin_Contest_List') }}</el-button
+            >{{ $t("m.Back_To_Admin_Contest_List") }}</el-button
           >
           <el-button
-            v-if="!editPage&&!createPage"
+            v-if="!editPage && !createPage"
             :type="adminPage ? 'danger' : 'success'"
             size="small"
             @click="handleAdminPage"
             :icon="adminPage ? 'el-icon-back' : 'el-icon-s-opportunity'"
-            >{{ adminPage ? $t('m.Back_To_Contest_List') : $t('m.Contest_Admin') }}</el-button
+            >{{
+              adminPage ? $t("m.Back_To_Contest_List") : $t("m.Contest_Admin")
+            }}</el-button
           >
         </el-col>
         <el-col
-         :md="18"
-         :xs="24"
+          :md="18"
+          :xs="24"
           v-else-if="
-            (isSuperAdmin || isGroupAdmin) &&
-              problemPage &&
-              !editProblemPage &&
-              !createProblemPage &&
-              !announcementPage
+            (isSuperAdmin || isGroupAdmin || isProblemAdmin) &&
+            problemPage &&
+            !editProblemPage &&
+            !createProblemPage &&
+            !announcementPage
           "
         >
           <el-button
@@ -56,36 +60,36 @@
             size="small"
             @click="handleCreateProblemPage"
             icon="el-icon-plus"
-            >{{ $t('m.Create') }}</el-button
+            >{{ $t("m.Create") }}</el-button
           >
           <el-button
             type="primary"
             size="small"
             @click="publicPage = true"
             icon="el-icon-plus"
-            >{{ $t('m.Add_From_Public_Problem') }}</el-button
+            >{{ $t("m.Add_From_Public_Problem") }}</el-button
           >
           <el-button
             type="success"
             size="small"
             @click="handleGroupPage"
             icon="el-icon-plus"
-            >{{ $t('m.Add_From_Group_Problem') }}</el-button
+            >{{ $t("m.Add_From_Group_Problem") }}</el-button
           >
           <el-button
             type="warning"
             size="small"
             @click="handleProblemPage(null)"
             icon="el-icon-back"
-            >{{ $t('m.Back_To_Admin_Contest_List') }}</el-button
+            >{{ $t("m.Back_To_Admin_Contest_List") }}</el-button
           >
         </el-col>
         <el-col
-         :md="18"
-         :xs="24"
+          :md="18"
+          :xs="24"
           v-else-if="
-            (isSuperAdmin || isGroupAdmin) &&
-              (editProblemPage || createProblemPage)
+            (isSuperAdmin || isGroupAdmin || isProblemAdmin) &&
+            (editProblemPage || createProblemPage)
           "
         >
           <el-button
@@ -94,7 +98,7 @@
             size="small"
             @click="handleEditProblemPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_Admin_Contest_Problem_List') }}</el-button
+            >{{ $t("m.Back_Admin_Contest_Problem_List") }}</el-button
           >`
           <el-button
             v-if="createProblemPage"
@@ -102,27 +106,29 @@
             size="small"
             @click="handleCreateProblemPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_Admin_Contest_Problem_List') }}</el-button
+            >{{ $t("m.Back_Admin_Contest_Problem_List") }}</el-button
           >`
         </el-col>
         <el-col
           :md="18"
           :xs="24"
-          v-else-if="(isSuperAdmin || isGroupAdmin) && announcementPage"
+          v-else-if="
+            (isSuperAdmin || isGroupAdmin || isProblemAdmin) && announcementPage
+          "
         >
           <el-button
             type="primary"
             size="small"
             @click="handleCreateAnnouncementPage"
             icon="el-icon-plus"
-            >{{ $t('m.Create') }}</el-button
+            >{{ $t("m.Create") }}</el-button
           >
           <el-button
             type="warning"
             size="small"
             @click="handleAnnouncementPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_To_Admin_Contest_List') }}</el-button
+            >{{ $t("m.Back_To_Admin_Contest_List") }}</el-button
           >
         </el-col>
       </el-row>
@@ -158,10 +164,10 @@
                   {{ contest.title }}
                 </a>
                 <template v-if="contest.auth == 1">
-                  <i class="el-icon-lock" size="20" style="color:#d9534f"></i>
+                  <i class="el-icon-lock" size="20" style="color: #d9534f"></i>
                 </template>
                 <template v-if="contest.auth == 2">
-                  <i class="el-icon-lock" size="20" style="color:#f0ad4e"></i>
+                  <i class="el-icon-lock" size="20" style="color: #f0ad4e"></i>
                 </template>
               </p>
               <ul class="detail">
@@ -196,14 +202,14 @@
                     <el-tooltip
                       :content="
                         $t('m.Contest_Rank') +
-                          '：' +
-                          (contest.oiRankScoreType == 'Recent'
-                            ? $t(
-                                'm.Based_on_The_Recent_Score_Submitted_Of_Each_Problem'
-                              )
-                            : $t(
-                                'm.Based_on_The_Highest_Score_Submitted_For_Each_Problem'
-                              ))
+                        '：' +
+                        (contest.oiRankScoreType == 'Recent'
+                          ? $t(
+                              'm.Based_on_The_Recent_Score_Submitted_Of_Each_Problem'
+                            )
+                          : $t(
+                              'm.Based_on_The_Highest_Score_Submitted_For_Each_Problem'
+                            ))
                       "
                       placement="top"
                     >
@@ -231,7 +237,7 @@
                       effect="plain"
                     >
                       {{
-                        $t('m.' + CONTEST_TYPE_REVERSE[contest.auth]['name'])
+                        $t("m." + CONTEST_TYPE_REVERSE[contest.auth]["name"])
                       }}
                     </el-tag>
                   </el-tooltip>
@@ -239,7 +245,7 @@
                 <li v-if="contest.auth != CONTEST_TYPE.PUBLIC">
                   <i
                     class="el-icon-user-solid"
-                    style="color:rgb(48, 145, 242);"
+                    style="color: rgb(48, 145, 242)"
                   ></i
                   >x{{ contest.count != null ? contest.count : 0 }}
                 </li>
@@ -270,7 +276,7 @@
                 size="medium"
               >
                 <i class="fa fa-circle" aria-hidden="true"></i>
-                {{ $t('m.' + CONTEST_STATUS_REVERSE[contest.status]['name']) }}
+                {{ $t("m." + CONTEST_STATUS_REVERSE[contest.status]["name"]) }}
               </el-tag>
             </el-col>
           </el-row>
@@ -354,25 +360,25 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import ContestList from '@/components/oj/group/ContestList';
-import Contest from '@/components/oj/group/Contest';
-import Problem from '@/components/oj/group/Problem';
-import ProblemList from '@/components/oj/group/ProblemList';
-import AddPublicProblem from '@/components/oj/group/AddPublicProblem.vue';
-import AddGroupProblem from '@/components/oj/group/AddGroupProblem.vue';
-import AnnouncementList from '@/components/oj/group/AnnouncementList';
-import api from '@/common/api';
-import time from '@/common/time';
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import ContestList from "@/components/oj/group/ContestList";
+import Contest from "@/components/oj/group/Contest";
+import Problem from "@/components/oj/group/Problem";
+import ProblemList from "@/components/oj/group/ProblemList";
+import AddPublicProblem from "@/components/oj/group/AddPublicProblem.vue";
+import AddGroupProblem from "@/components/oj/group/AddGroupProblem.vue";
+import AnnouncementList from "@/components/oj/group/AnnouncementList";
+import api from "@/common/api";
+import time from "@/common/time";
 import {
   CONTEST_STATUS_REVERSE,
   CONTEST_TYPE,
   CONTEST_TYPE_REVERSE,
   CONTEST_STATUS,
-} from '@/common/constants';
+} from "@/common/constants";
 export default {
-  name: 'GroupContestList',
+  name: "GroupContestList",
   components: {
     Pagination,
     ContestList,
@@ -400,8 +406,8 @@ export default {
       createProblemPage: false,
       announcementPage: false,
       contestId: null,
-      acmSrc: require('@/assets/acm.jpg'),
-      oiSrc: require('@/assets/oi.jpg'),
+      acmSrc: require("@/assets/acm.jpg"),
+      oiSrc: require("@/assets/oi.jpg"),
     };
   },
   mounted() {
@@ -447,7 +453,7 @@ export default {
     },
     goGroupContest(contestId) {
       this.$router.push({
-        name: 'ContestDetails',
+        name: "ContestDetails",
         params: {
           contestID: contestId,
         },
@@ -456,12 +462,12 @@ export default {
     goContestOutsideScoreBoard(cid, type) {
       if (type == 0) {
         this.$router.push({
-          name: 'ACMScoreBoard',
+          name: "ACMScoreBoard",
           params: { contestID: cid },
         });
       } else if (type == 1) {
         this.$router.push({
-          name: 'OIScoreBoard',
+          name: "OIScoreBoard",
           params: { contestID: cid },
         });
       }
@@ -471,8 +477,8 @@ export default {
     },
     getborderColor(contest) {
       return (
-        'border-left: 4px solid ' +
-        CONTEST_STATUS_REVERSE[contest.status]['color']
+        "border-left: 4px solid " +
+        CONTEST_STATUS_REVERSE[contest.status]["color"]
       );
     },
     handleCreatePage() {
@@ -511,7 +517,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'isSuperAdmin', 'isGroupAdmin']),
+    ...mapGetters([
+      "isAuthenticated",
+      "isSuperAdmin",
+      "isProblemAdmin",
+      "isGroupAdmin",
+    ]),
   },
 };
 </script>

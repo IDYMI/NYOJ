@@ -106,7 +106,7 @@ public class UserInfo implements Serializable {
 
     @TableField(updateStrategy = FieldStrategy.IGNORED)
     @ApiModelProperty(value = "个人代码模板")
-    private String usercodeTemplate;
+    private String codeTemplate;
 
     @ApiModelProperty(value = "0可用，-1不可用")
     private int status;

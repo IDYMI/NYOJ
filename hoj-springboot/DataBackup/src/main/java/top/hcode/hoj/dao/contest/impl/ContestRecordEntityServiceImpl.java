@@ -55,18 +55,14 @@ public class ContestRecordEntityServiceImpl extends ServiceImpl<ContestRecordMap
         HashMap<Long, String> pidMapUidAndPid = new HashMap<>(12);
         HashMap<String, Long> UidAndPidMapTime = new HashMap<>(12);
 
-        List<String> superAdminUidList = userInfoEntityService.getSuperAdminUidList();
-        List<String> problemAdminUidList = userInfoEntityService.getProblemAdminUidList();
-        if (!CollectionUtils.isEmpty(problemAdminUidList)) {
-            superAdminUidList.addAll(problemAdminUidList);
-        }
+        List<String> AdminUidList = userInfoEntityService.getNowContestAdmin(cid);
 
         List<ContestRecord> userACInfo = new LinkedList<>();
 
         for (ContestRecord contestRecord : acInfo) {
 
             if (contestRecord.getUid().equals(contestCreatorId)
-                    || superAdminUidList.contains(contestRecord.getUid())) { // 超级管理员和比赛创建者的提交跳过
+                    || AdminUidList.contains(contestRecord.getUid())) { // 超级管理员和比赛创建者的提交跳过
                 continue;
             }
 

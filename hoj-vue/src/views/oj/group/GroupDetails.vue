@@ -85,9 +85,9 @@
                 <i class="el-icon-s-tools"></i>&nbsp;{{ $t('m.Group_Setting') }}
               </span>
             </el-tab-pane>
-            <el-tab-pane 
-              lazy 
-              name="GroupRank" 
+            <el-tab-pane
+              lazy
+              name="GroupRank"
               :disabled="groupMenuDisabled">
               <span slot="label">
                 <i class="el-icon-medal-1"></i>&nbsp;{{ $t('m.Group_Rank') }}
@@ -99,10 +99,10 @@
 
       <template
         v-if="
-          $route.name === 'GroupSubmissionList' || 
+          $route.name === 'GroupSubmissionList' ||
           $route.name === 'GroupSubmissionDetails' ||
             $route.name === 'GroupProblemDetails' ||
-            ($route.name != 'GroupTrainingList' 
+            ($route.name != 'GroupTrainingList'
              && $route.name.startsWith('GroupTraining'))
         "
       >
@@ -121,14 +121,14 @@
           <el-card v-show="$route.name === 'GroupDetails'">
             <el-row>
               <el-col
-                :md="isGroupMember || isSuperAdmin ? 12 : 24"
+                :md="isGroupMember || isSuperAdmin || isProblemAdmin ? 12 : 24"
                 :sm="24"
                 :xs="24"
               >
                 <div class="description-body">
                   <Markdown
                     v-if="group.description"
-                    :isAvoidXss="true" 
+                    :isAvoidXss="true"
                     :content="group.description">
                   </Markdown>
                   <div class="markdown-body" v-else>
@@ -136,12 +136,12 @@
                   </div>
                 </div>
               </el-col>
-              <el-col v-if="isGroupMember || isSuperAdmin" :md="1" :lg="1">
+              <el-col v-if="isGroupMember || isSuperAdmin || isProblemAdmin" :md="1" :lg="1">
                 <div class="separator hidden-sm-and-down"></div>
                 <p></p>
               </el-col>
               <el-col
-                v-if="isGroupMember || isSuperAdmin"
+                v-if="isGroupMember || isSuperAdmin || isProblemAdmin"
                 :md="11"
                 :sm="24"
                 :xs="24"
@@ -241,7 +241,7 @@
               </div>
             </div>
             <div style="text-align: center">
-              <span v-if="isGroupOwner || isSuperAdmin">
+              <span v-if="isGroupOwner || isSuperAdmin || isProblemAdmin">
                 <el-button type="danger" size="small" @click="disbandGroup">
                   {{ $t('m.Disband_Group') }}
                 </el-button>
@@ -513,6 +513,7 @@ export default {
       'isGroupOwner',
       'userAuth',
       'isSuperAdmin',
+      'isProblemAdmin',
       'websiteConfig'
     ]),
   },

@@ -74,7 +74,7 @@ public class UserInfoVO {
     private String ideTheme;
 
     @ApiModelProperty(value = "个人代码模板")
-    private String usercodeTemplate;
+    private String codeTemplate;
 
     @ApiModelProperty(value = "角色列表")
     private List<String> roleList;

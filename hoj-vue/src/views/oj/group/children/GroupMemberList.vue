@@ -7,7 +7,7 @@
         </el-col>
         <el-col :md="18" :xs="19">
           <el-button
-            v-if="isSuperAdmin || isGroupAdmin"
+            v-if="isSuperAdmin || isGroupAdmin || isProblemAdmin"
             :type="adminPage ? 'warning' : 'success'"
             size="small"
             @click="adminPage = !adminPage"
