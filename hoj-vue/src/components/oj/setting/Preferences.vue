@@ -92,7 +92,7 @@
     }}</label>
     <div>
       <code-mirror
-        v-model="formProfile.usercodeTemplate"
+        v-model="formProfile.codeTemplate"
         class="template_code"
       ></code-mirror>
     </div>
@@ -219,7 +219,7 @@ export default {
         codeLanguage: "",
         codeSize: "",
         ideTheme: "",
-        usercodeTemplate: "",
+        codeTemplate: "",
       },
       themes: [
         { label: "monokai", value: "monokai" },
@@ -243,7 +243,7 @@ export default {
     Object.keys(this.formProfile).forEach((element) => {
       if (profile[element] !== undefined) {
         this.formProfile[element] = profile[element];
-        this.$emit("usercodeTemplate", this.formProfile.usercodeTemplate);
+        this.$emit("codeTemplate", this.formProfile.codeTemplate);
       }
     });
     utils.getLanguages().then((languages) => {

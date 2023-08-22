@@ -910,8 +910,7 @@ export default {
     },
     disabledManualJudge(status) {
       return (
-        !this.isSuperAdmin ||
-        !this.isProblemAdmin ||
+        (!this.isSuperAdmin && !this.isProblemAdmin) ||
         status == JUDGE_STATUS_RESERVE["Judging"] ||
         status == JUDGE_STATUS_RESERVE["Compiling"] ||
         status == JUDGE_STATUS_RESERVE["ce"]
@@ -1021,7 +1020,7 @@ export default {
         : this.$i18n.t("m.Status");
     },
     rejudgeColumnVisible() {
-      return (this.isSuperAdmin || this.isProblemAdmin);
+      return this.isSuperAdmin || this.isProblemAdmin;
     },
     scoreColumnVisible() {
       return (

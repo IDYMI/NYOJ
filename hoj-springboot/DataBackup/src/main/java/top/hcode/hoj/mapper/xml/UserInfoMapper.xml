@@ -13,4 +13,12 @@
     <select id="getProblemAdminUidList" resultType="java.lang.String" useCache="true">
         select ur.uid from user_role ur where ur.role_id = 1008
     </select>
+
+    <select id="getNowContestAdmin" resultType="java.lang.String" useCache="true">
+        SELECT ur.uid FROM user_role ur, contest ct where ct.id = #{cid} and (ur.role_id = 1008 or ur.role_id = 1000) and ct.start_time > ur.gmt_create
+    </select>
+
+    <select id="getNowGroupAdmin" resultType="java.lang.String" useCache="true">
+        SELECT ur.uid FROM user_role ur, contest ct where ct.gid = #{gid} and (ur.role_id = 1008 or ur.role_id = 1000) and ct.start_time > ur.gmt_create
+    </select>
 </mapper>

@@ -75,14 +75,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     private FileEntityService fileEntityService;
 
-    @Autowired
-    private RedisUtils redisUtils;
+    // @Autowired
+    // private RedisUtils redisUtils;
 
     @Autowired
     private UserInfoEntityService userInfoEntityService;
 
-    @Autowired
-    private UserRecordEntityService userRecordEntityService;
+    // @Autowired
+    // private UserRecordEntityService userRecordEntityService;
 
     @Resource
     private SessionEntityService sessionEntityService;
@@ -173,131 +173,131 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
     }
 
-    /**
-     * 每两小时获取其他OJ的比赛列表，并保存在redis里
-     * 保存格式：
-     * oj: "Codeforces",
-     * title: "Codeforces Round #680 (Div. 1, based on VK Cup 2020-2021 - Final)",
-     * beginTime: "2020-11-08T05:00:00Z",
-     * endTime: "2020-11-08T08:00:00Z",
-     */
-    @Scheduled(cron = "0 0 0/2 * * *")
-//    @Scheduled(cron = "0/5 * * * * *")
-    @Override
-    public void getOjContestsList() {
-        // 待格式化的API，需要填充年月查询
-        String nowcoderContestAPI = "https://ac.nowcoder.com/acm/calendar/contest?token=&month=%d-%d";
-        // 将获取的比赛列表添加进这里
-        List<Map<String, Object>> contestsList = new ArrayList<>();
-        // 获取当前年月
-        DateTime dateTime = DateUtil.date();
-        // offsetMonth 增加的月份，只枚举最近3个月的比赛
-        for (int offsetMonth = 0; offsetMonth <= 2; offsetMonth++) {
-            // 月份增加i个月
-            DateTime newDate = DateUtil.offsetMonth(dateTime, offsetMonth);
-            // 格式化API 月份从0-11，所以要加一
-            String contestAPI = String.format(nowcoderContestAPI, newDate.year(), newDate.month() + 1);
-            try {
-                // 连接api，获取json格式对象
-                JSONObject resultObject = JsoupUtils.getJsonFromConnection(JsoupUtils.getConnectionFromUrl(contestAPI, null, null));
-                // 比赛列表存放在data字段中
-                JSONArray contestsArray = resultObject.getJSONArray("data");
-                // 牛客比赛列表按时间顺序排序，所以从后向前取可以减少不必要的遍历
-                for (int i = contestsArray.size() - 1; i >= 0; i--) {
-                    JSONObject contest = contestsArray.getJSONObject(i);
-                    // 如果比赛已经结束了，则直接结束
-                    if (contest.getLong("endTime", 0L) < dateTime.getTime()) {
-                        break;
-                    }
-                    // 把比赛列表信息添加在List里
-                    contestsList.add(MapUtil.builder(new HashMap<String, Object>())
-                            .put("oj", contest.getStr("ojName"))
-                            .put("url", contest.getStr("link"))
-                            .put("title", contest.getStr("contestName"))
-                            .put("beginTime", new Date(contest.getLong("startTime")))
-                            .put("endTime", new Date(contest.getLong("endTime"))).map());
-                }
-            } catch (Exception e) {
-                log.error("爬虫爬取Nowcoder比赛异常----------------------->{}", e.getMessage());
-            }
-        }
-        // 把比赛列表按照开始时间排序，方便查看
-        contestsList.sort((o1, o2) -> {
+//     /**
+//      * 每两小时获取其他OJ的比赛列表，并保存在redis里
+//      * 保存格式：
+//      * oj: "Codeforces",
+//      * title: "Codeforces Round #680 (Div. 1, based on VK Cup 2020-2021 - Final)",
+//      * beginTime: "2020-11-08T05:00:00Z",
+//      * endTime: "2020-11-08T08:00:00Z",
+//      */
+//     @Scheduled(cron = "0 0 0/2 * * *")
+// //    @Scheduled(cron = "0/5 * * * * *")
+//     @Override
+//     public void getOjContestsList() {
+//         // 待格式化的API，需要填充年月查询
+//         String nowcoderContestAPI = "https://ac.nowcoder.com/acm/calendar/contest?token=&month=%d-%d";
+//         // 将获取的比赛列表添加进这里
+//         List<Map<String, Object>> contestsList = new ArrayList<>();
+//         // 获取当前年月
+//         DateTime dateTime = DateUtil.date();
+//         // offsetMonth 增加的月份，只枚举最近3个月的比赛
+//         for (int offsetMonth = 0; offsetMonth <= 2; offsetMonth++) {
+//             // 月份增加i个月
+//             DateTime newDate = DateUtil.offsetMonth(dateTime, offsetMonth);
+//             // 格式化API 月份从0-11，所以要加一
+//             String contestAPI = String.format(nowcoderContestAPI, newDate.year(), newDate.month() + 1);
+//             try {
+//                 // 连接api，获取json格式对象
+//                 JSONObject resultObject = JsoupUtils.getJsonFromConnection(JsoupUtils.getConnectionFromUrl(contestAPI, null, null));
+//                 // 比赛列表存放在data字段中
+//                 JSONArray contestsArray = resultObject.getJSONArray("data");
+//                 // 牛客比赛列表按时间顺序排序，所以从后向前取可以减少不必要的遍历
+//                 for (int i = contestsArray.size() - 1; i >= 0; i--) {
+//                     JSONObject contest = contestsArray.getJSONObject(i);
+//                     // 如果比赛已经结束了，则直接结束
+//                     if (contest.getLong("endTime", 0L) < dateTime.getTime()) {
+//                         break;
+//                     }
+//                     // 把比赛列表信息添加在List里
+//                     contestsList.add(MapUtil.builder(new HashMap<String, Object>())
+//                             .put("oj", contest.getStr("ojName"))
+//                             .put("url", contest.getStr("link"))
+//                             .put("title", contest.getStr("contestName"))
+//                             .put("beginTime", new Date(contest.getLong("startTime")))
+//                             .put("endTime", new Date(contest.getLong("endTime"))).map());
+//                 }
+//             } catch (Exception e) {
+//                 log.error("爬虫爬取Nowcoder比赛异常----------------------->{}", e.getMessage());
+//             }
+//         }
+//         // 把比赛列表按照开始时间排序，方便查看
+//         contestsList.sort((o1, o2) -> {
 
-            long beginTime1 = ((Date) o1.get("beginTime")).getTime();
-            long beginTime2 = ((Date) o2.get("beginTime")).getTime();
+//             long beginTime1 = ((Date) o1.get("beginTime")).getTime();
+//             long beginTime2 = ((Date) o2.get("beginTime")).getTime();
 
-            return Long.compare(beginTime1, beginTime2);
-        });
+//             return Long.compare(beginTime1, beginTime2);
+//         });
 
-        // 获取对应的redis key
-        String redisKey = Constants.Schedule.RECENT_OTHER_CONTEST.getCode();
-        // 缓存时间一天
-        redisUtils.set(redisKey, contestsList, 60 * 60 * 24);
-        // 增加log提示
-        log.info("获取牛客API的比赛列表成功！共获取数据" + contestsList.size() + "条");
-    }
+//         // 获取对应的redis key
+//         String redisKey = Constants.Schedule.RECENT_OTHER_CONTEST.getCode();
+//         // 缓存时间一天
+//         redisUtils.set(redisKey, contestsList, 60 * 60 * 24);
+//         // 增加log提示
+//         log.info("获取牛客API的比赛列表成功！共获取数据" + contestsList.size() + "条");
+//     }
 
 
-    /**
-     * 每天3点获取codeforces的rating分数
-     */
-    @Scheduled(cron = "0 0 3 * * *")
-//    @Scheduled(cron = "0/5 * * * * *")
-    @Override
-    public void getCodeforcesRating() {
-        String codeforcesUserInfoAPI = "https://codeforces.com/api/user.info?handles=%s";
-        QueryWrapper<UserInfo> userInfoQueryWrapper = new QueryWrapper<>();
-        // 查询cf_username不为空的数据
-        userInfoQueryWrapper.isNotNull("cf_username");
-        List<UserInfo> userInfoList = userInfoEntityService.list(userInfoQueryWrapper);
-        for (UserInfo userInfo : userInfoList) {
-            // 获取cf名字
-            String cfUsername = userInfo.getCfUsername();
-            // 获取uuid
-            String uuid = userInfo.getUuid();
-            // 格式化api
-            String ratingAPI = String.format(codeforcesUserInfoAPI, cfUsername);
-            try {
-                // 连接api，获取json格式对象
-                ScheduleServiceImpl service = applicationContext.getBean(ScheduleServiceImpl.class);
-                JSONObject resultObject = service.getCFUserInfo(ratingAPI);
-                // 获取状态码
-                String status = resultObject.getStr("status");
-                // 如果查无此用户，则跳过
-                if ("FAILED".equals(status)) {
-                    continue;
-                }
-                // 用户信息存放在result列表中的第0个
-                JSONObject cfUserInfo = resultObject.getJSONArray("result").getJSONObject(0);
-                // 获取cf的分数
-                Integer cfRating = cfUserInfo.getInt("rating", null);
-                UpdateWrapper<UserRecord> userRecordUpdateWrapper = new UpdateWrapper<>();
-                // 将对应的cf分数修改
-                userRecordUpdateWrapper.eq("uid", uuid).set("rating", cfRating);
-                boolean result = userRecordEntityService.update(userRecordUpdateWrapper);
-                if (!result) {
-                    log.error("插入UserRecord表失败------------------------------->");
-                }
+//     /**
+//      * 每天3点获取codeforces的rating分数
+//      */
+//     @Scheduled(cron = "0 0 3 * * *")
+// //    @Scheduled(cron = "0/5 * * * * *")
+//     @Override
+//     public void getCodeforcesRating() {
+//         String codeforcesUserInfoAPI = "https://codeforces.com/api/user.info?handles=%s";
+//         QueryWrapper<UserInfo> userInfoQueryWrapper = new QueryWrapper<>();
+//         // 查询cf_username不为空的数据
+//         userInfoQueryWrapper.isNotNull("cf_username");
+//         List<UserInfo> userInfoList = userInfoEntityService.list(userInfoQueryWrapper);
+//         for (UserInfo userInfo : userInfoList) {
+//             // 获取cf名字
+//             String cfUsername = userInfo.getCfUsername();
+//             // 获取uuid
+//             String uuid = userInfo.getUuid();
+//             // 格式化api
+//             String ratingAPI = String.format(codeforcesUserInfoAPI, cfUsername);
+//             try {
+//                 // 连接api，获取json格式对象
+//                 ScheduleServiceImpl service = applicationContext.getBean(ScheduleServiceImpl.class);
+//                 JSONObject resultObject = service.getCFUserInfo(ratingAPI);
+//                 // 获取状态码
+//                 String status = resultObject.getStr("status");
+//                 // 如果查无此用户，则跳过
+//                 if ("FAILED".equals(status)) {
+//                     continue;
+//                 }
+//                 // 用户信息存放在result列表中的第0个
+//                 JSONObject cfUserInfo = resultObject.getJSONArray("result").getJSONObject(0);
+//                 // 获取cf的分数
+//                 Integer cfRating = cfUserInfo.getInt("rating", null);
+//                 UpdateWrapper<UserRecord> userRecordUpdateWrapper = new UpdateWrapper<>();
+//                 // 将对应的cf分数修改
+//                 userRecordUpdateWrapper.eq("uid", uuid).set("rating", cfRating);
+//                 boolean result = userRecordEntityService.update(userRecordUpdateWrapper);
+//                 if (!result) {
+//                     log.error("插入UserRecord表失败------------------------------->");
+//                 }
 
-            } catch (Exception e) {
-                log.error("爬虫爬取Codeforces Rating分数异常----------------------->{}", e.getMessage());
-            }
-            try {
-                TimeUnit.SECONDS.sleep(2);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        log.info("获取Codeforces Rating成功！");
-    }
+//             } catch (Exception e) {
+//                 log.error("爬虫爬取Codeforces Rating分数异常----------------------->{}", e.getMessage());
+//             }
+//             try {
+//                 TimeUnit.SECONDS.sleep(2);
+//             } catch (InterruptedException e) {
+//                 e.printStackTrace();
+//             }
+//         }
+//         log.info("获取Codeforces Rating成功！");
+//     }
 
-    @Retryable(value = Exception.class,
-            maxAttempts = 5,
-            backoff = @Backoff(delay = 1000, multiplier = 1.4))
-    public JSONObject getCFUserInfo(String url) throws Exception {
-        return JsoupUtils.getJsonFromConnection(JsoupUtils.getConnectionFromUrl(url, null, null));
-    }
+//     @Retryable(value = Exception.class,
+//             maxAttempts = 5,
+//             backoff = @Backoff(delay = 1000, multiplier = 1.4))
+//     public JSONObject getCFUserInfo(String url) throws Exception {
+//         return JsoupUtils.getJsonFromConnection(JsoupUtils.getConnectionFromUrl(url, null, null));
+//     }
 
 
     /**

@@ -874,7 +874,7 @@ export default {
   data() {
     return {
       formProfile: {
-        usercodeTemplate: "",
+        codeTemplate: "",
       },
       statusVisible: false,
       captchaRequired: false,
@@ -1351,7 +1351,7 @@ export default {
           if (codeTemplate && codeTemplate[this.language]) {
             this.code = codeTemplate[this.language];
           } else {
-            this.code = this.formProfile.usercodeTemplate || "";
+            this.code = this.formProfile.codeTemplate || "";
           }
           this.$nextTick((_) => {
             addCodeBtn();
@@ -1457,7 +1457,7 @@ export default {
         if (this.problemData.codeTemplate[newLang]) {
           this.code = this.problemData.codeTemplate[newLang];
         } else {
-          this.code = this.formProfile.usercodeTemplate || "";
+          this.code = this.formProfile.codeTemplate || "";
         }
       }
       this.language = newLang;
@@ -1480,7 +1480,7 @@ export default {
           if (codeTemplate && codeTemplate[this.language]) {
             this.code = codeTemplate[this.language];
           } else {
-            this.code = this.formProfile.usercodeTemplate || "";
+            this.code = this.formProfile.codeTemplate || "";
           }
         })
         .catch(() => {});

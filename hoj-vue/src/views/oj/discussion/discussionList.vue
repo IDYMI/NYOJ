@@ -285,7 +285,7 @@
               "><i class="el-icon-folder-opened"></i> {{ $t('m.Category') }}</a>
             <span
               style="float:right"
-              v-if="isSuperAdmin"
+              v-if="isSuperAdmin || isProblemAdmin"
             >
               <a @click="upsertCategoryList">
                 <i
@@ -724,7 +724,7 @@ export default {
         myMessage.error(this.$i18n.t("m.Discussion_content") + " " + this.$i18n.t("m.Can_not_exceed_65535"));
         return;
       }
-      
+
       // 默认为题目的讨论添加题号格式
       let discussion = Object.assign({}, this.discussion);
       if (this.discussionDialogTitle == this.$i18n.t("m.Create_Discussion")) {
@@ -804,6 +804,7 @@ export default {
       "userInfo",
       "isAdminRole",
       "isSuperAdmin",
+      "isProblemAdmin",
     ]),
   },
 };

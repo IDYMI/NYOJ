@@ -284,12 +284,8 @@ public class TrainingManager {
         Map<Long, String> tpIdMapDisplayId = getTPIdMapDisplayId(tid);
         List<TrainingRecordVO> trainingRecordVOList = trainingRecordEntityService.getTrainingRecord(tid);
 
-        List<String> superAdminUidList = userInfoEntityService.getSuperAdminUidList();
-        List<String> problemAdminUidList = userInfoEntityService.getProblemAdminUidList();
-        if (!CollectionUtils.isEmpty(problemAdminUidList)) {
-            superAdminUidList.addAll(problemAdminUidList);
-        }
-        
+        List<String> superAdminUidList = userInfoEntityService.getNowGroupAdmin(gid);
+
         if (gid != null) {
             List<String> groupRootUidList = groupMemberEntityService.getGroupRootUidList(gid);
             superAdminUidList.addAll(groupRootUidList);

@@ -68,12 +68,7 @@ public class CommentEntityServiceImpl extends ServiceImpl<CommentMapper, Comment
                     && !isRoot && !contest.getUid().equals(uid);
             if (onlyMineAndAdmin) { // 自己和比赛管理者评论可看
 
-
-                List<String> myAndAdminUidList = userInfoEntityService.getSuperAdminUidList();
-                List<String> problemAdminUidList = userInfoEntityService.getProblemAdminUidList();
-                if (!CollectionUtils.isEmpty(problemAdminUidList)) {
-                    myAndAdminUidList.addAll(problemAdminUidList);
-                }
+                List<String> myAndAdminUidList = userInfoEntityService.getNowContestAdmin(contest.getId());
 
                 myAndAdminUidList.add(uid);
                 myAndAdminUidList.add(contest.getUid());

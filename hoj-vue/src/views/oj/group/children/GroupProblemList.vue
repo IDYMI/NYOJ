@@ -3,7 +3,7 @@
     <div class="filter-row">
       <el-row>
         <el-col :md="3" :xs="5">
-          <span class="title">{{ $t('m.Group_Problem') }}</span>
+          <span class="title">{{ $t("m.Group_Problem") }}</span>
         </el-col>
         <el-col :md="18" :xs="19" v-if="isSuperAdmin || isGroupAdmin">
           <el-button
@@ -12,7 +12,9 @@
             size="small"
             @click="handleCreatePage"
             :icon="createPage ? 'el-icon-back' : 'el-icon-plus'"
-            >{{ createPage ? $t('m.Back_To_Problem_List') : $t('m.Create') }}</el-button
+            >{{
+              createPage ? $t("m.Back_To_Problem_List") : $t("m.Create")
+            }}</el-button
           >
           <el-button
             v-if="editPage && adminPage"
@@ -20,14 +22,16 @@
             size="small"
             @click="handleEditPage"
             icon="el-icon-back"
-            >{{ $t('m.Back_To_Admin_Problem_List') }}</el-button
+            >{{ $t("m.Back_To_Admin_Problem_List") }}</el-button
           >`
           <el-button
             :type="adminPage ? 'danger' : 'success'"
             size="small"
             @click="handleAdminPage"
             :icon="adminPage ? 'el-icon-circle-close' : 'el-icon-s-opportunity'"
-            >{{ adminPage ? $t('m.Cancel_Admin') : $t('m.Problem_Admin') }}</el-button
+            >{{
+              adminPage ? $t("m.Cancel_Admin") : $t("m.Problem_Admin")
+            }}</el-button
           >
         </el-col>
       </el-row>
@@ -106,14 +110,14 @@
               v-if="!showTags"
               :underline="false"
               @click="showTags = !showTags"
-              >{{ $t('m.Show_Tags') }}</el-link
+              >{{ $t("m.Show_Tags") }}</el-link
             >
             <el-link
               type="danger"
               v-else
               @click="showTags = !showTags"
               :underline="false"
-              >{{ $t('m.Hide_Tags') }}</el-link
+              >{{ $t("m.Hide_Tags") }}</el-link
             >
           </template>
           <template v-slot="{ row }">
@@ -122,7 +126,7 @@
                 class="el-tag el-tag--small"
                 :style="
                   'margin-right:7px;color:#FFF;background-color:' +
-                    (tag.color ? tag.color : '#409eff')
+                  (tag.color ? tag.color : '#409eff')
                 "
                 v-for="tag in row.tags"
                 :key="tag.id"
@@ -178,15 +182,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import utils from '@/common/utils';
-import { JUDGE_STATUS } from '@/common/constants';
-import Pagination from '@/components/oj/common/Pagination';
-import ProblemList from '@/components/oj/group/ProblemList';
-import Problem from '@/components/oj/group/Problem';
-import api from '@/common/api';
+import { mapGetters } from "vuex";
+import utils from "@/common/utils";
+import { JUDGE_STATUS } from "@/common/constants";
+import Pagination from "@/components/oj/common/Pagination";
+import ProblemList from "@/components/oj/group/ProblemList";
+import Problem from "@/components/oj/group/Problem";
+import api from "@/common/api";
 export default {
-  name: 'GroupProblemList',
+  name: "GroupProblemList",
   components: {
     Pagination,
     ProblemList,
@@ -200,14 +204,14 @@ export default {
       problemList: [],
       contestID: null,
       pid: null,
-      title: '',
-      apiMethod: '',
+      title: "",
+      apiMethod: "",
       JUDGE_STATUS: {},
       isGetStatusOk: false,
-      testcolor: 'rgba(0, 206, 209, 1)',
+      testcolor: "rgba(0, 206, 209, 1)",
       showTags: false,
       loading: false,
-      routeName: '',
+      routeName: "",
       adminPage: false,
       createPage: false,
       editPage: false,
@@ -215,12 +219,12 @@ export default {
   },
   mounted() {
     this.routeName = this.$route.name;
-    if (this.routeName === 'GroupProblemList') {
-      this.title = this.$t('m.Create_Problem');
-      this.apiMethod = 'addGroupProblem';
-    } else if (this.routeName === 'GroupContestProblemList') {
-      this.title = this.$t('m.Create_Contest_Problem');
-      this.apiMethod = 'addGroupContestProblem';
+    if (this.routeName === "GroupProblemList") {
+      this.title = this.$t("m.Create_Problem");
+      this.apiMethod = "addGroupProblem";
+    } else if (this.routeName === "GroupContestProblemList") {
+      this.title = this.$t("m.Create_Contest_Problem");
+      this.apiMethod = "addGroupContestProblem";
     }
     this.init();
   },
@@ -271,8 +275,8 @@ export default {
                       index < this.problemList.length;
                       index++
                     ) {
-                      this.problemList[index]['myStatus'] =
-                        result[this.problemList[index].pid]['status'];
+                      this.problemList[index]["myStatus"] =
+                        result[this.problemList[index].pid]["status"];
                     }
                     this.isGetStatusOk = true;
                   });
@@ -286,7 +290,7 @@ export default {
     },
     goGroupProblem(event) {
       this.$router.push({
-        name: 'GroupFullProblemDetails',
+        name: "GroupFullProblemDetails",
         params: {
           problemID: event.row.problemId,
         },
@@ -309,7 +313,7 @@ export default {
     },
     getIconColor(status) {
       return (
-        'font-weight: 600;font-size: 16px;color:' + JUDGE_STATUS[status].rgb
+        "font-weight: 600;font-size: 16px;color:" + JUDGE_STATUS[status].rgb
       );
     },
     getLevelColor(difficulty) {
@@ -326,9 +330,14 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'isSuperAdmin', 'isGroupAdmin']),
+    ...mapGetters([
+      "isAuthenticated",
+      "isSuperAdmin",
+      "isProblemAdmin",
+      "isGroupAdmin",
+    ]),
     isContest() {
-      return !(this.routeName == 'GroupProblemList' && !this.contestId);
+      return !(this.routeName == "GroupProblemList" && !this.contestId);
     },
   },
 };

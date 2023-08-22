@@ -188,7 +188,7 @@ export default {
     this.init();
   },
   computed: {
-    ...mapGetters(['userInfo', 'isSuperAdmin']),
+    ...mapGetters(['userInfo', 'isSuperAdmin','isProblemAdmin']),
   },
   methods: {
     init() {

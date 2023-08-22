@@ -129,7 +129,7 @@ public class ContestScrollBoardManager {
             throw new StatusFailException("比赛未结束，禁止进行滚榜 (Roll off is prohibited before the contest is over)");
         }
 
-        List<String> removeUidList = contestCalculateRankManager.getSuperAdminUidList(contest.getGid());
+        List<String> removeUidList = contestCalculateRankManager.getSuperAdminUidList(contest.getGid(), contest.getId());
         if (!removeUidList.contains(contest.getUid())) {
             removeUidList.add(contest.getUid());
         }

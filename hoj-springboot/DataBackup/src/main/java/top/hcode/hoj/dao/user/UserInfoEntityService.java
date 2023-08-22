@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author Himit_ZH
@@ -21,4 +21,8 @@ public interface UserInfoEntityService extends IService<UserInfo> {
     public List<String> getSuperAdminUidList();
 
     public List<String> getProblemAdminUidList();
+
+    public List<String> getNowContestAdmin(Long cid);
+
+    public List<String> getNowGroupAdmin(Long gid);
 }

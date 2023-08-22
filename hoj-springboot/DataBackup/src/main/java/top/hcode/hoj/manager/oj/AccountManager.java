@@ -551,7 +551,7 @@ public class AccountManager {
                 .set("code_language", userInfoVo.getCodeLanguage())
                 .set("code_size", userInfoVo.getCodeSize())
                 .set("ide_theme", userInfoVo.getIdeTheme())
-                .set("code_template", userInfoVo.getUsercodeTemplate());
+                .set("code_template", userInfoVo.getCodeTemplate());
 
         boolean isOk = userInfoEntityService.update(updateWrapper);
 

@@ -434,17 +434,13 @@ public class ContestManager {
         }
 
         // 筛去 比赛管理员和超级管理员的提交
-        List<String> superAdminUidList = userInfoEntityService.getSuperAdminUidList();
-        List<String> problemAdminUidList = userInfoEntityService.getProblemAdminUidList();
-        if (!CollectionUtils.isEmpty(problemAdminUidList)) {
-            superAdminUidList.addAll(problemAdminUidList);
-        }
-        superAdminUidList.add(contest.getUid());
+        List<String> AdminUidList = userInfoEntityService.getNowContestAdmin(contest.getId());
+        AdminUidList.add(contest.getUid());
 
         // 获取题目的提交记录
         ProblemCountVO problemCount = judgeEntityService.getContestProblemCount(contestProblem.getPid(),
                 contestProblem.getId(),
-                contestProblem.getCid(), contest.getStartTime(), sealRankTime, superAdminUidList);
+                contestProblem.getCid(), contest.getStartTime(), sealRankTime, AdminUidList);
 
         // 获取题目的代码模板
         QueryWrapper<CodeTemplate> codeTemplateQueryWrapper = new QueryWrapper<>();

@@ -81,7 +81,7 @@ public class UserRolesVO implements Serializable {
     private String ideTheme;
 
     @ApiModelProperty(value = "个人代码模板")
-    private String usercodeTemplate;
+    private String codeTemplate;
 
     @ApiModelProperty(value = "个性签名")
     private String signature;
