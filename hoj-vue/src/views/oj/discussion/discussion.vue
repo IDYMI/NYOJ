@@ -14,7 +14,7 @@
           >
         </h1>
         <div class="title-msg">
-          <span>  
+          <span>
             <a
               class="c999"
               @click="getInfoByUsername(discussion.uid, discussion.author)"

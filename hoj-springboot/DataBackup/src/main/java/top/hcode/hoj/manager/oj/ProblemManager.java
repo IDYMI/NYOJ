@@ -85,18 +85,23 @@ public class ProblemManager {
      * @Since 2020/10/27
      */
     public Page<ProblemVO> getProblemList(Integer limit, Integer currentPage,
-                                          String keyword, List<Long> tagId, Integer difficulty, String oj) {
+            String keyword, List<Long> tagId, Integer difficulty, String oj) {
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
 
         // 关键词查询不为空
         if (!StringUtils.isEmpty(keyword)) {
             keyword = keyword.trim();
         }
-        if (oj != null && !Constants.RemoteOJ.isRemoteOJ(oj)) {
-            oj = "Mine";
-        }
+        // // 根据oj筛选过滤
+        // if (oj != null && !"All".equals(oj)) {
+        // if (!Constants.RemoteOJ.isRemoteOJ(oj)) {
+        // oj = (oj == "Mine" ? "NYOJ" : "NSWOJ");
+        // }
+        // }
         return problemEntityService.getProblemList(limit, currentPage, null, keyword,
                 difficulty, tagId, oj);
     }
@@ -106,11 +111,28 @@ public class ProblemManager {
      * @Description 随机选取一道题目
      * @Since 2020/10/27
      */
-    public RandomProblemVO getRandomProblem() throws StatusFailException {
+    public RandomProblemVO getRandomProblem(String oj) throws StatusFailException {
+        Boolean isRemote = false;
         QueryWrapper<Problem> queryWrapper = new QueryWrapper<>();
-        // 必须是公开题目
-        queryWrapper.select("problem_id").eq("auth", 1)
-                .eq("is_group", false);
+
+        // 根据oj筛选过滤
+        if (oj != null && !"All".equals(oj)) {
+            if (!Constants.RemoteOJ.isRemoteOJ(oj)) {
+                oj = (oj == "ME" ? "NYOJ" : "NSWOJ");
+            } else {
+                isRemote = true;
+            }
+        }
+
+        if (oj != null) {
+            // 必须是公开题目
+            queryWrapper.select("problem_id").eq("auth", 1).eq("is_remote", isRemote).eq("is_group", false)
+                    .likeRight("problem_id", oj);
+        } else {
+            // 必须是公开题目
+            queryWrapper.select("problem_id").eq("auth", 1).eq("is_group", false);
+        }
+
         List<Problem> list = problemEntityService.list(queryWrapper);
         if (list.size() == 0) {
             throw new StatusFailException("获取随机题目失败，题库暂无公开题目！");
@@ -249,9 +271,10 @@ public class ProblemManager {
      * @Description 获取指定题目的详情信息，标签，所支持语言，做题情况（只能查询公开题目 也就是auth为1）
      * @Since 2020/10/27
      */
-    public ProblemInfoVO getProblemInfo(String problemId, Long gid) throws StatusNotFoundException, StatusForbiddenException {
+    public ProblemInfoVO getProblemInfo(String problemId, Long gid)
+            throws StatusNotFoundException, StatusForbiddenException {
         QueryWrapper<Problem> wrapper = new QueryWrapper<Problem>().eq("problem_id", problemId);
-        //查询题目详情，题目标签，题目语言，题目做题情况
+        // 查询题目详情，题目标签，题目语言，题目做题情况
         Problem problem = problemEntityService.getOne(wrapper, false);
         if (problem == null) {
             throw new StatusNotFoundException("该题号对应的题目不存在");
@@ -295,7 +318,7 @@ public class ProblemManager {
         if (CollectionUtil.isNotEmpty(lidList)) {
             Collection<Language> languages = languageEntityService.listByIds(lidList);
             languages = languages.stream().sorted(Comparator.comparing(Language::getSeq, Comparator.reverseOrder())
-                            .thenComparing(Language::getId))
+                    .thenComparing(Language::getId))
                     .collect(Collectors.toList());
             languages.forEach(language -> {
                 languagesStr.add(language.getName());

@@ -2,7 +2,9 @@
   <el-card shadow :padding="10">
     <div slot="header">
       <span class="panel-title" v-if="isContest">{{ title }}</span>
-      <span v-else class="home-title panel-title"><i class="el-icon-data-board"></i> {{ title }}</span>
+      <span v-else class="home-title panel-title"
+        ><i class="el-icon-data-board"></i> {{ title }}</span
+      >
       <span style="float: right">
         <el-button
           v-if="listVisible"
@@ -11,7 +13,7 @@
           size="small"
           icon="el-icon-refresh"
           :loading="btnLoading"
-          >{{ $t('m.Refresh') }}</el-button
+          >{{ $t("m.Refresh") }}</el-button
         >
         <el-button
           v-else
@@ -19,7 +21,7 @@
           icon="el-icon-back"
           @click="goBack"
           size="small"
-          >{{ $t('m.Back') }}</el-button
+          >{{ $t("m.Back") }}</el-button
         >
       </span>
     </div>
@@ -78,18 +80,18 @@
 </template>
 
 <script>
-import api from '@/common/api';
-import { addCodeBtn } from '@/common/codeblock';
-import Pagination from '@/components/oj/common/Pagination';
+import api from "@/common/api";
+import { addCodeBtn } from "@/common/codeblock";
+import Pagination from "@/components/oj/common/Pagination";
 export default {
-  name: 'Announcement',
+  name: "Announcement",
   components: {
     Pagination,
   },
   props: {
     limit: {
       type: Number,
-      default: 10,
+      default: 8,
     },
   },
   data() {
@@ -97,7 +99,7 @@ export default {
       total: 0,
       btnLoading: false,
       announcements: [],
-      announcement: '',
+      announcement: "",
       listVisible: true,
     };
   },
@@ -154,15 +156,15 @@ export default {
     },
     goBack() {
       this.listVisible = true;
-      this.announcement = '';
+      this.announcement = "";
     },
   },
   computed: {
     title() {
       if (this.listVisible) {
         return this.isContest
-          ? this.$i18n.t('m.Contest_Announcement')
-          : this.$i18n.t('m.Announcement');
+          ? this.$i18n.t("m.Contest_Announcement")
+          : this.$i18n.t("m.Announcement");
       } else {
         return this.announcement.title;
       }
@@ -182,9 +184,10 @@ export default {
 .announcements-container li {
   padding-top: 15px;
   list-style: none;
-  padding-bottom: 15px;
-  margin-left: 20px;
-  margin-top: 10px;
+  padding-bottom: 25px;
+  margin-left: 60px;
+  margin-right: 60px;
+  margin-top: 20px;
   font-size: 16px;
   border: 1px solid rgba(187, 187, 187, 0.5);
   border-left: 2px solid #409eff;
@@ -201,6 +204,7 @@ export default {
 
 .flex-container .title .entry {
   color: #495060;
+  font-size: 20px;
   font-style: oblique;
 }
 .flex-container .title a:hover {
@@ -223,7 +227,7 @@ export default {
 
 .no-announcement {
   text-align: center;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .announcement-animate-enter-active {

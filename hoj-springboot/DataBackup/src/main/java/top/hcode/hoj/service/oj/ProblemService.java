@@ -20,9 +20,9 @@ import java.util.List;
 public interface ProblemService {
 
     public CommonResult<Page<ProblemVO>> getProblemList(Integer limit, Integer currentPage,
-                                                        String keyword, List<Long> tagId, Integer difficulty, String oj);
+            String keyword, List<Long> tagId, Integer difficulty, String oj);
 
-    public CommonResult<RandomProblemVO> getRandomProblem();
+    public CommonResult<RandomProblemVO> getRandomProblem(String oj);
 
     public CommonResult<HashMap<Long, Object>> getUserProblemStatus(PidListDTO pidListDto);
 

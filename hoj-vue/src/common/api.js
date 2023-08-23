@@ -304,8 +304,12 @@ const ojApi = {
     })
   },
   // 随机来一题
-  pickone() {
-    return ajax('/api/get-random-problem', 'get')
+  pickone(oj) {
+    return ajax('/api/get-random-problem', 'get', {
+      params: {
+        oj
+      }
+    })
   },
 
   // Problem详情页的相关请求
