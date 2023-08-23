@@ -22,10 +22,10 @@ import java.util.List;
 @Repository
 public interface ProblemMapper extends BaseMapper<Problem> {
     List<ProblemVO> getProblemList(IPage page,
-                                   @Param("pid") Long pid,
-                                   @Param("keyword") String keyword,
-                                   @Param("difficulty") Integer difficulty,
-                                   @Param("tid") List<Long> tid,
-                                   @Param("tagListSize") Integer tagListSize,
-                                   @Param("oj") String oj);
+            @Param("pid") Long pid,
+            @Param("keyword") String keyword,
+            @Param("difficulty") Integer difficulty,
+            @Param("tid") List<Long> tid,
+            @Param("tagListSize") Integer tagListSize,
+            @Param("oj") String oj);
 }

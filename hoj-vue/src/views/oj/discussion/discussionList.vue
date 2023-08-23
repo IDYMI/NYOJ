@@ -1,23 +1,24 @@
 <template>
   <div class="container">
     <el-row :gutter="20">
-      <el-col
-        :md="18"
-        :xs="24"
-        v-loading="loading.discussion"
-      >
+      <el-col :md="18" :xs="24" v-loading="loading.discussion">
         <div class="discussion-header">
-          <span style="padding: 16px;float:left;">
+          <span style="padding: 16px; float: left">
             <el-breadcrumb separator-class="el-icon-arrow-right">
               <template v-if="currentCategory">
                 <el-breadcrumb-item :to="{ name: routeName, query: null }">
-                  {{ query.onlyMine ? $t('m.Mine') : ''
-                  }}{{ $t('m.All') }}</el-breadcrumb-item>
-                <el-breadcrumb-item>{{ currentCategory }} ( {{ total }} )</el-breadcrumb-item>
+                  {{ query.onlyMine ? $t("m.Mine") : ""
+                  }}{{ $t("m.All") }}</el-breadcrumb-item
+                >
+                <el-breadcrumb-item
+                  >{{ currentCategory }} ( {{ total }} )</el-breadcrumb-item
+                >
               </template>
               <template v-else>
-                <el-breadcrumb-item :to="{ name: routeName }">{{ query.onlyMine ? $t('m.Mine') : '' }}{{ $t('m.All') }} (
-                  {{ total }} )</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{ name: routeName }"
+                  >{{ query.onlyMine ? $t("m.Mine") : "" }}{{ $t("m.All") }} (
+                  {{ total }} )</el-breadcrumb-item
+                >
               </template>
             </el-breadcrumb>
           </span>
@@ -37,14 +38,8 @@
             v-for="(discussion, index) in discussionList"
             :key="index"
           >
-            <el-card
-              shadow="hover"
-              class="list-card"
-            >
-              <span
-                class="svg-top"
-                v-if="discussion.topPriority"
-              >
+            <el-card shadow="hover" class="list-card">
+              <span class="svg-top" v-if="discussion.topPriority">
                 <svg
                   t="1620283436433"
                   class="icon"
@@ -74,7 +69,7 @@
                 <el-button
                   type="primary"
                   size="mini"
-                  style="margin-left:5px;"
+                  style="margin-left: 5px"
                   v-if="discussion.pid"
                   @click="
                     pushRouter(
@@ -83,7 +78,8 @@
                       'ProblemDetails'
                     )
                   "
-                >{{ $t('m.Go_to_problem') }}</el-button>
+                  >{{ $t("m.Go_to_problem") }}</el-button
+                >
               </h1>
               <a
                 @click="toDiscussionDetail(discussion.id)"
@@ -113,26 +109,44 @@
                     class="role-root role"
                     title="Super Administrator"
                     v-if="discussion.role == 'root'"
-                  >SPA</span>
+                    >SPA</span
+                  >
                   <span
                     class="role-admin role"
                     title="Administrator"
                     v-if="discussion.role == 'admin'"
-                  >ADM</span>
+                    >ADM</span
+                  >
                 </span>
 
-                <span class="pr pl"><label class="fw"><i class="el-icon-chat-round"></i></label><span>
-                    <span class="hidden-xs-only"> {{ $t('m.Comment') }}:</span>
-                    {{ discussion.commentNum }}</span></span>
+                <span class="pr pl"
+                  ><label class="fw"><i class="el-icon-chat-round"></i></label
+                  ><span>
+                    <span class="hidden-xs-only"> {{ $t("m.Comment") }}:</span>
+                    {{ discussion.commentNum }}</span
+                  ></span
+                >
 
-                <span class="pr"><label class="fw"><i class="fa fa-thumbs-o-up"></i></label><span>
-                    <span class="hidden-xs-only"> {{ $t('m.Likes') }}:</span>
-                    {{ discussion.likeNum }}</span></span>
-                <span class="pr"><label class="fw"><i class="fa fa-eye"></i></label><span>
-                    <span class="hidden-xs-only"> {{ $t('m.Views') }}:</span>
-                    {{ discussion.viewNum }}</span></span>
-                <span class="pr"><label class="fw"><i class="el-icon-folder-opened"></i></label>
-                  <a @click="
+                <span class="pr"
+                  ><label class="fw"><i class="fa fa-thumbs-o-up"></i></label
+                  ><span>
+                    <span class="hidden-xs-only"> {{ $t("m.Likes") }}:</span>
+                    {{ discussion.likeNum }}</span
+                  ></span
+                >
+                <span class="pr"
+                  ><label class="fw"><i class="fa fa-eye"></i></label
+                  ><span>
+                    <span class="hidden-xs-only"> {{ $t("m.Views") }}:</span>
+                    {{ discussion.viewNum }}</span
+                  ></span
+                >
+                <span class="pr"
+                  ><label class="fw"
+                    ><i class="el-icon-folder-opened"></i
+                  ></label>
+                  <a
+                    @click="
                       pushRouter(
                         {
                           cid: discussion.categoryId,
@@ -141,26 +155,30 @@
                         { problemID: query.pid },
                         routeName
                       )
-                    ">
-                    {{ cidMapName[discussion.categoryId] }}</a>
+                    "
+                  >
+                    {{ cidMapName[discussion.categoryId] }}</a
+                  >
                 </span>
 
                 <span class="pr pl hidden-xs-only">
-                  <label class="fw"><i class="fa fa-clock-o"></i></label><span>
-                    {{ $t('m.Release_Time') }}：<el-tooltip
+                  <label class="fw"><i class="fa fa-clock-o"></i></label
+                  ><span>
+                    {{ $t("m.Release_Time") }}：<el-tooltip
                       :content="discussion.gmtCreate | localtime"
                       placement="top"
                     >
                       <span>{{ discussion.gmtCreate | fromNow }}</span>
-                    </el-tooltip></span>
+                    </el-tooltip></span
+                  >
                 </span>
 
                 <el-dropdown
-                  style="float:right;"
+                  style="float: right"
                   class="hidden-xs-only"
                   v-show="
                     isAuthenticated &&
-                      (discussion.uid === userInfo.uid || isAdminRole)
+                    (discussion.uid === userInfo.uid || isAdminRole)
                   "
                   @command="handleCommand"
                 >
@@ -172,21 +190,23 @@
                       icon="el-icon-edit-outline"
                       :command="'edit:' + index"
                       v-show="discussion.uid === userInfo.uid"
-                    >{{ $t('m.Edit') }}</el-dropdown-item>
+                      >{{ $t("m.Edit") }}</el-dropdown-item
+                    >
                     <el-dropdown-item
                       icon="el-icon-delete"
                       :command="'delete:' + index"
                       v-show="discussion.uid === userInfo.uid || isAdminRole"
-                    >{{ $t('m.Delete') }}</el-dropdown-item>
+                      >{{ $t("m.Delete") }}</el-dropdown-item
+                    >
                   </el-dropdown-menu>
                 </el-dropdown>
 
                 <div class="hidden-sm-and-up">
                   <el-dropdown
-                    style="float:right;margin-top:10px; "
+                    style="float: right; margin-top: 10px"
                     v-show="
                       isAuthenticated &&
-                        (discussion.uid === userInfo.uid || isAdminRole)
+                      (discussion.uid === userInfo.uid || isAdminRole)
                     "
                     @command="handleCommand"
                   >
@@ -198,19 +218,21 @@
                         icon="el-icon-edit-outline"
                         :command="'edit:' + index"
                         v-show="discussion.uid === userInfo.uid"
-                      >{{ $t('m.Edit') }}</el-dropdown-item>
+                        >{{ $t("m.Edit") }}</el-dropdown-item
+                      >
                       <el-dropdown-item
                         icon="el-icon-delete"
                         :command="'delete:' + index"
                         v-show="discussion.uid === userInfo.uid || isAdminRole"
-                      >{{ $t('m.Delete') }}</el-dropdown-item>
+                        >{{ $t("m.Delete") }}</el-dropdown-item
+                      >
                     </el-dropdown-menu>
                   </el-dropdown>
 
-                  <span
-                    class="pr"
-                    style="float:right;margin-top:10px; "
-                  ><label class="fw"><i class="fa fa-clock-o"></i></label><span> {{ discussion.gmtCreate | localtime }}</span></span>
+                  <span class="pr" style="float: right; margin-top: 10px"
+                    ><label class="fw"><i class="fa fa-clock-o"></i></label
+                    ><span> {{ discussion.gmtCreate | localtime }}</span></span
+                  >
                 </div>
               </div>
             </el-card>
@@ -226,38 +248,37 @@
           :current.sync="query.currentPage"
         ></Pagination>
       </el-col>
-      <el-col
-        :md="6"
-        :xs="24"
-      >
+      <el-col :md="6" :xs="24">
         <el-button
           class="btn"
           type="primary"
           @click="toEditDiscussion"
-          style="width: 100%;"
-        ><i class="el-icon-edit">
+          style="width: 100%"
+          ><i class="el-icon-edit">
             {{
-              this.query.pid == ''
-                ? $t('m.Post_discussion')
-                : $t('m.Post_problem_discussion')
-            }}</i>
+              this.query.pid == ""
+                ? $t("m.Post_discussion")
+                : $t("m.Post_problem_discussion")
+            }}</i
+          >
         </el-button>
         <el-button
           v-if="isAuthenticated"
           class="btn"
           type="danger"
           @click="toOnlyMyDiscussion(!query.onlyMine)"
-          style="width: 100%;margin-left:0;margin-top:10px"
-        ><i class="el-icon-search">
-            {{ query.onlyMine ? $t('m.All') : $t('m.Mine') }}</i>
+          style="width: 100%; margin-left: 0; margin-top: 10px"
+          ><i class="el-icon-search">
+            {{ query.onlyMine ? $t("m.All") : $t("m.Mine") }}</i
+          >
         </el-button>
         <template v-if="this.query.pid">
           <el-button
             class="btn"
             type="success"
             @click="toAllDiscussion"
-            style="width: 100%;margin-left:0;margin-top:10px"
-          ><i class="el-icon-s-home"> {{ $t('m.General_discussion') }}</i>
+            style="width: 100%; margin-left: 0; margin-top: 10px"
+            ><i class="el-icon-s-home"> {{ $t("m.General_discussion") }}</i>
           </el-button>
 
           <el-button
@@ -270,32 +291,30 @@
                 'ProblemDetails'
               )
             "
-            style="width: 100%;margin-left:0;margin-top:10px"
-          ><i class="el-icon-back"> {{ $t('m.Return') }} ({{ query.pid }})</i>
+            style="width: 100%; margin-left: 0; margin-top: 10px"
+            ><i class="el-icon-back"> {{ $t("m.Return") }} ({{ query.pid }})</i>
           </el-button>
         </template>
         <div class="category-body">
           <h3 class="title-sidebar">
-            <a @click="
+            <a
+              @click="
                 pushRouter(
                   { onlyMine: query.onlyMine },
                   { problemID: query.pid },
                   routeName
                 )
-              "><i class="el-icon-folder-opened"></i> {{ $t('m.Category') }}</a>
-            <span
-              style="float:right"
-              v-if="isSuperAdmin || isProblemAdmin"
+              "
+              ><i class="el-icon-folder-opened"></i> {{ $t("m.Category") }}</a
             >
+            <span style="float: right" v-if="isSuperAdmin || isProblemAdmin">
               <a @click="upsertCategoryList">
-                <i
-                  class="el-icon-edit"
-                  v-if="isViewCategoryList"
-                > {{$t('m.Edit')}}</i>
-                <i
-                  class="el-icon-check"
-                  v-if="!isViewCategoryList"
-                > {{$t('m.OK')}}</i>
+                <i class="el-icon-edit" v-if="isViewCategoryList">
+                  {{ $t("m.Edit") }}</i
+                >
+                <i class="el-icon-check" v-if="!isViewCategoryList">
+                  {{ $t("m.OK") }}</i
+                >
               </a>
             </span>
           </h3>
@@ -310,18 +329,18 @@
               >
                 <a
                   @click="
-                  pushRouter(
-                    { cid: category.id, onlyMine: query.onlyMine },
-                    { problemID: query.pid },
-                    routeName
-                  )
-                "
+                    pushRouter(
+                      { cid: category.id, onlyMine: query.onlyMine },
+                      { problemID: query.pid },
+                      routeName
+                    )
+                  "
                   style="display: block"
                 >
                   {{ category.name }}
                   <span
                     class="el-icon-arrow-right"
-                    style="float:right;font-weight: 600!important;"
+                    style="float: right; font-weight: 600 !important"
                   ></span>
                 </a>
               </el-col>
@@ -337,33 +356,31 @@
                 style="margin-top: 10px"
               >
                 <template v-if="category.id != null">
-                  <el-input
-                  v-model="category.name"
-                  size="small"
-                ></el-input>
+                  <el-input v-model="category.name" size="small"></el-input>
                 </template>
                 <template v-else>
                   <el-input
-                  v-model="category.name"
-                  style="width: 75%;"
-                  size="small"
-                ></el-input>
+                    v-model="category.name"
+                    style="width: 75%"
+                    size="small"
+                  ></el-input>
                   <el-button
-                  type="danger"
-                  style="margin-left: 5%;width: 20%;"
-                  size="small"
-                  icon="el-icon-delete"
-                  @click="removeCategory(index)"
-                ></el-button>
+                    type="danger"
+                    style="margin-left: 5%; width: 20%"
+                    size="small"
+                    icon="el-icon-delete"
+                    @click="removeCategory(index)"
+                  ></el-button>
                 </template>
               </el-col>
               <el-col :span="24">
                 <el-button
                   type="primary"
-                  style="margin-top: 10px;width: 100%;"
+                  style="margin-top: 10px; width: 100%"
                   size="small"
                   @click="addNewCategory"
-                ><i class="el-icon-plus"></i></el-button>
+                  ><i class="el-icon-plus"></i
+                ></el-button>
               </el-col>
             </el-row>
           </template>
@@ -377,38 +394,23 @@
       :fullscreen="true"
       @open="onOpenEditDialog"
     >
-      <el-form
-        label-position="top"
-        :model="discussion"
-      >
-        <el-form-item
-          :label="$t('m.Discussion_title')"
-          required
-        >
+      <el-form label-position="top" :model="discussion">
+        <el-form-item :label="$t('m.Discussion_title')" required>
           <el-input
             v-model="discussion.title"
             :placeholder="$t('m.Discussion_title')"
           >
           </el-input>
         </el-form-item>
-        <el-form-item
-          :label="$t('m.Discussion_Desc')"
-          required
-        >
+        <el-form-item :label="$t('m.Discussion_Desc')" required>
           <el-input
             v-model="discussion.description"
             :placeholder="$t('m.Discussion_Desc')"
           >
           </el-input>
         </el-form-item>
-        <el-form-item
-          :label="$t('m.Discussion_Category')"
-          required
-        >
-          <el-select
-            v-model="discussion.categoryId"
-            placeholder="---"
-          >
+        <el-form-item :label="$t('m.Discussion_Category')" required>
+          <el-select v-model="discussion.categoryId" placeholder="---">
             <el-option
               v-for="category in categoryList"
               :key="category.id"
@@ -425,26 +427,18 @@
         >
           <el-switch v-model="discussion.topPriority"> </el-switch>
         </el-form-item>
-        <el-form-item
-          :label="$t('m.Discussion_content')"
-          required
-        >
+        <el-form-item :label="$t('m.Discussion_content')" required>
           <Editor :value.sync="discussion.content"></Editor>
         </el-form-item>
       </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-button
           type="danger"
           @click.native="showEditDiscussionDialog = false"
-        >{{ $t('m.Cancel') }}</el-button>
-        <el-button
-          type="primary"
-          @click.native="submitDiscussion"
-        >{{
-          $t('m.OK')
+          >{{ $t("m.Cancel") }}</el-button
+        >
+        <el-button type="primary" @click.native="submitDiscussion">{{
+          $t("m.OK")
         }}</el-button>
       </span>
     </el-dialog>
@@ -556,25 +550,26 @@ export default {
       this.getDiscussionList();
     },
 
-    upsertCategoryList(){
-      if(this.isViewCategoryList){
+    upsertCategoryList() {
+      if (this.isViewCategoryList) {
         this.isViewCategoryList = false;
         return;
-      }else{
+      } else {
         this.isViewCategoryList = true;
       }
       this.loading.category = true;
       api.upsertCategoryList(this.categoryList).then(
-      (res) => {
-        this.categoryList = res.data.data;
-        for (let i = 0; i < this.categoryList.length; i++) {
-          this.cidMapName[this.categoryList[i].id] = this.categoryList[i].name;
+        (res) => {
+          this.categoryList = res.data.data;
+          for (let i = 0; i < this.categoryList.length; i++) {
+            this.cidMapName[this.categoryList[i].id] =
+              this.categoryList[i].name;
+          }
+          this.loading.category = false;
+        },
+        (err) => {
+          this.loading.category = false;
         }
-        this.loading.category = false;
-      },
-      (err) => {
-        this.loading.category = false;
-      }
       );
     },
     getDiscussionList() {
@@ -691,37 +686,68 @@ export default {
 
     submitDiscussion() {
       if (!this.discussion.title || this.discussion.title.trim() === "") {
-        myMessage.error(this.$i18n.t("m.Discussion_title") + " " +this.$i18n.t("m.is_required"));
+        myMessage.error(
+          this.$i18n.t("m.Discussion_title") +
+            " " +
+            this.$i18n.t("m.is_required")
+        );
         return;
       }
 
       if (this.discussion.title.length > 255) {
-        myMessage.error(this.$i18n.t("m.Discussion_title") + " " + this.$i18n.t("m.Can_not_exceed_255"));
+        myMessage.error(
+          this.$i18n.t("m.Discussion_title") +
+            " " +
+            this.$i18n.t("m.Can_not_exceed_255")
+        );
         return;
       }
 
-      if (!this.discussion.description || this.discussion.description.trim() === "") {
-        myMessage.error(this.$i18n.t("m.Discussion_Desc") + " " +this.$i18n.t("m.is_required"));
+      if (
+        !this.discussion.description ||
+        this.discussion.description.trim() === ""
+      ) {
+        myMessage.error(
+          this.$i18n.t("m.Discussion_Desc") +
+            " " +
+            this.$i18n.t("m.is_required")
+        );
         return;
       }
 
       if (this.discussion.description.length > 255) {
-        myMessage.error(this.$i18n.t("m.Discussion_Desc") + " " + this.$i18n.t("m.Can_not_exceed_255"));
+        myMessage.error(
+          this.$i18n.t("m.Discussion_Desc") +
+            " " +
+            this.$i18n.t("m.Can_not_exceed_255")
+        );
         return;
       }
 
-      if(!this.discussion.categoryId){
-        myMessage.error(this.$i18n.t("m.Discussion_Category")+ " " +this.$i18n.t("m.is_required"));
+      if (!this.discussion.categoryId) {
+        myMessage.error(
+          this.$i18n.t("m.Discussion_Category") +
+            " " +
+            this.$i18n.t("m.is_required")
+        );
         return;
       }
 
       if (!this.discussion.content || this.discussion.content.trim() === "") {
-        myMessage.error(this.$i18n.t("m.Discussion_content") + " " +this.$i18n.t("m.is_required"));
+        myMessage.error(
+          this.$i18n.t("m.Discussion_content") +
+            " " +
+            this.$i18n.t("m.is_required")
+        );
         return;
       }
 
       if (this.discussion.content.length > 65535) {
-        myMessage.error(this.$i18n.t("m.Discussion_content") + " " + this.$i18n.t("m.Can_not_exceed_65535"));
+        myMessage.error(
+          this.$i18n.t("m.Discussion_content") +
+            " " +
+            this.$i18n.t("m.Can_not_exceed_65535")
+        );
         return;
       }
 
@@ -771,15 +797,15 @@ export default {
           break;
       }
     },
-    addNewCategory(){
+    addNewCategory() {
       this.categoryList.push({
         id: null,
-        name: ''
+        name: "",
       });
     },
-    removeCategory(index){
+    removeCategory(index) {
       this.categoryList.splice(index, 1);
-    }
+    },
   },
 
   watch: {

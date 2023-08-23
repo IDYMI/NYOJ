@@ -3,9 +3,9 @@
     <el-col :sm="24" :md="18" :lg="18">
       <el-card shadow>
         <div slot="header">
-          <el-row :gutter="20" style="margin-bottom: 0.5em;">
+          <el-row :gutter="20" style="margin-bottom: 0.5em">
             <el-col :xs="24" :sm="6">
-              <span class="problem-list-title">{{ $t('m.Problem_List') }}</span>
+              <span class="problem-list-title">{{ $t("m.Problem_List") }}</span>
             </el-col>
             <el-col :xs="24" :sm="6">
               <vxe-input
@@ -21,19 +21,19 @@
             <el-col
               :xs="12"
               :sm="6"
-              style="text-align: center;padding-top: 6px;"
+              style="text-align: center; padding-top: 6px"
               class="filter-mt"
             >
               <vxe-checkbox
                 v-model="tagVisible"
                 @change="changeTagVisible(tagVisible)"
-                >{{ $t('m.Show_Tags') }}</vxe-checkbox
+                >{{ $t("m.Show_Tags") }}</vxe-checkbox
               >
             </el-col>
             <el-col
               :xs="12"
               :sm="6"
-              style="text-align: center;"
+              style="text-align: center"
               class="filter-mt"
             >
               <el-button
@@ -42,29 +42,36 @@
                 icon="el-icon-refresh"
                 round
                 @click="onReset"
-                >{{ $t('m.Reset') }}</el-button
+                >{{ $t("m.Reset") }}</el-button
               >
             </el-col>
           </el-row>
 
           <section>
-            <b class="problem-filter">{{ $t('m.Problem_Bank') }}</b>
+            <b class="problem-filter">{{ $t("m.Problem_Bank") }}</b>
             <div>
               <el-tag
                 size="medium"
                 class="filter-item"
                 :effect="query.oj === 'All' ? 'dark' : 'plain'"
                 @click="filterByOJ('All')"
-                >{{ $t('m.All') }}</el-tag
+                >{{ $t("m.All") }}</el-tag
               >
               <el-tag
                 size="medium"
                 class="filter-item"
                 :effect="
-                  query.oj === 'Mine' || query.oj === '' ? 'dark' : 'plain'
+                  query.oj === 'NYOJ' || query.oj === '' ? 'dark' : 'plain'
                 "
-                @click="filterByOJ('Mine')"
-                >{{ $t('m.My_OJ') }}</el-tag
+                @click="filterByOJ('NYOJ')"
+                >{{ $t("m.My_OJ") }}</el-tag
+              >
+              <el-tag
+                size="medium"
+                class="filter-item"
+                :effect="query.oj === 'NSWOJ' ? 'dark' : 'plain'"
+                @click="filterByOJ('NSWOJ')"
+                >{{ $t("m.My_OJ2") }}</el-tag
               >
               <el-tag
                 size="medium"
@@ -79,7 +86,7 @@
           </section>
 
           <section>
-            <b class="problem-filter">{{ $t('m.Level') }}</b>
+            <b class="problem-filter">{{ $t("m.Level") }}</b>
             <div>
               <el-tag
                 size="medium"
@@ -90,7 +97,7 @@
                     : 'plain'
                 "
                 @click="filterByDifficulty('All')"
-                >{{ $t('m.All') }}</el-tag
+                >{{ $t("m.All") }}</el-tag
               >
               <el-tag
                 size="medium"
@@ -106,7 +113,7 @@
           </section>
           <template v-if="filterTagList.length > 0 && buildFilterTagList">
             <el-row>
-              <b class="problem-filter">{{ $t('m.Tags') }}</b>
+              <b class="problem-filter">{{ $t("m.Tags") }}</b>
               <el-tag
                 :key="index"
                 v-for="(tag, index) in filterTagList"
@@ -201,7 +208,7 @@
                 class="el-tag el-tag--small"
                 :style="
                   'cursor: pointer;margin-right:7px;color:#FFF;background-color:' +
-                    (tag.color ? tag.color : '#409eff')
+                  (tag.color ? tag.color : '#409eff')
                 "
                 v-for="tag in row.tags"
                 :key="tag.id"
@@ -227,7 +234,7 @@
                   effect="dark"
                   :content="row.ac + '/' + row.total"
                   placement="top"
-                  style="margin-top:0"
+                  style="margin-top: 0"
                 >
                   <el-progress
                     :text-inside="true"
@@ -252,10 +259,10 @@
     </el-col>
 
     <el-col :sm="24" :md="6" :lg="6">
-      <el-card style="text-align:center">
+      <el-card style="text-align: center">
         <span class="panel-title">{{ currentProblemTitle }}</span>
         <el-row v-for="(record, index) in problemRecord" :key="index">
-          <el-col :xs="5" :sm="4" :md="6" :lg="4" style="margin-top: 10px;">
+          <el-col :xs="5" :sm="4" :md="6" :lg="4" style="margin-top: 10px">
             <el-tag
               effect="dark"
               size="small"
@@ -273,10 +280,12 @@
           </el-col>
         </el-row>
       </el-card>
-      <el-card :padding="10" style="margin-top:20px">
-        <div slot="header" style="text-align: center;">
-          <span class="taglist-title">{{ OJName + ' ' + $t('m.Tags') }}</span>
-          <div style="margin: 10px 0;">
+      <el-card :padding="10" style="margin-top: 20px">
+        <div slot="header" style="text-align: center">
+          <span class="taglist-title">{{
+            findOJName() + " " + $t("m.Tags")
+          }}</span>
+          <div style="margin: 10px 0">
             <el-input
               size="medium"
               prefix-icon="el-icon-search"
@@ -289,37 +298,64 @@
             </el-input>
           </div>
         </div>
-        <template v-if="searchTagClassificationList.length > 0" v-loading="loadings.tag">
-          <el-row :gutter="10" v-for="(item,index) in secondClassificationTemp" 
-              :key="index">
-            <el-col  v-for="(tagsAndClassification,i) in item" :key="i"
-              :span="query.oj == 'All' || (secondClassificationTemp.length==index+1 && item.length == i+1 && i%2 ==0)
-              ?24:12">
-              <el-collapse v-model="activeTagClassificationIdList" style="margin-top:10px">
-                  <el-collapse-item :title="getTagClassificationName(tagsAndClassification.classification)"
-                    v-if="tagsAndClassification.classification != null 
-                        || tagsAndClassification.tagList.length > 0 " 
-                    :name="tagsAndClassification.classification == null?-1:tagsAndClassification.classification.id">
-                    <el-button
-                      v-for="tag in tagsAndClassification.tagList"
-                      :key="tag.id"
-                      @click="addTag(tag)"
-                      type="ghost"
-                      size="mini"
-                      class="tag-btn"
-                      :style="
-                        'color:#FFF;background-color:' +
-                          (tag.color ? tag.color : '#409eff')
-                      "
-                      >{{ tag.name }}
-                    </el-button>
-                  </el-collapse-item>
+        <template v-if="searchTagClassificationList.length > 0">
+          <el-row
+            :gutter="10"
+            v-for="(item, index) in secondClassificationTemp"
+            :key="index"
+          >
+            <el-col
+              v-for="(tagsAndClassification, i) in item"
+              :key="i"
+              :span="
+                query.oj == 'All' ||
+                (secondClassificationTemp.length == index + 1 &&
+                  item.length == i + 1 &&
+                  i % 2 == 0)
+                  ? 24
+                  : 12
+              "
+            >
+              <el-collapse
+                v-model="activeTagClassificationIdList"
+                style="margin-top: 10px"
+              >
+                <el-collapse-item
+                  :title="
+                    getTagClassificationName(
+                      tagsAndClassification.classification
+                    )
+                  "
+                  v-if="
+                    tagsAndClassification.classification != null ||
+                    tagsAndClassification.tagList.length > 0
+                  "
+                  :name="
+                    tagsAndClassification.classification == null
+                      ? -1
+                      : tagsAndClassification.classification.id
+                  "
+                >
+                  <el-button
+                    v-for="tag in tagsAndClassification.tagList"
+                    :key="tag.id"
+                    @click="addTag(tag)"
+                    type="ghost"
+                    size="mini"
+                    class="tag-btn"
+                    :style="
+                      'color:#FFF;background-color:' +
+                      (tag.color ? tag.color : '#409eff')
+                    "
+                    >{{ tag.name }}
+                  </el-button>
+                </el-collapse-item>
               </el-collapse>
             </el-col>
           </el-row>
-          <el-button long id="pick-one" @click="pickone">
+          <el-button long id="pick-one" @click="pickone()">
             <i class="fa fa-random"></i>
-            {{ $t('m.Pick_a_random_question') }}
+            {{ $t("m.Pick_a_random_question") }}
           </el-button>
         </template>
         <template v-else>
@@ -331,20 +367,20 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import api from '@/common/api';
+import { mapGetters } from "vuex";
+import api from "@/common/api";
 import {
   PROBLEM_LEVEL,
   JUDGE_STATUS,
   JUDGE_STATUS_RESERVE,
   REMOTE_OJ,
-} from '@/common/constants';
-import utils from '@/common/utils';
-import myMessage from '@/common/message';
-import 'element-ui/lib/theme-chalk/display.css';
-import Pagination from '@/components/oj/common/Pagination';
+} from "@/common/constants";
+import utils from "@/common/utils";
+import myMessage from "@/common/message";
+import "element-ui/lib/theme-chalk/display.css";
+import Pagination from "@/components/oj/common/Pagination";
 export default {
-  name: 'ProblemList',
+  name: "ProblemList",
   components: {
     Pagination,
   },
@@ -354,9 +390,9 @@ export default {
       JUDGE_STATUS: {},
       JUDGE_STATUS_RESERVE: {},
       REMOTE_OJ: {},
-      tagsAndClassificationList:[],
+      tagsAndClassificationList: [],
       tagVisible: false,
-      currentProblemTitle: '',
+      currentProblemTitle: "",
       problemRecord: [],
       problemList: [],
       limit: 30,
@@ -369,24 +405,24 @@ export default {
       filterConfig: { remote: true },
       filterTagList: [],
       buildFilterTagList: false,
-      routeName: '',
+      routeName: "",
       query: {
-        keyword: '',
-        difficulty: 'All',
-        oj: '',
-        tagId: '',
+        keyword: "",
+        difficulty: "All",
+        oj: "",
+        tagId: "",
         currentPage: 1,
       },
       customColors: [
-        { color: '#909399', percentage: 20 },
-        { color: '#f56c6c', percentage: 40 },
-        { color: '#e6a23c', percentage: 60 },
-        { color: '#1989fa', percentage: 80 },
-        { color: '#67c23a', percentage: 100 },
+        { color: "#909399", percentage: 20 },
+        { color: "#f56c6c", percentage: 40 },
+        { color: "#e6a23c", percentage: 60 },
+        { color: "#1989fa", percentage: 80 },
+        { color: "#67c23a", percentage: 100 },
       ],
-      searchTag: '',
+      searchTag: "",
       searchTagClassificationList: [],
-      activeTagClassificationIdList:[]
+      activeTagClassificationIdList: [],
     };
   },
   created() {
@@ -398,7 +434,7 @@ export default {
     this.JUDGE_STATUS_RESERVE = Object.assign({}, JUDGE_STATUS_RESERVE);
     this.JUDGE_STATUS = Object.assign({}, JUDGE_STATUS);
     this.REMOTE_OJ = Object.assign({}, REMOTE_OJ);
-    this.currentProblemTitle = this.$i18n.t('m.Touch_Get_Status');
+    this.currentProblemTitle = this.$i18n.t("m.Touch_Get_Status");
     // 初始化
     this.problemRecord = [
       { status: 0, count: 100 },
@@ -414,7 +450,7 @@ export default {
     this.loadings.table = true;
     setTimeout(() => {
       // 将指定列设置为隐藏状态
-      this.$refs.problemList.getColumnByField('tag').visible = false;
+      this.$refs.problemList.getColumnByField("tag").visible = false;
       this.$refs.problemList.refreshColumn();
       this.loadings.table = false;
     }, 200);
@@ -424,9 +460,9 @@ export default {
     init() {
       this.routeName = this.$route.name;
       let query = this.$route.query;
-      this.query.difficulty = query.difficulty || '';
-      this.query.oj = query.oj || 'Mine';
-      this.query.keyword = query.keyword || '';
+      this.query.difficulty = query.difficulty || "";
+      this.query.oj = query.oj || "NYOJ";
+      this.query.keyword = query.keyword || "";
       try {
         this.query.tagId = JSON.parse(query.tagId);
       } catch (error) {
@@ -449,7 +485,7 @@ export default {
       );
       this.query.limit = this.limit;
       this.$router.push({
-        path: '/problem',
+        path: "/problem",
         query: this.query,
       });
     },
@@ -504,15 +540,14 @@ export default {
     },
     getProblemList() {
       let queryParams = Object.assign({}, this.query);
-      if (queryParams.difficulty == 'All') {
-        queryParams.difficulty = '';
+      if (queryParams.difficulty == "All") {
+        queryParams.difficulty = "";
       }
-      if (queryParams.oj == 'All') {
-        queryParams.oj = '';
-      } else if (!queryParams.oj) {
-        queryParams.oj = 'Mine';
+      if (queryParams.oj == "All") {
+        queryParams.oj = "";
       }
-      queryParams.tagId = queryParams.tagId + '';
+      // myMessage.success(queryParams.oj);
+      queryParams.tagId = queryParams.tagId + "";
       queryParams.limit = this.limit;
       this.loadings.table = true;
       api.getProblemList(queryParams).then(
@@ -538,7 +573,7 @@ export default {
                     index < this.problemList.length;
                     index++
                   ) {
-                    this.problemList[index]['myStatus'] =
+                    this.problemList[index]["myStatus"] =
                       result[this.problemList[index].pid].status;
                   }
                   this.isGetStatusOk = true;
@@ -553,8 +588,10 @@ export default {
       );
     },
     getTagList(oj) {
-      if (oj == 'Mine') {
-        oj = 'ME';
+      if (oj == "NYOJ") {
+        oj = "ME";
+      } else if (oj == "NSWOJ") {
+        oj = "ME2";
       }
       this.loadings.tag = true;
       api.getProblemTagsAndClassification(oj).then(
@@ -566,9 +603,10 @@ export default {
           let tagLen = this.tagsAndClassificationList.length;
           for (let x = 0; x < tidLen; x++) {
             for (let y = 0; y < tagLen; y++) {
-              let tmpTagAndClassification = this.tagsAndClassificationList[y].tagList;
+              let tmpTagAndClassification =
+                this.tagsAndClassificationList[y].tagList;
               let tmpLen = tmpTagAndClassification.length;
-              for(let z = 0; z <tmpLen; z++){
+              for (let z = 0; z < tmpLen; z++) {
                 if (this.query.tagId[x] == tmpTagAndClassification[z].id) {
                   this.filterTagList.push(tmpTagAndClassification[z]);
                   break;
@@ -588,21 +626,25 @@ export default {
       if (this.searchTag) {
         this.searchTagClassificationList = [];
         this.activeTagClassificationIdList = [];
-        for(let tagsAndClassification of this.tagsAndClassificationList){
+        for (let tagsAndClassification of this.tagsAndClassificationList) {
           let tmpTagList = [];
-          for(let tag of tagsAndClassification.tagList){
-            if(tag.name.toLowerCase().indexOf(this.searchTag.toLowerCase()) >= 0){
+          for (let tag of tagsAndClassification.tagList) {
+            if (
+              tag.name.toLowerCase().indexOf(this.searchTag.toLowerCase()) >= 0
+            ) {
               tmpTagList.push(tag);
             }
           }
-          if(tmpTagList.length > 0){
-            this.searchTagClassificationList.push(
-              {
-                classification: tagsAndClassification.classification,
-                tagList:tmpTagList
-              }
-            )
-            this.activeTagClassificationIdList.push(tagsAndClassification.classification == null? -1:tagsAndClassification.classification.id);
+          if (tmpTagList.length > 0) {
+            this.searchTagClassificationList.push({
+              classification: tagsAndClassification.classification,
+              tagList: tmpTagList,
+            });
+            this.activeTagClassificationIdList.push(
+              tagsAndClassification.classification == null
+                ? -1
+                : tagsAndClassification.classification.id
+            );
           }
         }
       } else {
@@ -611,13 +653,13 @@ export default {
       }
     },
     changeTagVisible(visible) {
-      this.$refs.problemList.getColumnByField('tag').visible = visible;
+      this.$refs.problemList.getColumnByField("tag").visible = visible;
       this.$refs.problemList.refreshColumn();
     },
     onReset() {
       this.filterTagList = [];
-      if (JSON.stringify(this.$route.query) != '{}') {
-        this.$router.push({ name: 'ProblemList' });
+      if (JSON.stringify(this.$route.query) != "{}") {
+        this.$router.push({ name: "ProblemList" });
       }
     },
     removeTag(tag) {
@@ -645,7 +687,7 @@ export default {
     },
     filterByOJ(oj) {
       this.query.oj = oj;
-      if (oj != 'All') {
+      if (oj != "All") {
         this.filterTagList = [];
       }
       this.query.currentPage = 1;
@@ -657,10 +699,16 @@ export default {
       this.pushRouter();
     },
     pickone() {
-      api.pickone().then((res) => {
-        myMessage.success(this.$i18n.t('m.Good_luck_to_you'));
+      let oj = this.query.oj;
+      if (oj == "NYOJ") {
+        oj = "ME";
+      } else if (oj == "NSWOJ") {
+        oj = "ME2";
+      }
+      api.pickone(oj).then((res) => {
+        myMessage.success(this.$i18n.t("m.Good_luck_to_you"));
         this.$router.push({
-          name: 'ProblemDetails',
+          name: "ProblemDetails",
           params: { problemID: res.data.data.problemId },
         });
       });
@@ -682,7 +730,7 @@ export default {
     },
     getIconColor(status) {
       return (
-        'font-weight: 600;font-size: 16px;color:' +
+        "font-weight: 600;font-size: 16px;color:" +
         this.JUDGE_STATUS[status].rgb
       );
     },
@@ -691,57 +739,73 @@ export default {
         return this.getLevelColor(difficulty);
       }
     },
-    getTagClassificationName(classification){
-      if(classification !=null){
-        let name = '';
+    getTagClassificationName(classification) {
+      if (classification != null) {
+        let name = "";
         let oj = this.query.oj;
-        if(oj == 'All'){
-          switch(classification.oj){
+        if (oj == "All") {
+          switch (classification.oj) {
             case "ME":
-              name = '['+this.$i18n.t('m.My_OJ')+'] '
+              name = "[" + this.$i18n.t("m.My_OJ") + "] ";
+              break;
+            case "ME2":
+              name = "[" + this.$i18n.t("m.My_OJ2") + "] ";
               break;
             case "AC":
-              name = '[AtCoder] ';
+              name = "[AtCoder] ";
               break;
             case "CF":
-              name = '[Codeforces] ';
+              name = "[Codeforces] ";
               break;
             default:
-              name = '['+classification.oj+'] '
+              name = "[" + classification.oj + "] ";
           }
         }
         return name + classification.name;
-      }else{
-        return this.$i18n.t('m.Unclassified');
+      } else {
+        return this.$i18n.t("m.Unclassified");
       }
-    }
-  },
-  computed: {
-    ...mapGetters(['isAuthenticated']),
-    OJName() {
-      if (this.query.oj == 'Mine' || !this.$route.query.oj) {
-        return this.$i18n.t('m.My_OJ');
-      } else if (this.query.oj == 'All') {
-        return this.$i18n.t('m.All');
+    },
+    findOJName() {
+      if (this.query.oj == "NYOJ" || !this.$route.query.oj) {
+        return this.$i18n.t("m.My_OJ");
+      } else if (this.query.oj == "NSWOJ") {
+        return this.$i18n.t("m.My_OJ2");
+      } else if (this.query.oj == "All") {
+        return this.$i18n.t("m.All");
       } else {
         return this.query.oj;
       }
     },
-    secondClassificationTemp(){
+  },
+  computed: {
+    ...mapGetters(["isAuthenticated"]),
+    OJName() {
+      if (this.query.oj == "NYOJ" || !this.$route.query.oj) {
+        return this.$i18n.t("m.My_OJ");
+      } else if (this.query.oj == "NSWOJ") {
+        return this.$i18n.t("m.My_OJ2");
+      } else if (this.query.oj == "All") {
+        return this.$i18n.t("m.All");
+      } else {
+        return this.query.oj;
+      }
+    },
+    secondClassificationTemp() {
       let index = 0;
-      let count = 2;		//两个一组
+      let count = 2; //两个一组
       let arrTemp = [];
       let tagsClassificationList = this.searchTagClassificationList;
       let len = tagsClassificationList.length;
-      for(let i=0;i<len;i++){
-        index = parseInt(i/count);
+      for (let i = 0; i < len; i++) {
+        index = parseInt(i / count);
         if (arrTemp.length <= index) {
           arrTemp.push([]);
         }
-        arrTemp[index].push(tagsClassificationList[i])
+        arrTemp[index].push(tagsClassificationList[i]);
       }
-      return arrTemp
-    }
+      return arrTemp;
+    },
   },
   watch: {
     $route(newVal, oldVal) {
@@ -844,7 +908,7 @@ ul {
   }
 }
 
-/deep/.el-collapse-item__header{
+/deep/.el-collapse-item__header {
   font-weight: bolder !important;
   height: 38px !important;
   line-height: 38px !important;

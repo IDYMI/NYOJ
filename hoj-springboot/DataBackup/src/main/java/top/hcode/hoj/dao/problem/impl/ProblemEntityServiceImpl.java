@@ -79,9 +79,9 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
 
     @Override
     public Page<ProblemVO> getProblemList(int limit, int currentPage, Long pid, String title, Integer difficulty,
-                                          List<Long> tid, String oj) {
+            List<Long> tid, String oj) {
 
-        //新建分页
+        // 新建分页
         Page<ProblemVO> page = new Page<>(currentPage, limit);
         Integer tagListSize = null;
         if (tid != null) {
@@ -123,7 +123,7 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
         }
 
         /**
-         *  problem_id唯一性检查
+         * problem_id唯一性检查
          */
         String problemId = problem.getProblemId().toUpperCase();
         QueryWrapper<Problem> problemQueryWrapper = new QueryWrapper<>();
@@ -143,7 +143,7 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
 
         Map<String, Object> map = new HashMap<>();
         map.put("pid", pid);
-        //查询出原来题目的关联表数据
+        // 查询出原来题目的关联表数据
         List<ProblemLanguage> oldProblemLanguages = (List<ProblemLanguage>) problemLanguageEntityService.listByMap(map);
         List<ProblemCase> oldProblemCases = (List<ProblemCase>) problemCaseEntityService.listByMap(map);
         List<CodeTemplate> oldProblemTemplate = (List<CodeTemplate>) codeTemplateEntityService.listByMap(map);
@@ -172,7 +172,6 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
             needDeleteProblemCases.add(problemCase.getId());
             oldProblemMap.put(problemCase.getId(), problemCase);
         });
-
 
         // 与前端上传的数据进行对比，添加或删除！
         /**
@@ -239,13 +238,12 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
             saveOrUpdateCodeTemplate = codeTemplateEntityService.saveOrUpdateBatch(problemDto.getCodeTemplates());
         }
 
-
         /**
-         *  处理problem_language表的更新与删除
+         * 处理problem_language表的更新与删除
          */
 
         // 根据上传来的language列表的每一个name字段查询对应的language表的id，更新problem_language
-        //构建problem_language实体列表
+        // 构建problem_language实体列表
         List<ProblemLanguage> problemLanguageList = new LinkedList<>();
         for (Language language : problemDto.getLanguages()) { // 遍历插入
             if (mapOldPL.get(language.getId()) != null) { // 如果记录中有，则表式该language原来已有选中。
@@ -274,9 +272,8 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
             addLanguagesToProblemResult = problemLanguageEntityService.saveOrUpdateBatch(problemLanguageList);
         }
 
-
         /**
-         *  处理problem_case表的增加与删除
+         * 处理problem_case表的增加与删除
          */
 
         boolean checkProblemCase = true;
@@ -381,7 +378,8 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
         boolean problemUpdateResult = problemMapper.updateById(problem) == 1;
 
         if (problemUpdateResult && checkProblemCase && deleteLanguagesFromProblemResult && deleteTagsFromProblemResult
-                && addLanguagesToProblemResult && addTagsToProblemResult && deleteTemplate && saveOrUpdateCodeTemplate) {
+                && addLanguagesToProblemResult && addTagsToProblemResult && deleteTemplate
+                && saveOrUpdateCodeTemplate) {
             return true;
         } else {
             return false;
@@ -423,14 +421,16 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
             problemQueryWrapper.eq("problem_id", problemId);
             int existedProblem = problemMapper.selectCount(problemQueryWrapper);
             if (existedProblem > 0) {
-                throw new ProblemIDRepeatException("The problem_id [" + problemId + "] already exists. Do not reuse it!");
+                throw new ProblemIDRepeatException(
+                        "The problem_id [" + problemId + "] already exists. Do not reuse it!");
             }
             problem.setProblemId(problemId);
             problemMapper.insert(problem);
         }
         Long pid = problem.getId();
         if (pid == null) {
-            throw new ProblemIDRepeatException("The problem with problem_id [" + problem.getProblemId() + "] insert failed!");
+            throw new ProblemIDRepeatException(
+                    "The problem with problem_id [" + problem.getProblemId() + "] insert failed!");
         }
 
         // 为新的题目添加对应的language
@@ -448,7 +448,6 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
             }
             addProblemCodeTemplate = codeTemplateEntityService.saveOrUpdateBatch(problemDto.getCodeTemplates());
         }
-
 
         boolean addCasesToProblemResult = true;
         // 为新的题目添加对应的case
@@ -514,7 +513,7 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
         List<ProblemTag> problemTagList = new LinkedList<>();
         if (problemDto.getTags() != null) {
             for (Tag tag : problemDto.getTags()) {
-                if (tag.getId() == null) { //id为空 表示为原tag表中不存在的 插入后可以获取到对应的tagId
+                if (tag.getId() == null) { // id为空 表示为原tag表中不存在的 插入后可以获取到对应的tagId
                     Tag existedTag = tagEntityService.getOne(new QueryWrapper<Tag>().eq("name", tag.getName())
                             .eq("oj", "ME"), false);
                     if (existedTag == null) {
@@ -532,7 +531,6 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
             addTagsToProblemResult = problemTagEntityService.saveOrUpdateBatch(problemTagList);
         }
 
-
         if (addCasesToProblemResult && addLangToProblemResult
                 && addTagsToProblemResult && addProblemCodeTemplate) {
             return true;
@@ -544,11 +542,11 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
     // 初始化上传文件的测试数据，写成json文件
     @Async
     public void initUploadTestCase(String judgeMode,
-                                   String judgeCaseMode,
-                                   String version,
-                                   Long problemId,
-                                   String tmpTestcaseDir,
-                                   List<ProblemCase> problemCaseList) {
+            String judgeCaseMode,
+            String version,
+            Long problemId,
+            String tmpTestcaseDir,
+            List<ProblemCase> problemCaseList) {
 
         String testCasesDir = Constants.File.TESTCASE_BASE_FOLDER.getPath() + File.separator + "problem_" + problemId;
 
@@ -589,12 +587,14 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
             listFileNames.remove(problemCase.getOutput());
 
             // 读取输入文件
-            FileReader inputFile = new FileReader(testCasesDir + File.separator + problemCase.getInput(), CharsetUtil.UTF_8);
+            FileReader inputFile = new FileReader(testCasesDir + File.separator + problemCase.getInput(),
+                    CharsetUtil.UTF_8);
             String input = inputFile.readString()
                     .replaceAll("\r\n", "\n") // 避免window系统的换行问题
                     .replaceAll("\r", "\n"); // 避免mac系统的换行问题
 
-            FileWriter inputFileWriter = new FileWriter(testCasesDir + File.separator + problemCase.getInput(), CharsetUtil.UTF_8);
+            FileWriter inputFileWriter = new FileWriter(testCasesDir + File.separator + problemCase.getInput(),
+                    CharsetUtil.UTF_8);
             inputFileWriter.write(input);
 
             // 读取输出文件
@@ -605,7 +605,8 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
                 output = outputFile.readString()
                         .replaceAll("\r\n", "\n") // 避免window系统的换行问题
                         .replaceAll("\r", "\n"); // 避免mac系统的换行问题
-                FileWriter outFileWriter = new FileWriter(testCasesDir + File.separator + problemCase.getOutput(), CharsetUtil.UTF_8);
+                FileWriter outFileWriter = new FileWriter(testCasesDir + File.separator + problemCase.getOutput(),
+                        CharsetUtil.UTF_8);
                 outFileWriter.write(output);
             } else {
                 FileWriter fileWriter = new FileWriter(outputFilePath);
@@ -619,9 +620,11 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
                 // 原数据大小
                 jsonObject.set("outputSize", output.getBytes(StandardCharsets.UTF_8).length);
                 // 去掉全部空格的MD5，用来判断pe
-                jsonObject.set("allStrippedOutputMd5", DigestUtils.md5DigestAsHex(output.replaceAll("\\s+", "").getBytes(StandardCharsets.UTF_8)));
+                jsonObject.set("allStrippedOutputMd5",
+                        DigestUtils.md5DigestAsHex(output.replaceAll("\\s+", "").getBytes(StandardCharsets.UTF_8)));
                 // 默认去掉文末空格的MD5
-                jsonObject.set("EOFStrippedOutputMd5", DigestUtils.md5DigestAsHex(rtrim(output).getBytes(StandardCharsets.UTF_8)));
+                jsonObject.set("EOFStrippedOutputMd5",
+                        DigestUtils.md5DigestAsHex(rtrim(output).getBytes(StandardCharsets.UTF_8)));
             }
 
             testCaseList.add(jsonObject);
@@ -643,14 +646,13 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
         }
     }
 
-
     // 初始化手动输入上传的测试数据，写成json文件
     @Async
     public void initHandTestCase(String judgeMode,
-                                 String judgeCaseMode,
-                                 String version,
-                                 Long problemId,
-                                 List<ProblemCase> problemCaseList) {
+            String judgeCaseMode,
+            String version,
+            Long problemId,
+            List<ProblemCase> problemCaseList) {
 
         JSONObject result = new JSONObject();
         result.set("mode", judgeMode);
@@ -703,9 +705,11 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
                 // 原数据大小
                 jsonObject.set("outputSize", outputData.getBytes(StandardCharsets.UTF_8).length);
                 // 去掉全部空格的MD5，用来判断pe
-                jsonObject.set("allStrippedOutputMd5", DigestUtils.md5DigestAsHex(outputData.replaceAll("\\s+", "").getBytes(StandardCharsets.UTF_8)));
+                jsonObject.set("allStrippedOutputMd5",
+                        DigestUtils.md5DigestAsHex(outputData.replaceAll("\\s+", "").getBytes(StandardCharsets.UTF_8)));
                 // 默认去掉文末空格的MD5
-                jsonObject.set("EOFStrippedOutputMd5", DigestUtils.md5DigestAsHex(rtrim(outputData).getBytes(StandardCharsets.UTF_8)));
+                jsonObject.set("EOFStrippedOutputMd5",
+                        DigestUtils.md5DigestAsHex(rtrim(outputData).getBytes(StandardCharsets.UTF_8)));
             }
 
             testCaseList.add(jsonObject);
@@ -718,11 +722,10 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
         infoFile.write(JSONUtil.toJsonStr(result));
     }
 
-
     @Override
     @SuppressWarnings("All")
     public ImportProblemVO buildExportProblem(Long pid, List<HashMap<String, Object>> problemCaseList,
-                                              HashMap<Long, String> languageMap, HashMap<Long, String> tagMap) {
+            HashMap<Long, String> languageMap, HashMap<Long, String> tagMap) {
         // 导出相当于导入
         ImportProblemVO importProblemVo = new ImportProblemVO();
         Problem problem = problemMapper.selectById(pid);
@@ -751,35 +754,38 @@ public class ProblemEntityServiceImpl extends ServiceImpl<ProblemMapper, Problem
         importProblemVo.setSamples(problemCaseList);
 
         if (!StringUtils.isEmpty(problem.getUserExtraFile())) {
-            HashMap<String, String> userExtraFileMap = (HashMap<String, String>) JSONUtil.toBean(problem.getUserExtraFile(), Map.class);
+            HashMap<String, String> userExtraFileMap = (HashMap<String, String>) JSONUtil
+                    .toBean(problem.getUserExtraFile(), Map.class);
             importProblemVo.setUserExtraFile(userExtraFileMap);
         }
 
         if (!StringUtils.isEmpty(problem.getJudgeExtraFile())) {
-            HashMap<String, String> judgeExtraFileMap = (HashMap<String, String>) JSONUtil.toBean(problem.getJudgeExtraFile(), Map.class);
+            HashMap<String, String> judgeExtraFileMap = (HashMap<String, String>) JSONUtil
+                    .toBean(problem.getJudgeExtraFile(), Map.class);
             importProblemVo.setUserExtraFile(judgeExtraFileMap);
         }
 
         QueryWrapper<ProblemTag> problemTagQueryWrapper = new QueryWrapper<>();
         problemTagQueryWrapper.eq("pid", pid);
         List<ProblemTag> problemTags = problemTagEntityService.list(problemTagQueryWrapper);
-        importProblemVo.setTags(problemTags.stream().map(problemTag -> tagMap.get(problemTag.getTid())).collect(Collectors.toList()));
+        importProblemVo.setTags(
+                problemTags.stream().map(problemTag -> tagMap.get(problemTag.getTid())).collect(Collectors.toList()));
 
         QueryWrapper<ProblemLanguage> problemLanguageQueryWrapper = new QueryWrapper<>();
         problemLanguageQueryWrapper.eq("pid", pid);
         List<ProblemLanguage> problemLanguages = problemLanguageEntityService.list(problemLanguageQueryWrapper);
-        importProblemVo.setLanguages(problemLanguages.stream().map(problemLanguage -> languageMap.get(problemLanguage.getLid())).collect(Collectors.toList()));
-
+        importProblemVo.setLanguages(problemLanguages.stream()
+                .map(problemLanguage -> languageMap.get(problemLanguage.getLid())).collect(Collectors.toList()));
 
         return importProblemVo;
     }
 
     // 去除每行末尾的空白符
     public static String rtrim(String value) {
-        if (value == null) return null;
+        if (value == null)
+            return null;
         return EOL_PATTERN.matcher(StrUtil.trimEnd(value)).replaceAll("");
     }
-
 
     private Integer calProblemTotalScore(String judgeCaseMode, List<ProblemCase> problemCaseList) {
         int sumScore = 0;

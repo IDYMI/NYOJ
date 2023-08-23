@@ -10,7 +10,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.HashMap;
 import java.util.List;
 
-
 /**
  * <p>
  * 服务类
@@ -22,11 +21,12 @@ import java.util.List;
 
 public interface ProblemEntityService extends IService<Problem> {
     Page<ProblemVO> getProblemList(int limit, int currentPage, Long pid, String title,
-                                   Integer difficulty, List<Long> tid, String oj);
+            Integer difficulty, List<Long> tid, String oj);
 
     boolean adminUpdateProblem(ProblemDTO problemDto);
 
     boolean adminAddProblem(ProblemDTO problemDto);
 
-    ImportProblemVO buildExportProblem(Long pid, List<HashMap<String, Object>> problemCaseList, HashMap<Long, String> languageMap, HashMap<Long, String> tagMap);
+    ImportProblemVO buildExportProblem(Long pid, List<HashMap<String, Object>> problemCaseList,
+            HashMap<Long, String> languageMap, HashMap<Long, String> tagMap);
 }

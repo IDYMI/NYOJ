@@ -15,10 +15,10 @@
     </select>
 
     <select id="getNowContestAdmin" resultType="java.lang.String" useCache="true">
-        SELECT ur.uid FROM user_role ur, contest ct where ct.id = #{cid} and (ur.role_id = 1008 or ur.role_id = 1000) and ct.start_time > ur.gmt_create
+        SELECT ur.uid FROM user_role ur, contest ct where ct.id = #{cid} and (ur.role_id = 1008 or ur.role_id = 1000) and ct.start_time > ur.gmt_modified
     </select>
 
     <select id="getNowGroupAdmin" resultType="java.lang.String" useCache="true">
-        SELECT ur.uid FROM user_role ur, contest ct where ct.gid = #{gid} and (ur.role_id = 1008 or ur.role_id = 1000) and ct.start_time > ur.gmt_create
+        SELECT ur.uid FROM user_role ur, contest ct where ct.gid = #{gid} and (ur.role_id = 1008 or ur.role_id = 1000) and ct.start_time > ur.gmt_modified
     </select>
 </mapper>
