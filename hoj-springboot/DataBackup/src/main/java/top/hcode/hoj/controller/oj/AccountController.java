@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.oj;
 
-
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +29,8 @@ public class AccountController {
      */
     @RequestMapping(value = "/check-username-or-email", method = RequestMethod.POST)
     @AnonApi
-    public CommonResult<CheckUsernameOrEmailVO> checkUsernameOrEmail(@RequestBody CheckUsernameOrEmailDTO checkUsernameOrEmailDto) {
+    public CommonResult<CheckUsernameOrEmailVO> checkUsernameOrEmail(
+            @RequestBody CheckUsernameOrEmailDTO checkUsernameOrEmailDto) {
         return accountService.checkUsernameOrEmail(checkUsernameOrEmailDto);
     }
 
@@ -43,10 +43,9 @@ public class AccountController {
      */
     @GetMapping("/get-user-home-info")
     public CommonResult<UserHomeVO> getUserHomeInfo(@RequestParam(value = "uid", required = false) String uid,
-                                                    @RequestParam(value = "username", required = false) String username) {
+            @RequestParam(value = "username", required = false) String username) {
         return accountService.getUserHomeInfo(uid, username);
     }
-
 
     /**
      * @param uid
@@ -56,11 +55,24 @@ public class AccountController {
      */
     @GetMapping("/get-user-calendar-heatmap")
     @AnonApi
-    public CommonResult<UserCalendarHeatmapVO> getUserCalendarHeatmap(@RequestParam(value = "uid", required = false) String uid,
-                                                                      @RequestParam(value = "username", required = false) String username) {
+    public CommonResult<UserCalendarHeatmapVO> getUserCalendarHeatmap(
+            @RequestParam(value = "uid", required = false) String uid,
+            @RequestParam(value = "username", required = false) String username) {
         return accountService.getUserCalendarHeatmap(uid, username);
     }
 
+    /**
+     * @param uid
+     * @return
+     * @Description 获取用户最近一年的比赛名次变化图
+     */
+    @GetMapping("/get-user-contests-ranking")
+    @AnonApi
+    public CommonResult<UserContestsRankingVO> getUserContestsRanking(
+            @RequestParam(value = "uid", required = false) String uid,
+            @RequestParam(value = "username", required = false) String username) {
+        return accountService.getUserContestsRanking(uid, username);
+    }
 
     /**
      * @MethodName changePassword
@@ -78,6 +90,7 @@ public class AccountController {
 
     /**
      * 获取修改邮箱的验证码
+     *
      * @param email
      * @return
      */

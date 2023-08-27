@@ -339,7 +339,7 @@ export default {
       let updateData = utils.filterEmptyValue(
         Object.assign({}, this.formProfile)
       );
-      console.log(updateData);
+      // console.log(updateData);
       if (!updateData.gender) {
         updateData.gender = "secrecy";
       }

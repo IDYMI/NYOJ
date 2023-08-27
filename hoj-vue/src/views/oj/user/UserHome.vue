@@ -140,6 +140,22 @@
           >
           </calendar-heatmap>
         </el-card>
+        <div v-if="this.options.series.length">
+          <el-card style="margin-top: 1rem">
+            <div class="card-title">
+              <i class="el-icon-data-line" style="color: #409eff"> </i>
+              {{ $t("m.Ended_contests_ranking_changes") }}
+            </div>
+            <div class="echarts">
+              <ECharts
+                :options="options"
+                ref="chart"
+                :autoresize="true"
+                @click="gotoEcharts"
+              ></ECharts>
+            </div>
+          </el-card>
+        </div>
         <el-tabs type="card" style="margin-top: 1rem">
           <el-tab-pane :label="$t('m.Personal_Profile')">
             <div class="signature-body">
@@ -241,9 +257,9 @@
             </div>
           </el-tab-pane>
           <el-tab-pane :label="$t('m.UserHome_Participated_Contests')">
-            <div class="signature-body">
+            <div id="problems">
               <template v-if="profile.contestPidList.length">
-                <el-divider><i class="el-icon-circle-check"></i></el-divider>
+                <!-- <el-divider><i class="el-icon-circle-check"></i></el-divider> -->
                 <div>
                   {{ $t("m.List_Participated_Contests") }}
                   <el-button
@@ -287,6 +303,7 @@ import { CalendarHeatmap } from "vue-calendar-heatmap";
 import { PROBLEM_LEVEL } from "@/common/constants";
 import utils from "@/common/utils";
 import Markdown from "@/components/oj/common/Markdown";
+import moment from "moment";
 export default {
   components: {
     Avatar,
@@ -315,6 +332,66 @@ export default {
         loading: false,
       },
       PROBLEM_LEVEL: {},
+      options: {
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "none",
+            axis: "x",
+          },
+          formatter: function (params) {
+            var long_title = params[0].data.title;
+            var title = "";
+            for (var i = 0, s; (s = long_title[i++]); ) {
+              //遍历字符串数组
+              title += s;
+              if (!(i % 16)) title += "<br>"; //按需要求余
+            }
+
+            // console.log(params);
+            return (
+              "Contest：" +
+              long_title +
+              "<br>Rank：" +
+              params[0].data.value +
+              "<br>Time：" +
+              params[0].name
+            );
+          },
+        },
+
+        grid: {
+          x: 80,
+          x2: 100,
+          left: "5%", //设置canvas图距左的距离
+          top: "5%",
+          right: "5%",
+          bottom: "15%",
+        },
+        xAxis: {
+          type: "category",
+          data: [], // 把时间组成的数组接过来，放在x轴上
+          boundaryGap: true,
+          axisTick: {
+            show: false, // 不显示坐标轴刻度线
+          },
+          axisLine: {
+            show: false, // 不显示坐标轴线
+          },
+        },
+        yAxis: {
+          type: "value",
+          inverse: true,
+          minInterval: 1,
+          axisTick: {
+            show: false, // 不显示坐标轴刻度线
+          },
+          axisLine: {
+            show: false, // 不显示坐标轴线
+          },
+        },
+        series: [],
+      },
     };
   },
   created() {
@@ -325,6 +402,36 @@ export default {
       this.calendarHeatmapEndDate = res.data.data.endDate;
       this.loadingCalendarHeatmap = true;
     });
+    api.getUserContestsRanking(uid, username).then((res) => {
+      let dataList = res.data.data.dataList;
+      let len = dataList.length;
+
+      let [times, ranks, seriesData] = [[], [], []];
+
+      for (let i = 0; i < len; i++) {
+        let contest = dataList[i];
+        let time = moment(contest["date"]).format("hh:mm MM-DD");
+        let title = contest["title"];
+        let rank = contest["rank"];
+        let cid = contest["cid"];
+        ranks.push({ value: rank, title: title, cid: cid });
+        times.push(time);
+      }
+      if (ranks.length) {
+        seriesData.push({
+          name: username,
+          type: "line",
+          data: ranks,
+          emphasis: {
+            focus: "series",
+          },
+        });
+        this.options.series = seriesData;
+        this.options.xAxis.data = times;
+        // myMessage.success(seriesData);
+      }
+    });
+
     this.PROBLEM_LEVEL = Object.assign({}, PROBLEM_LEVEL);
   },
   mounted() {
@@ -377,6 +484,17 @@ export default {
           this.loading = false;
         }
       );
+    },
+    gotoEcharts(params) {
+      let cid = params.data.cid;
+      // console.log(cid);
+      this.getContestRank(cid);
+    },
+    getContestRank(cid) {
+      this.$router.push({
+        name: "ContestRank",
+        params: { contestID: cid },
+      });
     },
     goContest(cid) {
       this.$router.push({
@@ -433,7 +551,7 @@ export default {
       }
     },
     "$store.state.language"(newVal, oldVal) {
-      console.log(newVal, oldVal);
+      // console.log(newVal, oldVal);
       this.calendarHeatLocale = {
         months: [
           this.$i18n.t("m.Jan"),
@@ -468,6 +586,11 @@ export default {
 </script>
 
 <style scoped>
+.echarts {
+  margin: 20px auto;
+  height: 140px;
+  width: 100%;
+}
 .submission {
   background: skyblue;
   color: #fff;

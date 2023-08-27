@@ -407,6 +407,8 @@ const RankBox = () => import("@/components/oj/common/RankBox");
 import time from "@/common/time";
 import utils from "@/common/utils";
 import ContestRankMixin from "./contestRankMixin";
+import { messageDark } from "naive-ui";
+import myMessage from "@/common/message";
 
 export default {
   name: "ACMContestRank",
@@ -423,6 +425,7 @@ export default {
       limit: 50,
       autoRefresh: false,
       showChart: false,
+      showStarUser: false,
       contestID: "",
       dataRank: [],
       keyword: null,

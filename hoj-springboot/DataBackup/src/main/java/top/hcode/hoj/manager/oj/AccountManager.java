@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.apache.shiro.SecurityUtils;
@@ -35,6 +36,7 @@ import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.utils.RedisUtils;
 import top.hcode.hoj.validator.CommonValidator;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -79,6 +81,9 @@ public class AccountManager {
 
     @Autowired
     private EmailManager emailManager;
+
+    @Resource
+    private ContestCalculateRankManager contestCalculateRankManager;
 
     /**
      * @MethodName checkUsernameOrEmail
@@ -183,9 +188,7 @@ public class AccountManager {
         List<ContestRecord> contestList = userContestEntityService.list(queryWrapper2);
         List<Long> pidList2 = contestList.stream().map(ContestRecord::getCid).collect(Collectors.toList());
 
-        // List<HashMap<String, String>> contestsList = new LinkedList<>();
         List<Long> contestsPidList = new LinkedList<>();
-        // List<String> contestsTitleList = new LinkedList<>();
 
         if (pidList2.size() > 0) {
             QueryWrapper<Contest> contestQueryWrapper = new QueryWrapper<>();
@@ -193,11 +196,8 @@ public class AccountManager {
             contestQueryWrapper.in("id", pidList2);
             List<Contest> contests = contestEntityService.list(contestQueryWrapper);
             contestsPidList = contests.stream().map(Contest::getId).collect(Collectors.toList());
-            // contestsTitleList =
-            // contests.stream().map(Contest::getTitle).collect(Collectors.toList());
         }
         userHomeInfo.setContestPidList(contestsPidList);
-        // userHomeInfo.setContestedList(contestsTitleList);
 
         QueryWrapper<Session> sessionQueryWrapper = new QueryWrapper<>();
         sessionQueryWrapper.eq("uid", userHomeInfo.getUid())
@@ -256,6 +256,123 @@ public class AccountManager {
         }
         userCalendarHeatmapVo.setDataList(dataList);
         return userCalendarHeatmapVo;
+    }
+
+    /**
+     * @param uid
+     * @return
+     * @Description 获取用户最近一年的比赛名次变化图
+     */
+    public UserContestsRankingVO getUserContestsRanking(String uid, String username) throws StatusFailException {
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        if (StringUtils.isEmpty(uid) && StringUtils.isEmpty(username)) {
+            if (userRolesVo != null) {
+                uid = userRolesVo.getUid();
+            } else {
+                throw new StatusFailException("请求参数错误：uid和username不能都为空！");
+            }
+        }
+        QueryWrapper<ContestRecord> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("uid", uid)
+                .select("distinct cid");
+        List<ContestRecord> contestList = userContestEntityService.list(queryWrapper2);
+        List<Long> pidList2 = contestList.stream().map(ContestRecord::getCid).collect(Collectors.toList());
+
+        List<Long> contestsPidList = new LinkedList<>();
+
+        if (pidList2.size() > 0) {
+            QueryWrapper<Contest> contestQueryWrapper = new QueryWrapper<>();
+            contestQueryWrapper.select("id", "title");
+            contestQueryWrapper.in("id", pidList2);
+            List<Contest> contests = contestEntityService.list(contestQueryWrapper);
+            contestsPidList = contests.stream().map(Contest::getId).collect(Collectors.toList());
+        }
+
+        UserContestsRankingVO userContestsRankingVO = new UserContestsRankingVO();
+        userContestsRankingVO.setEndDate(DateUtil.format(new Date(), "yyyy-MM-dd"));
+
+        if (CollectionUtils.isEmpty(contestsPidList)) {
+            userContestsRankingVO.setDataList(new ArrayList<>());
+            return userContestsRankingVO;
+        }
+        List<HashMap<String, Object>> dataList = new ArrayList<>();
+        for (Long contestPid : contestsPidList) {
+            // // 筛去 比赛管理员和超级管理员
+            // List<String> AdminUidList =
+            // userInfoEntityService.getNowContestAdmin(contestPid);
+
+            // if (AdminUidList.contains(uid) {
+            // continue;
+            // }
+            // 获取已经结束,可见的ACM比赛的状态
+            Contest contest = contestEntityService.getById(contestPid);
+            if (contest.getType().intValue() == Constants.Contest.TYPE_ACM.getCode()
+                    && contest.getStatus().intValue() == 1 && contest.getVisible()) {
+                List<String> emptyStringList = new ArrayList<>();
+                List<Integer> emptyIntegerList = new ArrayList<>();
+
+                // 进行排序计算得到用户的排名
+                List<ACMContestRankVO> orderResultList = contestCalculateRankManager.calcACMRank(
+                        false,
+                        true,
+                        contest,
+                        userRolesVo.getUid(),
+                        emptyStringList,
+                        emptyIntegerList,
+                        true);
+
+                if (StrUtil.isNotBlank(username)) {
+                    String finalKeyword = username.trim().toLowerCase();
+                    orderResultList = orderResultList.stream()
+                            .filter(rankVo -> filterBySchoolORRankShowName(finalKeyword,
+                                    rankVo.getSchool(),
+                                    getUserRankShowName(contest.getRankShowName(),
+                                            rankVo.getUsername(),
+                                            rankVo.getRealname(),
+                                            rankVo.getNickname())))
+                            .collect(Collectors.toList());
+                }
+                if (orderResultList.size() > 0) {
+                    String user_uid = orderResultList.get(0).getUid();
+                    if (user_uid.equals(uid)) {
+                        Integer rank = orderResultList.get(0).getRank();
+                        Date startTime = contest.getStartTime();
+                        String dateStr = DateUtil.format(startTime, "yyyy-MM-dd");
+                        HashMap<String, Object> tmp = new HashMap<>(4);
+                        tmp.put("date", dateStr);
+                        tmp.put("rank", rank);
+                        tmp.put("cid", contest.getId());
+                        tmp.put("title", contest.getTitle());
+                        dataList.add(tmp);
+                    }
+                }
+            }
+        }
+        if (CollectionUtils.isEmpty(dataList)) {
+            userContestsRankingVO.setDataList(new ArrayList<>());
+            return userContestsRankingVO;
+        }
+        userContestsRankingVO.setDataList(dataList);
+        return userContestsRankingVO;
+    }
+
+    private String getUserRankShowName(String contestRankShowName, String username, String realName, String nickname) {
+        switch (contestRankShowName) {
+            case "username":
+                return username;
+            case "realname":
+                return realName;
+            case "nickname":
+                return nickname;
+        }
+        return null;
+    }
+
+    private boolean filterBySchoolORRankShowName(String keyword, String school, String rankShowName) {
+        if (StrUtil.isNotEmpty(school) && school.toLowerCase().contains(keyword)) {
+            return true;
+        }
+        return StrUtil.isNotEmpty(rankShowName) && rankShowName.toLowerCase().contains(keyword);
     }
 
     /**

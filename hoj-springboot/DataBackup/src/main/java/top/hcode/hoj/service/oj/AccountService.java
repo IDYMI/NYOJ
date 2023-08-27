@@ -15,6 +15,8 @@ public interface AccountService {
 
     public CommonResult<UserCalendarHeatmapVO> getUserCalendarHeatmap(String uid, String username);
 
+    public CommonResult<UserContestsRankingVO> getUserContestsRanking(String uid, String username);
+
     public CommonResult<ChangeAccountVO> changePassword(ChangePasswordDTO changePasswordDto);
 
     public CommonResult<Void> getChangeEmailCode(String email);
