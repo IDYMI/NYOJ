@@ -257,8 +257,8 @@ export default {
     window.addEventListener("visibilitychange", this.autoRefreshUserInfo);
   },
   mounted() {
-    console.log(LOGO);
-    console.log(MOTTO);
+    // console.log(LOGO);
+    // console.log(MOTTO);
     this.autoChangeLanguge();
     this.getWebsiteConfig();
   },

@@ -722,6 +722,15 @@ const ojApi = {
     })
   },
 
+  getUserContestsRanking(uid, username) {
+    return ajax("/api/get-user-contests-ranking", 'get', {
+      params: {
+        uid,
+        username
+      }
+    })
+  },
+
   // setting页的请求
   changePassword(data) {
     return ajax("/api/change-password", 'post', {
