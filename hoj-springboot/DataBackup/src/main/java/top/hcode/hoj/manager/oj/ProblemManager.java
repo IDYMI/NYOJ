@@ -96,12 +96,9 @@ public class ProblemManager {
         if (!StringUtils.isEmpty(keyword)) {
             keyword = keyword.trim();
         }
-        // // 根据oj筛选过滤
-        // if (oj != null && !"All".equals(oj)) {
-        // if (!Constants.RemoteOJ.isRemoteOJ(oj)) {
-        // oj = (oj == "Mine" ? "NYOJ" : "NSWOJ");
-        // }
-        // }
+        if (oj != null && !Constants.RemoteOJ.isRemoteOJ(oj)) {
+            oj = "Mine";
+        }
         return problemEntityService.getProblemList(limit, currentPage, null, keyword,
                 difficulty, tagId, oj);
     }
@@ -112,25 +109,14 @@ public class ProblemManager {
      * @Since 2020/10/27
      */
     public RandomProblemVO getRandomProblem(String oj) throws StatusFailException {
-        Boolean isRemote = false;
         QueryWrapper<Problem> queryWrapper = new QueryWrapper<>();
 
-        // 根据oj筛选过滤
-        if (oj != null && !"All".equals(oj)) {
-            if (!Constants.RemoteOJ.isRemoteOJ(oj)) {
-                oj = (oj == "ME" ? "NYOJ" : "NSWOJ");
-            } else {
-                isRemote = true;
-            }
-        }
-
-        if (oj != null) {
-            // 必须是公开题目
-            queryWrapper.select("problem_id").eq("auth", 1).eq("is_remote", isRemote).eq("is_group", false)
-                    .likeRight("problem_id", oj);
+        // 必须是公开题目
+        if (!Constants.RemoteOJ.isRemoteOJ(oj)) {
+            queryWrapper.select("problem_id").eq("auth", 1).eq("is_remote", false).eq("is_group", false);
         } else {
-            // 必须是公开题目
-            queryWrapper.select("problem_id").eq("auth", 1).eq("is_group", false);
+            queryWrapper.select("problem_id").eq("auth", 1).eq("is_remote", true).eq("is_group", false)
+                    .likeRight("problem_id", oj);
         }
 
         List<Problem> list = problemEntityService.list(queryWrapper);

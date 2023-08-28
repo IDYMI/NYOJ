@@ -30,6 +30,7 @@
               style="width: 150px;margin-top: 10px;"
             >
               <el-option :label="$t('m.My_OJ')" :value="'ME'"></el-option>
+              <!-- <el-option :label="$t('m.My_OJ2')" :value="'ME2'"></el-option> -->
               <el-option
                 :label="remoteOj.name"
                 :key="index"
@@ -44,20 +45,20 @@
     </el-card>
     <div v-loading = "getTagListLoading">
       <el-row :gutter="20">
-          <el-col v-for="(tagsAndClassification,index)  in tagsAndClassificationList"  
+          <el-col v-for="(tagsAndClassification,index)  in tagsAndClassificationList"
             :key="index" :md="8" :xs="24">
             <el-card style="margin-top:15px">
               <el-collapse v-model="activeTagClassificationIdList">
                   <el-collapse-item :name="tagsAndClassification.classification == null?-1:tagsAndClassification.classification.id">
                       <template slot="title">
-                        <span>{{ tagsAndClassification.classification!=null? 
+                        <span>{{ tagsAndClassification.classification!=null?
                           tagsAndClassification.classification.name:$t('m.Unclassified')
                         }}
                         </span>
                         <span style="margin-left:10px;"
                           v-if="tagsAndClassification.classification!=null">
-                          <el-button type="primary" 
-                            icon="el-icon-edit" 
+                          <el-button type="primary"
+                            icon="el-icon-edit"
                             circle
                             size="mini"
                             @click.stop="openTagClassificationDialog('update',tagsAndClassification.classification)"
@@ -65,8 +66,8 @@
                         </span>
                         <span style="margin-left:10px;"
                           v-if="tagsAndClassification.classification!=null">
-                          <el-button type="danger" 
-                            icon="el-icon-delete" 
+                          <el-button type="danger"
+                            icon="el-icon-delete"
                             circle
                             size="mini"
                             @click.stop="deleteTagClassification(tagsAndClassification.classification)"
@@ -116,6 +117,7 @@
         <el-form-item :label="$t('m.Tag_Attribution')" required="">
           <el-select v-model="tag.oj" size="small" style="width: 150px;">
             <el-option :label="$t('m.My_OJ')" :value="'ME'"></el-option>
+            <!-- <el-option :label="$t('m.My_OJ2')" :value="'ME2'"></el-option> -->
             <el-option
               :label="remoteOj.name"
               :key="index"
@@ -161,6 +163,7 @@
         <el-form-item :label="$t('m.Tag_Classification_Attribution')" required="">
           <el-select v-model="tagClassification.oj" size="small" style="width: 150px;" :disabled="true">
             <el-option :label="$t('m.My_OJ')" :value="'ME'"></el-option>
+            <!-- <el-option :label="$t('m.My_OJ2')" :value="'ME2'"></el-option> -->
             <el-option
               :label="remoteOj.name"
               :key="index"
