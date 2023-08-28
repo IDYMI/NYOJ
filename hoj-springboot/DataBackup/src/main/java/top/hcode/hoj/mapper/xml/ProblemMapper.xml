@@ -44,14 +44,11 @@
             <if test="difficulty != null">
                 and p.difficulty = #{difficulty}
             </if>
-            <if test="oj != null and oj != 'NYOJ' and oj != 'NSWOJ'">
+            <if test="oj != null and oj !='Mine'">
                 and p.problem_id like concat(#{oj},'%') and p.is_remote=true
             </if>
-            <if test="oj != null and oj == 'NYOJ'">
-                and p.problem_id like concat(#{oj},'%') and p.is_remote=false
-            </if>
-            <if test="oj != null and oj == 'NSWOJ'">
-                and p.problem_id like concat(#{oj},'%') and p.is_remote=false
+            <if test="oj != null and oj =='Mine'">
+                and p.is_remote=false
             </if>
         </where>
         order by length(p.problem_id) asc,p.problem_id asc

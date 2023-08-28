@@ -253,7 +253,7 @@ export const m = {
   Problem_List: '题目列表',
   Problem_Bank: '题库',
   All: '全部',
-  My_OJ: 'NYOJ',
+  My_OJ: '主题库',
   My_OJ2: 'NSWOJ',
   Level: '难度',
   Tags: '标签',

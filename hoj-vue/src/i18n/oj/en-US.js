@@ -254,7 +254,7 @@ export const m = {
   Problem_List: 'Problem List',
   Problem_Bank: 'Problem Bank',
   All: 'All',
-  My_OJ: 'NYOJ',
+  My_OJ: 'Main',
   My_OJ2: 'NSWOJ',
   Level: 'Level',
   Tags: 'Tags',

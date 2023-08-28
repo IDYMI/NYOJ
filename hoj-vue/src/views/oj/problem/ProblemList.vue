@@ -61,18 +61,18 @@
                 size="medium"
                 class="filter-item"
                 :effect="
-                  query.oj === 'NYOJ' || query.oj === '' ? 'dark' : 'plain'
+                  query.oj === 'Mine' || query.oj === '' ? 'dark' : 'plain'
                 "
-                @click="filterByOJ('NYOJ')"
+                @click="filterByOJ('Mine')"
                 >{{ $t("m.My_OJ") }}</el-tag
               >
-              <el-tag
+              <!-- <el-tag
                 size="medium"
                 class="filter-item"
                 :effect="query.oj === 'NSWOJ' ? 'dark' : 'plain'"
                 @click="filterByOJ('NSWOJ')"
                 >{{ $t("m.My_OJ2") }}</el-tag
-              >
+              > -->
               <el-tag
                 size="medium"
                 class="filter-item"
@@ -461,7 +461,7 @@ export default {
       this.routeName = this.$route.name;
       let query = this.$route.query;
       this.query.difficulty = query.difficulty || "";
-      this.query.oj = query.oj || "NYOJ";
+      this.query.oj = query.oj || "Mine";
       this.query.keyword = query.keyword || "";
       try {
         this.query.tagId = JSON.parse(query.tagId);
@@ -588,10 +588,8 @@ export default {
       );
     },
     getTagList(oj) {
-      if (oj == "NYOJ") {
-        oj = "ME";
-      } else if (oj == "NSWOJ") {
-        oj = "ME2";
+      if (oj == 'Mine') {
+        oj = 'ME';
       }
       this.loadings.tag = true;
       api.getProblemTagsAndClassification(oj).then(
@@ -700,10 +698,8 @@ export default {
     },
     pickone() {
       let oj = this.query.oj;
-      if (oj == "NYOJ") {
-        oj = "ME";
-      } else if (oj == "NSWOJ") {
-        oj = "ME2";
+      if (oj == 'Mine') {
+        oj = 'ME';
       }
       api.pickone(oj).then((res) => {
         myMessage.success(this.$i18n.t("m.Good_luck_to_you"));
@@ -748,9 +744,9 @@ export default {
             case "ME":
               name = "[" + this.$i18n.t("m.My_OJ") + "] ";
               break;
-            case "ME2":
-              name = "[" + this.$i18n.t("m.My_OJ2") + "] ";
-              break;
+            // case "ME2":
+            //   name = "[" + this.$i18n.t("m.My_OJ2") + "] ";
+            //   break;
             case "AC":
               name = "[AtCoder] ";
               break;
@@ -767,11 +763,13 @@ export default {
       }
     },
     findOJName() {
-      if (this.query.oj == "NYOJ" || !this.$route.query.oj) {
+      if (this.query.oj == "Mine" || !this.$route.query.oj) {
         return this.$i18n.t("m.My_OJ");
-      } else if (this.query.oj == "NSWOJ") {
-        return this.$i18n.t("m.My_OJ2");
-      } else if (this.query.oj == "All") {
+      }
+      // else if (this.query.oj == "NSWOJ") {
+      //   return this.$i18n.t("m.My_OJ2");
+      // }
+      else if (this.query.oj == "All") {
         return this.$i18n.t("m.All");
       } else {
         return this.query.oj;
@@ -781,11 +779,13 @@ export default {
   computed: {
     ...mapGetters(["isAuthenticated"]),
     OJName() {
-      if (this.query.oj == "NYOJ" || !this.$route.query.oj) {
+      if (this.query.oj == "Mine" || !this.$route.query.oj) {
         return this.$i18n.t("m.My_OJ");
-      } else if (this.query.oj == "NSWOJ") {
-        return this.$i18n.t("m.My_OJ2");
-      } else if (this.query.oj == "All") {
+      }
+      // else if (this.query.oj == "NSWOJ") {
+      //   return this.$i18n.t("m.My_OJ2");
+      // }
+      else if (this.query.oj == "All") {
         return this.$i18n.t("m.All");
       } else {
         return this.query.oj;
