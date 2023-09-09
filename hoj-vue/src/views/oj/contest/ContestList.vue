@@ -284,7 +284,7 @@ import {
 import myMessage from '@/common/message';
 const Pagination = () => import('@/components/oj/common/Pagination');
 // const ContestListAttention = () => import('@/components/oj/contest/ContestListAttention');
-const limit = 10;
+const limit = 8;
 
 export default {
   name: 'contest-list',

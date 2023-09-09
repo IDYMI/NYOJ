@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-loading="loading">
+  <div class="container1" v-loading="loading">
     <div class="avatar-container">
       <avatar
         :username="profile.username"
@@ -9,7 +9,7 @@
         :src="profile.avatar"
       ></avatar>
     </div>
-    <el-card>
+    <el-card class="box-card">
       <div class="recent-login">
         <el-tooltip
           :content="profile.recentLoginTime | localtime"
@@ -140,22 +140,20 @@
           >
           </calendar-heatmap>
         </el-card>
-        <div v-if="this.options.series.length">
-          <el-card style="margin-top: 1rem">
-            <div class="card-title">
-              <i class="el-icon-data-line" style="color: #409eff"> </i>
-              {{ $t("m.Ended_contests_ranking_changes") }}
-            </div>
-            <div class="echarts">
-              <ECharts
-                :options="options"
-                ref="chart"
-                :autoresize="true"
-                @click="gotoEcharts"
-              ></ECharts>
-            </div>
-          </el-card>
-        </div>
+        <el-card style="margin-top: 1rem" v-if="this.options.series.length">
+          <div class="card-title">
+            <i class="el-icon-data-line" style="color: #409eff"> </i>
+            {{ $t("m.Ended_contests_ranking_changes") }}
+          </div>
+          <div class="echarts">
+            <ECharts
+              :options="options"
+              ref="chart"
+              :autoresize="true"
+              @click="gotoEcharts"
+            ></ECharts>
+          </div>
+        </el-card>
         <el-tabs type="card" style="margin-top: 1rem">
           <el-tab-pane :label="$t('m.Personal_Profile')">
             <div class="signature-body">
@@ -588,7 +586,7 @@ export default {
 <style scoped>
 .echarts {
   margin: 20px auto;
-  height: 140px;
+  height: 240px;
   width: 100%;
 }
 .submission {
@@ -619,63 +617,69 @@ export default {
   font-size: 20px;
   font-weight: 600;
 }
-
-.container p {
+.container1 {
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  border: 1px solid #ebeef5;
+}
+.container1 p {
   margin-top: 8px;
   margin-bottom: 8px;
 }
 
 @media screen and (max-width: 1080px) {
-  .container {
+  .container1 {
     position: relative;
     width: 100%;
-    margin-top: 110px;
+    margin-top: 80px;
     text-align: center;
   }
-  .container .avatar-container {
+  .container1 .avatar-container {
     position: absolute;
     left: 50%;
     transform: translate(-50%);
     z-index: 1;
-    margin-top: -90px;
+    margin-top: -110px;
   }
-  .container .recent-login {
+
+  .container1 .recent-login {
     text-align: center;
     margin-top: 30px;
   }
 }
 
 @media screen and (min-width: 1080px) {
-  .container {
+  .container1 {
     position: relative;
-    width: 75%;
-    margin-top: 160px;
+    width: 100%;
+    margin-top: 100px;
     text-align: center;
   }
-  .container .avatar-container {
+  .container1 .avatar-container {
     position: absolute;
     left: 50%;
     transform: translate(-50%);
     z-index: 1;
-    margin-top: -8%;
+    margin-top: -4%;
   }
-  .container .recent-login {
+  .container1 .recent-login {
     position: absolute;
     right: 1rem;
     top: 0.5rem;
   }
-  .container .user-info {
+  .container1 .user-info {
     margin-top: 50px;
   }
 }
-.container .avatar {
+.container1 .avatar {
   width: 140px;
   height: 140px;
   border-radius: 50%;
   box-shadow: 0 1px 1px 0;
 }
 
-.container .emphasis {
+.container1 .emphasis {
   font-size: 20px;
   font-weight: 600;
 }

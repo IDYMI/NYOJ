@@ -8,20 +8,15 @@
           router
           active-text-color="#2196f3"
           text-color="#495060"
+          class="custom-menu"
         >
           <div class="logo">
             <router-link to="/home">
-              <el-tooltip
-                :content="$t('m.Click_To_Home')"
-                placement="bottom"
-                effect="dark"
-              >
-                <el-image
-                  style="width: 139px; height: 50px"
-                  :src="imgUrl"
-                  fit="scale-down"
-                ></el-image>
-              </el-tooltip>
+              <el-image
+                style="width: 139px; height: 50px"
+                :src="imgUrl"
+                fit="scale-down"
+              ></el-image>
             </router-link>
           </div>
           <template v-if="mode == 'defalut'">
@@ -284,7 +279,7 @@
           </template>
         </el-menu>
       </div>
-      <div id="header-hidden" v-show="isScrolled"></div>
+      <!-- <div id="header-hidden" v-show="isScrolled"></div> -->
     </template>
     <template v-else>
       <div style="top: 0px; left: 0px">
@@ -949,14 +944,24 @@ export default {
 <style scoped>
 #header {
   min-width: 300px;
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   left: 0;
   height: auto;
-  width: 100%;
+  width: 70%;
+  margin: 0 auto;
   z-index: 2000;
   background-color: #fff;
   box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+}
+
+.custom-menu .el-menu-item {
+  width: 140px;
+  text-align: center;
+}
+
+.custom-menu .spacer {
+  visibility: hidden;
 }
 .mobile-nav {
   position: fixed;

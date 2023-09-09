@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div >
     <el-row :gutter="20">
-      <el-col :md="18" :xs="24" v-loading="loading.discussion">
+      <el-col :md="19" :xs="24" v-loading="loading.discussion">
         <div class="discussion-header">
           <span style="padding: 16px; float: left">
             <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -248,7 +248,7 @@
           :current.sync="query.currentPage"
         ></Pagination>
       </el-col>
-      <el-col :md="6" :xs="24">
+      <el-col :md="5" :xs="24">
         <el-button
           class="btn"
           type="primary"

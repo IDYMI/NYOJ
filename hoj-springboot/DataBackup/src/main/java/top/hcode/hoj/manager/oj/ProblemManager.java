@@ -131,6 +131,21 @@ public class ProblemManager {
     }
 
     /**
+     * @MethodName getProblemLastId
+     * @Description 获取最新的题目Id
+     * @Since 2020/10/27
+     */
+    public ProblemLastIdVO getProblemLastId() throws StatusFailException {
+        QueryWrapper<Problem> queryWrapper = new QueryWrapper<>();
+
+        queryWrapper.select("problem_id").eq("is_remote", false).orderByDesc("id").last("limit 1");
+        List<Problem> list = problemEntityService.list(queryWrapper);
+        ProblemLastIdVO problemLastIdVO = new ProblemLastIdVO();
+        problemLastIdVO.setProblemLastId(list.get(0).getProblemId());
+        return problemLastIdVO;
+    }
+
+    /**
      * @MethodName getUserProblemStatus
      * @Description 获取用户对应该题目列表中各个题目的做题情况
      * @Since 2020/12/29

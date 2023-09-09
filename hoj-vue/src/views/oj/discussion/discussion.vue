@@ -1,120 +1,121 @@
 <template>
   <div>
-    <div class="container" v-loading="loading">
-      <div class="title-article" style="text-align: left">
-        <h1 class="title" id="sharetitle">
-          <span>{{ discussion.title }}</span>
-          <el-button
-            type="primary"
-            size="mini"
-            style="margin-left:5px;vertical-align:middle;"
-            v-if="discussion.pid"
-            @click="toProblem(discussion.pid)"
-            >{{ $t('m.Go_to_problem') }}</el-button
+    <div class="title-article" style="text-align: left" v-loading="loading">
+      <h1 class="title" id="sharetitle">
+        <span>{{ discussion.title }}</span>
+        <el-button
+          type="primary"
+          size="mini"
+          style="margin-left: 5px; vertical-align: middle"
+          v-if="discussion.pid"
+          @click="toProblem(discussion.pid)"
+          >{{ $t("m.Go_to_problem") }}</el-button
+        >
+      </h1>
+      <div class="title-msg">
+        <span>
+          <a
+            class="c999"
+            @click="getInfoByUsername(discussion.uid, discussion.author)"
+            :title="discussion.author"
           >
-        </h1>
-        <div class="title-msg">
+            <avatar
+              :username="discussion.author"
+              :inline="true"
+              :size="26"
+              color="#FFF"
+              class="user-avatar"
+              :src="discussion.avatar"
+            ></avatar>
+            <span class="user-name">{{ discussion.author }}</span>
+          </a>
+          <span v-if="discussion.titleName">
+            <el-tag effect="dark" size="small" :color="discussion.titleColor">
+              {{ discussion.titleName }}
+            </el-tag>
+          </span>
+        </span>
+        <span
+          class="role-root role"
+          title="Super Administrator"
+          v-if="discussion.role == 'root'"
+          >SPA</span
+        >
+        <span
+          class="role-admin role"
+          title="Administrator"
+          v-if="discussion.role == 'admin'"
+          >ADM</span
+        >
+        <span class="c999" style="padding: 0 6px"
+          ><i class="el-icon-folder-opened"> {{ $t("m.Category") }}：</i
+          ><a
+            class="c999"
+            @click="toAllDiscussionByCid(discussion.categoryId)"
+            >{{ discussion.categoryName }}</a
+          ></span
+        >
+        <span class="c999"
+          ><i class="fa fa-thumbs-o-up"></i
+          ><span> {{ $t("m.Likes") }}：{{ discussion.likeNum }}</span></span
+        >
+        <span class="c999"
+          ><i class="fa fa-eye"></i
+          ><span> {{ $t("m.Views") }}：{{ discussion.viewNum }}</span></span
+        >
+
+        <a
+          @click="showReportDialog = true"
+          class="report"
+          :title="$t('m.Report')"
+          ><i class="fa fa-envira"></i><span>{{ $t("m.Report") }}</span></a
+        >
+        <a
+          @click="toLikeDiscussion(discussion.id, true)"
+          class="like"
+          :title="$t('m.Like')"
+          v-if="!discussion.hasLike"
+        >
+          <i class="fa fa-thumbs-o-up"></i>
+          <span>{{ $t("m.Like") }}</span></a
+        >
+        <a
+          @click="toLikeDiscussion(discussion.id, false)"
+          class="like"
+          :title="$t('m.Liked')"
+          v-else
+        >
+          <i class="fa fa-thumbs-up"></i>
+          <span>{{ $t("m.Liked") }}</span></a
+        >
+
+        <span>
+          <i class="fa fa-clock-o"> {{ $t("m.Release_Time") }}：</i>
           <span>
-            <a
-              class="c999"
-              @click="getInfoByUsername(discussion.uid, discussion.author)"
-              :title="discussion.author"
+            <el-tooltip
+              :content="discussion.gmtCreate | localtime"
+              placement="top"
             >
-              <avatar
-                :username="discussion.author"
-                :inline="true"
-                :size="26"
-                color="#FFF"
-                class="user-avatar"
-                :src="discussion.avatar"
-              ></avatar>
-              <span class="user-name">{{ discussion.author }}</span>
-            </a>
-            <span v-if="discussion.titleName">
-              <el-tag effect="dark" size="small" :color="discussion.titleColor">
-                {{ discussion.titleName }}
-              </el-tag>
-            </span>
+              <span>{{ discussion.gmtCreate | fromNow }}</span>
+            </el-tooltip>
           </span>
-          <span
-            class="role-root role"
-            title="Super Administrator"
-            v-if="discussion.role == 'root'"
-            >SPA</span
-          >
-          <span
-            class="role-admin role"
-            title="Administrator"
-            v-if="discussion.role == 'admin'"
-            >ADM</span
-          >
-          <span class="c999" style="padding:0 6px;"
-            ><i class="el-icon-folder-opened"> {{ $t('m.Category') }}：</i
-            ><a
-              class="c999"
-              @click="toAllDiscussionByCid(discussion.categoryId)"
-              >{{ discussion.categoryName }}</a
-            ></span
-          >
-          <span class="c999"
-            ><i class="fa fa-thumbs-o-up"></i
-            ><span> {{ $t('m.Likes') }}：{{ discussion.likeNum }}</span></span
-          >
-          <span class="c999"
-            ><i class="fa fa-eye"></i
-            ><span> {{ $t('m.Views') }}：{{ discussion.viewNum }}</span></span
-          >
+        </span>
 
-          <a
-            @click="showReportDialog = true"
-            class="report"
-            :title="$t('m.Report')"
-            ><i class="fa fa-envira"></i><span>{{ $t('m.Report') }}</span></a
-          >
-          <a
-            @click="toLikeDiscussion(discussion.id, true)"
-            class="like"
-            :title="$t('m.Like')"
-            v-if="!discussion.hasLike"
-          >
-            <i class="fa fa-thumbs-o-up"></i>
-            <span>{{ $t('m.Like') }}</span></a
-          >
-          <a
-            @click="toLikeDiscussion(discussion.id, false)"
-            class="like"
-            :title="$t('m.Liked')"
-            v-else
-          >
-            <i class="fa fa-thumbs-up"></i> <span>{{ $t('m.Liked') }}</span></a
-          >
-
-          <span>
-            <i class="fa fa-clock-o"> {{ $t('m.Release_Time') }}：</i>
-            <span>
-              <el-tooltip
-                :content="discussion.gmtCreate | localtime"
-                placement="top"
-              >
-                <span>{{ discussion.gmtCreate | fromNow }}</span>
-              </el-tooltip>
-            </span>
-          </span>
-
-          <span style="padding:0 6px;" v-show="userInfo.uid == discussion.uid"
-            ><a style="color:#8fb0c9" @click="showEditDiscussionDialog = true"
-              ><i class="el-icon-edit-outline"> {{ $t('m.Edit') }}</i></a
-            ></span
-          >
-        </div>
+        <span style="padding: 0 6px" v-show="userInfo.uid == discussion.uid"
+          ><a style="color: #8fb0c9" @click="showEditDiscussionDialog = true"
+            ><i class="el-icon-edit-outline"> {{ $t("m.Edit") }}</i></a
+          ></span
+        >
       </div>
       <div class="body-article">
         <Markdown
-          :isAvoidXss="discussion.role != 'root'&&discussion.role != 'admin'"
-          :content="discussion.content">
+          :isAvoidXss="discussion.role != 'root' && discussion.role != 'admin'"
+          :content="discussion.content"
+        >
         </Markdown>
       </div>
     </div>
+
     <el-dialog
       :title="$t('m.Report')"
       :visible.sync="showReportDialog"
@@ -145,10 +146,10 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="danger" @click.native="showReportDialog = false">{{
-          $t('m.Cancel')
+          $t("m.Cancel")
         }}</el-button>
         <el-button type="primary" @click.native="submitReport">{{
-          $t('m.OK')
+          $t("m.OK")
         }}</el-button>
       </span>
     </el-dialog>
@@ -201,10 +202,10 @@
         <el-button
           type="danger"
           @click.native="showEditDiscussionDialog = false"
-          >{{ $t('m.Cancel') }}</el-button
+          >{{ $t("m.Cancel") }}</el-button
         >
         <el-button type="primary" @click.native="submitDiscussion">{{
-          $t('m.OK')
+          $t("m.OK")
         }}</el-button>
       </span>
     </el-dialog>
@@ -213,14 +214,14 @@
 </template>
 
 <script>
-import api from '@/common/api';
-import myMessage from '@/common/message';
-import { addCodeBtn } from '@/common/codeblock';
-import Avatar from 'vue-avatar';
-import { mapGetters, mapActions } from 'vuex';
-const Editor = () => import('@/components/admin/Editor.vue');
-const comment = () => import('@/components/oj/comment/comment');
-import Markdown from '@/components/oj/common/Markdown';
+import api from "@/common/api";
+import myMessage from "@/common/message";
+import { addCodeBtn } from "@/common/codeblock";
+import Avatar from "vue-avatar";
+import { mapGetters, mapActions } from "vuex";
+const Editor = () => import("@/components/admin/Editor.vue");
+const comment = () => import("@/components/oj/comment/comment");
+import Markdown from "@/components/oj/common/Markdown";
 export default {
   components: {
     comment,
@@ -231,8 +232,8 @@ export default {
   data() {
     return {
       discussion: {
-        author: 'HOJ',
-        avatar: '',
+        author: "HOJ",
+        avatar: "",
       },
       query: {
         currentPage: 1,
@@ -240,11 +241,11 @@ export default {
       },
       discussionID: 0,
       showEditDiscussionDialog: false,
-      discussionDialogTitle: 'Edit Discussion',
+      discussionDialogTitle: "Edit Discussion",
       showReportDialog: false,
       report: {
         tagList: [],
-        content: '',
+        content: "",
       },
       loading: false,
     };
@@ -253,10 +254,10 @@ export default {
     this.init();
   },
   methods: {
-    ...mapActions(['changeDomTitle']),
+    ...mapActions(["changeDomTitle"]),
     init() {
       this.routeName = this.$route.name;
-      this.discussionID = this.$route.params.discussionID || '';
+      this.discussionID = this.$route.params.discussionID || "";
       this.loading = true;
       api.getDiscussion(this.discussionID).then(
         (res) => {
@@ -275,14 +276,14 @@ export default {
 
     getInfoByUsername(uid, username) {
       this.$router.push({
-        path: '/user-home',
+        path: "/user-home",
         query: { uid, username },
       });
     },
 
     toAllDiscussionByCid(cid) {
       this.$router.push({
-        path: '/discussion',
+        path: "/discussion",
         query: { cid },
       });
     },
@@ -291,12 +292,12 @@ export default {
       let groupID = this.$route.params.groupID;
       if (groupID) {
         this.$router.push({
-          name: 'GroupProblemDetails',
+          name: "GroupProblemDetails",
           params: { problemID: pid, groupID: groupID },
         });
       } else {
         this.$router.push({
-          name: 'ProblemDetails',
+          name: "ProblemDetails",
           params: { problemID: pid },
         });
       }
@@ -304,16 +305,16 @@ export default {
 
     toLikeDiscussion(did, toLike) {
       if (!this.isAuthenticated) {
-        myMessage.warning(this.$i18n.t('m.Please_login_first'));
+        myMessage.warning(this.$i18n.t("m.Please_login_first"));
         return;
       }
       api.toLikeDiscussion(did, toLike).then((res) => {
         if (toLike) {
           this.discussion.likeNum++;
           this.discussion.hasLike = true;
-          myMessage.success(this.$i18n.t('m.Like_Successfully'));
+          myMessage.success(this.$i18n.t("m.Like_Successfully"));
         } else {
-          myMessage.success(this.$i18n.t('m.Cancel_Like_Successfully'));
+          myMessage.success(this.$i18n.t("m.Cancel_Like_Successfully"));
           this.discussion.likeNum--;
           this.discussion.hasLike = false;
         }
@@ -326,25 +327,25 @@ export default {
       delete discussion.viewNum;
       delete discussion.likeNum;
       api.updateDiscussion(discussion).then((res) => {
-        myMessage.success(this.$i18n.t('m.Update_Successfully'));
+        myMessage.success(this.$i18n.t("m.Update_Successfully"));
         this.showEditDiscussionDialog = false;
         this.init();
       });
     },
     submitReport() {
       if (!this.isAuthenticated) {
-        myMessage.warning(this.$i18n.t('m.Please_login_first'));
+        myMessage.warning(this.$i18n.t("m.Please_login_first"));
         return;
       }
       if (this.report.tagList.length == 0 && !this.report.content) {
         myMessage.warning(
-          this.$i18n.t('m.The_report_label_and_reason_cannot_be_empty')
+          this.$i18n.t("m.The_report_label_and_reason_cannot_be_empty")
         );
         return;
       }
-      var reportMsg = '';
+      var reportMsg = "";
       for (let i = 0; i < this.report.tagList.length; i++) {
-        reportMsg += '#' + this.report.tagList[i] + '# ';
+        reportMsg += "#" + this.report.tagList[i] + "# ";
       }
       reportMsg += this.report.content;
       let discussionReport = {
@@ -353,13 +354,13 @@ export default {
         did: this.discussionID,
       };
       api.toReportDiscussion(discussionReport).then((res) => {
-        myMessage.success(this.$i18n.t('m.Send_successfully'));
+        myMessage.success(this.$i18n.t("m.Send_successfully"));
         this.showReportDialog = false;
       });
     },
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'isAdminRole', 'userInfo']),
+    ...mapGetters(["isAuthenticated", "isAdminRole", "userInfo"]),
   },
   watch: {
     isAuthenticated(newVal, oldVal) {
@@ -375,19 +376,18 @@ export default {
 /deep/ .el-dialog__body {
   padding: 0px 20px;
 }
-.container {
-  box-sizing: border-box;
-  background-color: #fff;
-  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
-  border: 1px solid #ebeef5;
-  margin-bottom: 20px;
-}
+
 .title-article {
+  width: 100%;
   background: #fff;
   overflow: hidden;
   padding: 10px 20px;
   position: relative;
   text-align: center;
+  box-sizing: border-box;
+  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+  border: 1px solid #ebeef5;
+  margin-bottom: 20px;
 }
 .title-article h1.title {
   font-size: 25px;

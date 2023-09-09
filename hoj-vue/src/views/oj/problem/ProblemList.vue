@@ -66,13 +66,6 @@
                 @click="filterByOJ('Mine')"
                 >{{ $t("m.My_OJ") }}</el-tag
               >
-              <!-- <el-tag
-                size="medium"
-                class="filter-item"
-                :effect="query.oj === 'NSWOJ' ? 'dark' : 'plain'"
-                @click="filterByOJ('NSWOJ')"
-                >{{ $t("m.My_OJ2") }}</el-tag
-              > -->
               <el-tag
                 size="medium"
                 class="filter-item"

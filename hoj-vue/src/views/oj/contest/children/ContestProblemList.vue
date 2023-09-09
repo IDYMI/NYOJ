@@ -70,9 +70,14 @@
           </template>
         </template>
       </vxe-table-column>
-      <vxe-table-column field="displayId" width="80" title="#">
+      <vxe-table-column
+        field="displayId"
+        width="80"
+        title="#"
+        :sort-method="customSort"
+      >
         <template v-slot="{ row }">
-          <span style="vertical-align: top;" v-if="row.color">
+          <span style="vertical-align: top" v-if="row.color">
             <svg
               t="1633685184463"
               class="icon"
@@ -105,7 +110,7 @@
           <span v-if="!ContestRealTimePermission">
             <i
               class="fa fa-question"
-              style="font-weight: 600;font-size: 16px;color:#909399"
+              style="font-weight: 600; font-size: 16px; color: #909399"
             ></i>
           </span>
           <span v-else>
@@ -118,7 +123,7 @@
           <span v-if="!ContestRealTimePermission">
             <i
               class="fa fa-question"
-              style="font-weight: 600;font-size: 16px;color:#909399"
+              style="font-weight: 600; font-size: 16px; color: #909399"
             ></i>
           </span>
           <span v-else>
@@ -148,17 +153,17 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
-import { JUDGE_STATUS, RULE_TYPE } from '@/common/constants';
-import api from '@/common/api';
+import { mapState, mapGetters } from "vuex";
+import { JUDGE_STATUS, RULE_TYPE } from "@/common/constants";
+import api from "@/common/api";
 export default {
-  name: 'ContestProblemList',
+  name: "ContestProblemList",
   data() {
     return {
       JUDGE_STATUS: {},
       RULE_TYPE: {},
       isGetStatusOk: false,
-      testcolor: 'rgba(0, 206, 209, 1)',
+      testcolor: "rgba(0, 206, 209, 1)",
     };
   },
   mounted() {
@@ -168,7 +173,7 @@ export default {
   },
   methods: {
     getContestProblems() {
-      this.$store.dispatch('getContestProblems').then((res) => {
+      this.$store.dispatch("getContestProblems").then((res) => {
         if (this.isAuthenticated) {
           let isContestProblemList = true;
           // 如果已登录，则需要查询对当前页面题目列表中各个题目的提交情况
@@ -189,10 +194,10 @@ export default {
               .then((res) => {
                 let result = res.data.data;
                 for (let index = 0; index < this.problems.length; index++) {
-                  this.problems[index]['myStatus'] =
-                    result[this.problems[index].pid]['status'];
-                  this.problems[index]['score'] =
-                    result[this.problems[index].pid]['score'];
+                  this.problems[index]["myStatus"] =
+                    result[this.problems[index].pid]["status"];
+                  this.problems[index]["score"] =
+                    result[this.problems[index].pid]["score"];
                 }
                 this.isGetStatusOk = true;
               });
@@ -202,7 +207,7 @@ export default {
     },
     goContestProblem(event) {
       this.$router.push({
-        name: 'ContestProblemDetails',
+        name: "ContestProblemDetails",
         params: {
           contestID: this.$route.params.contestID,
           problemID: event.row.displayId,
@@ -217,16 +222,16 @@ export default {
     },
     getIconColor(status) {
       return (
-        'font-weight: 600;font-size: 16px;color:' + JUDGE_STATUS[status].rgb
+        "font-weight: 600;font-size: 16px;color:" + JUDGE_STATUS[status].rgb
       );
     },
     getScoreColor(score) {
       if (score == 0) {
-        return 'el-tag el-tag--small oi-0';
+        return "el-tag el-tag--small oi-0";
       } else if (score > 0 && score < 100) {
-        return 'el-tag el-tag--small oi-between';
+        return "el-tag el-tag--small oi-between";
       } else if (score == 100) {
-        return 'el-tag el-tag--small oi-100';
+        return "el-tag el-tag--small oi-100";
       }
     },
   },
@@ -235,17 +240,17 @@ export default {
       problems: (state) => state.contest.contestProblems,
     }),
     ...mapGetters([
-      'isAuthenticated',
-      'contestRuleType',
-      'ContestRealTimePermission',
-      'isContainsAfterContestJudge'
+      "isAuthenticated",
+      "contestRuleType",
+      "ContestRealTimePermission",
+      "isContainsAfterContestJudge",
     ]),
   },
-  watch:{
-    isContainsAfterContestJudge(){
+  watch: {
+    isContainsAfterContestJudge() {
       this.getContestProblems();
-    }
-  }
+    },
+  },
 };
 </script>
 

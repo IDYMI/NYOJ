@@ -311,7 +311,9 @@ const ojApi = {
       }
     })
   },
-
+  getProblemLastId() {
+    return ajax('/api/get-last-problemId', 'get')
+  },
   // Problem详情页的相关请求
   getProblem(problemId, cid, gid) {
     return ajax('/api/get-problem-detail', 'get', {
@@ -1782,6 +1784,7 @@ const adminApi = {
       }
     })
   },
+
   admin_getAllProblemTagList(oj) {
     return ajax('/api/get-all-problem-tags', 'get', {
       params: {

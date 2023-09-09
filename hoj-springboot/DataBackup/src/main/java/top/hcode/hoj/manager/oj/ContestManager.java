@@ -601,7 +601,8 @@ public class ContestManager {
                     currentPage,
                     limit,
                     contestRankDto.getKeyword(),
-                    isContainsAfterContestJudge);
+                    isContainsAfterContestJudge,
+                    nowtime);
 
         } else {
             // OI比赛
@@ -614,7 +615,8 @@ public class ContestManager {
                     currentPage,
                     limit,
                     contestRankDto.getKeyword(),
-                    isContainsAfterContestJudge);
+                    isContainsAfterContestJudge,
+                    nowtime);
         }
         return resultList;
     }

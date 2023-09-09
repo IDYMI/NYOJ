@@ -16,6 +16,7 @@ import top.hcode.hoj.pojo.vo.ProblemInfoVO;
 import top.hcode.hoj.pojo.vo.ProblemVO;
 import top.hcode.hoj.pojo.vo.RandomProblemVO;
 import top.hcode.hoj.service.oj.ProblemService;
+import top.hcode.hoj.pojo.vo.ProblemLastIdVO;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -43,6 +44,15 @@ public class ProblemServiceImpl implements ProblemService {
     public CommonResult<RandomProblemVO> getRandomProblem(String oj) {
         try {
             return CommonResult.successResponse(problemManager.getRandomProblem(oj));
+        } catch (StatusFailException e) {
+            return CommonResult.errorResponse(e.getMessage());
+        }
+    }
+
+    @Override
+    public CommonResult<ProblemLastIdVO> getProblemLastId() {
+        try {
+            return CommonResult.successResponse(problemManager.getProblemLastId());
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         }
