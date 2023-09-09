@@ -60,14 +60,14 @@
         </where>
         ) as ac
         from contest_problem cp,problem p
-        where cp.cid = #{cid} and cp.pid=p.id and p.auth!=2 order by cp.display_id asc
+        where cp.cid = #{cid} and cp.pid=p.id and p.auth!=2 order by CAST(cp.display_id AS SIGNED),cp.display_id ASC
     </select>
 
     <select id="getContestFullScreenProblemList" resultType="top.hcode.hoj.pojo.vo.ProblemFullScreenListVO">
         select cp.display_id as problem_id,cp.pid,cp.display_title as title
         from contest_problem cp,problem p
         where cp.cid = #{cid} and cp.pid = p.id and p.auth != 2
-        order by cp.display_id asc
+        order by CAST(cp.display_id AS SIGNED),cp.display_id ASC
     </select>
 
 </mapper>
