@@ -74,7 +74,6 @@
         field="displayId"
         width="80"
         title="#"
-        :sort-method="customSort"
       >
         <template v-slot="{ row }">
           <span style="vertical-align: top" v-if="row.color">
