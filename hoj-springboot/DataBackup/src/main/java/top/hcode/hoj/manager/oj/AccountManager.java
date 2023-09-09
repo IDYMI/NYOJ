@@ -319,7 +319,8 @@ public class AccountManager {
                         userRolesVo.getUid(),
                         emptyStringList,
                         emptyIntegerList,
-                        true);
+                        true,
+                        null);
 
                 if (StrUtil.isNotBlank(username)) {
                     String finalKeyword = username.trim().toLowerCase();

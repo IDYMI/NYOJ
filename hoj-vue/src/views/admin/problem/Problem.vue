@@ -21,7 +21,7 @@
               <el-input
                 :placeholder="$t('m.Problem_Display_ID')"
                 v-model="problem.problemId"
-                :disabled="problem.isRemote"
+                :disabled="true"
               >
               </el-input>
             </el-form-item>
@@ -769,6 +769,7 @@ export default {
   },
   data() {
     return {
+      problemLastId: "",
       rules: {
         title: {
           required: true,
@@ -1102,6 +1103,30 @@ export default {
         for (let item of this.allLanguage) {
           this.problemLanguages.push(item.name);
         }
+        api.getProblemLastId().then((res) => {
+          let problemLastId = res.data.data.problemLastId;
+          let numericId;
+          let prefix = "";
+
+          if (problemLastId.includes("-")) {
+            let splitParts = problemLastId.split("-");
+            prefix = splitParts.slice(0, splitParts.length - 1).join("-") + "-";
+            let lastPart = splitParts[splitParts.length - 1];
+            numericId = parseInt(lastPart) + 1;
+          } else {
+            numericId = parseInt(problemLastId) + 1;
+          }
+
+          let newProblemId = String(numericId);
+
+          // // 在问题ID前补零，确保始终为4位数
+          // while (newProblemId.length < 4) {
+          //   newProblemId = "0" + newProblemId;
+          // }
+
+          this.problem.problemId = prefix + newProblemId;
+          // myMessage.success(this.problem.problemId);
+        });
       }
     },
 
@@ -1147,7 +1172,7 @@ export default {
       });
     },
     querySearch(queryString, cb) {
-     var ojName = "ME";
+      var ojName = "ME";
       if (this.problem.isRemote) {
         ojName = this.problem.problemId.split("-")[0];
       }

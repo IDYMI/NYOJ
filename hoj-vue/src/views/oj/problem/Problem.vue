@@ -1941,8 +1941,7 @@ a {
 }
 @media screen and (min-width: 992px) {
   .problem-body {
-    margin-left: -2%;
-    margin-right: -2%;
+    margin-bottom: 20px;
   }
   .js-left {
     height: 730px !important;
@@ -2143,8 +2142,8 @@ a {
 }
 .captcha-container .captcha-code {
   width: auto;
-  margin-top: -20px;
-  margin-left: 20px;
+  /* margin-top: -20px;
+  margin-left: 20px; */
 }
 
 .fl-right {

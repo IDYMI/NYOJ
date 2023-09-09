@@ -1,7 +1,12 @@
 <template>
   <!-- <n-config-provider abstract="" :theme="darkTheme"> -->
+  <div class="main">
     <div id="app">
       <el-backtop :right="10"></el-backtop>
+
+      <router-link to="/home">
+        <el-image :src="imgUrl" class="centered-image"></el-image>
+      </router-link>
       <div v-if="!isAdminView" class="full-height flex-column">
         <NavBar></NavBar>
         <div id="oj-content">
@@ -114,7 +119,8 @@
         </div>
       </div>
     </div>
-    <!-- <n-global-style /> -->
+  </div>
+  <!-- <n-global-style /> -->
   <!-- </n-config-provider> -->
 </template>
 
@@ -133,6 +139,7 @@ export default {
   },
   data() {
     return {
+      imgUrl: require("@/assets/nyoj.png"),
       isAdminView: false,
       showFooter: true,
     };
@@ -257,6 +264,9 @@ export default {
     window.addEventListener("visibilitychange", this.autoRefreshUserInfo);
   },
   mounted() {
+    // let div = document.getElementsByClassName("main")[0];
+    // this.watchCanvs(div.offsetWidth, div.offsetHeight, " ACM ICPC ", div);
+
     // console.log(LOGO);
     // console.log(MOTTO);
     this.autoChangeLanguge();
@@ -266,6 +276,12 @@ export default {
 </script>
 
 <style>
+.centered-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+}
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -546,6 +562,8 @@ a:hover {
 }
 @media screen and (min-width: 1050px) {
   #oj-content {
+    width: 76%;
+    margin: 0 auto;
     margin-top: 20px;
     padding: 0 3%;
     margin-bottom: 1.5rem;
@@ -559,6 +577,8 @@ a:hover {
 }
 @media screen and (max-width: 1050px) {
   #oj-content {
+    width: 100%;
+    margin: 0 auto;
     margin-top: 20px;
     padding: 0 5px;
     margin-bottom: 1.5rem;

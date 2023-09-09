@@ -31,7 +31,9 @@
         </template>
       </el-alert>
     </div>
-    <div class="container" :style="cid ? 'max-width: 100% !important;' : ''">
+    <!-- <div class="container" :style="cid ? 'max-width: 100% !important;' : ''"> -->
+      <div class="container" style="max-width: 100% !important;">
+
       <div class="own-input">
         <el-input
           v-model="ownInputComment"
@@ -228,7 +230,7 @@
         <div class="info-bottom">
           <Markdown
             class="content markdown-content"
-            :isAvoidXss="true" 
+            :isAvoidXss="true"
             :content="item.content">
           </Markdown>
           <div class="control">
@@ -321,7 +323,7 @@
               <div style="padding: 8px 0;margin-left: 34px;">
                 <Markdown
                   class="markdown-content"
-                  :isAvoidXss="true" 
+                  :isAvoidXss="true"
                   :content="reply.content">
                 </Markdown>
               </div>
@@ -544,7 +546,7 @@ export default {
       default: null,
     },
   },
-  components: { 
+  components: {
     Avatar,
     Markdown
   },

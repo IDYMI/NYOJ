@@ -93,7 +93,7 @@
               </el-col>
             </el-row>
           </div>
-          <div class="slider">
+          <div class="slider" ref="sliderContainer" @click="handleClick">
             <el-slider
               v-model="progressValue"
               :format-tooltip="formatTooltip"
@@ -355,6 +355,7 @@ export default {
   },
   data() {
     return {
+      sliderValue: 0,
       route_name: "contestDetails",
       timer: null,
       CONTEST_STATUS: {},
@@ -420,6 +421,7 @@ export default {
             }
             storage.set(key, readAnnouncementList);
           });
+          n;
         }, 60 * 1000);
       }
 
@@ -439,6 +441,14 @@ export default {
       } else {
         return time.secondFormat(this.contest.duration);
       }
+    },
+    handleClick(event) {
+      const sliderWidth = event.currentTarget.offsetWidth;
+      const clickPosition =
+        event.clientX - event.currentTarget.getBoundingClientRect().left;
+      const clickPercentage = clickPosition / sliderWidth;
+      this.sliderValue = Math.round(clickPercentage * 100);
+      console.log(this.sliderValue);
     },
     checkPassword() {
       if (this.contestPassword === "") {

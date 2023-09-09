@@ -1,26 +1,35 @@
 import api from '@/common/api'
-import { mapGetters, mapState } from 'vuex'
-import { CONTEST_STATUS, buildContestRankConcernedKey } from '@/common/constants'
+import {
+  mapGetters,
+  mapState
+} from 'vuex'
+import {
+  CONTEST_STATUS,
+  buildContestRankConcernedKey
+} from '@/common/constants'
 import storage from '@/common/storage';
 export default {
   methods: {
-    initConcernedList(){
+    initConcernedList() {
       let key = buildContestRankConcernedKey(this.$route.params.contestID);
       this.concernedList = storage.get(key) || [];
     },
-    getContestRankData (page = 1, refresh = false) {
+    getContestRankData(page = 1, refresh = false) {
       if (this.showChart && !refresh) {
-        this.$refs.chart.showLoading({maskColor: 'rgba(250, 250, 250, 0.8)'})
+        this.$refs.chart.showLoading({
+          maskColor: 'rgba(250, 250, 250, 0.8)'
+        })
       }
       let data = {
-        currentPage:page,
+        currentPage: page,
         limit: this.limit,
         cid: this.$route.params.contestID,
-        forceRefresh: this.forceUpdate ? true: false,
+        forceRefresh: this.forceUpdate ? true : false,
         removeStar: !this.showStarUser,
-        concernedList:this.concernedList,
-        keyword: this.keyword == null? null: this.keyword.trim(),
+        concernedList: this.concernedList,
+        keyword: this.keyword == null ? null : this.keyword.trim(),
         containsEnd: this.isContainsAfterContestJudge,
+        time: null
       }
       api.getContestRank(data).then(res => {
         if (this.showChart && !refresh) {
@@ -33,7 +42,7 @@ export default {
         this.applyToTable(res.data.data.records)
       })
     },
-    handleAutoRefresh (status) {
+    handleAutoRefresh(status) {
       if (status == true) {
         this.refreshFunc = setInterval(() => {
           this.$store.dispatch('getContestProblems');
@@ -43,78 +52,88 @@ export default {
         clearInterval(this.refreshFunc)
       }
     },
-    updateConcernedList(uid, isConcerned){
-      if(isConcerned){
+    updateConcernedList(uid, isConcerned) {
+      if (isConcerned) {
         this.concernedList.push(uid);
-      }else{
+      } else {
         var index = this.concernedList.indexOf(uid);
         if (index > -1) {
-        this.concernedList.splice(index, 1);
+          this.concernedList.splice(index, 1);
         }
       }
       let key = buildContestRankConcernedKey(this.contestID);
       storage.set(key, this.concernedList);
       this.getContestRankData(this.page, true);
     },
-    getRankShowName(rankShowName, username){
+    getRankShowName(rankShowName, username) {
       let finalShowName = rankShowName;
-      if(rankShowName == null || rankShowName == '' || rankShowName.trim().length == 0){
+      if (rankShowName == null || rankShowName == '' || rankShowName.trim().length == 0) {
         finalShowName = username;
       }
       return finalShowName;
     }
   },
   computed: {
-    ...mapGetters(['isContestAdmin','userInfo', "isContainsAfterContestJudge"]),
+    ...mapGetters(['isContestAdmin', 'userInfo', "isContainsAfterContestJudge"]),
     ...mapState({
       'contest': state => state.contest.contest,
       'contestProblems': state => state.contest.contestProblems
     }),
     showChart: {
-      get () {
+      get() {
         return this.$store.state.contest.itemVisible.chart
       },
-      set (value) {
-        this.$store.commit('changeContestItemVisible', {chart: value})
+      set(value) {
+        this.$store.commit('changeContestItemVisible', {
+          chart: value
+        })
       }
     },
-    showStarUser:{
-      get () {
+    showStarUser: {
+      get() {
         return !this.$store.state.contest.removeStar
       },
-      set (value) {
-        this.$store.commit('changeRankRemoveStar', {value: !value})
+      set(value) {
+        this.$store.commit('changeRankRemoveStar', {
+          value: !value
+        })
       }
     },
     showTable: {
-      get () {
+      get() {
         return this.$store.state.contest.itemVisible.table
       },
-      set (value) {
-        this.$store.commit('changeContestItemVisible', {table: value})
+      set(value) {
+        this.$store.commit('changeContestItemVisible', {
+          table: value
+        })
       }
     },
     forceUpdate: {
-      get () {
+      get() {
         return this.$store.state.contest.forceUpdate
       },
-      set (value) {
-        this.$store.commit('changeRankForceUpdate', {value: value})
+      set(value) {
+        this.$store.commit('changeRankForceUpdate', {
+          value: value
+        })
       }
     },
-    concernedList:{
-      get () {
+    concernedList: {
+      get() {
         return this.$store.state.contest.concernedList
       },
-      set (value) {
-        this.$store.commit('changeConcernedList', {value: value})
+      set(value) {
+        this.$store.commit('changeConcernedList', {
+          value: value
+        })
       }
     },
-    refreshDisabled () {
+    refreshDisabled() {
       return this.contest.status == CONTEST_STATUS.ENDED
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     clearInterval(this.refreshFunc)
   }
 }

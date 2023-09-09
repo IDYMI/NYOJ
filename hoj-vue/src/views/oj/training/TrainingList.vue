@@ -123,9 +123,9 @@
           </template>
         </vxe-table-column>
 
-        <vxe-table-column 
-          field="acCount" 
-          :title="$t('m.Progress')" 
+        <vxe-table-column
+          field="acCount"
+          :title="$t('m.Progress')"
           min-width="120"
           align="center">
           <template v-slot="{ row }">

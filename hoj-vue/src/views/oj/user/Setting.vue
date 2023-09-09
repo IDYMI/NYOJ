@@ -45,8 +45,8 @@ export default {
 <style scoped>
 @media screen and (min-width: 1200px) {
   .box-card {
-    margin-left: 10%;
-    margin-right: 10%;
+    width: 100%;
+    margin: 0 auto;
   }
 }
 /deep/ .el-collapse-item__header {

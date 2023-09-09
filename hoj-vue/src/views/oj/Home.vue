@@ -405,7 +405,6 @@
 <script>
 import time from "@/common/time";
 import api from "@/common/api";
-import { getResizedSize } from "@/common/image";
 import {
   CONTEST_STATUS_REVERSE,
   CONTEST_TYPE_REVERSE,
@@ -423,7 +422,7 @@ export default {
   },
   data() {
     return {
-      interval: 5000,
+      interval: 2000,
       recentUpdatedProblems: [],
       recentUserACRecord: [],
       CONTEST_STATUS_REVERSE: {},
@@ -457,7 +456,7 @@ export default {
         //   // hint: "",
         // },
       ],
-      srcHight: "600px",
+      srcHight: "340px",
       remoteJudgeList: [
         {
           url: "http://acm.hdu.edu.cn",
@@ -501,9 +500,9 @@ export default {
   mounted() {
     let screenWidth = window.screen.width;
     if (screenWidth < 768) {
-      this.srcHight = "400px";
+      this.srcHight = "200px";
     } else {
-      this.srcHight = "600px";
+      this.srcHight = "340px";
     }
     this.CONTEST_STATUS_REVERSE = Object.assign({}, CONTEST_STATUS_REVERSE);
     this.CONTEST_TYPE_REVERSE = Object.assign({}, CONTEST_TYPE_REVERSE);
@@ -513,16 +512,16 @@ export default {
     this.getRecentUpdatedProblemList();
   },
   methods: {
-    handleImageLoad(event) {
-      const image = event.target; // 获取图片对象
-      this.newsize = image;
-      const { width, height } = getResizedSize(image, 400, srcHight); // 计算图片缩放后的大小
-      this.newsize = width + height;
-      // console.log(`缩放后的宽度为${width}px，高度为${height}px`);
-      // 在这里可以设置图片的宽度和高度，例如：
-      // image.width = width;
-      // image.height = height;
-    },
+    // handleImageLoad(event) {
+    //   const image = event.target; // 获取图片对象
+    //   this.newsize = image;
+    //   const { width, height } = getResizedSize(image, 400, srcHight); // 计算图片缩放后的大小
+    //   this.newsize = width + height;
+    //   // console.log(`缩放后的宽度为${width}px，高度为${height}px`);
+    //   // 在这里可以设置图片的宽度和高度，例如：
+    //   // image.width = width;
+    //   // image.height = height;
+    // },
     linkTo() {
       const activeIndex = this.$refs.carousel.activeIndex;
       if (activeIndex !== undefined && this.carouselImgList[activeIndex].link) {
@@ -660,8 +659,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 600px;
-  max-height: 600px;
+  /* max-width: 300px;
+  max-height: 300px; */
   object-fit: contain;
 }
 
@@ -755,7 +754,7 @@ li {
   float: right;
 }
 .img-carousel {
-  height: 640px;
+  height: 390px;
 }
 
 @media screen and (max-width: 768px) {
