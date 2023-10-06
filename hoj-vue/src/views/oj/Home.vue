@@ -40,20 +40,16 @@
                   >
                     {{ item.hint }}
                   </div>
-                  <div>
-                    <el-image
-                      fit="contain"
-                      :src="item.url"
-                      :alt="item.url"
-
-                      :style="{
-                        cursor:
-                          isActive(item) && item.link ? 'pointer' : 'auto',
-                      }"
-                      @click="linkTo"
-                      class="normal-image"
-                    ></el-image>
-                  </div>
+                  <el-image
+                    fit="contain"
+                    :src="item.url"
+                    :alt="item.url"
+                    :style="{
+                      cursor: isActive(item) && item.link ? 'pointer' : 'auto',
+                    }"
+                    @click="linkTo"
+                    class="normal-image"
+                  ></el-image>
                 </el-tooltip>
               </div>
               <div v-else>
@@ -637,31 +633,15 @@ export default {
 }
 </style>
 <style scoped>
-.image {
-  /* width: auto;
-  height: 100%; */
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  /*不定宽高的图片居中显示*/
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .preview-image,
 .normal-image {
-  width: auto;
+  width: 100%;
   height: 100%;
-  background: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* max-width: 300px;
-  max-height: 300px; */
-  object-fit: contain;
+  object-fit: cover; /* 图片等比缩放以填充整个容器 */
+  object-position: center; /* 图片在容器中的位置，这里设置为居中 */
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 /deep/.el-card__header {
