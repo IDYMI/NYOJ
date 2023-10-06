@@ -1,5 +1,7 @@
 package top.hcode.hoj.manager.oj;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -138,10 +140,25 @@ public class ProblemManager {
     public ProblemLastIdVO getProblemLastId() throws StatusFailException {
         QueryWrapper<Problem> queryWrapper = new QueryWrapper<>();
 
-        queryWrapper.select("problem_id").eq("is_remote", false).orderByDesc("id").last("limit 1");
+        queryWrapper.select("problem_id")
+                .eq("is_remote", false) // 公共题库
+                .orderByDesc("problem_id");
         List<Problem> list = problemEntityService.list(queryWrapper);
+
+        // 刷选选纯数字的 problem_id，防止团队题目影响
+        Pattern pattern = Pattern.compile("^\\d+$");
+        List<Problem> filteredList = new ArrayList<>();
+        for (Problem problem : list) {
+            String problemId = problem.getProblemId();
+            // 使用正则匹配方法判断字符串是否为纯数字
+            Matcher matcher = pattern.matcher(problemId);
+            if (matcher.matches()) {
+                filteredList.add(problem);
+            }
+        }
+
         ProblemLastIdVO problemLastIdVO = new ProblemLastIdVO();
-        problemLastIdVO.setProblemLastId(list.get(0).getProblemId());
+        problemLastIdVO.setProblemLastId(filteredList.get(0).getProblemId());
         return problemLastIdVO;
     }
 
