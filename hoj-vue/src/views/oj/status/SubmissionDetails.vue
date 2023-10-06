@@ -145,11 +145,11 @@
       </vxe-table>
     </el-col>
     <template v-if="testCaseResult != null">
-      <template v-if="testCaseResult.judgeCaseMode == JUDGE_CASE_MODE.DEFAULT 
+      <template v-if="testCaseResult.judgeCaseMode == JUDGE_CASE_MODE.DEFAULT
         || testCaseResult.judgeCaseMode == JUDGE_CASE_MODE.ERGODIC_WITHOUT_ERROR ">
         <el-col
           :span="24"
-          v-if="testCaseResult != null 
+          v-if="testCaseResult != null
       && testCaseResult.judgeCaseList != null
       && testCaseResult.judgeCaseList.length > 0"
         >

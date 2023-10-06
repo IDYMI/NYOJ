@@ -93,12 +93,18 @@
               </el-col>
             </el-row>
           </div>
-          <div class="slider" ref="sliderContainer" @click="handleClick">
-            <el-slider
+          <div style="width: 100%">
+            <!-- <el-slider
               v-model="progressValue"
               :format-tooltip="formatTooltip"
               :step="timeStep"
-            ></el-slider>
+            ></el-slider> -->
+            <Timebar
+              :progressValue="progressValue"
+              :Tooltip="formatTooltip()"
+              @transfer="getStopFlag"
+            />
+            <p></p>
           </div>
           <el-row>
             <el-col :span="24" style="text-align: center">
@@ -338,6 +344,8 @@ import moment from "moment";
 import api from "@/common/api";
 import { mapState, mapGetters, mapActions } from "vuex";
 import { addCodeBtn } from "@/common/codeblock";
+import Timebar from "@/components/oj/common/Timebar.vue";
+
 import {
   CONTEST_STATUS_REVERSE,
   CONTEST_STATUS,
@@ -348,13 +356,17 @@ import {
 import myMessage from "@/common/message";
 import storage from "@/common/storage";
 import Markdown from "@/components/oj/common/Markdown";
+import ClickRank from "@/views/oj/contest/ClickRank";
+
 export default {
   name: "ContestDetails",
   components: {
     Markdown,
+    Timebar,
   },
   data() {
     return {
+      percentage: -1, // 点击点占总长度的距离
       sliderValue: 0,
       route_name: "contestDetails",
       timer: null,
@@ -432,23 +444,26 @@ export default {
   },
   methods: {
     ...mapActions(["changeDomTitle"]),
-    formatTooltip(val) {
-      if (this.contest.status == -1) {
-        // 还未开始
-        return "00:00:00";
-      } else if (this.contest.status == 0) {
-        return time.secondFormat(this.BeginToNowDuration); // 格式化时间
-      } else {
-        return time.secondFormat(this.contest.duration);
-      }
+    getStopFlag(percentage) {
+      this.percentage = percentage;
     },
-    handleClick(event) {
-      const sliderWidth = event.currentTarget.offsetWidth;
-      const clickPosition =
-        event.clientX - event.currentTarget.getBoundingClientRect().left;
-      const clickPercentage = clickPosition / sliderWidth;
-      this.sliderValue = Math.round(clickPercentage * 100);
-      console.log(this.sliderValue);
+    formatTooltip(val) {
+      if (this.percentage !== -1) {
+        const nowTime = this.contest.duration * this.percentage;
+
+        // 查询对应的榜单
+        ClickRank.$emit("clickGetContestRank", 1, false, parseInt(nowTime));
+        return time.secondFormat(nowTime); // 格式化时间
+      } else {
+        if (this.contest.status == -1) {
+          // 还未开始
+          return "00:00:00";
+        } else if (this.contest.status == 0) {
+          return time.secondFormat(this.BeginToNowDuration);
+        } else {
+          return time.secondFormat(this.contest.duration);
+        }
+      }
     },
     checkPassword() {
       if (this.contestPassword === "") {
@@ -576,7 +591,7 @@ export default {
     text-align: center;
   }
 }
-/deep/.el-slider__button {
+/* /deep/.el-slider__button {
   width: 20px !important;
   height: 20px !important;
   background-color: #409eff !important;
@@ -587,7 +602,7 @@ export default {
 /deep/.el-slider__bar {
   height: 10px !important;
   background-color: #09be24 !important;
-}
+} */
 /deep/ .el-card__header {
   border-bottom: 0px;
   padding-bottom: 0px;

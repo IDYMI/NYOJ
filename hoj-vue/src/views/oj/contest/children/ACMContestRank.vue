@@ -407,8 +407,10 @@ const RankBox = () => import("@/components/oj/common/RankBox");
 import time from "@/common/time";
 import utils from "@/common/utils";
 import ContestRankMixin from "./contestRankMixin";
+import api from "@/common/api";
 import { messageDark } from "naive-ui";
 import myMessage from "@/common/message";
+import ClickRank from "@/views/oj/contest/ClickRank";
 
 export default {
   name: "ACMContestRank",
@@ -502,6 +504,8 @@ export default {
   },
   created() {
     this.initConcernedList();
+    // 开始对clickGetContestRank事件的监听
+    ClickRank.$on("clickGetContestRank", this.clickGetContestRankData);
   },
   mounted() {
     this.contestID = this.$route.params.contestID;
@@ -514,6 +518,13 @@ export default {
   },
   methods: {
     ...mapActions(["getContestProblems"]),
+    clickGetContestRankData(page, refresh, nowTime) {
+      // 停止自动更新
+      this.autoRefresh = false;
+      this.handleAutoRefresh(false);
+      // 查询对应的榜单
+      this.getContestRankData(page, refresh, nowTime);
+    },
     getUserACSubmit(username) {
       this.$router.push({
         name: "ContestSubmissionList",
@@ -718,6 +729,10 @@ export default {
     isMobileView() {
       return window.screen.width < 768;
     },
+  },
+  beforeDestroy() {
+    // 取消对clickGetContestRank事件的监听，以避免内存泄漏
+    ClickRank.$off("clickGetContestRank", this.executeFunction);
   },
 };
 </script>

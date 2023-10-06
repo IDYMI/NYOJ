@@ -956,7 +956,7 @@ export default {
 }
 
 .custom-menu .el-menu-item {
-  width: 140px;
+  width: auto;
   text-align: center;
 }
 

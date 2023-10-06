@@ -219,6 +219,7 @@ export const m = {
   Development: '开发',
   Open_Source: '开源',
   Support: '支持',
+  Partner_School: '友校链接',
   Help: '声明',
   Group: 'Q群',
 

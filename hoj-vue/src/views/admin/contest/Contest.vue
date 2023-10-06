@@ -664,9 +664,11 @@ export default {
         sealRankTime: "An hour", //封榜时间
         autoRealRank: true,
         auth: 1,
-        openPrint: false,
+        openPrint: true,
         rankShowName: "username",
         openAccountLimit: false,
+        openRank: true,
+        allowEndSubmit: true,
         accountLimitRule: "",
         starAccount: [],
         oiRankScoreType: "Recent",

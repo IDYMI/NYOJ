@@ -363,6 +363,8 @@ import ContestRankMixin from "./contestRankMixin";
 import utils from "@/common/utils";
 const Pagination = () => import("@/components/oj/common/Pagination");
 const RankBox = () => import("@/components/oj/common/RankBox");
+import ClickRank from "@/views/oj/contest/ClickRank";
+
 export default {
   name: "OIContestRank",
   components: {
@@ -443,6 +445,8 @@ export default {
   },
   created() {
     this.initConcernedList();
+    // 开始对clickGetContestRank事件的监听
+    ClickRank.$on("clickGetContestRank", this.clickGetContestRankData);
   },
   mounted() {
     this.contestID = this.$route.params.contestID;
@@ -467,7 +471,13 @@ export default {
   },
   methods: {
     ...mapActions(["getContestProblems"]),
-
+    clickGetContestRankData(page, refresh, nowTime) {
+      // 停止自动更新
+      this.autoRefresh = false;
+      this.handleAutoRefresh(false);
+      // 查询对应的榜单
+      this.getContestRankData(page, refresh, nowTime);
+    },
     cellClassName({ row, rowIndex, column, columnIndex }) {
       if (row.username == this.userInfo.username) {
         if (
@@ -604,6 +614,10 @@ export default {
           this.isContainsAfterContestJudge
         }`
       );
+    },
+    beforeDestroy() {
+      // 取消对clickGetContestRank事件的监听，以避免内存泄漏
+      ClickRank.$off("clickGetContestRank", this.executeFunction);
     },
   },
 };
