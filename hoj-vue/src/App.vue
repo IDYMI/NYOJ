@@ -139,7 +139,7 @@ export default {
   },
   data() {
     return {
-      imgUrl: require("@/assets/nyoj.png"),
+      imgUrl: require("@/assets/NYOJ_Logo.png"),
       isAdminView: false,
       showFooter: true,
     };
@@ -281,6 +281,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 70%;
+  height: auto;
 }
 * {
   -webkit-box-sizing: border-box;

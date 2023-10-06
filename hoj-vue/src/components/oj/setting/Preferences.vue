@@ -274,13 +274,10 @@ export default {
       this.formProfile.codeSize = codesize;
     },
     updateUserPreferences() {
-      // console.log(this.formProfile);
       this.loadingSaveBtn = true;
       let updateData = utils.filterEmptyValue(
         Object.assign({}, this.formProfile)
       );
-      console.log(updateData);
-
       api.changeUserPreferences(updateData).then(
         (res) => {
           myMessage.success(this.$i18n.t("m.Update_Successfully"));

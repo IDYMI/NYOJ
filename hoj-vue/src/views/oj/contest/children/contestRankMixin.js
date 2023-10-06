@@ -14,7 +14,7 @@ export default {
       let key = buildContestRankConcernedKey(this.$route.params.contestID);
       this.concernedList = storage.get(key) || [];
     },
-    getContestRankData(page = 1, refresh = false) {
+    getContestRankData(page = 1, refresh = false, nowTime = null) {
       if (this.showChart && !refresh) {
         this.$refs.chart.showLoading({
           maskColor: 'rgba(250, 250, 250, 0.8)'
@@ -29,7 +29,7 @@ export default {
         concernedList: this.concernedList,
         keyword: this.keyword == null ? null : this.keyword.trim(),
         containsEnd: this.isContainsAfterContestJudge,
-        time: null
+        time: nowTime
       }
       api.getContestRank(data).then(res => {
         if (this.showChart && !refresh) {

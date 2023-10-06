@@ -71,6 +71,7 @@ export default {
     },
     ...mapActions(['changeDomTitle']),
     formatTooltip(val) {
+      
       if (this.contest.status == -1) {
         // 还未开始
         return '00:00:00';

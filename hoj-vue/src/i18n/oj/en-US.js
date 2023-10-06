@@ -221,6 +221,7 @@ export const m = {
   Development: 'Development',
   Open_Source: 'Open Source',
   Support: 'Support',
+  Partner_School: 'Partner School',
   Help: 'Help',
   Group: 'Group',
 

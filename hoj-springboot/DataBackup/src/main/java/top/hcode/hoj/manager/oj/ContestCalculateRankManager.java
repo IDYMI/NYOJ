@@ -269,7 +269,7 @@ public class ContestCalculateRankManager {
         for (ContestRecordVO contestRecord : contestRecordList) {
 
             if (nowtime != null) {
-                if (contestRecord.getSubmitTime().getTime() > nowtime) {
+                if (contestRecord.getTime() > nowtime) {
                     // 将超过查询时间的数据排除
                     continue;
                 }
@@ -569,12 +569,12 @@ public class ContestCalculateRankManager {
         for (ContestRecordVO contestRecord : oiContestRecord) {
 
             if (nowtime != null) {
-                if (contestRecord.getSubmitTime().getTime() > nowtime) {
+                if (contestRecord.getTime() > nowtime) {
                     // 将超过查询时间的数据排除
                     continue;
                 }
             }
-            
+
             if (superAdminUidList.contains(contestRecord.getUid())) { // 超级管理员的提交不入排行榜
                 continue;
             }

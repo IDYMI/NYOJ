@@ -705,7 +705,6 @@ export default {
     Object.keys(this.formProfile).forEach((element) => {
       if (profile[element] !== undefined) {
         this.formProfile[element] = profile[element];
-        // console.log(this.language);
       }
     });
     utils.getLanguages().then((languages) => {

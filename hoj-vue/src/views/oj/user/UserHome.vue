@@ -485,7 +485,6 @@ export default {
     },
     gotoEcharts(params) {
       let cid = params.data.cid;
-      // console.log(cid);
       this.getContestRank(cid);
     },
     getContestRank(cid) {

@@ -3,33 +3,56 @@
     class="timeline"
     ref="timeline"
     @mousemove="handleMouseMove"
-    @mousedown="handleMouseDown"
+    @mousedown.stop="handleMouseDown"
     @mouseup="handleMouseUp"
+    @click="handleClick"
   >
     <div class="background-bar" :style="{ width: `${barWidth}px` }"></div>
-    <div class="button" :style="{ left: `${buttonPosition}px` }"></div>
+    <el-tooltip :content="Tooltip" placement="top">
+      <button
+        class="draggable-button"
+        :style="{ left: buttonPosition + 'px' }"
+      ></button>
+    </el-tooltip>
   </div>
 </template>
 
 <script>
 export default {
+  name: "Timebar",
+  props: {
+    // 按钮位置
+    buttonPosition: {
+      type: Number,
+      default: 0,
+    },
+    // 显示
+    Tooltip: {
+      type: String,
+      default: "00:00:00",
+    },
+    // 比例
+    progressValue: {
+      type: Number,
+      default: 0,
+    },
+  },
   data() {
     return {
-      buttonPosition: 0, // 按钮位置
       barWidth: 0, // 背景条宽度
       isDragging: false, // 是否正在拖拽
-      intervalId: null, // setInterval 的 ID
+      startX: 0,
     };
   },
   mounted() {
     // 通过 setInterval 每100毫秒自增背景条的宽度
     this.intervalId = setInterval(() => {
-      this.barWidth += 1;
-
-      // 如果没有拖拽或点击，将按钮显示在背景条的最右侧
-      if (!this.isDragging) {
-        this.buttonPosition = this.barWidth;
-      }
+      this.barWidth =
+        (this.progressValue / 100) * this.$refs.timeline.offsetWidth;
+      this.buttonPosition = Math.min(
+        this.$refs.timeline.offsetWidth,
+        this.barWidth - 10
+      );
     }, 100);
   },
   beforeDestroy() {
@@ -37,54 +60,82 @@ export default {
     clearInterval(this.intervalId);
   },
   methods: {
+    getLeftPoint() {
+      const timelineRect = this.$refs.timeline.getBoundingClientRect();
+      const timelineLeft = timelineRect.left; // 时间轴的左侧坐标
+      return timelineLeft;
+    },
+    newInterval(event) {
+      // 清除 setInterval
+      clearInterval(this.intervalId);
+      const timelineLeft = this.getLeftPoint();
+      const offsetX = event.clientX - timelineLeft - 10;
+      let percentage_real = offsetX / this.$refs.timeline.offsetWidth;
+      if (percentage_real > 0.99) { // 解决右边终点
+        percentage_real = 1;
+      }
+      console.log(percentage_real);
+      const percentage = Math.max(0, Math.min(percentage_real, 1));
+      this.$emit("transfer", percentage); //触发transfer方法，传递 百分比 为向父组件传递的数据
+      this.barWidth =
+        (this.progressValue / 100) * this.$refs.timeline.offsetWidth;
+    },
     handleMouseMove(event) {
-      // 只有在拖拽状态下，才能改变按钮位置
       if (this.isDragging) {
-        const timelineRect = this.$refs.timeline.getBoundingClientRect();
-        const timelineLeft = timelineRect.left; // 时间轴的左侧坐标
-        const mouseX = event.clientX - timelineLeft; // 鼠标相对于时间轴的水平位置
-        const maxButtonPosition = this.barWidth; // 按钮可以移动的最远位置
-        this.buttonPosition = Math.min(Math.max(mouseX, 0), maxButtonPosition); // 限制按钮位置在区域内
+        const offsetX = event.clientX - this.startX - 10;
+        this.buttonPosition = Math.max(
+          0,
+          Math.min(offsetX, this.barWidth - 10)
+        );
       }
     },
     handleMouseDown(event) {
       this.isDragging = true;
-      const timelineRect = this.$refs.timeline.getBoundingClientRect();
-      const timelineLeft = timelineRect.left; // 时间轴的左侧坐标
-      const mouseX = event.clientX - timelineLeft; // 鼠标相对于时间轴的水平位置
-      const maxButtonPosition = this.barWidth; // 按钮可以移动的最远位置
-      this.buttonPosition = Math.min(Math.max(mouseX, 0), maxButtonPosition); // 限制按钮位置在区域内
+      this.startX = event.clientX - this.buttonPosition - 10;
+
+      this.newInterval(event);
     },
     handleMouseUp() {
       this.isDragging = false;
+    },
+    handleClick(event) {
+      const timelineLeft = this.getLeftPoint();
+      const offsetX = event.clientX - timelineLeft - 10;
+      this.buttonPosition = Math.max(0, Math.min(offsetX, this.barWidth - 10));
+
+      this.newInterval(event);
     },
   },
 };
 </script>
 
-<style>
+<style scoped>
 .timeline {
-  width: 500px;
-  height: 50px;
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
   position: relative;
-  background-color: #ccc;
-  cursor: pointer;
+  background-color: #e4e7ed;
+}
+
+.draggable-button {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #409eff;
+  border-radius: 50%;
+  color: #fff;
+  border: none;
+  cursor: grab;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .background-bar {
-  height: 100%;
-  background-color: #ff0000;
+  height: 10px;
+  background-color: #09be24;
+  border-radius: 5px;
   position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.button {
-  width: 20px;
-  height: 20px;
-  background-color: #00ff00;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  cursor: pointer;
 }
 </style>
