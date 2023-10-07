@@ -942,19 +942,35 @@ export default {
 };
 </script>
 <style scoped>
-#header {
-  min-width: 300px;
-  /* position: fixed; */
-  top: 0;
-  left: 0;
-  height: auto;
-  width: 80%;
-  margin: 0 auto;
-  z-index: 2000;
-  background-color: #fff;
-  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+@media screen and (min-width: 1050px) {
+  #header {
+    min-width: 300px;
+    /* position: fixed; */
+    top: 0;
+    left: 0;
+    height: auto;
+    width: 80%;
+    margin: 0 auto;
+    z-index: 2000;
+    background-color: #fff;
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+  }
 }
 
+@media screen and (max-width: 1050px) {
+  #header {
+    min-width: 300px;
+    /* position: fixed; */
+    top: 0;
+    left: 0;
+    height: auto;
+    width: 100%;
+    margin: 0 auto;
+    z-index: 2000;
+    background-color: #fff;
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+  }
+}
 .custom-menu .el-menu-item {
   width: auto;
   text-align: center;

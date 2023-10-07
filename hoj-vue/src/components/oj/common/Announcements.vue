@@ -185,8 +185,8 @@ export default {
   padding-top: 15px;
   list-style: none;
   padding-bottom: 25px;
-  margin-left: 60px;
-  margin-right: 60px;
+  margin-left: 20px;
+  margin-right: 20px;
   margin-top: 20px;
   font-size: 16px;
   border: 1px solid rgba(187, 187, 187, 0.5);

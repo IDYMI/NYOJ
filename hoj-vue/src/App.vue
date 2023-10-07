@@ -276,13 +276,6 @@ export default {
 </script>
 
 <style>
-.centered-image {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 80%;
-  height: auto;
-}
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -562,6 +555,13 @@ a:hover {
   background: #66b1ff !important;
 }
 @media screen and (min-width: 1050px) {
+  .centered-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    height: auto;
+  }
   #oj-content {
     width: 86%;
     margin: 0 auto;
@@ -577,6 +577,13 @@ a:hover {
   max-width: 100%;
 }
 @media screen and (max-width: 1050px) {
+  .centered-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    height: auto;
+  }
   #oj-content {
     width: 100%;
     margin: 0 auto;
