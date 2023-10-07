@@ -948,7 +948,7 @@ export default {
   top: 0;
   left: 0;
   height: auto;
-  width: 70%;
+  width: 80%;
   margin: 0 auto;
   z-index: 2000;
   background-color: #fff;

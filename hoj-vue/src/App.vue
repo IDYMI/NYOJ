@@ -280,7 +280,7 @@ export default {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 70%;
+  width: 80%;
   height: auto;
 }
 * {
@@ -563,7 +563,7 @@ a:hover {
 }
 @media screen and (min-width: 1050px) {
   #oj-content {
-    width: 76%;
+    width: 86%;
     margin: 0 auto;
     margin-top: 20px;
     padding: 0 3%;
@@ -593,7 +593,7 @@ a:hover {
     padding-right: 0px !important;
   }
   .el-message-box {
-    width: 70% !important;
+    width: 80% !important;
   }
 }
 #problem-content .sample pre {
