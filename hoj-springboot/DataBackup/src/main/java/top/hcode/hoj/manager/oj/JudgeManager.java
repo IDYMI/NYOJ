@@ -322,8 +322,10 @@ public class JudgeManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         // 清空vj信息
         judge.setVjudgeUsername(null);
@@ -546,8 +548,10 @@ public class JudgeManager {
         }
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin"); // 是否为超级管理员
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Contest contest = contestEntityService.getById(submitIdListDto.getCid());
 
@@ -610,10 +614,12 @@ public class JudgeManager {
             if (userRolesVo == null) { // 没有登录
                 wrapper.select("time", "memory", "score", "status", "user_output", "group_num", "seq", "mode");
             } else {
+                // 是否为超级管理员或者题目管理或者普通管理
                 boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                        || SecurityUtils.getSubject().hasRole("problem_admin");
-                if (!isRoot
-                        && !SecurityUtils.getSubject().hasRole("admin")) { // 不是管理员
+                        || SecurityUtils.getSubject().hasRole("problem_admin")
+                        || SecurityUtils.getSubject().hasRole("admin");
+
+                if (!isRoot) { // 不是管理员
                     wrapper.select("time", "memory", "score", "status", "user_output", "group_num", "seq", "mode");
                 }
             }
@@ -621,8 +627,11 @@ public class JudgeManager {
             if (userRolesVo == null) {
                 throw new StatusForbiddenException("您还未登录！不可查看比赛提交的测试点详情！");
             }
+            // 是否为超级管理员或者题目管理或者普通管理
             boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                    || SecurityUtils.getSubject().hasRole("problem_admin"); // 是否为超级管理员
+                    || SecurityUtils.getSubject().hasRole("problem_admin")
+                    || SecurityUtils.getSubject().hasRole("admin");
+
             if (!isRoot) {
                 Contest contest = contestEntityService.getById(judge.getCid());
                 // 如果不是比赛管理员 需要受到规则限制

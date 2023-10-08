@@ -29,7 +29,7 @@
             ><i class="el-icon-s-home"> {{ $t("m.Group_Discussion") }}</i>
           </el-button>
           <el-button
-            v-if="isSuperAdmin || isGroupAdmin || isProblemAdmin"
+            v-if="isGroupAdmin "
             :type="adminPage ? 'warning' : 'success'"
             size="small"
             @click="handleAdminPage"
@@ -503,7 +503,6 @@ export default {
     ...mapGetters([
       "isAuthenticated",
       "isSuperAdmin",
-      "isProblemAdmin",
       "isGroupAdmin",
       "userInfo",
       "isAdminRole",

@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.file;
 
-
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import org.apache.shiro.authz.annotation.Logical;
 
 @Controller
 @RequestMapping("/api/file")
+@RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
 public class ImportHydroProblemController {
 
     @Autowired
@@ -34,13 +34,12 @@ public class ImportHydroProblemController {
      * @Return
      * @Since 2022/10/16
      */
-    @RequiresRoles(value = {"root", "admin", "problem_admin"}, logical = Logical.OR)
+
     @RequiresAuthentication
     @ResponseBody
     @PostMapping("/import-hydro-problem")
     public CommonResult<Void> importHydroProblem(@RequestParam("file") MultipartFile file) {
         return importHydroProblemService.importHydroProblem(file);
     }
-
 
 }

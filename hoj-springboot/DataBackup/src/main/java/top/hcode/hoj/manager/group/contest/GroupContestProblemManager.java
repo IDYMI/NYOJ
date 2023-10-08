@@ -65,10 +65,14 @@ public class GroupContestProblemManager {
     @Autowired
     private ProblemValidator problemValidator;
 
-    public HashMap<String, Object> getContestProblemList(Integer limit, Integer currentPage, String keyword, Long cid, Integer problemType, String oj) throws StatusNotFoundException, StatusForbiddenException {
+    public HashMap<String, Object> getContestProblemList(Integer limit, Integer currentPage, String keyword, Long cid,
+            Integer problemType, String oj) throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Contest contest = contestEntityService.getById(cid);
 
@@ -78,7 +82,7 @@ public class GroupContestProblemManager {
 
         Long gid = contest.getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("获取失败，不可获取非团队内的比赛题目列表！");
         }
 
@@ -88,24 +92,29 @@ public class GroupContestProblemManager {
             throw new StatusNotFoundException("获取比赛题目列表失败，该团队不存在或已被封禁！");
         }
 
-        if (!groupValidator.isGroupRoot(userRolesVo.getUid(), gid) && !userRolesVo.getUid().equals(contest.getUid()) && !isRoot) {
+        if (!groupValidator.isGroupRoot(userRolesVo.getUid(), gid) && !userRolesVo.getUid().equals(contest.getUid())
+                && !isRoot) {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
         return adminContestProblemManager.getProblemList(limit, currentPage, keyword, cid, problemType, oj);
     }
 
-    public Map<Object, Object> addProblem(ProblemDTO problemDto) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public Map<Object, Object> addProblem(ProblemDTO problemDto)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
 
         problemValidator.validateGroupProblem(problemDto.getProblem());
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Long gid = problemDto.getProblem().getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusNotFoundException("添加失败，题目所属的团队ID不可为空！");
         }
 
@@ -155,10 +164,14 @@ public class GroupContestProblemManager {
         }
     }
 
-    public ContestProblem getContestProblem(Long pid, Long cid) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public ContestProblem getContestProblem(Long pid, Long cid)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Contest contest = contestEntityService.getById(cid);
 
@@ -168,7 +181,7 @@ public class GroupContestProblemManager {
 
         Long gid = contest.getGid();
 
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("获取比赛题目失败，不可获取非团队内的比赛题目！");
         }
         Group group = groupEntityService.getById(gid);
@@ -192,10 +205,14 @@ public class GroupContestProblemManager {
         return contestProblem;
     }
 
-    public void updateContestProblem(ContestProblem contestProblem) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void updateContestProblem(ContestProblem contestProblem)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Long cid = contestProblem.getCid();
 
@@ -206,7 +223,7 @@ public class GroupContestProblemManager {
         }
 
         Long gid = contest.getGid();
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("更新失败，不可操作非团队内的比赛题目！");
         }
 
@@ -224,16 +241,21 @@ public class GroupContestProblemManager {
 
         boolean isOk = contestProblemEntityService.saveOrUpdate(contestProblem);
         if (isOk) {
-            contestProblemEntityService.syncContestRecord(contestProblem.getPid(), contestProblem.getCid(), contestProblem.getDisplayId());
+            contestProblemEntityService.syncContestRecord(contestProblem.getPid(), contestProblem.getCid(),
+                    contestProblem.getDisplayId());
         } else {
             throw new StatusFailException("更新失败！");
         }
     }
 
-    public void deleteContestProblem(Long pid, Long cid) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void deleteContestProblem(Long pid, Long cid)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Contest contest = contestEntityService.getById(cid);
 
@@ -242,7 +264,7 @@ public class GroupContestProblemManager {
         }
 
         Long gid = contest.getGid();
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("删除失败，不可操作非团队内的比赛题目！");
         }
 
@@ -269,10 +291,14 @@ public class GroupContestProblemManager {
         }
     }
 
-    public void addProblemFromPublic(ContestProblemDTO contestProblemDto) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void addProblemFromPublic(ContestProblemDTO contestProblemDto)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Long pid = contestProblemDto.getPid();
 
@@ -290,7 +316,7 @@ public class GroupContestProblemManager {
             throw new StatusNotFoundException("该比赛不存在！");
         }
         Long gid = contest.getGid();
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("添加失败，不可操作非团队内的比赛！");
         }
         Group group = groupEntityService.getById(gid);
@@ -329,10 +355,14 @@ public class GroupContestProblemManager {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addProblemFromGroup(String problemId, Long cid, String displayId) throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
+    public void addProblemFromGroup(String problemId, Long cid, String displayId)
+            throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Contest contest = contestEntityService.getById(cid);
 
@@ -341,7 +371,7 @@ public class GroupContestProblemManager {
         }
 
         Long gid = contest.getGid();
-        if (gid == null){
+        if (gid == null) {
             throw new StatusForbiddenException("添加失败，不可操作非团队内的比赛！");
         }
 

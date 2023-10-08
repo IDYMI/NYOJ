@@ -40,7 +40,7 @@ public class AnnouncementController {
     }
 
     @PostMapping("/announcement")
-    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
+    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     @RequiresPermissions("announcement_admin")
     public CommonResult<Void> addAnnouncement(@RequestBody Announcement announcement) {
         return adminAnnouncementService.addAnnouncement(announcement);

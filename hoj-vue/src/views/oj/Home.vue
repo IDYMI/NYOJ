@@ -120,7 +120,7 @@
             </el-carousel-item>
           </el-carousel> -->
         </el-card>
-        <!-- <SubmissionStatistic class="card-top"></SubmissionStatistic> -->
+        <SubmissionStatistic class="card-top"></SubmissionStatistic>
         <el-card class="card-top">
           <div slot="header" class="clearfix">
             <span class="panel-title home-title">

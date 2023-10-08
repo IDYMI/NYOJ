@@ -322,6 +322,7 @@ export default {
         score: 0,
         solvedList: [],
         contestPidList: [],
+        dataList: [], // 日期对应的比赛名次数据列表
         solvedGroupByDifficulty: null,
         calendarHeatLocale: null,
         calendarHeatmapValue: [],
@@ -400,36 +401,6 @@ export default {
       this.calendarHeatmapEndDate = res.data.data.endDate;
       this.loadingCalendarHeatmap = true;
     });
-    api.getUserContestsRanking(uid, username).then((res) => {
-      let dataList = res.data.data.dataList;
-      let len = dataList.length;
-
-      let [times, ranks, seriesData] = [[], [], []];
-
-      for (let i = 0; i < len; i++) {
-        let contest = dataList[i];
-        let time = moment(contest["date"]).format("hh:mm MM-DD");
-        let title = contest["title"];
-        let rank = contest["rank"];
-        let cid = contest["cid"];
-        ranks.push({ value: rank, title: title, cid: cid });
-        times.push(time);
-      }
-      if (ranks.length) {
-        seriesData.push({
-          name: username,
-          type: "line",
-          data: ranks,
-          emphasis: {
-            focus: "series",
-          },
-        });
-        this.options.series = seriesData;
-        this.options.xAxis.data = times;
-        // myMessage.success(seriesData);
-      }
-    });
-
     this.PROBLEM_LEVEL = Object.assign({}, PROBLEM_LEVEL);
   },
   mounted() {
@@ -473,6 +444,33 @@ export default {
         (res) => {
           this.changeDomTitle({ title: res.data.username });
           this.profile = res.data.data;
+          let dataList = this.profile.dataList;
+          let len = dataList.length;
+
+          let [times, ranks, seriesData] = [[], [], []];
+
+          for (let i = 0; i < len; i++) {
+            let contest = dataList[i];
+            let time = moment(contest["date"]).format("hh:mm MM-DD");
+            let title = contest["title"];
+            let rank = contest["rank"];
+            let cid = contest["cid"];
+            ranks.push({ value: rank, title: title, cid: cid });
+            times.push(time);
+          }
+          if (ranks.length) {
+            seriesData.push({
+              name: username,
+              type: "line",
+              data: ranks,
+              emphasis: {
+                focus: "series",
+              },
+            });
+            this.options.series = seriesData;
+            this.options.xAxis.data = times;
+            // myMessage.success(seriesData);
+          }
           this.$nextTick((_) => {
             addCodeBtn();
           });

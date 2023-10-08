@@ -9,7 +9,7 @@
           :md="18"
           :xs="24"
           v-if="
-            (isSuperAdmin || isGroupAdmin || isProblemAdmin) &&
+            (isMainAdminRole || isGroupAdmin ) &&
             !problemPage &&
             !editProblemPage
           "
@@ -47,7 +47,7 @@
           :md="18"
           :xs="24"
           v-else-if="
-            (isSuperAdmin || isGroupAdmin || isProblemAdmin) &&
+            (isMainAdminRole || isGroupAdmin ) &&
             problemPage &&
             !editProblemPage
           "
@@ -78,7 +78,7 @@
           :md="18"
           :xs="24"
           v-else-if="
-            (isSuperAdmin || isGroupAdmin || isProblemAdmin) && editProblemPage
+            (isMainAdminRole || isGroupAdmin ) && editProblemPage
           "
         >
           <el-button
@@ -386,8 +386,8 @@ export default {
   computed: {
     ...mapGetters([
       "isAuthenticated",
-      "isSuperAdmin",
-      "isProblemAdmin",
+      "isMainAdminRole",
+      'isNormalAdmin',
       "isGroupAdmin",
     ]),
   },

@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.file;
 
-
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import org.apache.shiro.authz.annotation.Logical;
 
 @Controller
 @RequestMapping("/api/file")
+@RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
 public class ImportQDUOJProblemController {
 
     @Autowired
@@ -34,13 +34,12 @@ public class ImportQDUOJProblemController {
      * @Return
      * @Since 2021/5/27
      */
-    @RequiresRoles(value = {"root", "admin", "problem_admin"}, logical = Logical.OR)
+
     @RequiresAuthentication
     @ResponseBody
     @PostMapping("/import-qdoj-problem")
     public CommonResult<Void> importQDOJProblem(@RequestParam("file") MultipartFile file) {
         return importQDUOJProblemService.importQDOJProblem(file);
     }
-
 
 }

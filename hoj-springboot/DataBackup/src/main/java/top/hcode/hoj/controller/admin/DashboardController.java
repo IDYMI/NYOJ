@@ -12,7 +12,6 @@ import top.hcode.hoj.common.result.CommonResult;
 import top.hcode.hoj.pojo.entity.user.Session;
 import top.hcode.hoj.service.admin.system.DashboardService;
 
-
 import java.util.Map;
 
 /**
@@ -22,24 +21,23 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/admin/dashboard")
+@RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
 public class DashboardController {
 
     @Autowired
     private DashboardService dashboardService;
 
-
     @PostMapping("/get-sessions")
     @RequiresAuthentication
-    @RequiresRoles(value = {"root","admin","problem_admin"},logical = Logical.OR)
-    public CommonResult<Session> getRecentSession(){
+
+    public CommonResult<Session> getRecentSession() {
 
         return dashboardService.getRecentSession();
     }
 
     @GetMapping("/get-dashboard-info")
     @RequiresAuthentication
-    @RequiresRoles(value = {"root","admin","problem_admin"},logical = Logical.OR)
-    public CommonResult<Map<Object,Object>> getDashboardInfo(){
+    public CommonResult<Map<Object, Object>> getDashboardInfo() {
 
         return dashboardService.getDashboardInfo();
     }

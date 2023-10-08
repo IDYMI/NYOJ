@@ -106,7 +106,8 @@ public class DiscussionManager {
                     .like("description", key));
         }
 
-        boolean isAdmin = SecurityUtils.getSubject().hasRole("root")
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
                 || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
@@ -114,12 +115,12 @@ public class DiscussionManager {
             discussionQueryWrapper.eq("pid", pid);
         }
 
-        if (!(admin && isAdmin)) {
+        if (!(admin && isRoot)) {
             discussionQueryWrapper.isNull("gid");
         }
 
         discussionQueryWrapper
-                .eq(!(admin && isAdmin), "status", 0)
+                .eq(!(admin && isRoot), "status", 0)
                 .orderByDesc("top_priority")
                 .orderByDesc("gmt_create")
                 .orderByDesc("like_num")
@@ -148,9 +149,10 @@ public class DiscussionManager {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         String uid = null;
 
@@ -202,10 +204,10 @@ public class DiscussionManager {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-        boolean isProblemAdmin = SecurityUtils.getSubject().hasRole("problem_admin");
-        boolean isAdmin = SecurityUtils.getSubject().hasRole("admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         String problemId = discussion.getPid();
         if (problemId != null) {
@@ -218,7 +220,7 @@ public class DiscussionManager {
         }
 
         if (discussion.getGid() != null) {
-            if (!isRoot && !isProblemAdmin
+            if (!isRoot
                     && !discussion.getUid().equals(userRolesVo.getUid())
                     && !groupValidator.isGroupMember(userRolesVo.getUid(), discussion.getGid())) {
                 throw new StatusForbiddenException("对不起，您无权限操作！");
@@ -226,7 +228,7 @@ public class DiscussionManager {
         }
 
         // 除管理员外 其它用户需要AC20道题目以上才可发帖，同时限制一天只能发帖5次
-        if (!isRoot && !isProblemAdmin && !isAdmin) {
+        if (!isRoot) {
             QueryWrapper<UserAcproblem> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("uid", userRolesVo.getUid()).select("distinct pid");
             int userAcProblemCount = userAcproblemEntityService.count(queryWrapper);
@@ -254,8 +256,7 @@ public class DiscussionManager {
 
         if (SecurityUtils.getSubject().hasRole("root")) {
             discussion.setRole("root");
-        } else if (SecurityUtils.getSubject().hasRole("admin")
-                || SecurityUtils.getSubject().hasRole("problem_admin")) {
+        } else if (isRoot) {
             discussion.setRole("admin");
         } else {
             // 如果不是管理员角色，一律重置为不置顶
@@ -289,10 +290,10 @@ public class DiscussionManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-        boolean isProblemAdmin = SecurityUtils.getSubject().hasRole("problem_admin");
-        boolean isAdmin = SecurityUtils.getSubject().hasRole("admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot
                 && !oriDiscussion.getUid().equals(userRolesVo.getUid())
@@ -305,8 +306,7 @@ public class DiscussionManager {
                 .set("content", discussion.getContent())
                 .set("description", discussion.getDescription())
                 .set("category_id", discussion.getCategoryId())
-                .set(isRoot || isProblemAdmin || isAdmin,
-                        "top_priority", discussion.getTopPriority())
+                .set(isRoot, "top_priority", discussion.getTopPriority())
                 .eq("id", discussion.getId());
         boolean isOk = discussionEntityService.update(discussionUpdateWrapper);
         if (!isOk) {
@@ -329,9 +329,10 @@ public class DiscussionManager {
 
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot
                 && !discussion.getUid().equals(userRolesVo.getUid())
@@ -341,10 +342,9 @@ public class DiscussionManager {
         }
 
         UpdateWrapper<Discussion> discussionUpdateWrapper = new UpdateWrapper<Discussion>().eq("id", did);
+
         // 如果不是是管理员,则需要附加当前用户的uid条件
-        if (!SecurityUtils.getSubject().hasRole("root")
-                && !SecurityUtils.getSubject().hasRole("admin")
-                && !SecurityUtils.getSubject().hasRole("problem_admin")) {
+        if (!isRoot) {
             discussionUpdateWrapper.eq("uid", userRolesVo.getUid());
         }
         boolean isOk = discussionEntityService.remove(discussionUpdateWrapper);
@@ -367,9 +367,10 @@ public class DiscussionManager {
         }
 
         if (discussion.getGid() != null) {
-            // 是否为超级管理员或者题目管理
+            // 是否为超级管理员或者题目管理或者普通管理
             boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                    || SecurityUtils.getSubject().hasRole("problem_admin");
+                    || SecurityUtils.getSubject().hasRole("problem_admin")
+                    || SecurityUtils.getSubject().hasRole("admin");
             if (!isRoot && !discussion.getUid().equals(userRolesVo.getUid())
                     && !groupValidator.isGroupMember(userRolesVo.getUid(), discussion.getGid())) {
                 throw new StatusForbiddenException("对不起，您无权限操作！");

@@ -18,7 +18,7 @@ const state = {
 const getters = {
   isTrainingAdmin: (state, getters, _, rootGetters) => {
     return rootGetters.isAuthenticated &&
-      (state.training.author === rootGetters.userInfo.username || rootGetters.isSuperAdmin || rootGetters.isProblemAdmin || state.groupTrainingAuth == 5)
+      (state.training.author === rootGetters.userInfo.username || rootGetters.isSuperAdmin || rootGetters.isNormalAdmin || state.groupTrainingAuth == 5)
   },
   trainingMenuDisabled: (state, getters) => {
     // 训练创建者和超级管理员可以直接查看

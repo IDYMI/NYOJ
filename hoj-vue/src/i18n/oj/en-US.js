@@ -1,5 +1,8 @@
 export const m = {
 
+  // src/common/filters.js
+
+
   // /src/common/api.js
   Query_error_unable_to_find_the_resource_to_request: 'Query error! Unable to find the resource to request!',
   Server_error_please_refresh_again: 'Server error! Please refresh again!',

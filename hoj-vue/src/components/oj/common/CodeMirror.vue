@@ -743,11 +743,13 @@ export default {
     CodeLanguage() {
       if (this.languages.includes(this.formProfile.codeLanguage)) {
         this.language = this.formProfile.codeLanguage;
+        this.onLangChange(this.language);
       }
       return this.language;
     },
     CodeBeauty() {
       this.value = js_beautify(this.value || "");
+      this.editor.setValue(this.value);
       this.editor.refresh();
     },
     onEditorCodeChange(newCode) {

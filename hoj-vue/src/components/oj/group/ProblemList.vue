@@ -24,8 +24,8 @@
         align="left"
       >
         <template v-slot="{ row }">
-          <p v-if="contestId">{{ $t('m.Display_ID') }}：{{ row.problemId }}</p>
-          <p v-if="contestId">{{ $t('m.Title') }}：{{ row.title }}</p>
+          <p v-if="contestId">{{ $t("m.Display_ID") }}：{{ row.problemId }}</p>
+          <p v-if="contestId">{{ $t("m.Title") }}：{{ row.title }}</p>
           <span v-else>{{ row.problemId }}</span>
         </template>
       </vxe-table-column>
@@ -45,20 +45,20 @@
       >
         <template v-slot="{ row }">
           <p v-if="contestProblemMap[row.id]">
-            {{ $t('m.Display_ID') }}：{{
-              contestProblemMap[row.id]['displayId']
+            {{ $t("m.Display_ID") }}：{{
+              contestProblemMap[row.id]["displayId"]
             }}
           </p>
           <p v-if="contestProblemMap[row.id]">
-            {{ $t('m.Title') }}：{{ contestProblemMap[row.id]['displayTitle'] }}
+            {{ $t("m.Title") }}：{{ contestProblemMap[row.id]["displayTitle"] }}
           </p>
           <span v-if="contestProblemMap[row.id]">
-            {{ $t('m.Balloon_Color') }}：<el-color-picker
+            {{ $t("m.Balloon_Color") }}：<el-color-picker
               v-model="contestProblemMap[row.id].color"
               show-alpha
               :predefine="predefineColors"
               size="small"
-              style="vertical-align: middle;"
+              style="vertical-align: middle"
               @change="changeProblemColor(contestProblemMap[row.id])"
             >
             </el-color-picker>
@@ -97,7 +97,7 @@
             size="small"
             :disabled="
               row.gid != gid ||
-                (!isGroupRoot && userInfo.username != row.author)
+              (!isGroupRoot && userInfo.username != row.author)
             "
           >
             <el-option :label="$t('m.Public_Problem')" :value="1"></el-option>
@@ -150,13 +150,15 @@
             :content="getApplyContent(row.applyPublicProgress)"
             placement="top"
             v-if="
-              !contestId && row.gid == gid && (isGroupRoot || userInfo.username == row.author)
+              !contestId &&
+              row.gid == gid &&
+              (isGroupRoot || userInfo.username == row.author)
             "
           >
             <el-button
               :icon="getApplyIcon(row.applyPublicProgress)"
               size="mini"
-              @click.native="applyPublic(row.id,row.applyPublicProgress)"
+              @click.native="applyPublic(row.id, row.applyPublicProgress)"
               type="warning"
             >
             </el-button>
@@ -217,14 +219,14 @@
 </template>
 
 <script>
-import utils from '@/common/utils';
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import api from '@/common/api';
-import mMessage from '@/common/message';
-import Problem from '@/components/oj/group/Problem';
+import utils from "@/common/utils";
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import api from "@/common/api";
+import mMessage from "@/common/message";
+import Problem from "@/components/oj/group/Problem";
 export default {
-  name: 'GroupProblemList',
+  name: "GroupProblemList",
   components: {
     Pagination,
     Problem,
@@ -305,90 +307,90 @@ export default {
     },
     handleEditPage() {
       this.editPage = false;
-      this.$emit('currentChange', 1);
+      this.$emit("currentChange", 1);
       if (this.contestId) {
-        this.$emit('handleEditProblemPage');
+        this.$emit("handleEditProblemPage");
       } else {
-        this.$emit('handleEditPage');
+        this.$emit("handleEditPage");
       }
     },
     goEditProblem(id) {
       this.pid = id;
       this.editPage = !this.editPage;
       if (this.contestId) {
-        this.$emit('handleEditProblemPage');
+        this.$emit("handleEditProblemPage");
       } else {
-        this.$emit('handleEditPage');
+        this.$emit("handleEditPage");
       }
     },
     changeProblemColor(contestProblem) {
       api.updateGroupContestProblem(contestProblem).then((res) => {
-        mMessage.success(this.$i18n.t('m.Update_Successfully'));
+        mMessage.success(this.$i18n.t("m.Update_Successfully"));
       });
     },
     changeProblemAuth(pid, auth) {
       api.changeGroupProblemAuth(pid, auth).then((res) => {
-        mMessage.success(this.$i18n.t('m.Update_Successfully'));
-        this.$emit('currentChange', 1);
+        mMessage.success(this.$i18n.t("m.Update_Successfully"));
+        this.$emit("currentChange", 1);
       });
     },
-    getApplyContent(progress){
-      if(progress == null){
-        return this.$i18n.t('m.Group_Problem_Apply_Public');
-      }else if(progress == 1){
-        return this.$i18n.t('m.Applying_for_Publicity');
-      }else if(progress == 2){
-        return this.$i18n.t('m.Already_Public_Problem');
-      }else if(progress == 3){
-        return this.$i18n.t('m.Refused');
+    getApplyContent(progress) {
+      if (progress == null) {
+        return this.$i18n.t("m.Group_Problem_Apply_Public");
+      } else if (progress == 1) {
+        return this.$i18n.t("m.Applying_for_Publicity");
+      } else if (progress == 2) {
+        return this.$i18n.t("m.Already_Public_Problem");
+      } else if (progress == 3) {
+        return this.$i18n.t("m.Refused");
       }
     },
-    getApplyIcon(progress){
-      if(progress == null){
-        return 'el-icon-upload2';
-      }else if(progress == 1){
-        return 'el-icon-loading';
-      }else if(progress == 2){
-        return 'el-icon-circle-check';
-      }else if(progress == 3){
-        return 'el-icon-circle-close';
+    getApplyIcon(progress) {
+      if (progress == null) {
+        return "el-icon-upload2";
+      } else if (progress == 1) {
+        return "el-icon-loading";
+      } else if (progress == 2) {
+        return "el-icon-circle-check";
+      } else if (progress == 3) {
+        return "el-icon-circle-close";
       }
     },
-    applyPublic(pid, progress){
-      if(progress == null){
+    applyPublic(pid, progress) {
+      if (progress == null) {
         this.$confirm(
-        this.$i18n.t('m.Group_Problem_Apply_Public_Tips'),
-        this.$i18n.t('m.Tips'),
-        {
-          type: 'info',
-        }
+          this.$i18n.t("m.Group_Problem_Apply_Public_Tips"),
+          this.$i18n.t("m.Tips"),
+          {
+            type: "info",
+          }
         ).then(
           () => {
             api
               .applyGroupProblemPublic(pid, true)
               .then((res) => {
-                mMessage.success('success');
-                this.$emit('currentChange', 1);
+                mMessage.success("success");
+                this.$emit("currentChange", 1);
                 this.currentChange(1);
               })
               .catch(() => {});
           },
           () => {}
         );
-      }else{
+      } else {
         this.$confirm(
-        this.$i18n.t('m.Cancel_Group_Problem_Apply_Public_Tips'),
-        this.$i18n.t('m.Warning'),
-        {
-          type: 'warning',
-        }
+          this.$i18n.t("m.Cancel_Group_Problem_Apply_Public_Tips"),
+          this.$i18n.t("m.Warning"),
+          {
+            type: "warning",
+          }
         ).then(
           () => {
             api
               .applyGroupProblemPublic(pid, false)
               .then((res) => {
-                mMessage.success('success');
-                this.$emit('currentChange', 1);
+                mMessage.success("success");
+                this.$emit("currentChange", 1);
                 this.currentChange(1);
               })
               .catch(() => {});
@@ -396,22 +398,21 @@ export default {
           () => {}
         );
       }
-
     },
     removeProblem(pid) {
       this.$confirm(
-        this.$i18n.t('m.Remove_Contest_Problem_Tips'),
-        this.$i18n.t('m.Warning'),
+        this.$i18n.t("m.Remove_Contest_Problem_Tips"),
+        this.$i18n.t("m.Warning"),
         {
-          type: 'warning',
+          type: "warning",
         }
       ).then(
         () => {
           api
             .deleteGroupContestProblem(pid, this.contestId)
             .then((res) => {
-              mMessage.success('success');
-              this.$emit('currentChangeProblem');
+              mMessage.success("success");
+              this.$emit("currentChangeProblem");
             })
             .catch(() => {});
         },
@@ -419,28 +420,28 @@ export default {
       );
     },
     downloadTestCase(problemID) {
-      let url = '/api/file/download-testcase?pid=' + problemID;
+      let url = "/api/file/download-testcase?pid=" + problemID;
       utils.downloadFile(url).then(() => {
         this.$alert(
-          this.$i18n.t('m.Download_Testcase_Success'),
-          this.$i18n.t('m.Tips')
+          this.$i18n.t("m.Download_Testcase_Success"),
+          this.$i18n.t("m.Tips")
         );
       });
     },
     deleteProblem(id) {
       this.$confirm(
-        this.$i18n.t('m.Delete_Problem_Tips'),
-        this.$i18n.t('m.Warning'),
+        this.$i18n.t("m.Delete_Problem_Tips"),
+        this.$i18n.t("m.Warning"),
         {
-          type: 'warning',
+          type: "warning",
         }
       ).then(
         () => {
           api
             .deleteGroupProblem(id, this.$route.params.groupID)
             .then((res) => {
-              mMessage.success(this.$i18n.t('m.Delete_successfully'));
-              this.$emit('currentChange', 1);
+              mMessage.success(this.$i18n.t("m.Delete_successfully"));
+              this.$emit("currentChange", 1);
               this.currentChange(1);
             })
             .catch(() => {});
@@ -450,7 +451,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['userInfo', 'isGroupRoot']),
+    ...mapGetters(["userInfo", "isGroupRoot"]),
     isContest() {
       return !!this.contestId;
     },

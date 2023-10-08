@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,11 +63,11 @@ public class UserHomeVO {
     @ApiModelProperty(value = "已解决题目列表")
     private List<String> solvedList;
 
-    // @ApiModelProperty(value = "已参加比赛")
-    // private List<String> contestedList;
-
     @ApiModelProperty(value = "已参加比赛id")
     private List<Long> contestPidList;
+
+    @ApiModelProperty(value = "日期对应的比赛名次数据列表")
+    private List<HashMap<String,Object>> dataList;
 
     @ApiModelProperty(value = "难度=>[P1000,P1001]")
     private Map<Integer, List<UserHomeProblemVO>> solvedGroupByDifficulty;

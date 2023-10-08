@@ -185,6 +185,10 @@ public class AccountManager {
         List<Long> contestsPidList = (List<Long>) getUserContestsRanking(uid, username).getSolvedList();
         userHomeInfo.setContestPidList(contestsPidList);
 
+        // 获取用户最近一年参加比赛的榜单
+        List<HashMap<String,Object>> dataList= (List<HashMap<String,Object>>) getUserContestsRanking(uid, username).getDataList();
+        userHomeInfo.setDataList(dataList);
+
         QueryWrapper<Session> sessionQueryWrapper = new QueryWrapper<>();
         sessionQueryWrapper.eq("uid", userHomeInfo.getUid())
                 .orderByDesc("gmt_create")
@@ -317,6 +321,7 @@ public class AccountManager {
 
         if (CollectionUtils.isEmpty(contestsPidList)) {
             userContestsRankingVO.setDataList(new ArrayList<>());
+            userContestsRankingVO.setSolvedList(new ArrayList<>());
             return userContestsRankingVO;
         }
 
@@ -366,6 +371,7 @@ public class AccountManager {
             }
         }
         if (CollectionUtils.isEmpty(dataList)) {
+            userContestsRankingVO.setSolvedList(new ArrayList<>());
             userContestsRankingVO.setDataList(new ArrayList<>());
             return userContestsRankingVO;
         }

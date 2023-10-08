@@ -101,7 +101,7 @@ public class AdminAccountManager {
             // 会话记录
             sessionEntityService.save(new Session().setUid(userRolesVo.getUid())
                     .setIp(IpUtils.getUserIpAddr(request)).setUserAgent(request.getHeader("User-Agent")));
-            // 异步检查是否异地登录
+            // 异步检查是否异地登录 
             sessionEntityService.checkRemoteLogin(userRolesVo.getUid());
 
             UserInfoVO userInfoVo = new UserInfoVO();

@@ -49,15 +49,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public CommonResult<UserContestsRankingVO> getUserContestsRanking(String uid, String username) {
-        try {
-            return CommonResult.successResponse(accountManager.getUserContestsRanking(uid, username));
-        } catch (StatusFailException e) {
-            return CommonResult.errorResponse(e.getMessage());
-        }
-    }
-
-    @Override
     public CommonResult<ChangeAccountVO> changePassword(ChangePasswordDTO changePasswordDto) {
         try {
             return CommonResult.successResponse(accountManager.changePassword(changePasswordDto));

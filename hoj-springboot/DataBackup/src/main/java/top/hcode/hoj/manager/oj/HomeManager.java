@@ -100,17 +100,18 @@ public class HomeManager {
     }
 
     // /**
-    //  * @MethodName editHomeCarousel
-    //  * @Params
-    //  * @Description 修改主页轮播图
-    //  * @Return
-    //  * @Since 2023/8/12
-    //  */
-    // public void editHomeCarousel(Long id, String addUrl, String addHint) throws StatusFailException {
-    //     boolean isOk = fileEntityService.editHomeCarousel(id, addUrl, addHint);
-    //     if (!isOk) {
-    //         throw new StatusFailException("更新失败");
-    //     }
+    // * @MethodName editHomeCarousel
+    // * @Params
+    // * @Description 修改主页轮播图
+    // * @Return
+    // * @Since 2023/8/12
+    // */
+    // public void editHomeCarousel(Long id, String addUrl, String addHint) throws
+    // StatusFailException {
+    // boolean isOk = fileEntityService.editHomeCarousel(id, addUrl, addHint);
+    // if (!isOk) {
+    // throw new StatusFailException("更新失败");
+    // }
     // }
 
     /**
@@ -223,8 +224,11 @@ public class HomeManager {
         SubmissionStatisticsVO submissionStatisticsVO = (SubmissionStatisticsVO) redisUtils
                 .get(SUBMISSION_STATISTICS_KEY);
 
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
+
         forceRefresh = forceRefresh && isRoot;
 
         if (submissionStatisticsVO == null || forceRefresh) {

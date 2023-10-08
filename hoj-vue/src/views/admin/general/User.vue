@@ -447,6 +447,11 @@
                   :key="1000"
                 ></el-option>
                 <el-option
+                  label="普通管理员"
+                  :value="1001"
+                  :key="1001"
+                ></el-option>
+                <el-option
                   label="题目管理员"
                   :value="1008"
                   :key="1008"

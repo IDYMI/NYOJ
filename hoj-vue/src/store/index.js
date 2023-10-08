@@ -16,7 +16,7 @@ const rootState = {
   },
   websiteConfig: {
     recordName: '© 2020-2022',
-    projectName: 'HOJ',
+    projectName: 'NYOJ',
     shortName: 'OJ',
     recordUrl: '#',
     projectUrl: '#',
@@ -135,13 +135,17 @@ const rootActions = {
     commit,
     state
   }, payload) {
-    let ojName = state.websiteConfig.shortName ? state.websiteConfig.shortName : 'OJ'
-    // if (payload && payload.title) {
-    //   window.document.title = ojName + ' - ' + payload.title
-    // } else {
-    //   window.document.title = ojName + ' - ' + state.route.meta.title
-    // }
-    window.document.title = ojName
+    let ojName = state.websiteConfig.shortName ? state.websiteConfig.shortName : 'NYOJ'
+    if (payload && payload.title) {
+      window.document.title = payload.title
+    } else {
+      let page = state.route.meta.title;
+      if (page == 'Home') {
+        page = 'Welcome to Nanyang Institute of Technology Online Judge'
+      }
+      window.document.title = page
+    }
+    // window.document.title = ojName
   },
   getWebsiteConfig({
     commit

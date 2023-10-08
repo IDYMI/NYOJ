@@ -1,7 +1,7 @@
 package top.hcode.hoj.dao.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.stereotype.Service;;
+import org.springframework.stereotype.Service;
 import top.hcode.hoj.mapper.ContestMapper;
 
 import top.hcode.hoj.pojo.entity.contest.Contest;

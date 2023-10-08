@@ -13,8 +13,6 @@ import top.hcode.hoj.pojo.dto.LoginDTO;
 import top.hcode.hoj.pojo.vo.UserInfoVO;
 import top.hcode.hoj.service.admin.account.AdminAccountService;
 
-
-
 /**
  * @Author: Himit_ZH
  * @Date: 2020/12/2 21:23
@@ -28,13 +26,13 @@ public class AdminAccountController {
     private AdminAccountService adminAccountService;
 
     @PostMapping("/login")
-    public CommonResult<UserInfoVO> login(@Validated @RequestBody LoginDTO loginDto){
-       return adminAccountService.login(loginDto);
+    public CommonResult<UserInfoVO> login(@Validated @RequestBody LoginDTO loginDto) {
+        return adminAccountService.login(loginDto);
     }
 
     @GetMapping("/logout")
     @RequiresAuthentication
-    @RequiresRoles(value = {"root","admin","problem_admin"},logical = Logical.OR)
+    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     public CommonResult<Void> logout() {
         return adminAccountService.logout();
     }

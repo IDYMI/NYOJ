@@ -1,5 +1,5 @@
 package top.hcode.hoj.pojo.dto;
-;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 

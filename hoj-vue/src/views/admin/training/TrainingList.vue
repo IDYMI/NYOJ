@@ -54,7 +54,7 @@
           <template v-slot="{ row }">
             <el-switch
               v-model="row.status"
-              :disabled="!isSuperAdmin && !isProblemAdmin && userInfo.username != row.author"
+              :disabled="!isMainAdminRole && userInfo.username != row.author"
               @change="changeTrainingStatus(row.id, row.status, row.author)"
             >
             </el-switch>
@@ -69,7 +69,7 @@
         </vxe-table-column>
         <vxe-table-column min-width="150" :title="$t('m.Option')">
           <template v-slot="{ row }">
-            <template v-if="isSuperAdmin || isProblemAdmin || userInfo.username == row.author">
+            <template v-if="isMainAdminRole || userInfo.username == row.author">
               <div style="margin-bottom: 10px">
                 <el-tooltip
                   effect="dark"
@@ -103,7 +103,7 @@
               effect="dark"
               :content="$t('m.Delete')"
               placement="top"
-              v-if="isSuperAdmin || isProblemAdmin || userInfo.username == row.author"
+              v-if="isSuperAdmin || userInfo.username == row.author"
             >
               <el-button
                 icon="el-icon-delete"
@@ -164,7 +164,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["isSuperAdmin", "isProblemAdmin", "userInfo"]),
+    ...mapGetters(["isSuperAdmin", "isNormalAdmin", "isMainAdminRole", "userInfo"]),
   },
   methods: {
     // 切换页码回调

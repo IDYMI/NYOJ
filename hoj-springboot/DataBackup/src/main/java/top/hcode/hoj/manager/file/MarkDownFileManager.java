@@ -35,17 +35,16 @@ public class MarkDownFileManager {
     @Autowired
     private GroupValidator groupValidator;
 
-    public Map<Object, Object> uploadMDImg(MultipartFile image, Long gid) throws StatusFailException, StatusSystemErrorException, StatusForbiddenException {
+    public Map<Object, Object> uploadMDImg(MultipartFile image, Long gid)
+            throws StatusFailException, StatusSystemErrorException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-        boolean isProblemAdmin = SecurityUtils.getSubject().hasRole("problem_admin");
-        boolean isAdmin = SecurityUtils.getSubject().hasRole("admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
-        if (!isRoot
-                && !isProblemAdmin
-                && !isAdmin
-                && !(gid != null && groupValidator.isGroupAdmin(userRolesVo.getUid(), gid))) {
+        if (!isRoot && !(gid != null && groupValidator.isGroupAdmin(userRolesVo.getUid(), gid))) {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
@@ -55,19 +54,19 @@ public class MarkDownFileManager {
         if (image.getSize() > 1024 * 1024 * 4) {
             throw new StatusFailException("上传的图片文件大小不能大于4M！");
         }
-        //获取文件后缀
+        // 获取文件后缀
         String suffix = image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1);
         if (!"jpg,jpeg,gif,png,webp".toUpperCase().contains(suffix.toUpperCase())) {
             throw new StatusFailException("请选择jpg,jpeg,gif,png,webp格式的图片！");
         }
 
-        //若不存在该目录，则创建目录
+        // 若不存在该目录，则创建目录
         FileUtil.mkdir(Constants.File.MARKDOWN_FILE_FOLDER.getPath());
 
-        //通过UUID生成唯一文件名
+        // 通过UUID生成唯一文件名
         String filename = IdUtil.simpleUUID() + "." + suffix;
         try {
-            //将文件保存指定目录
+            // 将文件保存指定目录
             image.transferTo(FileUtil.file(Constants.File.MARKDOWN_FILE_FOLDER.getPath() + File.separator + filename));
         } catch (Exception e) {
             log.error("图片文件上传异常-------------->", e);
@@ -102,14 +101,15 @@ public class MarkDownFileManager {
             throw new StatusForbiddenException("错误：不支持删除！");
         }
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-        boolean isProblemAdmin = SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Long gid = file.getGid();
 
         if (!file.getUid().equals(userRolesVo.getUid())
                 && !isRoot
-                && !isProblemAdmin
                 && !(gid != null && groupValidator.isGroupAdmin(userRolesVo.getUid(), gid))) {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
@@ -122,15 +122,16 @@ public class MarkDownFileManager {
         }
     }
 
-    public Map<Object, Object> uploadMd(MultipartFile file, Long gid) throws StatusFailException, StatusSystemErrorException, StatusForbiddenException {
+    public Map<Object, Object> uploadMd(MultipartFile file, Long gid)
+            throws StatusFailException, StatusSystemErrorException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root");
-        boolean isProblemAdmin = SecurityUtils.getSubject().hasRole("problem_admin");
-        boolean isAdmin = SecurityUtils.getSubject().hasRole("admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
-        if (!isRoot && !isProblemAdmin && !isAdmin
-                && !(gid != null && groupValidator.isGroupAdmin(userRolesVo.getUid(), gid))) {
+        if (!isRoot && !(gid != null && groupValidator.isGroupAdmin(userRolesVo.getUid(), gid))) {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
@@ -140,21 +141,21 @@ public class MarkDownFileManager {
         if (file.getSize() >= 1024 * 1024 * 128) {
             throw new StatusFailException("上传的文件大小不能大于128M！");
         }
-        //获取文件后缀
+        // 获取文件后缀
         String suffix = "";
         String filename = "";
         if (file.getOriginalFilename() != null && file.getOriginalFilename().contains(".")) {
             suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
-            //通过UUID生成唯一文件名
+            // 通过UUID生成唯一文件名
             filename = IdUtil.simpleUUID() + "." + suffix;
         } else {
             filename = IdUtil.simpleUUID();
         }
-        //若不存在该目录，则创建目录
+        // 若不存在该目录，则创建目录
         FileUtil.mkdir(Constants.File.MARKDOWN_FILE_FOLDER.getPath());
 
         try {
-            //将文件保存指定目录
+            // 将文件保存指定目录
             file.transferTo(FileUtil.file(Constants.File.MARKDOWN_FILE_FOLDER.getPath() + File.separator + filename));
         } catch (Exception e) {
             log.error("文件上传异常-------------->", e);

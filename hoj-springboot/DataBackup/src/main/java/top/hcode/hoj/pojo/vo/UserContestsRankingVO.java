@@ -22,6 +22,6 @@ public class UserContestsRankingVO implements Serializable {
     @ApiModelProperty(value = "日期对应的比赛名次数据列表")
     private List<HashMap<String,Object>> dataList;
 
-    @ApiModelProperty(value = "已解决题目列表")
+    @ApiModelProperty(value = "已参加比赛列表")
     private List<Long> solvedList;
 }

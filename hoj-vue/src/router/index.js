@@ -44,7 +44,6 @@ router.beforeEach((to, from, next) => {
     const isSuperAdmin = store.getters.isSuperAdmin
     const isAmdin = store.getters.isAdminRole
     if (token) { // 判断当前的token是否存在 ； 登录存入的token
-
       if(to.matched.some(record => record.meta.requireSuperAdmin)){ // 判断是否需要超级管理权限
 
         if(isSuperAdmin){ // 拥有权限就进入
@@ -52,12 +51,12 @@ router.beforeEach((to, from, next) => {
         }else{ // 没有超级管理员权限 全部返回登录页，并且清除缓存
           if(to.path.split('/')[1]==='admin'){ //管理端
             next({
-              path: '/admin/login' 
+              path: '/admin/login'
             })
             mMessage.error(i18n.t('m.Please_login_first_by_admin_account'))
           }else{ // oj端
             next({
-              path: '/home' 
+              path: '/home'
             })
             store.commit('changeModalStatus',{mode: 'Login', visible: true})
             mMessage.error(i18n.t('m.Please_login_first'))
@@ -70,17 +69,17 @@ router.beforeEach((to, from, next) => {
         }else{ // 没有管理员权限 全部返回登录页，并且清除缓存
           if(to.path.split('/')[1]==='admin'){ // 管理端
             next({
-              path: '/admin/login' 
+              path: '/admin/login'
             })
             mMessage.error(i18n.t('m.Please_login_first_by_admin_account'))
           }else{
             next({
-              path: '/home' 
+              path: '/home'
             })
             store.commit('changeModalStatus',{mode: 'Login', visible: true})
             mMessage.error(i18n.t('m.Please_login_first'))
             store.commit("clearUserInfoAndToken");
-          }  
+          }
         }
       }else{
         next()
@@ -108,7 +107,7 @@ router.beforeEach((to, from, next) => {
         case 'discussion':
           if(!webConfig.openPublicDiscussion){
             next({
-              path: '/home' 
+              path: '/home'
             })
             mMessage.error(i18n.t('m.No_Access_There_is_no_open_discussion_area_on_the_website'))
           }
@@ -116,7 +115,7 @@ router.beforeEach((to, from, next) => {
         case 'groupDiscussion':
           if(!webConfig.openGroupDiscussion){
             next({
-              path: '/home' 
+              path: '/home'
             })
             mMessage.error(i18n.t('m.No_Access_There_is_no_open_group_discussion_area_on_the_website'))
           }
@@ -124,7 +123,7 @@ router.beforeEach((to, from, next) => {
         case 'contestComment':
           if(!webConfig.openContestComment){
             next({
-              path: '/home' 
+              path: '/home'
             })
             mMessage.error(i18n.t('m.No_Access_There_is_no_open_contest_comment_area_on_the_website'))
           }
@@ -133,7 +132,7 @@ router.beforeEach((to, from, next) => {
     }
     next()
   }
-  
+
 })
 
 router.afterEach((to, from, next) => {

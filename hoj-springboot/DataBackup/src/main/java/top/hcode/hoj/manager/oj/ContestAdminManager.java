@@ -1,6 +1,5 @@
 package top.hcode.hoj.manager.oj;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -19,7 +18,6 @@ import top.hcode.hoj.pojo.entity.contest.ContestRecord;
 import top.hcode.hoj.shiro.AccountProfile;
 import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.validator.GroupValidator;
-
 
 /**
  * @Author: Himit_ZH
@@ -41,7 +39,8 @@ public class ContestAdminManager {
     @Autowired
     private GroupValidator groupValidator;
 
-    public IPage<ContestRecord> getContestACInfo(Long cid, Integer currentPage, Integer limit) throws StatusForbiddenException {
+    public IPage<ContestRecord> getContestACInfo(Long cid, Integer currentPage, Integer limit)
+            throws StatusForbiddenException {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
@@ -49,8 +48,10 @@ public class ContestAdminManager {
         Contest contest = contestEntityService.getById(cid);
 
         // 超级管理员或者该比赛的创建者，则为比赛管理者
-        // 是否为超级管理员或者题目管理
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot
                 && !contest.getUid().equals(userRolesVo.getUid())
@@ -58,8 +59,10 @@ public class ContestAdminManager {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 30;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 30;
 
         // 获取当前比赛的，状态为ac，未被校验的排在前面
         return contestRecordEntityService.getACInfo(currentPage,
@@ -72,7 +75,6 @@ public class ContestAdminManager {
 
     }
 
-
     public void checkContestACInfo(CheckACDTO checkACDto) throws StatusFailException, StatusForbiddenException {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
@@ -80,8 +82,10 @@ public class ContestAdminManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(checkACDto.getCid());
 
-        // 是否为超级管理员或者题目管理,或者该比赛的创建者， 则为比赛管理者
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot
                 && !contest.getUid().equals(userRolesVo.getUid())
@@ -98,14 +102,17 @@ public class ContestAdminManager {
 
     }
 
-    public IPage<ContestPrint> getContestPrint(Long cid, Integer currentPage, Integer limit) throws StatusForbiddenException {
+    public IPage<ContestPrint> getContestPrint(Long cid, Integer currentPage, Integer limit)
+            throws StatusForbiddenException {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        // 超级管理员获取题目管理, 或者该比赛的创建者，则为比赛管理者
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot
                 && !contest.getUid().equals(userRolesVo.getUid())
@@ -113,8 +120,10 @@ public class ContestAdminManager {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 30;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 30;
 
         // 获取当前比赛的，未被确定的排在签名
 
@@ -129,15 +138,16 @@ public class ContestAdminManager {
         return contestPrintEntityService.page(contestPrintIPage, contestPrintQueryWrapper);
     }
 
-
     public void checkContestPrintStatus(Long id, Long cid) throws StatusFailException, StatusForbiddenException {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        // 超级管理员获取题目管理, 或者该比赛的创建者，则为比赛管理者
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot && !contest.getUid().equals(userRolesVo.getUid())
                 && !(contest.getIsGroup() && groupValidator.isGroupRoot(userRolesVo.getUid(), contest.getGid()))) {

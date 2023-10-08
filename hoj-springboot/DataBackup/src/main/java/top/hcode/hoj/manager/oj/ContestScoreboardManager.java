@@ -43,7 +43,8 @@ public class ContestScoreboardManager {
     @Resource
     private ContestRankManager contestRankManager;
 
-    public ContestOutsideInfoVO getContestOutsideInfo(Long cid) throws StatusNotFoundException, StatusForbiddenException {
+    public ContestOutsideInfoVO getContestOutsideInfo(Long cid)
+            throws StatusNotFoundException, StatusForbiddenException {
 
         ContestVO contestInfo = contestEntityService.getContestInfoById(cid);
 
@@ -72,8 +73,8 @@ public class ContestScoreboardManager {
         return contestOutsideInfoVO;
     }
 
-
-    public IPage getContestOutsideScoreboard(ContestRankDTO contestRankDto) throws StatusFailException, StatusForbiddenException {
+    public IPage getContestOutsideScoreboard(ContestRankDTO contestRankDto)
+            throws StatusFailException, StatusForbiddenException {
 
         Long cid = contestRankDto.getCid();
         List<String> concernedList = contestRankDto.getConcernedList();
@@ -114,20 +115,24 @@ public class ContestScoreboardManager {
 
         if (userRolesVo != null) {
             currentUid = userRolesVo.getUid();
-            // 是否为超级管理员或者题目管理
-            isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+            // 是否为超级管理员或者题目管理或者普通管理
+            isRoot = SecurityUtils.getSubject().hasRole("root")
+                    || SecurityUtils.getSubject().hasRole("problem_admin")
+                    || SecurityUtils.getSubject().hasRole("admin");
+
             // 不是比赛创建者或者超管无权限开启强制实时榜单
             if (!isRoot && !contest.getUid().equals(currentUid)) {
                 forceRefresh = false;
             }
         }
 
-
         Integer currentPage = contestRankDto.getCurrentPage();
         Integer limit = contestRankDto.getLimit();
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 50;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 50;
 
         // 校验该比赛是否开启了封榜模式，超级管理员和比赛创建者可以直接看到实际榜单
         boolean isOpenSealRank = contestValidator.isSealRank(currentUid, contest, forceRefresh, isRoot);
@@ -135,7 +140,6 @@ public class ContestScoreboardManager {
                 && Objects.equals(contestRankDto.getContainsEnd(), true);
 
         if (contest.getType().intValue() == Constants.Contest.TYPE_ACM.getCode()) {
-
 
             // 获取ACM比赛排行榜外榜
             return contestRankManager.getACMContestScoreboard(isOpenSealRank,

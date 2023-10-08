@@ -15,7 +15,7 @@ const getters = {
   },
   isGroupRoot: (state, getters, _, rootGetters) => {
     return rootGetters.isAuthenticated && (
-      state.auth === 5 || getters.isGroupOwner || rootGetters.isSuperAdmin || rootGetters.isProblemAdmin
+      state.auth === 5 || getters.isGroupOwner || rootGetters.isSuperAdmin
     )
   },
   isGroupAdmin: (state, getters, _, rootGetters) => {
