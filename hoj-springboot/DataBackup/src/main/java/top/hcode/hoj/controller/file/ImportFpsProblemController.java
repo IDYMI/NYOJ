@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.file;
 
-
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
@@ -22,8 +21,8 @@ import javax.annotation.Resource;
  */
 @Controller
 @RequestMapping("/api/file")
+@RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
 public class ImportFpsProblemController {
-
 
     @Resource
     private ImportFpsProblemService importFpsProblemService;
@@ -35,13 +34,12 @@ public class ImportFpsProblemController {
      * @Return
      * @Since 2021/10/06
      */
-    @RequiresRoles(value = {"root", "admin", "problem_admin"}, logical = Logical.OR)
+
     @RequiresAuthentication
     @ResponseBody
     @PostMapping("/import-fps-problem")
     public CommonResult<Void> importFPSProblem(@RequestParam("file") MultipartFile file) {
         return importFpsProblemService.importFPSProblem(file);
     }
-
 
 }

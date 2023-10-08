@@ -39,7 +39,7 @@ export const m = {
   // /views/admin/Dashboard.vue
   Last_Login: 'Last Login',
   Super_Admin: 'Super Admin',
-  Admin: 'Admin',
+  Admin: 'Normal Admin',
   All_Problem_Admin: 'Problem Admin',
   Total_Users: 'Total Users',
   Today_Submissions: 'Today Submissions',
@@ -395,7 +395,7 @@ export const m = {
   Exclude_admin_submissions: 'Exclude admin submissions',
   SplitType_User: 'Split folders by username',
   SplitType_Problem: 'Split folders by problem id',
-  Delete_Contest_Tips: 'This operation will delete the contest and its submission, discussion, announcement, record and other data. Do you want to continue?',  
+  Delete_Contest_Tips: 'This operation will delete the contest and its submission, discussion, announcement, record and other data. Do you want to continue?',
 
   // /views/admin/contest/Contest.vue
   Contest_Title: 'Contest Title',

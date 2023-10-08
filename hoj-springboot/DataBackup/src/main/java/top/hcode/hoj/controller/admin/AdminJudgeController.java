@@ -17,11 +17,12 @@ import javax.annotation.Resource;
 /**
  * @Author: Himit_ZH
  * @Date: 2021/1/3 14:09
- * @Description: 超管重判提交
+ * @Description: 超管或者题目管理重判提交
  */
 
 @RestController
 @RequestMapping("/api/admin/judge")
+@RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
 public class AdminJudgeController {
 
     @Resource
@@ -29,7 +30,6 @@ public class AdminJudgeController {
 
     @GetMapping("/rejudge")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     @RequiresPermissions("rejudge")
     public CommonResult<Judge> rejudge(@RequestParam("submitId") Long submitId) {
         return rejudgeService.rejudge(submitId);
@@ -37,7 +37,6 @@ public class AdminJudgeController {
 
     @GetMapping("/rejudge-contest-problem")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     @RequiresPermissions("rejudge")
     public CommonResult<Void> rejudgeContestProblem(@RequestParam("cid") Long cid, @RequestParam("pid") Long pid) {
         return rejudgeService.rejudgeContestProblem(cid, pid);
@@ -45,7 +44,6 @@ public class AdminJudgeController {
 
     @GetMapping("/manual-judge")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     @RequiresPermissions("rejudge")
     public CommonResult<Judge> manualJudge(@RequestParam("submitId") Long submitId,
             @RequestParam("status") Integer status,
@@ -55,7 +53,6 @@ public class AdminJudgeController {
 
     @GetMapping("/cancel-judge")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     @RequiresPermissions("rejudge")
     public CommonResult<Judge> cancelJudge(@RequestParam("submitId") Long submitId) {
         return rejudgeService.cancelJudge(submitId);

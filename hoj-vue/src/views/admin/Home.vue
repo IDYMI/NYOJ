@@ -24,7 +24,6 @@
           <i class="fa fa-tachometer fa-size" aria-hidden="true"></i
           >{{ $t("m.Dashboard") }}
         </el-menu-item>
-        <!-- <el-submenu v-if="isSuperAdmin" index="general"> -->
         <el-submenu index="general" v-if="isSuperAdmin">
           <template slot="title"
             ><i class="el-icon-menu"></i>{{ $t("m.General") }}</template
@@ -60,12 +59,14 @@
           <el-menu-item index="/admin/problem/tag">{{
             $t("m.Admin_Tag")
           }}</el-menu-item>
-          <el-menu-item index="/admin/group-problem/apply"
+          <el-menu-item
+            index="/admin/group-problem/apply"
+            v-if="isMainAdminRole"
             >{{ $t("m.Admin_Group_Apply_Problem") }}
           </el-menu-item>
           <el-menu-item
             index="/admin/problem/batch-operation"
-            v-if="isSuperAdmin || isProblemAdmin"
+            v-if="isMainAdminRole"
             >{{ $t("m.Export_Import_Problem") }}</el-menu-item
           >
         </el-submenu>
@@ -103,7 +104,7 @@
           }}</el-menu-item>
         </el-submenu>
 
-        <el-submenu index="discussion">
+        <el-submenu index="discussion" v-if="isSuperAdmin">
           <template slot="title"
             ><i class="fa fa-comments fa-size" aria-hidden="true"></i
             >{{ $t("m.Discussion") }}</template
@@ -326,7 +327,6 @@
               }}</mu-list-item-title>
             </mu-list-item>
             <mu-list-item
-              v-if="isSuperAdmin || isProblemAdmin"
               button
               :ripple="false"
               slot="nested"
@@ -338,7 +338,6 @@
             </mu-list-item>
 
             <mu-list-item
-              v-if="isSuperAdmin || isProblemAdmin"
               button
               :ripple="false"
               slot="nested"
@@ -352,7 +351,6 @@
             </mu-list-item>
 
             <mu-list-item
-              v-if="isSuperAdmin || isProblemAdmin"
               button
               :ripple="false"
               slot="nested"
@@ -599,7 +597,7 @@ export default {
     ...mapGetters([
       "userInfo",
       "isSuperAdmin",
-      "isProblemAdmin",
+      "isMainAdminRole",
       "isAuthenticated",
       "websiteConfig",
       "webLanguage",

@@ -510,7 +510,6 @@ export default {
       "isShowContestSetting",
       "BeginToNowDuration",
       "isContestAdmin",
-      "isSuperAdmin",
       "ContestRealTimePermission",
       "passwordFormVisible",
       "userInfo",

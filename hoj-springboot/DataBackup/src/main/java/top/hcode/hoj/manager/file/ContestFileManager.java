@@ -93,14 +93,14 @@ public class ContestFileManager {
             throw new StatusFailException("错误：该比赛不存在！");
         }
 
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Long gid = contest.getGid();
 
-        if (!isRoot
-                && !contest.getUid().equals(userRolesVo.getUid())
+        if (!isRoot && !contest.getUid().equals(userRolesVo.getUid())
                 && !(contest.getIsGroup() && groupValidator.isGroupRoot(userRolesVo.getUid(), gid))) {
             throw new StatusForbiddenException("错误：您并非该比赛的管理员，无权下载榜单！");
         }
@@ -165,9 +165,11 @@ public class ContestFileManager {
 
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        // 是否为超级管理员或者题目管理
+
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Long gid = contest.getGid();
         if (!isRoot
@@ -345,9 +347,11 @@ public class ContestFileManager {
     public void downloadContestPrintText(Long id, HttpServletResponse response) throws StatusForbiddenException {
         ContestPrint contestPrint = contestPrintEntityService.getById(id);
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        // 是否为超级管理员或者题目管理
+
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Long cid = contestPrint.getCid();
 

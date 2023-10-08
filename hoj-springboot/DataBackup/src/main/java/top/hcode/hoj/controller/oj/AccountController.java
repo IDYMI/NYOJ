@@ -62,19 +62,6 @@ public class AccountController {
     }
 
     /**
-     * @param uid
-     * @return
-     * @Description 获取用户最近一年的比赛名次变化图
-     */
-    @GetMapping("/get-user-contests-ranking")
-    @AnonApi
-    public CommonResult<UserContestsRankingVO> getUserContestsRanking(
-            @RequestParam(value = "uid", required = false) String uid,
-            @RequestParam(value = "username", required = false) String username) {
-        return accountService.getUserContestsRanking(uid, username);
-    }
-
-    /**
      * @MethodName changePassword
      * @Params * @param null
      * @Description 修改密码的操作，连续半小时内修改密码错误5次，则需要半个小时后才可以再次尝试修改密码

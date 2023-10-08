@@ -18,7 +18,7 @@ export default {
       text: '',
     };
   },
-  created() {},
+  created() {}, 
   mounted() {
     let timer = setTimeout(() => {
       this.move();

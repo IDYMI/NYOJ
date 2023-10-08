@@ -18,6 +18,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/api/admin/msg")
+@RequiresRoles("root")
 public class AdminNoticeController {
 
     @Resource
@@ -25,7 +26,6 @@ public class AdminNoticeController {
 
     @GetMapping("/notice")
     @RequiresAuthentication
-    @RequiresRoles("root")
     public CommonResult<IPage<AdminSysNoticeVO>> getSysNotice(@RequestParam(value = "limit", required = false) Integer limit,
                                                               @RequestParam(value = "currentPage", required = false) Integer currentPage,
                                                               @RequestParam(value = "type", required = false) String type) {
@@ -35,7 +35,6 @@ public class AdminNoticeController {
 
     @PostMapping("/notice")
     @RequiresAuthentication
-    @RequiresRoles("root")
     public CommonResult<Void> addSysNotice(@RequestBody AdminSysNotice adminSysNotice) {
 
         return adminNoticeService.addSysNotice(adminSysNotice);
@@ -44,7 +43,6 @@ public class AdminNoticeController {
 
     @DeleteMapping("/notice")
     @RequiresAuthentication
-    @RequiresRoles("root")
     public CommonResult<Void> deleteSysNotice(@RequestParam("id") Long id) {
 
         return adminNoticeService.deleteSysNotice(id);
@@ -53,7 +51,6 @@ public class AdminNoticeController {
 
     @PutMapping("/notice")
     @RequiresAuthentication
-    @RequiresRoles("root")
     public CommonResult<Void> updateSysNotice(@RequestBody AdminSysNotice adminSysNotice) {
 
         return adminNoticeService.updateSysNotice(adminSysNotice);

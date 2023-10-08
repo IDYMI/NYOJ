@@ -39,7 +39,7 @@ export const m = {
   // /views/admin/Dashboard.vue
   Last_Login: '最近登录',
   Super_Admin: '超级管理员',
-  Admin: '社团管理员',
+  Admin: '普通管理员',
   All_Problem_Admin: '题目管理员',
   Total_Users: '总用户数',
   Today_Submissions: '今日总交题数',

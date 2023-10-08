@@ -17,7 +17,7 @@
           ><el-link
             type="primary"
             @click="goUserHome(row.username)"
-            style="font-size: 13px;"
+            style="font-size: 13px"
             >{{ row.username }}</el-link
           >
         </template>
@@ -50,32 +50,56 @@
             v-model="row.auth"
             @change="updateGroupMember(row)"
             size="small"
-            :disabled="!isSuperAdmin && !isGroupOwner && row.auth >= userAuth"
+            :disabled="
+              !isSuperAdmin &&
+              !isGroupOwner &&
+              row.auth >= userAuth
+            "
           >
             <el-option
               :label="$t('m.Applying')"
               :value="1"
-              :disabled="!isSuperAdmin && !isGroupOwner && 1 >= userAuth"
+              :disabled="
+                !isSuperAdmin &&
+                !isGroupOwner &&
+                1 >= userAuth
+              "
             ></el-option>
             <el-option
               :label="$t('m.Refused')"
               :value="2"
-              :disabled="!isSuperAdmin && !isGroupOwner && 2 >= userAuth"
+              :disabled="
+                !isSuperAdmin &&
+                !isGroupOwner &&
+                2 >= userAuth
+              "
             ></el-option>
             <el-option
               :label="$t('m.General_Member')"
               :value="3"
-              :disabled="!isSuperAdmin && !isGroupOwner && 3 >= userAuth"
+              :disabled="
+                !isSuperAdmin &&
+                !isGroupOwner &&
+                3 >= userAuth
+              "
             ></el-option>
             <el-option
               :label="$t('m.Group_Admin')"
               :value="4"
-              :disabled="!isSuperAdmin && !isGroupOwner && 4 >= userAuth"
+              :disabled="
+                !isSuperAdmin &&
+                !isGroupOwner &&
+                4 >= userAuth
+              "
             ></el-option>
             <el-option
               :label="$t('m.Group_Root')"
               :value="5"
-              :disabled="!isSuperAdmin && !isGroupOwner && 5 >= userAuth"
+              :disabled="
+                !isSuperAdmin &&
+                !isGroupOwner &&
+                5 >= userAuth
+              "
             ></el-option>
           </el-select>
         </template>
@@ -102,8 +126,8 @@
             placement="top"
             v-if="
               (isGroupOwner || row.auth < userAuth) &&
-                userInfo.uid != row.uid &&
-                row.uid != group.owner
+              userInfo.uid != row.uid &&
+              row.uid != group.owner
             "
           >
             <el-button
@@ -128,13 +152,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import api from '@/common/api';
-import mMessage from '@/common/message';
-import Editor from '@/components/admin/Editor.vue';
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import api from "@/common/api";
+import mMessage from "@/common/message";
+import Editor from "@/components/admin/Editor.vue";
 export default {
-  name: 'GroupMemberList',
+  name: "GroupMemberList",
   components: {
     Pagination,
     Editor,
@@ -147,7 +171,7 @@ export default {
       adminMemberList: [],
       member: {
         id: null,
-        username: '',
+        username: "",
         auth: null,
       },
       loading: false,
@@ -162,7 +186,7 @@ export default {
     },
     goUserHome(username) {
       this.$router.push({
-        path: '/user-home',
+        path: "/user-home",
         query: { username },
       });
     },
@@ -197,26 +221,26 @@ export default {
       api
         .updateGroupMember(data)
         .then((res) => {
-          mMessage.success(this.$i18n.t('m.Update_Successfully'));
-          this.$emit('currentChange', 1);
-          this.$store.dispatch('getGroup');
+          mMessage.success(this.$i18n.t("m.Update_Successfully"));
+          this.$emit("currentChange", 1);
+          this.$store.dispatch("getGroup");
           this.currentChange(1);
         })
         .catch(() => {});
     },
     viewReason(value) {
-      this.$alert(value, this.$t('m.Apply_Reason'), {
-        confirmButtonText: this.$t('m.OK'),
+      this.$alert(value, this.$t("m.Apply_Reason"), {
+        confirmButtonText: this.$t("m.OK"),
       });
     },
     deleteMember(uid, gid) {
       this.$confirm(
-        this.$i18n.t('m.Delete_Member_Tips'),
-        this.$i18n.t('m.Warning'),
+        this.$i18n.t("m.Delete_Member_Tips"),
+        this.$i18n.t("m.Warning"),
         {
-          confirmButtonText: this.$i18n.t('m.OK'),
-          cancelButtonText: this.$i18n.t('m.Cancel'),
-          type: 'warning',
+          confirmButtonText: this.$i18n.t("m.OK"),
+          cancelButtonText: this.$i18n.t("m.Cancel"),
+          type: "warning",
         }
       )
         .then(() => {
@@ -225,9 +249,9 @@ export default {
             .deleteGroupMember(uid, gid)
             .then((res) => {
               this.loading = false;
-              mMessage.success(this.$i18n.t('m.Delete_successfully'));
-              this.$emit('currentChange', 1);
-              this.$store.dispatch('getGroup');
+              mMessage.success(this.$i18n.t("m.Delete_successfully"));
+              this.$emit("currentChange", 1);
+              this.$store.dispatch("getGroup");
               this.currentChange(1);
             })
             .catch(() => {
@@ -241,11 +265,11 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'userInfo',
-      'isSuperAdmin',
-      'userAuth',
-      'isGroupOwner',
-      'group',
+      "userInfo",
+      "isSuperAdmin",
+      "userAuth",
+      "isGroupOwner",
+      "group",
     ]),
   },
 };

@@ -111,13 +111,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import api from '@/common/api';
-import mMessage from '@/common/message';
-import Editor from '@/components/admin/Editor.vue';
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import api from "@/common/api";
+import mMessage from "@/common/message";
+import Editor from "@/components/admin/Editor.vue";
 export default {
-  name: 'GroupDiscussionList',
+  name: "GroupDiscussionList",
   components: {
     Pagination,
     Editor,
@@ -167,7 +167,7 @@ export default {
     },
     goGroupDiscussion(discussionId) {
       this.$router.push({
-        name: 'GroupDiscussionDetails',
+        name: "GroupDiscussionDetails",
         params: {
           discussionID: discussionId,
           groupID: this.$route.params.groupID,
@@ -176,27 +176,27 @@ export default {
     },
     updateGroupDiscussion(row) {
       api.updateGroupDiscussion(row).then((res) => {
-        mMessage.success(this.$i18n.t('m.Update_Successfully'));
-        this.$emit('currentChange', 1);
+        mMessage.success(this.$i18n.t("m.Update_Successfully"));
+        this.$emit("currentChange", 1);
         this.currentChange(1);
       });
     },
     deleteGroupDiscussion(did) {
       this.$confirm(
-        this.$i18n.t('m.Delete_Discussion_Tips'),
-        this.$i18n.t('m.Warning'),
+        this.$i18n.t("m.Delete_Discussion_Tips"),
+        this.$i18n.t("m.Warning"),
         {
-          confirmButtonText: this.$i18n.t('m.OK'),
-          cancelButtonText: this.$i18n.t('m.Cancel'),
-          type: 'warning',
+          confirmButtonText: this.$i18n.t("m.OK"),
+          cancelButtonText: this.$i18n.t("m.Cancel"),
+          type: "warning",
         }
       )
         .then(() => {
           this.loading = true;
           api.deleteGroupDiscussion(did).then((res) => {
             this.loading = true;
-            mMessage.success(this.$i18n.t('m.Delete_successfully'));
-            this.$emit('currentChange', 1);
+            mMessage.success(this.$i18n.t("m.Delete_successfully"));
+            this.$emit("currentChange", 1);
             this.currentChange(1);
           });
         })
@@ -206,7 +206,12 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['userInfo', 'isSuperAdmin', 'isGroupAdmin']),
+    ...mapGetters([
+      "userInfo",
+      "isSuperAdmin",
+      "isNormalAdmin",
+      "isGroupAdmin",
+    ]),
   },
 };
 </script>

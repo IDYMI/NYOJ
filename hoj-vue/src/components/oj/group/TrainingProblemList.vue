@@ -31,10 +31,7 @@
         show-overflow
       >
       </vxe-table-column>
-      <vxe-table-column
-        min-width="200"
-        :title="$t('m.Training_Problem_Rank')"
-      >
+      <vxe-table-column min-width="200" :title="$t('m.Training_Problem_Rank')">
         <template v-slot="{ row }">
           <el-input-number
             v-model="trainingProblemMap[row.id].rank"
@@ -52,14 +49,8 @@
             :disabled="row.gid != gid"
             size="small"
           >
-            <el-option
-              :label="$t('m.Public_Problem')"
-              :value="1"
-            ></el-option>
-            <el-option
-              :label="$t('m.Private_Problem')"
-              :value="2"
-            ></el-option>
+            <el-option :label="$t('m.Public_Problem')" :value="1"></el-option>
+            <el-option :label="$t('m.Private_Problem')" :value="2"></el-option>
             <el-option
               :label="$t('m.Contest_Problem')"
               :value="3"
@@ -110,7 +101,7 @@
             </el-button>
           </el-tooltip>
 
-          <el-tooltip
+          <!-- <el-tooltip
             effect="dark"
             :content="$t('m.Delete')"
             placement="top"
@@ -123,7 +114,7 @@
               type="danger"
             >
             </el-button>
-          </el-tooltip>
+          </el-tooltip> -->
         </template>
       </vxe-table-column>
     </vxe-table>
@@ -149,34 +140,34 @@
 </template>
 
 <script>
-import api from '@/common/api';
-import mMessage from '@/common/message';
-import Pagination from '@/components/oj/common/Pagination';
-import Problem from '@/components/oj/group/Problem'
-import { mapGetters } from 'vuex';
-import utils from '@/common/utils';
+import api from "@/common/api";
+import mMessage from "@/common/message";
+import Pagination from "@/components/oj/common/Pagination";
+import Problem from "@/components/oj/group/Problem";
+import { mapGetters } from "vuex";
+import utils from "@/common/utils";
 export default {
-  name: 'GroupTrainingProblemList',
+  name: "GroupTrainingProblemList",
   components: {
     Pagination,
-    Problem
+    Problem,
   },
   props: {
     trainingId: {
       type: Number,
-      default: null
+      default: null,
     },
   },
   data() {
     return {
-      oj: 'All',
+      oj: "All",
       limit: 10,
       currentPage: 1,
       total: 0,
       problemList: [],
       trainingProblemMap: {},
       loading: false,
-      currentProblemID: '',
+      currentProblemID: "",
       currentRow: {},
       editPage: false,
       pid: null,
@@ -188,7 +179,7 @@ export default {
     this.init();
   },
   computed: {
-    ...mapGetters(['userInfo', 'isSuperAdmin','isProblemAdmin']),
+    ...mapGetters(["userInfo"]),
   },
   methods: {
     init() {
@@ -206,28 +197,30 @@ export default {
       this.loading = true;
       let params = {
         tid: this.trainingId,
-      }
-      api.getGroupTrainingProblemList(this.currentPage, this.limit, params).then(
-        (res) => {
-          this.loading = false;
-          this.total = res.data.data.problemList.total;
-          this.problemList = res.data.data.problemList.records;
-          this.trainingProblemMap = res.data.data.trainingProblemMap;
-        },
-        (err) => {
-          this.loading = false;
-        }
-      );
+      };
+      api
+        .getGroupTrainingProblemList(this.currentPage, this.limit, params)
+        .then(
+          (res) => {
+            this.loading = false;
+            this.total = res.data.data.problemList.total;
+            this.problemList = res.data.data.problemList.records;
+            this.trainingProblemMap = res.data.data.trainingProblemMap;
+          },
+          (err) => {
+            this.loading = false;
+          }
+        );
     },
     handleChangeRank(data) {
       api.updateGroupTrainingProblem(data).then((res) => {
-        mMessage.success(this.$i18n.t('m.Update_Successfully'));
+        mMessage.success(this.$i18n.t("m.Update_Successfully"));
         this.getProblemList(1);
       });
     },
     changeProblemAuth(pid, auth) {
       api.changeGroupProblemAuth(pid, auth).then((res) => {
-        mMessage.success(this.$i18n.t('m.Update_Successfully'));
+        mMessage.success(this.$i18n.t("m.Update_Successfully"));
       });
     },
     handleEditPage() {
@@ -240,14 +233,18 @@ export default {
       this.$emit("handleEditProblemPage");
     },
     deleteProblem(id) {
-      this.$confirm(this.$i18n.t('m.Delete_Problem_Tips'), this.$i18n.t('m.Warning'), {
-        type: 'warning',
-      }).then(
+      this.$confirm(
+        this.$i18n.t("m.Delete_Problem_Tips"),
+        this.$i18n.t("m.Warning"),
+        {
+          type: "warning",
+        }
+      ).then(
         () => {
           api
             .deleteGroupProblem(id)
             .then((res) => {
-              mMessage.success(this.$i18n.t('m.Delete_successfully'));
+              mMessage.success(this.$i18n.t("m.Delete_successfully"));
               this.$emit("currentChangeProblem");
             })
             .catch(() => {});
@@ -256,14 +253,18 @@ export default {
       );
     },
     removeProblem(pid) {
-      this.$confirm(this.$i18n.t('m.Remove_Training_Problem_Tips'), this.$i18n.t('m.Warning'), {
-        type: 'warning',
-      }).then(
+      this.$confirm(
+        this.$i18n.t("m.Remove_Training_Problem_Tips"),
+        this.$i18n.t("m.Warning"),
+        {
+          type: "warning",
+        }
+      ).then(
         () => {
           api
             .deleteGroupTrainingProblem(pid, this.trainingId)
             .then((res) => {
-              mMessage.success('success');
+              mMessage.success("success");
               this.$emit("currentChangeProblem");
             })
             .catch(() => {});
@@ -272,9 +273,12 @@ export default {
       );
     },
     downloadTestCase(problemID) {
-      let url = '/api/file/download-testcase?pid=' + problemID;
+      let url = "/api/file/download-testcase?pid=" + problemID;
       utils.downloadFile(url).then(() => {
-        this.$alert(this.$i18n.t('m.Download_Testcase_Success'), this.$i18n.t('m.Tips'));
+        this.$alert(
+          this.$i18n.t("m.Download_Testcase_Success"),
+          this.$i18n.t("m.Tips")
+        );
       });
     },
   },

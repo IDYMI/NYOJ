@@ -117,9 +117,10 @@ public class ContestManager {
     public ContestVO getContestInfo(Long cid) throws StatusFailException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         ContestVO contestInfo = contestEntityService.getContestInfoById(cid);
         if (contestInfo == null) {
@@ -152,9 +153,10 @@ public class ContestManager {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Contest contest = contestEntityService.getById(cid);
 
@@ -231,9 +233,10 @@ public class ContestManager {
         Contest contest = contestEntityService.getById(cid);
 
         // 超级管理员或者该比赛的创建者，则为比赛管理者
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         // 需要对该比赛做判断，是否处于开始或结束状态才可以获取题目列表，同时若是私有赛需要判断是否已注册（比赛管理员包括超级管理员可以直接获取）
         contestValidator.validateContestAuth(contest, userRolesVo, isRoot);
@@ -283,9 +286,10 @@ public class ContestManager {
         Contest contest = contestEntityService.getById(cid);
 
         // 超级管理员或者该比赛的创建者，则为比赛管理者
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         // 需要对该比赛做判断，是否处于开始或结束状态才可以获取题目列表，同时若是私有赛需要判断是否已注册（比赛管理员包括超级管理员可以直接获取）
         contestValidator.validateContestAuth(contest, userRolesVo, isRoot);
@@ -358,9 +362,10 @@ public class ContestManager {
         Contest contest = contestEntityService.getById(cid);
 
         // 是否为超级管理员或者该比赛的创建者，则为比赛管理者
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         // 需要对该比赛做判断，是否处于开始或结束状态才可以获取题目，同时若是私有赛需要判断是否已注册（比赛管理员包括超级管理员可以直接获取）
         contestValidator.validateContestAuth(contest, userRolesVo, isRoot);
@@ -472,9 +477,10 @@ public class ContestManager {
         Contest contest = contestEntityService.getById(searchCid);
 
         // 是否为超级管理员或者该比赛的创建者，则为比赛管理者
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         // 需要对该比赛做判断，是否处于开始或结束状态才可以获取题目，同时若是私有赛需要判断是否已注册（比赛管理员包括超级管理员可以直接获取）
         contestValidator.validateContestAuth(contest, userRolesVo, isRoot);
@@ -576,9 +582,10 @@ public class ContestManager {
         Contest contest = contestEntityService.getById(contestRankDto.getCid());
 
         // 超级管理员或者该比赛的创建者，则为比赛管理者
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         // 需要对该比赛做判断，是否处于开始或结束状态才可以获取题目，同时若是私有赛需要判断是否已注册（比赛管理员包括超级管理员可以直接获取）
         contestValidator.validateContestAuth(contest, userRolesVo, isRoot);
@@ -629,9 +636,10 @@ public class ContestManager {
         Contest contest = contestEntityService.getById(cid);
 
         // 超级管理员或者该比赛的创建者，则为比赛管理者
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         // 需要对该比赛做判断，是否处于开始或结束状态才可以获取题目，同时若是私有赛需要判断是否已注册（比赛管理员包括超级管理员可以直接获取）
         contestValidator.validateContestAuth(contest, userRolesVo, isRoot);
@@ -681,9 +689,10 @@ public class ContestManager {
         Contest contest = contestEntityService.getById(contestPrintDto.getCid());
 
         // 超级管理员或者该比赛的创建者，则为比赛管理者
-        // 是否为超级管理员或者题目管理
+        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin");
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         // 需要对该比赛做判断，是否处于开始或结束状态才可以获取题目，同时若是私有赛需要判断是否已注册（比赛管理员包括超级管理员可以直接获取）
         contestValidator.validateContestAuth(contest, userRolesVo, isRoot);

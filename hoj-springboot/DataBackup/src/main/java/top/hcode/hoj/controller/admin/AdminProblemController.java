@@ -23,6 +23,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api/admin/problem")
+@RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
 public class AdminProblemController {
 
     @Autowired
@@ -30,7 +31,6 @@ public class AdminProblemController {
 
     @GetMapping("/get-problem-list")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     public CommonResult<IPage<Problem>> getProblemList(@RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "currentPage", required = false) Integer currentPage,
             @RequestParam(value = "keyword", required = false) String keyword,
@@ -41,35 +41,30 @@ public class AdminProblemController {
 
     @GetMapping("")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     public CommonResult<Problem> getProblem(@RequestParam("pid") Long pid) {
         return adminProblemService.getProblem(pid);
     }
 
     @DeleteMapping("")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin" }, logical = Logical.OR)
     public CommonResult<Void> deleteProblem(@RequestParam("pid") Long pid) {
         return adminProblemService.deleteProblem(pid);
     }
 
     @PostMapping("")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     public CommonResult<Void> addProblem(@RequestBody ProblemDTO problemDto) {
         return adminProblemService.addProblem(problemDto);
     }
 
     @PutMapping("")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     public CommonResult<Void> updateProblem(@RequestBody ProblemDTO problemDto) {
         return adminProblemService.updateProblem(problemDto);
     }
 
     @GetMapping("/get-problem-cases")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin" }, logical = Logical.OR)
     public CommonResult<List<ProblemCase>> getProblemCases(@RequestParam("pid") Long pid,
             @RequestParam(value = "isUpload", defaultValue = "true") Boolean isUpload) {
         return adminProblemService.getProblemCases(pid, isUpload);
@@ -77,21 +72,18 @@ public class AdminProblemController {
 
     @PostMapping("/compile-spj")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     public CommonResult compileSpj(@RequestBody CompileDTO compileDTO) {
         return adminProblemService.compileSpj(compileDTO);
     }
 
     @PostMapping("/compile-interactive")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     public CommonResult compileInteractive(@RequestBody CompileDTO compileDTO) {
         return adminProblemService.compileInteractive(compileDTO);
     }
 
     @GetMapping("/import-remote-oj-problem")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
     public CommonResult<Void> importRemoteOJProblem(@RequestParam("name") String name,
             @RequestParam("problemId") String problemId) {
         return adminProblemService.importRemoteOJProblem(name, problemId);
@@ -99,7 +91,6 @@ public class AdminProblemController {
 
     @PutMapping("/change-problem-auth")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     public CommonResult<Void> changeProblemAuth(@RequestBody Problem problem) {
         return adminProblemService.changeProblemAuth(problem);
     }

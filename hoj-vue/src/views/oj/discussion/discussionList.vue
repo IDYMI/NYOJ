@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <el-row :gutter="20">
       <el-col :md="19" :xs="24" v-loading="loading.discussion">
         <div class="discussion-header">
@@ -307,7 +307,10 @@
               "
               ><i class="el-icon-folder-opened"></i> {{ $t("m.Category") }}</a
             >
-            <span style="float: right" v-if="isSuperAdmin || isProblemAdmin">
+            <span
+              style="float: right"
+              v-if="isAdminRole"
+            >
               <a @click="upsertCategoryList">
                 <i class="el-icon-edit" v-if="isViewCategoryList">
                   {{ $t("m.Edit") }}</i
@@ -829,7 +832,6 @@ export default {
       "isAuthenticated",
       "userInfo",
       "isAdminRole",
-      "isSuperAdmin",
       "isProblemAdmin",
     ]),
   },

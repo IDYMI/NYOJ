@@ -259,7 +259,6 @@ const ojRoutes = [{
         component: ContestRejudgeAdmin,
         meta: {
           title: 'Contest Rejudge',
-          requireSuperAdmin: true
         }
       },
       {
@@ -334,7 +333,7 @@ const ojRoutes = [{
     name: 'ACM Rank',
     component: NEWACMRank,
     meta: {
-      title: 'NEW ACM Rank'
+      title: 'New ACM Rank'
     }
   },
   {
@@ -342,7 +341,7 @@ const ojRoutes = [{
     name: 'OI Rank',
     component: NEWOIRank,
     meta: {
-      title: 'NEW OI Rank'
+      title: 'New OI Rank'
     }
   },
 

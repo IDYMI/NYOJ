@@ -31,17 +31,17 @@ public class DiscussionController {
     @Autowired
     private DiscussionService discussionService;
 
-
     @GetMapping("/get-discussion-list")
     @AnonApi
-    @HOJAccess({HOJAccessEnum.PUBLIC_DISCUSSION})
-    public CommonResult<IPage<Discussion>> getDiscussionList(@RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
-                                                             @RequestParam(value = "currentPage", required = false, defaultValue = "1") Integer currentPage,
-                                                             @RequestParam(value = "cid", required = false) Integer categoryId,
-                                                             @RequestParam(value = "pid", required = false) String pid,
-                                                             @RequestParam(value = "onlyMine", required = false, defaultValue = "false") Boolean onlyMine,
-                                                             @RequestParam(value = "keyword", required = false) String keyword,
-                                                             @RequestParam(value = "admin", defaultValue = "false") Boolean admin) {
+    @HOJAccess({ HOJAccessEnum.PUBLIC_DISCUSSION })
+    public CommonResult<IPage<Discussion>> getDiscussionList(
+            @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
+            @RequestParam(value = "currentPage", required = false, defaultValue = "1") Integer currentPage,
+            @RequestParam(value = "cid", required = false) Integer categoryId,
+            @RequestParam(value = "pid", required = false) String pid,
+            @RequestParam(value = "onlyMine", required = false, defaultValue = "false") Boolean onlyMine,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "admin", defaultValue = "false") Boolean admin) {
 
         return discussionService.getDiscussionList(limit, currentPage, categoryId, pid, onlyMine, keyword, admin);
 
@@ -56,7 +56,7 @@ public class DiscussionController {
     @PostMapping("/discussion")
     @RequiresPermissions("discussion_add")
     @RequiresAuthentication
-    @HOJAccess({HOJAccessEnum.PUBLIC_DISCUSSION})
+    @HOJAccess({ HOJAccessEnum.PUBLIC_DISCUSSION })
     public CommonResult<Void> addDiscussion(@RequestBody Discussion discussion) {
         return discussionService.addDiscussion(discussion);
     }
@@ -64,7 +64,7 @@ public class DiscussionController {
     @PutMapping("/discussion")
     @RequiresPermissions("discussion_edit")
     @RequiresAuthentication
-    @HOJAccess({HOJAccessEnum.PUBLIC_DISCUSSION})
+    @HOJAccess({ HOJAccessEnum.PUBLIC_DISCUSSION })
     public CommonResult<Void> updateDiscussion(@RequestBody Discussion discussion) {
         return discussionService.updateDiscussion(discussion);
     }
@@ -72,7 +72,7 @@ public class DiscussionController {
     @DeleteMapping("/discussion")
     @RequiresPermissions("discussion_del")
     @RequiresAuthentication
-    @HOJAccess({HOJAccessEnum.PUBLIC_DISCUSSION})
+    @HOJAccess({ HOJAccessEnum.PUBLIC_DISCUSSION })
     public CommonResult<Void> removeDiscussion(@RequestParam("did") Integer did) {
         return discussionService.removeDiscussion(did);
     }
@@ -80,7 +80,7 @@ public class DiscussionController {
     @GetMapping("/discussion-like")
     @RequiresAuthentication
     public CommonResult<Void> addDiscussionLike(@RequestParam("did") Integer did,
-                                                @RequestParam("toLike") Boolean toLike) {
+            @RequestParam("toLike") Boolean toLike) {
         return discussionService.addDiscussionLike(did, toLike);
     }
 
@@ -92,11 +92,10 @@ public class DiscussionController {
 
     @PostMapping("/discussion-category")
     @RequiresAuthentication
-    @RequiresRoles(value = {"root", "problem_admin"}, logical = Logical.OR)
+    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     public CommonResult<List<Category>> upsertDiscussionCategory(@RequestBody List<Category> categoryList) {
         return discussionService.upsertDiscussionCategory(categoryList);
     }
-
 
     @PostMapping("/discussion-report")
     @RequiresAuthentication

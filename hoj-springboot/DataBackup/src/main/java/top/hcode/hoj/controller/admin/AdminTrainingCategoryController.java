@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/api/admin/training/category")
+@RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
 public class AdminTrainingCategoryController {
 
     @Resource
@@ -26,21 +27,18 @@ public class AdminTrainingCategoryController {
 
     @PostMapping("")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     public CommonResult<TrainingCategory> addTrainingCategory(@RequestBody TrainingCategory trainingCategory) {
         return adminTrainingCategoryService.addTrainingCategory(trainingCategory);
     }
 
     @PutMapping("")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     public CommonResult<Void> updateTrainingCategory(@RequestBody TrainingCategory trainingCategory) {
         return adminTrainingCategoryService.updateTrainingCategory(trainingCategory);
     }
 
     @DeleteMapping("")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     public CommonResult<Void> deleteTrainingCategory(@RequestParam("cid") Long cid) {
         return adminTrainingCategoryService.deleteTrainingCategory(cid);
     }

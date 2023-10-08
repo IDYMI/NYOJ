@@ -1,6 +1,6 @@
 package top.hcode.hoj.service.admin.contest;
 
-;
+
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import top.hcode.hoj.common.result.CommonResult;
 import top.hcode.hoj.pojo.entity.contest.Contest;

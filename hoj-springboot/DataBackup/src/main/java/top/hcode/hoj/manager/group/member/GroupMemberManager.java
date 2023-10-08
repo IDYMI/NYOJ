@@ -31,14 +31,17 @@ public class GroupMemberManager {
     @Autowired
     private GroupMemberEntityService groupMemberEntityService;
 
-
     @Autowired
     private GroupValidator groupValidator;
 
-    public IPage<GroupMemberVO> getMemberList(Integer limit, Integer currentPage, String keyword, Integer auth, Long gid) throws StatusNotFoundException, StatusForbiddenException {
+    public IPage<GroupMemberVO> getMemberList(Integer limit, Integer currentPage, String keyword, Integer auth,
+            Long gid) throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Group group = groupEntityService.getById(gid);
 
@@ -50,9 +53,12 @@ public class GroupMemberManager {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
-        if (auth == null || auth < 1) auth = 0;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
+        if (auth == null || auth < 1)
+            auth = 0;
 
         if (!StringUtils.isEmpty(keyword)) {
             keyword = keyword.trim();
@@ -61,10 +67,14 @@ public class GroupMemberManager {
         return groupMemberEntityService.getMemberList(limit, currentPage, keyword, auth, gid);
     }
 
-    public IPage<GroupMemberVO> getApplyList(Integer limit, Integer currentPage, String keyword, Integer auth, Long gid) throws StatusNotFoundException, StatusForbiddenException {
+    public IPage<GroupMemberVO> getApplyList(Integer limit, Integer currentPage, String keyword, Integer auth, Long gid)
+            throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Group group = groupEntityService.getById(gid);
 
@@ -76,9 +86,12 @@ public class GroupMemberManager {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
-        if (auth == null || auth < 1) auth = 0;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
+        if (auth == null || auth < 1)
+            auth = 0;
 
         if (!StringUtils.isEmpty(keyword)) {
             keyword = keyword.trim();
@@ -87,10 +100,14 @@ public class GroupMemberManager {
         return groupMemberEntityService.getApplyList(limit, currentPage, keyword, auth, gid);
     }
 
-    public void addMember(Long gid, String code, String reason) throws StatusFailException, StatusNotFoundException, StatusForbiddenException {
+    public void addMember(Long gid, String code, String reason)
+            throws StatusFailException, StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Group group = groupEntityService.getById(gid);
 
@@ -144,10 +161,14 @@ public class GroupMemberManager {
         }
     }
 
-    public void updateMember(GroupMember groupMemberDto) throws StatusFailException, StatusForbiddenException, StatusNotFoundException {
+    public void updateMember(GroupMember groupMemberDto)
+            throws StatusFailException, StatusForbiddenException, StatusNotFoundException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Long gid = groupMemberDto.getGid();
 
@@ -193,16 +214,21 @@ public class GroupMemberManager {
             throw new StatusFailException("更新失败，请重新尝试！");
         } else {
             if (changeGroupMember.getAuth() <= 2) { // 之前是申请中，则之后通过审批就要发消息
-                groupMemberEntityService.addWelcomeNoticeToGroupNewMember(gid, group.getName(), groupMemberDto.getUid());
+                groupMemberEntityService.addWelcomeNoticeToGroupNewMember(gid, group.getName(),
+                        groupMemberDto.getUid());
             }
         }
     }
 
-    public void deleteMember(String uid, Long gid) throws StatusFailException, StatusNotFoundException, StatusForbiddenException {
+    public void deleteMember(String uid, Long gid)
+            throws StatusFailException, StatusNotFoundException, StatusForbiddenException {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Group group = groupEntityService.getById(gid);
 
@@ -229,7 +255,6 @@ public class GroupMemberManager {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
-
         QueryWrapper<GroupMember> changeGroupMemberQueryWrapper = new QueryWrapper<>();
         changeGroupMemberQueryWrapper.eq("gid", gid).eq("uid", uid);
 
@@ -255,7 +280,10 @@ public class GroupMemberManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root") || SecurityUtils.getSubject().hasRole("problem_admin");
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
 
         Group group = groupEntityService.getById(gid);
 

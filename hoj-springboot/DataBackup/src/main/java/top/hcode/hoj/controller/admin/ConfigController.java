@@ -34,13 +34,13 @@ public class ConfigController {
      * @Return CommonResult
      * @Since 2020/12/3
      */
-    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
+    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     @RequestMapping("/get-service-info")
     public CommonResult<JSONObject> getServiceInfo() {
         return configService.getServiceInfo();
     }
 
-    @RequiresRoles(value = { "root", "admin", "problem_admin" }, logical = Logical.OR)
+    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
     @RequestMapping("/get-judge-service-info")
     public CommonResult<List<JSONObject>> getJudgeServiceInfo() {
         return configService.getJudgeServiceInfo();
