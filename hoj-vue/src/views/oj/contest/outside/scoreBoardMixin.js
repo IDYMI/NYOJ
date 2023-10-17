@@ -37,6 +37,7 @@ export default {
       });
     },
     getContestOutsideScoreboard () {
+      this.$store.dispatch('getContestProblems');
       let data = {
         cid: this.$route.params.contestID,
         forceRefresh: this.forceUpdate ? true: false,
@@ -71,7 +72,6 @@ export default {
     },
     ...mapActions(['changeDomTitle']),
     formatTooltip(val) {
-      
       if (this.contest.status == -1) {
         // 还未开始
         return '00:00:00';
@@ -80,9 +80,6 @@ export default {
       } else {
         return time.secondFormat(this.contest.duration);
       }
-    },
-    getProblemCount(num){
-      return num == undefined? 0 : num
     },
     updateConcernedList(uid,isConcerned){
       if(isConcerned){

@@ -43,7 +43,7 @@ const getters = {
      return state.intoAccess||state.submitAccess || state.contest.auth === CONTEST_TYPE.PUBLIC ||getters.isContestAdmin
   },
   contestMenuDisabled: (state, getters) => {
-    // 比赛创建者或者超级管理员或者题目管理可以直接查看
+    // 比赛创建者或者超级管理员可以直接查看
     if (getters.isContestAdmin) return false
      // 未开始不可查看
     if(getters.contestStatus === CONTEST_STATUS.SCHEDULED) return true
@@ -243,9 +243,7 @@ const actions = {
       api.getScoreBoardContestInfo(rootState.route.params.contestID).then((res) => {
         resolve(res)
         let contest = res.data.data.contest;
-        let problemList = res.data.data.problemList;
         commit('changeContest', {contest: contest})
-        commit('changeContestProblems', {contestProblems: problemList})
         commit('now', {now: moment(contest.now)})
       }, err => {
         reject(err)

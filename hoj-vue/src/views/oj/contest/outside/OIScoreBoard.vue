@@ -437,26 +437,14 @@
                 effect="dark"
                 placement="top"
               >
-                <div slot="content">
+              <div slot="content">
                   {{ problem.displayId + '. ' + problem.displayTitle }}
                   <br />
-                  {{
-                    'Accepted: ' +
-                      getProblemCount(problemACCountMap[problem.displayId])
-                  }}
+                  {{ 'Accepted: ' + problem.ac }}
                   <br />
-                  {{
-                    'Rejected: ' +
-                      getProblemCount(problemErrorCountMap[problem.displayId])
-                  }}
+                  {{ 'Rejected: ' + (problem.total - problem.ac) }}
                 </div>
-                <span>({{
-                    getProblemCount(problemACCountMap[problem.displayId])
-                  }}/{{
-                    getProblemCount(problemACCountMap[problem.displayId]) +
-                      getProblemCount(problemErrorCountMap[problem.displayId])
-                  }})
-                </span>
+              <span>({{ problem.ac }}/{{ problem.total }}) </span>
               </el-tooltip>
             </span>
           </template>
@@ -604,12 +592,12 @@ export default {
 };
 </script>
 <style scoped>
-/* @media screen and (min-width: 1050px) {
+/*@media screen and (min-width: 1050px) {
   .scoreboard-body {
     margin-left: -2%;
     margin-right: -2%;
   }
-} */
+}*/
 .contest-title {
   text-align: center;
 }
