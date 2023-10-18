@@ -20,7 +20,7 @@ import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.validator.GroupValidator;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 19:40
  * @Description:
  */

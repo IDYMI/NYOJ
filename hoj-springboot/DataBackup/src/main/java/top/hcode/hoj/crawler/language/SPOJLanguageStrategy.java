@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/27 21:21
  * @Description:
  */
@@ -105,7 +105,6 @@ public class SPOJLanguageStrategy extends LanguageStrategy {
         languageMap.put("6", "Whitespace (wspace 0.3)");
     }
 
-
     @Override
     public String getLanguageNameById(String id) {
         return languageMap.get(id);
@@ -116,7 +115,8 @@ public class SPOJLanguageStrategy extends LanguageStrategy {
 
         List<String> langNameList = langIdList.stream().map(this::getLanguageNameById).collect(Collectors.toList());
 
-        return allLanguageList.stream().filter(language -> langNameList.contains(language.getName())).collect(Collectors.toList());
+        return allLanguageList.stream().filter(language -> langNameList.contains(language.getName()))
+                .collect(Collectors.toList());
     }
 
     @Override

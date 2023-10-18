@@ -10,7 +10,7 @@ import top.hcode.hoj.pojo.vo.ReplyVO;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/5 22:07
  * @Description:
  */
@@ -20,5 +20,5 @@ import java.util.List;
 public interface ReplyMapper extends BaseMapper<Reply> {
 
     public List<ReplyVO> getAllReplyByCommentId(@Param("commentId") Integer commentId,
-                                                @Param("myAndAdminUidList") List<String> myAndAdminUidList);
+            @Param("myAndAdminUidList") List<String> myAndAdminUidList);
 }

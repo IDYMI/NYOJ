@@ -6,7 +6,7 @@ import top.hcode.hoj.pojo.entity.common.Announcement;
 import top.hcode.hoj.pojo.vo.AnnouncementVO;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 22:11
  * @Description:
  */

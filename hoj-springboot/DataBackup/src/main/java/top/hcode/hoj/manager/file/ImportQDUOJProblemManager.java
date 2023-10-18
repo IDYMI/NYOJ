@@ -35,7 +35,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 14:47
  * @Description:
  */
@@ -84,7 +84,6 @@ public class ImportQDUOJProblemManager {
         // 删除zip文件
         FileUtil.del(filePath);
 
-
         // 检查文件是否存在
         File testCaseFileList = new File(fileDir);
         File[] files = testCaseFileList.listFiles();
@@ -92,7 +91,6 @@ public class ImportQDUOJProblemManager {
             FileUtil.del(fileDir);
             throw new StatusFailException("压缩包里文件不能为空！");
         }
-
 
         HashMap<String, File> problemInfo = new HashMap<>();
         for (File tmp : files) {
@@ -227,7 +225,8 @@ public class ImportQDUOJProblemManager {
         QDOJProblemDTO qdojProblemDto = new QDOJProblemDTO();
         List<String> tags = (List<String>) problemJson.get("tags");
         qdojProblemDto.setTags(tags.stream().map(UnicodeUtil::toString).collect(Collectors.toList()));
-        qdojProblemDto.setLanguages(Arrays.asList("C", "C With O2", "C++", "C++ With O2", "Java", "Python3", "Python2", "Golang", "C#"));
+        qdojProblemDto.setLanguages(
+                Arrays.asList("C", "C With O2", "C++", "C++ With O2", "Java", "Python3", "Python2", "Golang", "C#"));
         Object spj = problemJson.getObj("spj");
         boolean isSpj = !JSONUtil.isNull(spj);
         qdojProblemDto.setIsSpj(isSpj);

@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 16:28
  * @Description:
  */
@@ -68,7 +68,6 @@ public class CommonManager {
         captchaVo.setCaptchaKey(key);
         return captchaVo;
     }
-
 
     public List<TrainingCategory> getTrainingCategory() {
         QueryWrapper<TrainingCategory> trainingCategoryQueryWrapper = new QueryWrapper<>();
@@ -146,7 +145,6 @@ public class CommonManager {
         return problemTagVOList;
     }
 
-
     public Collection<Tag> getProblemTags(Long pid) {
         Map<String, Object> map = new HashMap<>();
         map.put("pid", pid);
@@ -160,7 +158,6 @@ public class CommonManager {
         return tagEntityService.listByIds(tidList);
     }
 
-
     public List<Language> getLanguages(Long pid, Boolean all) {
 
         String oj = "ME";
@@ -171,7 +168,7 @@ public class CommonManager {
             }
         }
 
-        if (oj.equals("GYM")) {  // GYM用与CF一样的编程语言列表
+        if (oj.equals("GYM")) { // GYM用与CF一样的编程语言列表
             oj = "CF";
         }
 
@@ -180,7 +177,7 @@ public class CommonManager {
         queryWrapper.eq(all != null && !all, "oj", oj);
         List<Language> languageList = languageEntityService.list(queryWrapper);
         return languageList.stream().sorted(Comparator.comparing(Language::getSeq, Comparator.reverseOrder())
-                        .thenComparing(Language::getId))
+                .thenComparing(Language::getId))
                 .collect(Collectors.toList());
     }
 
@@ -189,12 +186,12 @@ public class CommonManager {
         queryWrapper.eq("pid", pid).select("lid");
         List<Long> idList = problemLanguageEntityService.list(queryWrapper)
                 .stream().map(ProblemLanguage::getLid).collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(idList)){
+        if (CollectionUtils.isEmpty(idList)) {
             return Collections.emptyList();
         }
         Collection<Language> languages = languageEntityService.listByIds(idList);
         return languages.stream().sorted(Comparator.comparing(Language::getSeq, Comparator.reverseOrder())
-                        .thenComparing(Language::getId))
+                .thenComparing(Language::getId))
                 .collect(Collectors.toList());
     }
 

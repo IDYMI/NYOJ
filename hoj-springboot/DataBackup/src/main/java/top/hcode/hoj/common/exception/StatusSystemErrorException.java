@@ -1,7 +1,7 @@
 package top.hcode.hoj.common.exception;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 14:33
  * @Description:
  */
@@ -22,7 +22,8 @@ public class StatusSystemErrorException extends Exception {
         super(cause);
     }
 
-    public StatusSystemErrorException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public StatusSystemErrorException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

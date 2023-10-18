@@ -15,7 +15,7 @@ import top.hcode.hoj.service.oj.ContestScoreboardService;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 22:18
  * @Description:
  */
@@ -40,7 +40,7 @@ public class ContestScoreboardServiceImpl implements ContestScoreboardService {
     public CommonResult<IPage> getContestOutsideScoreboard(ContestRankDTO contestRankDto) {
         try {
             return CommonResult.successResponse(contestScoreboardManager.getContestOutsideScoreboard(contestRankDto));
-        }  catch (StatusForbiddenException e) {
+        } catch (StatusForbiddenException e) {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());

@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/28 23:20
  * @Description:
  */
@@ -33,23 +33,26 @@ public class AtCoderJudge extends RemoteJudgeStrategy {
 
     public static Map<String, String> headers = MapUtil
             .builder(new HashMap<String, String>())
-            .put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
+            .put("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
             .map();
 
-    private static final Map<String, Constants.Judge> statusMap = new HashMap<String, Constants.Judge>() {{
-        put("CE", Constants.Judge.STATUS_COMPILE_ERROR);
-        put("RE", Constants.Judge.STATUS_RUNTIME_ERROR);
-        put("QLE", Constants.Judge.STATUS_RUNTIME_ERROR);
-        put("OLE", Constants.Judge.STATUS_RUNTIME_ERROR);
-        put("IE", Constants.Judge.STATUS_RUNTIME_ERROR);
-        put("WA", Constants.Judge.STATUS_WRONG_ANSWER);
-        put("AC", Constants.Judge.STATUS_ACCEPTED);
-        put("TLE", Constants.Judge.STATUS_TIME_LIMIT_EXCEEDED);
-        put("MLE", Constants.Judge.STATUS_MEMORY_LIMIT_EXCEEDED);
-        put("WJ", Constants.Judge.STATUS_PENDING);
-        put("WR", Constants.Judge.STATUS_PENDING); // Waiting Rejudge
-        put("Judging", Constants.Judge.STATUS_JUDGING); // Waiting Rejudge
-    }};
+    private static final Map<String, Constants.Judge> statusMap = new HashMap<String, Constants.Judge>() {
+        {
+            put("CE", Constants.Judge.STATUS_COMPILE_ERROR);
+            put("RE", Constants.Judge.STATUS_RUNTIME_ERROR);
+            put("QLE", Constants.Judge.STATUS_RUNTIME_ERROR);
+            put("OLE", Constants.Judge.STATUS_RUNTIME_ERROR);
+            put("IE", Constants.Judge.STATUS_RUNTIME_ERROR);
+            put("WA", Constants.Judge.STATUS_WRONG_ANSWER);
+            put("AC", Constants.Judge.STATUS_ACCEPTED);
+            put("TLE", Constants.Judge.STATUS_TIME_LIMIT_EXCEEDED);
+            put("MLE", Constants.Judge.STATUS_MEMORY_LIMIT_EXCEEDED);
+            put("WJ", Constants.Judge.STATUS_PENDING);
+            put("WR", Constants.Judge.STATUS_PENDING); // Waiting Rejudge
+            put("Judging", Constants.Judge.STATUS_JUDGING); // Waiting Rejudge
+        }
+    };
 
     private static final Map<String, String> languageMap = new HashMap<>();
 
@@ -60,7 +63,8 @@ public class AtCoderJudge extends RemoteJudgeStrategy {
         if (remoteJudgeDTO.getLoginStatus() != 302) {
             log.error("Login to AtCoder failed, the response status:{},username:{},password:{}",
                     remoteJudgeDTO.getLoginStatus(), remoteJudgeDTO.getUsername(), remoteJudgeDTO.getPassword());
-            throw new RuntimeException("[AtCoder] Failed to Login, the response status:" + remoteJudgeDTO.getLoginStatus());
+            throw new RuntimeException(
+                    "[AtCoder] Failed to Login, the response status:" + remoteJudgeDTO.getLoginStatus());
         }
 
         HttpResponse response = trySubmit();
@@ -79,7 +83,9 @@ public class AtCoderJudge extends RemoteJudgeStrategy {
         }
 
         if (response.getStatus() != 302) {
-            log.error("Submit to AtCoder failed, the response status:{}, It may be that the frequency of submission operation is too fast. Please try later", response.getStatus());
+            log.error(
+                    "Submit to AtCoder failed, the response status:{}, It may be that the frequency of submission operation is too fast. Please try later",
+                    response.getStatus());
             throw new RuntimeException("[AtCoder] Failed to Submit, the response status:" + response.getStatus());
         }
 
@@ -90,7 +96,8 @@ public class AtCoderJudge extends RemoteJudgeStrategy {
             e.printStackTrace();
         }
 
-        Long maxRunId = getMaxRunId(remoteJudgeDTO.getUsername(), remoteJudgeDTO.getContestId(), remoteJudgeDTO.getCompleteProblemId());
+        Long maxRunId = getMaxRunId(remoteJudgeDTO.getUsername(), remoteJudgeDTO.getContestId(),
+                remoteJudgeDTO.getCompleteProblemId());
 
         remoteJudgeDTO.setCookies(remoteJudgeDTO.getCookies())
                 .setSubmitId(maxRunId);
@@ -120,9 +127,12 @@ public class AtCoderJudge extends RemoteJudgeStrategy {
 
         RemoteJudgeDTO remoteJudgeDTO = getRemoteJudgeDTO();
 
-        String url = HOST + String.format(SUBMISSION_RESULT_URL, remoteJudgeDTO.getContestId(), remoteJudgeDTO.getSubmitId());
+        String url = HOST
+                + String.format(SUBMISSION_RESULT_URL, remoteJudgeDTO.getContestId(), remoteJudgeDTO.getSubmitId());
         String body = HttpUtil.get(url);
-        String status = ReUtil.get("<th>Status</th>[\\s\\S]*?<td id=\"judge-status\" class=\"[\\s\\S]*?\"><span [\\s\\S]*?>([\\s\\S]*?)</span></td>", body, 1);
+        String status = ReUtil.get(
+                "<th>Status</th>[\\s\\S]*?<td id=\"judge-status\" class=\"[\\s\\S]*?\"><span [\\s\\S]*?>([\\s\\S]*?)</span></td>",
+                body, 1);
         Constants.Judge judgeStatus = statusMap.get(status);
         if (judgeStatus == Constants.Judge.STATUS_JUDGING || judgeStatus == Constants.Judge.STATUS_PENDING) {
             return RemoteJudgeRes.builder()
@@ -174,7 +184,8 @@ public class AtCoderJudge extends RemoteJudgeStrategy {
         // 清除当前线程的cookies缓存
         HttpRequest.getCookieManager().getCookieStore().removeAll();
         RemoteJudgeDTO remoteJudgeDTO = getRemoteJudgeDTO();
-        String url = HOST + String.format("/contests/%s/submissions?f.Task=%s&f.User=%s", contestId, problemId, username);
+        String url = HOST
+                + String.format("/contests/%s/submissions?f.Task=%s&f.User=%s", contestId, problemId, username);
         HttpRequest httpRequest = HttpUtil.createGet(url);
         httpRequest.cookie(remoteJudgeDTO.getCookies());
         httpRequest.addHeaders(headers);

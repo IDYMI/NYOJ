@@ -11,7 +11,7 @@ import top.hcode.hoj.service.oj.ContestScoreboardService;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 22:11
  * @Description: 处理比赛外榜的相关请求
  */
@@ -32,7 +32,8 @@ public class ContestScoreboardController {
      * @Since 2021/12/8
      */
     @GetMapping("/get-contest-outsize-info")
-    public CommonResult<ContestOutsideInfoVO> getContestOutsideInfo(@RequestParam(value = "cid", required = true) Long cid) {
+    public CommonResult<ContestOutsideInfoVO> getContestOutsideInfo(
+            @RequestParam(value = "cid", required = true) Long cid) {
         return contestScoreboardService.getContestOutsideInfo(cid);
     }
 

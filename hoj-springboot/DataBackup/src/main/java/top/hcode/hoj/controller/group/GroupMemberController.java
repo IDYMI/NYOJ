@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -23,28 +23,30 @@ public class GroupMemberController {
     private GroupMemberService groupMemberService;
 
     @GetMapping("/get-member-list")
-    public CommonResult<IPage<GroupMemberVO>> getMemberList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                            @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                            @RequestParam(value = "keyword", required = false) String keyword,
-                                                            @RequestParam(value = "auth", required = false) Integer auth,
-                                                            @RequestParam(value = "gid", required = true) Long gid) {
+    public CommonResult<IPage<GroupMemberVO>> getMemberList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "auth", required = false) Integer auth,
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupMemberService.getMemberList(limit, currentPage, keyword, auth, gid);
     }
 
     @GetMapping("/get-apply-list")
-    public CommonResult<IPage<GroupMemberVO>> getApplyList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                           @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                           @RequestParam(value = "keyword", required = false) String keyword,
-                                                           @RequestParam(value = "auth", required = false) Integer auth,
-                                                           @RequestParam(value = "gid", required = true) Long gid) {
+    public CommonResult<IPage<GroupMemberVO>> getApplyList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "auth", required = false) Integer auth,
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupMemberService.getApplyList(limit, currentPage, keyword, auth, gid);
     }
 
     @PostMapping("/member")
     @RequiresAuthentication
     public CommonResult<Void> addGroupMember(@RequestParam(value = "gid", required = true) Long gid,
-                                             @RequestParam(value = "code", required = false) String code,
-                                             @RequestParam(value = "reason", required = false) String reason) {
+            @RequestParam(value = "code", required = false) String code,
+            @RequestParam(value = "reason", required = false) String reason) {
         return groupMemberService.addMember(gid, code, reason);
     }
 
@@ -57,7 +59,7 @@ public class GroupMemberController {
     @DeleteMapping("/member")
     @RequiresAuthentication
     public CommonResult<Void> deleteMember(@RequestParam(value = "uid", required = true) String uid,
-                                           @RequestParam(value = "gid", required = true) Long gid) {
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupMemberService.deleteMember(uid, gid);
     }
 
@@ -66,6 +68,5 @@ public class GroupMemberController {
     public CommonResult<Void> exitGroup(@RequestParam(value = "gid", required = true) Long gid) {
         return groupMemberService.exitGroup(gid);
     }
-
 
 }

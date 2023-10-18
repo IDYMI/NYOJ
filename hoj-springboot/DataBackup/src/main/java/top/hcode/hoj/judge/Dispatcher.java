@@ -1,6 +1,5 @@
 package top.hcode.hoj.judge;
 
-
 import cn.hutool.core.lang.UUID;
 import cn.hutool.json.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -29,7 +28,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/4/15 17:29
  * @Description: 分发调用判题机执行任务
  */
@@ -84,6 +83,7 @@ public class Dispatcher {
 
     /**
      * 普通评测
+     * 
      * @param data
      * @param path
      */
@@ -104,9 +104,11 @@ public class Dispatcher {
             if (judgeServer != null) { // 获取到判题机资源
                 CommonResult result = null;
                 try {
-                    result = restTemplate.postForObject("http://" + judgeServer.getUrl() + path, data, CommonResult.class);
+                    result = restTemplate.postForObject("http://" + judgeServer.getUrl() + path, data,
+                            CommonResult.class);
                 } catch (Exception e) {
-                    log.error("[Self Judge] Request the judge server [" + judgeServer.getUrl() + "] error -------------->", e);
+                    log.error("[Self Judge] Request the judge server [" + judgeServer.getUrl()
+                            + "] error -------------->", e);
                 } finally {
                     checkResult(result, submitId);
                     releaseJudgeServer(judgeServer.getId());
@@ -120,6 +122,7 @@ public class Dispatcher {
 
     /**
      * 远程评测
+     * 
      * @param data
      * @param path
      */
@@ -160,9 +163,11 @@ public class Dispatcher {
                 data.setJudgeServerPort(judgeServer.getPort());
                 CommonResult result = null;
                 try {
-                    result = restTemplate.postForObject("http://" + judgeServer.getUrl() + path, data, CommonResult.class);
+                    result = restTemplate.postForObject("http://" + judgeServer.getUrl() + path, data,
+                            CommonResult.class);
                 } catch (Exception e) {
-                    log.error("[Remote Judge] Request the judge server [" + judgeServer.getUrl() + "] error-------------->", e);
+                    log.error("[Remote Judge] Request the judge server [" + judgeServer.getUrl()
+                            + "] error-------------->", e);
                     changeRemoteJudgeStatus(finalOj, data.getUsername(), judgeServer);
                 } finally {
                     checkResult(result, submitId);
@@ -180,6 +185,7 @@ public class Dispatcher {
 
     /**
      * 在线调试
+     * 
      * @param testJudgeReq
      * @param path
      */
@@ -215,7 +221,9 @@ public class Dispatcher {
                         }
                     }
                 } catch (Exception e) {
-                    log.error("[Test Judge] Request the judge server [" + judgeServer.getUrl() + "] error-------------->", e);
+                    log.error(
+                            "[Test Judge] Request the judge server [" + judgeServer.getUrl() + "] error-------------->",
+                            e);
                     TestJudgeRes testJudgeRes = TestJudgeRes.builder()
                             .status(Constants.Judge.STATUS_SYSTEM_ERROR.getStatus())
                             .time(0L)
@@ -233,9 +241,9 @@ public class Dispatcher {
         futureTaskMap.put(taskKey, scheduledFuture);
     }
 
-
     /**
      * 编译特殊判题程序或交互程序
+     * 
      * @param data
      * @param path
      */
@@ -246,7 +254,8 @@ public class Dispatcher {
             try {
                 result = restTemplate.postForObject("http://" + judgeServer.getUrl() + path, data, CommonResult.class);
             } catch (Exception e) {
-                log.error("[Compile] Request the judge server [" + judgeServer.getUrl() + "] error-------------->", e.getMessage());
+                log.error("[Compile] Request the judge server [" + judgeServer.getUrl() + "] error-------------->",
+                        e.getMessage());
             } finally {
                 // 无论成功与否，都要将对应的当前判题机当前判题数减1
                 releaseJudgeServer(judgeServer.getId());
@@ -254,7 +263,6 @@ public class Dispatcher {
         }
         return result;
     }
-
 
     private void checkResult(CommonResult<Void> result, Long submitId) {
 
@@ -327,9 +335,9 @@ public class Dispatcher {
         } while (retryable);
     }
 
-
     /**
      * 将远程评测的账号变为可用
+     * 
      * @param oj
      * @param username
      * @param judgeServer
@@ -348,6 +356,7 @@ public class Dispatcher {
 
     /**
      * 将远程评测的账号变为可用
+     * 
      * @param remoteJudge
      * @param username
      */
@@ -369,8 +378,8 @@ public class Dispatcher {
         }
     }
 
-
-    private void tryAgainUpdateAccount(UpdateWrapper<RemoteJudgeAccount> updateWrapper, String remoteJudge, String username) {
+    private void tryAgainUpdateAccount(UpdateWrapper<RemoteJudgeAccount> updateWrapper, String remoteJudge,
+            String username) {
         boolean retryable;
         int attemptNumber = 0;
         do {
@@ -381,7 +390,8 @@ public class Dispatcher {
                 attemptNumber++;
                 retryable = attemptNumber < 8;
                 if (attemptNumber == 8) {
-                    log.error("[Remote Judge] Failed to change the account to be available----------->{}", "oj:" + remoteJudge + ",username:" + username);
+                    log.error("[Remote Judge] Failed to change the account to be available----------->{}",
+                            "oj:" + remoteJudge + ",username:" + username);
                     break;
                 }
                 try {
@@ -423,7 +433,8 @@ public class Dispatcher {
                 attemptNumber++;
                 retryable = attemptNumber < 8;
                 if (attemptNumber == 8) {
-                    log.error("[Remote Judge] Change Codeforces Judge Server Status to `true` Failed! =======>{}", "ip:" + ip + ",port:" + port);
+                    log.error("[Remote Judge] Change Codeforces Judge Server Status to `true` Failed! =======>{}",
+                            "ip:" + ip + ",port:" + port);
                     break;
                 }
                 try {

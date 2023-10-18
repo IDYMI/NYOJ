@@ -7,10 +7,11 @@ import top.hcode.hoj.pojo.entity.problem.CodeTemplate;
 import top.hcode.hoj.dao.problem.CodeTemplateEntityService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/4/24 10:27
  * @Description:
  */
 @Service
-public class CodeTemplateEntityServiceImpl extends ServiceImpl<CodeTemplateMapper, CodeTemplate> implements CodeTemplateEntityService {
+public class CodeTemplateEntityServiceImpl extends ServiceImpl<CodeTemplateMapper, CodeTemplate>
+        implements CodeTemplateEntityService {
 }

@@ -7,11 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/10/1 20:59
  * @Description:
  */
-@ApiModel(value="用户未读消息统计", description="")
+@ApiModel(value = "用户未读消息统计", description = "")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

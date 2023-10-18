@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -25,14 +25,14 @@ public class GroupEntityServiceImpl extends ServiceImpl<GroupMapper, Group> impl
 
     @Override
     public IPage<GroupVO> getGroupList(int limit,
-                                       int currentPage,
-                                       String keyword,
-                                       Integer auth,
-                                       String uid,
-                                       Boolean onlyMine,
-                                       Boolean isRoot) {
+            int currentPage,
+            String keyword,
+            Integer auth,
+            String uid,
+            Boolean onlyMine,
+            Boolean isRoot) {
         IPage<GroupVO> iPage = new Page<>(currentPage, limit);
-        List<GroupVO> groupList = groupMapper.getGroupList(iPage, keyword, auth, uid, onlyMine,isRoot);
+        List<GroupVO> groupList = groupMapper.getGroupList(iPage, keyword, auth, uid, onlyMine, isRoot);
 
         return iPage.setRecords(groupList);
     }

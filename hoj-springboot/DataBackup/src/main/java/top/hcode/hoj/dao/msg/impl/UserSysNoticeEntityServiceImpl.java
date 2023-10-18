@@ -10,13 +10,15 @@ import top.hcode.hoj.pojo.vo.SysMsgVO;
 import top.hcode.hoj.dao.msg.UserSysNoticeEntityService;
 
 import javax.annotation.Resource;
+
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/10/1 20:35
  * @Description:
  */
 @Service
-public class UserSysNoticeEntityServiceImpl extends ServiceImpl<UserSysNoticeMapper, UserSysNotice> implements UserSysNoticeEntityService {
+public class UserSysNoticeEntityServiceImpl extends ServiceImpl<UserSysNoticeMapper, UserSysNotice>
+        implements UserSysNoticeEntityService {
 
     @Resource
     private UserSysNoticeMapper userSysNoticeMapper;

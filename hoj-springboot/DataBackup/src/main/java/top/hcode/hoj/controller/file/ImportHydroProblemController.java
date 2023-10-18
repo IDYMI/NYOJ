@@ -14,7 +14,7 @@ import top.hcode.hoj.service.file.ImportHydroProblemService;
 import org.apache.shiro.authz.annotation.Logical;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/10/16 00:19
  * @Description:
  */

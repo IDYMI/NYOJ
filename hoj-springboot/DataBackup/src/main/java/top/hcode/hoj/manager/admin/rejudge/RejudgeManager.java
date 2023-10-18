@@ -26,7 +26,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 16:21
  * @Description:
  */
@@ -60,7 +60,6 @@ public class RejudgeManager {
             Constants.Judge.STATUS_TIME_LIMIT_EXCEEDED.getStatus(),
             Constants.Judge.STATUS_MEMORY_LIMIT_EXCEEDED.getStatus(),
             Constants.Judge.STATUS_RUNTIME_ERROR.getStatus());
-
 
     public Judge rejudge(Long submitId) throws StatusFailException {
         Judge judge = judgeEntityService.getById(submitId);
@@ -118,7 +117,8 @@ public class RejudgeManager {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean checkAndUpdateJudge(Boolean isContestSubmission, Judge judge, Long submitId) throws StatusFailException {
+    public boolean checkAndUpdateJudge(Boolean isContestSubmission, Judge judge, Long submitId)
+            throws StatusFailException {
         // 如果是非比赛题目
         boolean resetContestRecordResult = true;
         if (!isContestSubmission) {
@@ -162,7 +162,8 @@ public class RejudgeManager {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void checkAndUpdateJudgeBatch(List<Judge> rejudgeList, HashMap<Long, Integer> idMapStatus) throws StatusFailException {
+    public void checkAndUpdateJudgeBatch(List<Judge> rejudgeList, HashMap<Long, Integer> idMapStatus)
+            throws StatusFailException {
         List<Long> submitIdList = new LinkedList<>();
         // 全部设置默认值
         for (Judge judge : rejudgeList) {
@@ -268,8 +269,7 @@ public class RejudgeManager {
                 userAcproblemEntityService.saveOrUpdate(new UserAcproblem()
                         .setPid(judge.getPid())
                         .setUid(judge.getUid())
-                        .setSubmitId(submitId)
-                );
+                        .setSubmitId(submitId));
             }
         }
 
@@ -310,14 +310,15 @@ public class RejudgeManager {
         if (judge.getStatus().equals(Constants.Judge.STATUS_JUDGING.getStatus())
                 || judge.getStatus().equals(Constants.Judge.STATUS_COMPILING.getStatus())
                 || (judge.getStatus().equals(Constants.Judge.STATUS_PENDING.getStatus())
-                && !StringUtils.isEmpty(judge.getJudger()))) {
+                        && !StringUtils.isEmpty(judge.getJudger()))) {
             throw new StatusFailException("错误：该提交正在评测中，无法取消，请稍后再尝试！");
         }
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         UpdateWrapper<Judge> judgeUpdateWrapper = new UpdateWrapper<>();
         judgeUpdateWrapper
-                .setSql("status=-4,score=null,oi_rank_score=null,is_manual=true,judger='" + userRolesVo.getUsername() + "'")
+                .setSql("status=-4,score=null,oi_rank_score=null,is_manual=true,judger='" + userRolesVo.getUsername()
+                        + "'")
                 .eq("submit_id", judge.getSubmitId());
         boolean isUpdateOK = judgeEntityService.update(judgeUpdateWrapper);
         if (!isUpdateOK) {

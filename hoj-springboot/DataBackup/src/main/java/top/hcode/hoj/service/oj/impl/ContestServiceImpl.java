@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/12 15:06
  * @Description:
  */
@@ -31,7 +31,8 @@ public class ContestServiceImpl implements ContestService {
     private ContestManager contestManager;
 
     @Override
-    public CommonResult<IPage<ContestVO>> getContestList(Integer limit, Integer currentPage, Integer status, Integer type, String keyword) {
+    public CommonResult<IPage<ContestVO>> getContestList(Integer limit, Integer currentPage, Integer status,
+            Integer type, String keyword) {
         return CommonResult.successResponse(contestManager.getContestList(limit, currentPage, status, type, keyword));
     }
 
@@ -79,9 +80,11 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public CommonResult<ProblemInfoVO> getContestProblemDetails(Long cid, String displayId, Boolean isContainsContestEndJudge) {
+    public CommonResult<ProblemInfoVO> getContestProblemDetails(Long cid, String displayId,
+            Boolean isContainsContestEndJudge) {
         try {
-            return CommonResult.successResponse(contestManager.getContestProblemDetails(cid, displayId, isContainsContestEndJudge));
+            return CommonResult.successResponse(
+                    contestManager.getContestProblemDetails(cid, displayId, isContainsContestEndJudge));
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         } catch (StatusForbiddenException e) {
@@ -93,15 +96,15 @@ public class ContestServiceImpl implements ContestService {
 
     @Override
     public CommonResult<IPage<JudgeVO>> getContestSubmissionList(Integer limit,
-                                                                 Integer currentPage,
-                                                                 Boolean onlyMine,
-                                                                 String displayId,
-                                                                 Integer searchStatus,
-                                                                 String searchUsername,
-                                                                 Long searchCid,
-                                                                 Boolean beforeContestSubmit,
-                                                                 Boolean completeProblemID,
-                                                                 Boolean isContainsContestEndJudge) {
+            Integer currentPage,
+            Boolean onlyMine,
+            String displayId,
+            Integer searchStatus,
+            String searchUsername,
+            Long searchCid,
+            Boolean beforeContestSubmit,
+            Boolean completeProblemID,
+            Boolean isContainsContestEndJudge) {
         try {
             return CommonResult.successResponse(contestManager.getContestSubmissionList(limit,
                     currentPage,
@@ -143,9 +146,11 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public CommonResult<List<Announcement>> getContestUserNotReadAnnouncement(UserReadContestAnnouncementDTO userReadContestAnnouncementDto) {
+    public CommonResult<List<Announcement>> getContestUserNotReadAnnouncement(
+            UserReadContestAnnouncementDTO userReadContestAnnouncementDto) {
 
-        return CommonResult.successResponse(contestManager.getContestUserNotReadAnnouncement(userReadContestAnnouncementDto));
+        return CommonResult
+                .successResponse(contestManager.getContestUserNotReadAnnouncement(userReadContestAnnouncementDto));
     }
 
     @Override

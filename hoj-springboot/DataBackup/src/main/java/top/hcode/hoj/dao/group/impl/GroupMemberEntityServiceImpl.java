@@ -19,12 +19,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
 @Service
-public class GroupMemberEntityServiceImpl extends ServiceImpl<GroupMemberMapper, GroupMember> implements GroupMemberEntityService {
+public class GroupMemberEntityServiceImpl extends ServiceImpl<GroupMemberMapper, GroupMember>
+        implements GroupMemberEntityService {
 
     @Autowired
     private GroupMemberMapper groupMemberMapper;
@@ -83,7 +84,6 @@ public class GroupMemberEntityServiceImpl extends ServiceImpl<GroupMemberMapper,
                 "Please go to [" + groupName + "](/group/" + gid + "/member) check and approve!";
     }
 
-
     @Async
     @Override
     public void addWelcomeNoticeToGroupNewMember(Long gid, String groupName, String memberUid) {
@@ -100,7 +100,6 @@ public class GroupMemberEntityServiceImpl extends ServiceImpl<GroupMemberMapper,
                 "]【[" + groupName + "](/group/" + gid + ")】!";
     }
 
-
     @Async
     @Override
     public void addRemoveNoticeToGroupMember(Long gid, String groupName, String operator, String memberUid) {
@@ -114,13 +113,14 @@ public class GroupMemberEntityServiceImpl extends ServiceImpl<GroupMemberMapper,
                 "团队的管理员【[" + operator + "](/user-home?username=" + operator + ")】移除了团队！" +
                 "\n\n" +
                 "Hello, You have been removed from the group [" + gid +
-                "]【[" + groupName + "](/group/" + gid + ")】 by the group admin 【[" + operator + "](/user-home?username=" + operator + ")】!";
+                "]【[" + groupName + "](/group/" + gid + ")】 by the group admin 【[" + operator + "](/user-home?username="
+                + operator + ")】!";
     }
-
 
     @Async
     @Override
-    public void addDissolutionNoticeToGroupMember(Long gid, String groupName, List<String> groupMemberUidList, String operator) {
+    public void addDissolutionNoticeToGroupMember(Long gid, String groupName, List<String> groupMemberUidList,
+            String operator) {
         String title = "团队解散通知(Group Dissolution Notice)";
         String content = getDissolutionGroupContent(gid, groupName, operator);
         adminNoticeManager.addSingleNoticeToBatchUser(null, groupMemberUidList, title, content, "Mine");

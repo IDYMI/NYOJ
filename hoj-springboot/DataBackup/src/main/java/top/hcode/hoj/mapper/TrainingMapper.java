@@ -11,7 +11,7 @@ import top.hcode.hoj.pojo.vo.TrainingVO;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/11/19 22:03
  * @Description:
  */
@@ -19,13 +19,13 @@ import java.util.List;
 @Repository
 public interface TrainingMapper extends BaseMapper<Training> {
 
-    List<TrainingVO> getTrainingList(IPage page,
-            @Param("categoryId") Long categoryId,
-            @Param("auth") String auth,
-            @Param("keyword") String keyword);
+        List<TrainingVO> getTrainingList(IPage page,
+                        @Param("categoryId") Long categoryId,
+                        @Param("auth") String auth,
+                        @Param("keyword") String keyword);
 
-    List<Training> getAdminTrainingList(IPage page,
-            @Param("categoryId") Long categoryId,
-            @Param("auth") String auth,
-            @Param("keyword") String keyword);
+        List<Training> getAdminTrainingList(IPage page,
+                        @Param("categoryId") Long categoryId,
+                        @Param("auth") String auth,
+                        @Param("keyword") String keyword);
 }

@@ -15,7 +15,7 @@ import top.hcode.hoj.service.admin.rejudge.RejudgeService;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/1/3 14:09
  * @Description: 超管或者题目管理重判提交
  */

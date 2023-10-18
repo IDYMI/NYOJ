@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 21:34
  * @Description:
  */
@@ -25,7 +25,8 @@ public class AdminUserServiceImpl implements AdminUserService {
     private AdminUserManager adminUserManager;
 
     @Override
-    public CommonResult<IPage<UserRolesVO>> getUserList(Integer limit, Integer currentPage, Boolean onlyAdmin, String keyword) {
+    public CommonResult<IPage<UserRolesVO>> getUserList(Integer limit, Integer currentPage, Boolean onlyAdmin,
+            String keyword) {
         return CommonResult.successResponse(adminUserManager.getUserList(limit, currentPage, onlyAdmin, keyword));
     }
 

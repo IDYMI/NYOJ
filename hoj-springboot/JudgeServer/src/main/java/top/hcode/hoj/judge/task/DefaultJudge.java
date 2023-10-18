@@ -17,7 +17,7 @@ import top.hcode.hoj.util.Constants;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/2 21:18
  * @Description: 普通评测
  */
@@ -28,7 +28,7 @@ public class DefaultJudge extends AbstractJudge {
         LanguageConfig runConfig = judgeGlobalDTO.getRunConfig();
         // 调用安全沙箱使用测试点对程序进行测试
         return SandboxRun.testCase(
-                parseRunCommand(runConfig.getRunCommand(),  null, null, null),
+                parseRunCommand(runConfig.getRunCommand(), null, null, null),
                 runConfig.getRunEnvs(),
                 judgeDTO.getTestCaseInputPath(),
                 judgeDTO.getTestCaseInputContent(),
@@ -60,22 +60,25 @@ public class DefaultJudge extends AbstractJudge {
                 result.set("status", Constants.Judge.STATUS_MEMORY_LIMIT_EXCEEDED.getStatus());
             } else {
                 // 与原测试数据输出的md5进行对比 AC或者是WA
-                JSONObject testcaseInfo = (JSONObject) ((JSONArray) judgeGlobalDTO.getTestCaseInfo().get("testCases")).get(judgeDTO.getTestCaseNum() - 1);
-                result.set("status", compareOutput(sandBoxRes.getStdout(), judgeGlobalDTO.getRemoveEOLBlank(), testcaseInfo));
+                JSONObject testcaseInfo = (JSONObject) ((JSONArray) judgeGlobalDTO.getTestCaseInfo().get("testCases"))
+                        .get(judgeDTO.getTestCaseNum() - 1);
+                result.set("status",
+                        compareOutput(sandBoxRes.getStdout(), judgeGlobalDTO.getRemoveEOLBlank(), testcaseInfo));
             }
         } else if (sandBoxRes.getStatus().equals(Constants.Judge.STATUS_TIME_LIMIT_EXCEEDED.getStatus())) {
             result.set("status", Constants.Judge.STATUS_TIME_LIMIT_EXCEEDED.getStatus());
         } else if (sandBoxRes.getExitCode() != 0) {
             result.set("status", Constants.Judge.STATUS_RUNTIME_ERROR.getStatus());
             if (sandBoxRes.getExitCode() < 32) {
-                errMsg.append(String.format("The program return exit status code: %s (%s)\n", sandBoxRes.getExitCode(), SandboxRun.signals.get(sandBoxRes.getExitCode())));
+                errMsg.append(String.format("The program return exit status code: %s (%s)\n", sandBoxRes.getExitCode(),
+                        SandboxRun.signals.get(sandBoxRes.getExitCode())));
             } else {
                 errMsg.append(String.format("The program return exit status code: %s\n", sandBoxRes.getExitCode()));
             }
         } else {
             result.set("status", sandBoxRes.getStatus());
             // 输出超限的特别提示
-            if ("Output Limit Exceeded".equals(sandBoxRes.getOriginalStatus())){
+            if ("Output Limit Exceeded".equals(sandBoxRes.getOriginalStatus())) {
                 errMsg.append("The output character length of the program exceeds the limit");
             }
         }
@@ -85,11 +88,12 @@ public class DefaultJudge extends AbstractJudge {
         // ns->ms
         result.set("time", sandBoxRes.getTime());
 
-//        if (!StringUtils.isEmpty(sandBoxRes.getStdout())) {
-//            // 对于当前测试样例，用户程序的输出对应生成的文件
-//            FileWriter stdWriter = new FileWriter(judgeGlobalDTO.getRunDir() + "/" + judgeDTO.getTestCaseId() + ".out");
-//            stdWriter.write(sandBoxRes.getStdout());
-//        }
+        // if (!StringUtils.isEmpty(sandBoxRes.getStdout())) {
+        // // 对于当前测试样例，用户程序的输出对应生成的文件
+        // FileWriter stdWriter = new FileWriter(judgeGlobalDTO.getRunDir() + "/" +
+        // judgeDTO.getTestCaseId() + ".out");
+        // stdWriter.write(sandBoxRes.getStdout());
+        // }
 
         // 记录该测试点的错误信息
         if (!StringUtils.isEmpty(errMsg.toString())) {
@@ -105,7 +109,8 @@ public class DefaultJudge extends AbstractJudge {
     }
 
     @Override
-    public JSONObject checkMultipleResult(SandBoxRes userSandBoxRes, SandBoxRes interactiveSandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) {
+    public JSONObject checkMultipleResult(SandBoxRes userSandBoxRes, SandBoxRes interactiveSandBoxRes,
+            JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) {
         return null;
     }
 
@@ -117,7 +122,7 @@ public class DefaultJudge extends AbstractJudge {
             String userOutputMd5 = DigestUtils.md5DigestAsHex(rtrim(userOutput).getBytes(StandardCharsets.UTF_8));
             if (userOutputMd5.equals(testcaseInfo.getStr("EOFStrippedOutputMd5"))) {
                 return Constants.Judge.STATUS_ACCEPTED.getStatus();
-            }else{
+            } else {
                 return Constants.Judge.STATUS_WRONG_ANSWER.getStatus();
             }
         } else { // 不选择默认去掉文末空格 与原数据进行对比
@@ -127,13 +132,13 @@ public class DefaultJudge extends AbstractJudge {
             }
         }
         // 如果不AC,进行PE判断，否则为WA
-        String userOutputMd5 = DigestUtils.md5DigestAsHex(userOutput.replaceAll("\\s+", "").getBytes(StandardCharsets.UTF_8));
+        String userOutputMd5 = DigestUtils
+                .md5DigestAsHex(userOutput.replaceAll("\\s+", "").getBytes(StandardCharsets.UTF_8));
         if (userOutputMd5.equals(testcaseInfo.getStr("allStrippedOutputMd5"))) {
             return Constants.Judge.STATUS_PRESENTATION_ERROR.getStatus();
         } else {
             return Constants.Judge.STATUS_WRONG_ANSWER.getStatus();
         }
     }
-
 
 }

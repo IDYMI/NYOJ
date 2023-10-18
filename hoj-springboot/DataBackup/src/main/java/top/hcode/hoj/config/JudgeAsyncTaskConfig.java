@@ -9,7 +9,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/24 16:54
  * @Description: 专用于判题的异步线程池
  */
@@ -19,15 +19,15 @@ public class JudgeAsyncTaskConfig {
     @Bean
     public Executor judgeTaskAsyncPool() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        //核心线程池大小
+        // 核心线程池大小
         executor.setCorePoolSize(2);
-        //最大线程数
+        // 最大线程数
         executor.setMaxPoolSize(10);
-        //队列容量
+        // 队列容量
         executor.setQueueCapacity(500);
-        //活跃时间
+        // 活跃时间
         executor.setKeepAliveSeconds(3);
-        //线程名字前缀
+        // 线程名字前缀
         executor.setThreadNamePrefix("JudgeExecutor-");
 
         // setRejectedExecutionHandler：当pool已经达到max size的时候，如何处理新任务

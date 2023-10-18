@@ -17,13 +17,13 @@ import top.hcode.hoj.service.admin.discussion.AdminDiscussionService;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/15 20:35
  * @Description:
  */
 @RestController
 @RequestMapping("/api/admin")
-@RequiresRoles(value = { "root", "problem_admin", "admin"}, logical = Logical.OR)
+@RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
 public class AdminDiscussionController {
 
     @Autowired

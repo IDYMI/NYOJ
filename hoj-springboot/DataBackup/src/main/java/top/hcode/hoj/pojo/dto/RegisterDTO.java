@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/10/24 11:15
  * @Description: 注册数据实体类
  */

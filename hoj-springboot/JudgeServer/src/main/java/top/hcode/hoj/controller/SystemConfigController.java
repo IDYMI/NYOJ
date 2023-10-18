@@ -8,7 +8,7 @@ import top.hcode.hoj.service.SystemConfigService;
 import java.util.HashMap;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/3 20:12
  * @Description:
  */
@@ -19,7 +19,7 @@ public class SystemConfigController {
     private SystemConfigService systemConfigService;
 
     @RequestMapping("/get-sys-config")
-    public HashMap<String,Object> getSystemConfig(){
+    public HashMap<String, Object> getSystemConfig() {
         return systemConfigService.getSystemConfig();
     }
 }

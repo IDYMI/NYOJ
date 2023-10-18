@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/7/19 22:59
  * @Description: 存在redis session的当前登录用户信息
  */
@@ -37,7 +37,7 @@ public class AccountProfile implements Serializable {
     @ApiModelProperty(value = "0可用，1不可用")
     private int status;
 
-    public String getId() { //shiro登录用户实体默认主键获取方法要为getId
+    public String getId() { // shiro登录用户实体默认主键获取方法要为getId
         return uid;
     }
 }

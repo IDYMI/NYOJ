@@ -7,7 +7,7 @@ import top.hcode.hoj.pojo.entity.problem.Problem;
 import java.util.*;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/11/24 19:16
  * @Description:
  */

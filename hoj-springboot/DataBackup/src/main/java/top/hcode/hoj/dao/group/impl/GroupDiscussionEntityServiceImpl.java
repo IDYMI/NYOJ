@@ -7,10 +7,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
 @Service
-public class GroupDiscussionEntityServiceImpl extends ServiceImpl<GroupDiscussionMapper, Discussion> implements GroupDiscussionEntityService {
+public class GroupDiscussionEntityServiceImpl extends ServiceImpl<GroupDiscussionMapper, Discussion>
+        implements GroupDiscussionEntityService {
 }

@@ -17,7 +17,7 @@ import top.hcode.hoj.util.Constants;
 import java.io.File;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/2 23:24
  * @Description: 交互评测
  */
@@ -53,19 +53,22 @@ public class InteractiveJudge extends AbstractJudge {
                 judgeDTO.getTestCaseOutputPath(),
                 testCaseOutputFileName,
                 userOutputFileName,
-                parseRunCommand(interactiveRunConfig.getRunCommand(), testCaseInputFileName, userOutputFileName, testCaseOutputFileName),
+                parseRunCommand(interactiveRunConfig.getRunCommand(), testCaseInputFileName, userOutputFileName,
+                        testCaseOutputFileName),
                 interactiveRunConfig.getRunEnvs(),
                 interactiveExeSrc,
                 interactiveRunConfig.getExeName());
     }
 
     @Override
-    public JSONObject checkResult(SandBoxRes sandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) throws SystemError {
+    public JSONObject checkResult(SandBoxRes sandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO)
+            throws SystemError {
         return null;
     }
 
     @Override
-    public JSONObject checkMultipleResult(SandBoxRes userSandBoxRes, SandBoxRes interactiveSandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) {
+    public JSONObject checkMultipleResult(SandBoxRes userSandBoxRes, SandBoxRes interactiveSandBoxRes,
+            JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) {
 
         JSONObject result = new JSONObject();
 
@@ -79,11 +82,13 @@ public class InteractiveJudge extends AbstractJudge {
             result.set("status", Constants.Judge.STATUS_TIME_LIMIT_EXCEEDED.getStatus());
         } else if (userSandBoxRes.getMemory() > judgeGlobalDTO.getMaxMemory() * 1024) { // 如果运行超过题目限制空间，直接MLE
             result.set("status", Constants.Judge.STATUS_MEMORY_LIMIT_EXCEEDED.getStatus());
-        } else if ((userExitCode != 0 && userExitCode != 13) || (userExitCode == 13 && interactiveSandBoxRes.getExitCode() == 0)) {
+        } else if ((userExitCode != 0 && userExitCode != 13)
+                || (userExitCode == 13 && interactiveSandBoxRes.getExitCode() == 0)) {
             // Broken Pipe
             result.set("status", Constants.Judge.STATUS_RUNTIME_ERROR.getStatus());
             if (userExitCode < 32) {
-                errMsg.append(String.format("The program return exit status code: %s (%s)\n", userExitCode, SandboxRun.signals.get(userExitCode)));
+                errMsg.append(String.format("The program return exit status code: %s (%s)\n", userExitCode,
+                        SandboxRun.signals.get(userExitCode)));
             } else {
                 errMsg.append(String.format("The program return exit status code: %s\n", userExitCode));
             }
@@ -109,7 +114,8 @@ public class InteractiveJudge extends AbstractJudge {
                 errMsg.append(spjErrMsg).append(" ");
             }
             if (interactiveSandBoxRes.getExitCode() != 0 && !StringUtils.isEmpty(interactiveSandBoxRes.getStderr())) {
-                errMsg.append(String.format("Interactive program exited with code: %s", interactiveSandBoxRes.getExitCode()));
+                errMsg.append(
+                        String.format("Interactive program exited with code: %s", interactiveSandBoxRes.getExitCode()));
             }
         }
         // kb
@@ -125,7 +131,6 @@ public class InteractiveJudge extends AbstractJudge {
 
         return result;
     }
-
 
     private JSONObject checkInteractiveRes(SandBoxRes interactiveSandBoxRes) {
 

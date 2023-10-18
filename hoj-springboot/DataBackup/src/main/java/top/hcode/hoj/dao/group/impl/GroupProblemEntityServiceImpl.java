@@ -13,12 +13,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
 @Service
-public class GroupProblemEntityServiceImpl extends ServiceImpl<GroupProblemMapper, Problem> implements GroupProblemEntityService {
+public class GroupProblemEntityServiceImpl extends ServiceImpl<GroupProblemMapper, Problem>
+        implements GroupProblemEntityService {
 
     @Autowired
     private GroupProblemMapper groupProblemMapper;

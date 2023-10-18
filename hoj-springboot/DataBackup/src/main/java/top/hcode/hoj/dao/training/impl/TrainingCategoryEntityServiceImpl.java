@@ -9,12 +9,13 @@ import top.hcode.hoj.dao.training.TrainingCategoryEntityService;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/11/20 12:15
  * @Description:
  */
 @Service
-public class TrainingCategoryEntityServiceImpl extends ServiceImpl<TrainingCategoryMapper, TrainingCategory> implements TrainingCategoryEntityService {
+public class TrainingCategoryEntityServiceImpl extends ServiceImpl<TrainingCategoryMapper, TrainingCategory>
+        implements TrainingCategoryEntityService {
 
     @Resource
     private TrainingCategoryMapper trainingCategoryMapper;

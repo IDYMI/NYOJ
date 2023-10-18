@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -19,9 +19,9 @@ import java.util.List;
 @Repository
 public interface GroupMapper extends BaseMapper<Group> {
     List<GroupVO> getGroupList(IPage iPage,
-                               @Param("keyword") String keyword,
-                               @Param("auth") Integer auth,
-                               @Param("uid") String uid,
-                               @Param("onlyMine") Boolean onlyMine,
-                               @Param("isRoot") Boolean isRoot);
+            @Param("keyword") String keyword,
+            @Param("auth") Integer auth,
+            @Param("uid") String uid,
+            @Param("onlyMine") Boolean onlyMine,
+            @Param("isRoot") Boolean isRoot);
 }

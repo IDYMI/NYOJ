@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 11:37
  * @Description:
  */
@@ -40,8 +40,10 @@ public class NoticeManager {
     public IPage<SysMsgVO> getSysNotice(Integer limit, Integer currentPage) {
 
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 5;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 5;
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
@@ -50,12 +52,13 @@ public class NoticeManager {
         return sysNotice;
     }
 
-
     public IPage<SysMsgVO> getMineNotice(Integer limit, Integer currentPage) {
 
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 5;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 5;
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
@@ -63,7 +66,6 @@ public class NoticeManager {
         applicationContext.getBean(NoticeManager.class).updateSysOrMineMsgRead(mineNotice);
         return mineNotice;
     }
-
 
     @Async
     public void updateSysOrMineMsgRead(IPage<SysMsgVO> userMsgList) {

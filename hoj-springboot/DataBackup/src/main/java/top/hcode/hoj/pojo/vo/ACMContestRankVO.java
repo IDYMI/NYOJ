@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 import java.util.HashMap;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/1/18 14:55
  * @Description:
  */
@@ -61,5 +61,5 @@ public class ACMContestRankVO {
     private Integer ac;
 
     @ApiModelProperty(value = "有提交的题的提交详情")
-    private HashMap<String,HashMap<String,Object>> submissionInfo;
+    private HashMap<String, HashMap<String, Object>> submissionInfo;
 }

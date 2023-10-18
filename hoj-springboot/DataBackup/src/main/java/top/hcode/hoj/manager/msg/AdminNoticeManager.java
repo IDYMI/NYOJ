@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 21:19
  * @Description:
  */
@@ -33,12 +33,13 @@ public class AdminNoticeManager {
     @Resource
     private UserSysNoticeEntityService userSysNoticeEntityService;
 
-
     public IPage<AdminSysNoticeVO> getSysNotice(Integer limit, Integer currentPage, String type) {
 
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 5;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 5;
 
         return adminSysNoticeEntityService.getSysNotice(limit, currentPage, type);
     }
@@ -113,10 +114,10 @@ public class AdminNoticeManager {
     @Transactional(rollbackFor = Exception.class)
     @Async
     public void addSingleNoticeToBatchUser(String adminId,
-                                           List<String> recipientIdList,
-                                           String title,
-                                           String content,
-                                           String type) {
+            List<String> recipientIdList,
+            String title,
+            String content,
+            String type) {
         if (CollectionUtils.isEmpty(recipientIdList)) {
             return;
         }

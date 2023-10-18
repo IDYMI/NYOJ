@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/12/10 17:07
  * @Description:
  */
@@ -20,7 +20,7 @@ public class ContestRankDTO {
      * @param containsEnd   是否展示比赛结束后的提交结果
      * @param time          比赛的当前时间
      */
-    private Long cid;   
+    private Long cid;
 
     private Integer limit;
 

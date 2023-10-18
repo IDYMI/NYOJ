@@ -5,12 +5,12 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/11/21 14:31
  * @Description:
  */
 @Data
-@ApiModel(value="用户在训练的记录", description="")
+@ApiModel(value = "用户在训练的记录", description = "")
 public class TrainingRecordVO {
 
     private Long id;

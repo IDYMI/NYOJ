@@ -13,9 +13,8 @@ import top.hcode.hoj.service.msg.UserMessageService;
 
 import javax.annotation.Resource;
 
-
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/10/1 20:40
  * @Description: 获取用户 评论我的、回复我的、收到的赞的消息
  */
@@ -38,7 +37,6 @@ public class UserMessageController {
         return userMessageService.getUnreadMsgCount();
     }
 
-
     /**
      * @param type Discuss Reply Like Sys Mine
      * @MethodName cleanMsg
@@ -49,10 +47,9 @@ public class UserMessageController {
     @RequestMapping(value = "/clean", method = RequestMethod.DELETE)
     @RequiresAuthentication
     public CommonResult<Void> cleanMsg(@RequestParam("type") String type,
-                                       @RequestParam(value = "id", required = false) Long id) {
+            @RequestParam(value = "id", required = false) Long id) {
         return userMessageService.cleanMsg(type, id);
     }
-
 
     /**
      * @param limit
@@ -65,7 +62,7 @@ public class UserMessageController {
     @RequestMapping(value = "/comment", method = RequestMethod.GET)
     @RequiresAuthentication
     public CommonResult<IPage<UserMsgVO>> getCommentMsg(@RequestParam(value = "limit", required = false) Integer limit,
-                                                        @RequestParam(value = "currentPage", required = false) Integer currentPage) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage) {
         return userMessageService.getCommentMsg(limit, currentPage);
     }
 
@@ -80,10 +77,9 @@ public class UserMessageController {
     @RequestMapping(value = "/reply", method = RequestMethod.GET)
     @RequiresAuthentication
     public CommonResult<IPage<UserMsgVO>> getReplyMsg(@RequestParam(value = "limit", required = false) Integer limit,
-                                                      @RequestParam(value = "currentPage", required = false) Integer currentPage) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage) {
         return userMessageService.getReplyMsg(limit, currentPage);
     }
-
 
     /**
      * @param limit
@@ -96,7 +92,7 @@ public class UserMessageController {
     @RequestMapping(value = "/like", method = RequestMethod.GET)
     @RequiresAuthentication
     public CommonResult<IPage<UserMsgVO>> getLikeMsg(@RequestParam(value = "limit", required = false) Integer limit,
-                                                     @RequestParam(value = "currentPage", required = false) Integer currentPage) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage) {
         return userMessageService.getLikeMsg(limit, currentPage);
     }
 

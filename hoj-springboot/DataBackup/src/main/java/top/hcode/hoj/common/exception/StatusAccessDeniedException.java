@@ -1,7 +1,7 @@
 package top.hcode.hoj.common.exception;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 10:30
  * @Description:
  */
@@ -22,7 +22,8 @@ public class StatusAccessDeniedException extends Exception {
         super(cause);
     }
 
-    public StatusAccessDeniedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public StatusAccessDeniedException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/9/19 21:00
  * @Description:
  */
@@ -21,7 +21,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="ContestPrint", description="")
+@ApiModel(value = "ContestPrint", description = "")
 public class ContestPrint {
     private static final long serialVersionUID = 1L;
 

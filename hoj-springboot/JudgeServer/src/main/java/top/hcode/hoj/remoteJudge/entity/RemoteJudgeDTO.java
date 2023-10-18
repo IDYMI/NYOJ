@@ -13,7 +13,7 @@ import java.net.HttpCookie;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/29 00:18
  * @Description:
  */
@@ -48,7 +48,7 @@ public class RemoteJudgeDTO implements Serializable {
     public RemoteJudgeDTO setCookies(List<HttpCookie> cookies) {
         if (cookies != null
                 && (Constants.RemoteJudge.CF_JUDGE.getName().equals(this.oj)
-                || Constants.RemoteJudge.GYM_JUDGE.getName().equals(this.oj))) {
+                        || Constants.RemoteJudge.GYM_JUDGE.getName().equals(this.oj))) {
             HttpCookie rcpc = new HttpCookie("RCPC", CodeForcesUtils.getRCPC());
             rcpc.setVersion(0);
             cookies.add(rcpc);
@@ -63,7 +63,7 @@ public class RemoteJudgeDTO implements Serializable {
     private String csrfToken;
 
     /**
-     * 远程评测的完整题目id  like CF:110C AtCoder: abc111_a
+     * 远程评测的完整题目id like CF:110C AtCoder: abc111_a
      */
     private String completeProblemId;
 

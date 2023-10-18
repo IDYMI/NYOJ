@@ -7,7 +7,7 @@ import top.hcode.hoj.pojo.entity.problem.Category;
 import top.hcode.hoj.dao.problem.CategoryEntityService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/4 22:30
  * @Description:
  */

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -23,16 +23,18 @@ public class GroupAnnouncementController {
     private GroupAnnouncementService groupAnnouncementService;
 
     @GetMapping("/get-announcement-list")
-    public CommonResult<IPage<AnnouncementVO>> getAnnouncementList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                                   @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                                   @RequestParam(value = "gid", required = true) Long gid) {
+    public CommonResult<IPage<AnnouncementVO>> getAnnouncementList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupAnnouncementService.getAnnouncementList(limit, currentPage, gid);
     }
 
     @GetMapping("/get-admin-announcement-list")
-    public CommonResult<IPage<AnnouncementVO>> getAdminAnnouncementList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                                        @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                                        @RequestParam(value = "gid", required = true) Long gid) {
+    public CommonResult<IPage<AnnouncementVO>> getAdminAnnouncementList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupAnnouncementService.getAdminAnnouncementList(limit, currentPage, gid);
     }
 

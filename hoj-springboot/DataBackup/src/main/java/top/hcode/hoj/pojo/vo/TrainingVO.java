@@ -8,11 +8,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/11/20 10:51
  * @Description:
  */
-@ApiModel(value="训练题单查询对象TrainingVO", description="")
+@ApiModel(value = "训练题单查询对象TrainingVO", description = "")
 @Data
 public class TrainingVO implements Serializable {
 
@@ -51,6 +51,5 @@ public class TrainingVO implements Serializable {
 
     @ApiModelProperty(value = "训练更新时间")
     private Date gmtModified;
-
 
 }

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 15:04
  * @Description:
  */
@@ -18,7 +18,6 @@ public class UserFileServiceImpl implements UserFileService {
 
     @Resource
     private UserFileManager userFileManager;
-
 
     @Override
     public void generateUserExcel(String key, HttpServletResponse response) throws IOException {

@@ -36,7 +36,7 @@ import top.hcode.hoj.utils.Constants;
 import java.util.*;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 21:50
  * @Description: 动态修改网站配置，获取后台服务状态及判题服务器的状态
  */

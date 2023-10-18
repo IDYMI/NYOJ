@@ -32,7 +32,7 @@ import top.hcode.hoj.validator.TrainingValidator;
 import java.util.Objects;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */

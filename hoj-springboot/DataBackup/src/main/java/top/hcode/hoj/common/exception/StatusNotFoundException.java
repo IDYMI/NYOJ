@@ -1,11 +1,11 @@
 package top.hcode.hoj.common.exception;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 10:30
  * @Description:
  */
-public class StatusNotFoundException extends Exception{
+public class StatusNotFoundException extends Exception {
 
     public StatusNotFoundException() {
     }
@@ -22,7 +22,8 @@ public class StatusNotFoundException extends Exception{
         super(cause);
     }
 
-    public StatusNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public StatusNotFoundException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

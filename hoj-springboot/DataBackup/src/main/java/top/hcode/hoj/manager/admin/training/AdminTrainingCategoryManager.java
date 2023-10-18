@@ -12,7 +12,7 @@ import top.hcode.hoj.shiro.AccountProfile;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 19:29
  * @Description:
  */
@@ -28,7 +28,8 @@ public class AdminTrainingCategoryManager {
         QueryWrapper<TrainingCategory> trainingCategoryQueryWrapper = new QueryWrapper<>();
         trainingCategoryQueryWrapper.eq(trainingCategory.getGid() != null, "gid", trainingCategory.getGid())
                 .eq("name", trainingCategory.getName());
-        TrainingCategory existedTrainingCategory = trainingCategoryEntityService.getOne(trainingCategoryQueryWrapper, false);
+        TrainingCategory existedTrainingCategory = trainingCategoryEntityService.getOne(trainingCategoryQueryWrapper,
+                false);
 
         if (existedTrainingCategory != null) {
             throw new StatusFailException("该分类名称已存在！请勿重复添加！");
@@ -58,6 +59,5 @@ public class AdminTrainingCategoryManager {
         log.info("[{}],[{}],categoryId:[{}],operatorUid:[{}],operatorUsername:[{}]",
                 "Admin_Training", "Delete_Category", cid, userRolesVo.getUid(), userRolesVo.getUsername());
     }
-
 
 }

@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/7/19 22:57
  * @Description:
  */
@@ -50,11 +50,11 @@ public class AccountRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         AccountProfile user = (AccountProfile) principals.getPrimaryPrincipal();
-        //角色权限列表
+        // 角色权限列表
         List<String> permissionsNameList = new LinkedList<>();
-        //用户角色列表
+        // 用户角色列表
         List<String> roleNameList = new LinkedList<>();
-        //获取该用户角色所有的权限
+        // 获取该用户角色所有的权限
         List<Role> roles = userRoleEntityService.getRolesByUid(user.getUid());
         for (Role role : roles) {
             roleNameList.add(role.getRole());
@@ -65,7 +65,7 @@ public class AccountRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 
         authorizationInfo.addRoles(roleNameList);
-        //添加权限
+        // 添加权限
         authorizationInfo.addStringPermissions(permissionsNameList);
         return authorizationInfo;
     }

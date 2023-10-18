@@ -15,7 +15,7 @@ import top.hcode.hoj.service.oj.ProblemService;
 import java.util.*;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/10/27 13:24
  * @Description: 问题数据控制类，处理题目列表请求，题目内容请求。
  */

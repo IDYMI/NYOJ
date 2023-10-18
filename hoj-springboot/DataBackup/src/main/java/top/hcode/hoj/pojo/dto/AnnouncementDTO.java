@@ -6,7 +6,7 @@ import top.hcode.hoj.pojo.entity.common.Announcement;
 import javax.validation.constraints.NotBlank;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/21 22:55
  * @Description:
  */

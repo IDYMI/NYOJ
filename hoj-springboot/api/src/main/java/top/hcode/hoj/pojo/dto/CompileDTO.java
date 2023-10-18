@@ -5,9 +5,8 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.HashMap;
 
-
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/2/6 14:42
  * @Description:
  */
@@ -39,5 +38,5 @@ public class CompileDTO implements Serializable {
     /**
      * 编译所需的额外文件，key:文件名,value:文件内容
      */
-    private HashMap<String,String> extraFiles;
+    private HashMap<String, String> extraFiles;
 }

@@ -4,7 +4,7 @@ import top.hcode.hoj.common.result.CommonResult;
 import top.hcode.hoj.pojo.entity.training.TrainingCategory;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 19:38
  * @Description:
  */

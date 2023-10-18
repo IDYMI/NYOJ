@@ -21,7 +21,7 @@ import top.hcode.hoj.utils.RedisUtils;
 import java.util.Objects;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/2/5 16:43
  * @Description:
  */
@@ -50,7 +50,6 @@ public class JudgeReceiver extends AbstractReceiver {
                 Constants.Queue.GENERAL_JUDGE_WAITING.getName(),
                 Constants.Queue.TEST_JUDGE_WAITING.getName());
     }
-
 
     @Override
     public String getTaskByRedis(String queue) {

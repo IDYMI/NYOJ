@@ -20,12 +20,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
 @Service
-public class GroupTrainingEntityServiceImpl extends ServiceImpl<GroupTrainingMapper, Training> implements GroupTrainingEntityService {
+public class GroupTrainingEntityServiceImpl extends ServiceImpl<GroupTrainingMapper, Training>
+        implements GroupTrainingEntityService {
 
     @Autowired
     private GroupTrainingMapper groupTrainingMapper;
@@ -45,7 +46,8 @@ public class GroupTrainingEntityServiceImpl extends ServiceImpl<GroupTrainingMap
             AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
             List<Long> tidList = trainingList.stream().map(TrainingVO::getId).collect(Collectors.toList());
-            List<TrainingProblem> trainingProblemList = trainingProblemEntityService.getGroupTrainingListAcceptedCountByUid(tidList, gid, userRolesVo.getUid());
+            List<TrainingProblem> trainingProblemList = trainingProblemEntityService
+                    .getGroupTrainingListAcceptedCountByUid(tidList, gid, userRolesVo.getUid());
             HashMap<Long, Integer> tidMapCount = new HashMap<>(trainingList.size());
             for (TrainingProblem trainingProblem : trainingProblemList) {
                 int count = tidMapCount.getOrDefault(trainingProblem.getTid(), 0);

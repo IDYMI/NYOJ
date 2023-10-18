@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Objects;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/21 17:57
  * @Description:
  */
@@ -111,7 +111,8 @@ public class DruidConfig {
                 mysqlName, mysqlHost, mysqlPort, mysqlUsername, mysqlUserPassword);
 
         DruidDataSource datasource = new DruidDataSource();
-        String url = "jdbc:mysql://" + mysqlHost + ":" + mysqlPort + "/" + mysqlName + "?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true&rewriteBatchedStatements=true";
+        String url = "jdbc:mysql://" + mysqlHost + ":" + mysqlPort + "/" + mysqlName
+                + "?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true&rewriteBatchedStatements=true";
         datasource.setUrl(url);
         datasource.setUsername(mysqlUsername);
         datasource.setPassword(mysqlUserPassword);

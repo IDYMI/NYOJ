@@ -13,12 +13,13 @@ import top.hcode.hoj.dao.msg.AdminSysNoticeEntityService;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/10/1 20:34
  * @Description:
  */
 @Service
-public class AdminSysNoticeEntityServiceImpl extends ServiceImpl<AdminSysNoticeMapper, AdminSysNotice> implements AdminSysNoticeEntityService {
+public class AdminSysNoticeEntityServiceImpl extends ServiceImpl<AdminSysNoticeMapper, AdminSysNotice>
+        implements AdminSysNoticeEntityService {
 
     @Resource
     private AdminSysNoticeMapper adminSysNoticeMapper;

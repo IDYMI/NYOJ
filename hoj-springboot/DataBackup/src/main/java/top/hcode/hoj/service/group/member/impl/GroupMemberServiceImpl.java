@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -25,9 +25,11 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     private GroupMemberManager groupMemberManager;
 
     @Override
-    public CommonResult<IPage<GroupMemberVO>> getMemberList(Integer limit, Integer currentPage, String keyword, Integer auth, Long gid) {
+    public CommonResult<IPage<GroupMemberVO>> getMemberList(Integer limit, Integer currentPage, String keyword,
+            Integer auth, Long gid) {
         try {
-            return CommonResult.successResponse(groupMemberManager.getMemberList(limit, currentPage, keyword, auth, gid));
+            return CommonResult
+                    .successResponse(groupMemberManager.getMemberList(limit, currentPage, keyword, auth, gid));
         } catch (StatusForbiddenException e) {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         } catch (StatusNotFoundException e) {
@@ -36,9 +38,11 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     }
 
     @Override
-    public CommonResult<IPage<GroupMemberVO>> getApplyList(Integer limit, Integer currentPage, String keyword, Integer auth, Long gid) {
+    public CommonResult<IPage<GroupMemberVO>> getApplyList(Integer limit, Integer currentPage, String keyword,
+            Integer auth, Long gid) {
         try {
-            return CommonResult.successResponse(groupMemberManager.getApplyList(limit, currentPage, keyword, auth, gid));
+            return CommonResult
+                    .successResponse(groupMemberManager.getApplyList(limit, currentPage, keyword, auth, gid));
         } catch (StatusForbiddenException e) {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         } catch (StatusNotFoundException e) {
@@ -74,7 +78,6 @@ public class GroupMemberServiceImpl implements GroupMemberService {
         }
     }
 
-
     @Override
     public CommonResult<Void> deleteMember(String uid, Long gid) {
         try {
@@ -88,7 +91,6 @@ public class GroupMemberServiceImpl implements GroupMemberService {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.FAIL);
         }
     }
-
 
     @Override
     public CommonResult<Void> exitGroup(Long gid) {

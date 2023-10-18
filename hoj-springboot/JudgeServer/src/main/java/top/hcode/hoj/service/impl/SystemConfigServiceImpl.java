@@ -1,6 +1,5 @@
 package top.hcode.hoj.service.impl;
 
-
 import cn.hutool.system.oshi.OshiUtil;
 import org.springframework.stereotype.Service;
 import top.hcode.hoj.service.SystemConfigService;
@@ -8,7 +7,7 @@ import top.hcode.hoj.service.SystemConfigService;
 import java.util.HashMap;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/3 20:15
  * @Description:
  */

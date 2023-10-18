@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.HashMap;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 16:12
  * @Description:
  */
@@ -15,5 +15,5 @@ public class CommentListVO {
 
     private IPage<CommentVO> commentList;
 
-    private HashMap<Integer, Boolean>  commentLikeMap;
+    private HashMap<Integer, Boolean> commentLikeMap;
 }

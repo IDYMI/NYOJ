@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Properties;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 22:01
  * @Description:
  */
@@ -104,7 +104,7 @@ public class EmailManager {
             context.setVariable("CODE", code);
             context.setVariable("EXPIRE_TIME", expireTime.toString());
 
-            //利用模板引擎加载html文件进行渲染并生成对应的字符串
+            // 利用模板引擎加载html文件进行渲染并生成对应的字符串
             String emailContent = templateEngine.process("emailTemplate_registerCode", context);
 
             // 设置邮件标题
@@ -120,7 +120,6 @@ public class EmailManager {
             log.error("用户注册的邮件任务发生异常------------>{}", e.getMessage());
         }
     }
-
 
     /**
      * @param username 需要重置密码的用户名
@@ -158,7 +157,7 @@ public class EmailManager {
             context.setVariable("EXPIRE_TIME", expireTime.toString());
             context.setVariable("USERNAME", username);
 
-            //利用模板引擎加载html文件进行渲染并生成对应的字符串
+            // 利用模板引擎加载html文件进行渲染并生成对应的字符串
             String emailContent = templateEngine.process("emailTemplate_resetPassword", context);
 
             mimeMessageHelper.setSubject(UnicodeUtil.toString(webConfig.getShortName()) + "的重置密码邮件");
@@ -173,7 +172,6 @@ public class EmailManager {
             log.error("用户重置密码的邮件任务发生异常------------>{}", e.getMessage());
         }
     }
-
 
     /**
      * @param email 用户邮箱
@@ -196,7 +194,7 @@ public class EmailManager {
             context.setVariable(Constants.Email.OJ_SHORT_NAME.name(), UnicodeUtil.toString(webConfig.getShortName()));
             context.setVariable(Constants.Email.OJ_URL.name(), webConfig.getBaseUrl());
             context.setVariable(Constants.Email.EMAIL_BACKGROUND_IMG.name(), webConfig.getBaseUrl());
-            //利用模板引擎加载html文件进行渲染并生成对应的字符串
+            // 利用模板引擎加载html文件进行渲染并生成对应的字符串
             String emailContent = templateEngine.process("emailTemplate_testEmail", context);
 
             mimeMessageHelper.setSubject(UnicodeUtil.toString(webConfig.getShortName()) + "的测试邮件");
@@ -211,7 +209,6 @@ public class EmailManager {
             log.error("超级管理员重置邮件系统配置的测试邮箱可用性的任务发生异常------------>{}", e.getMessage());
         }
     }
-
 
     /**
      * @param email 用户邮箱
@@ -238,7 +235,7 @@ public class EmailManager {
             context.setVariable("USERNAME", username);
             context.setVariable("EXPIRE_TIME", expireTime.toString());
 
-            //利用模板引擎加载html文件进行渲染并生成对应的字符串
+            // 利用模板引擎加载html文件进行渲染并生成对应的字符串
             String emailContent = templateEngine.process("emailTemplate_changeEmailCode", context);
 
             // 设置邮件标题

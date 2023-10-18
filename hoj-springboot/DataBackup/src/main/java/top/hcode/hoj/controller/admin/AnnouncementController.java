@@ -13,7 +13,7 @@ import top.hcode.hoj.service.admin.announcement.AdminAnnouncementService;
 import org.apache.shiro.authz.annotation.Logical;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/10 19:53
  * @Description:
  */

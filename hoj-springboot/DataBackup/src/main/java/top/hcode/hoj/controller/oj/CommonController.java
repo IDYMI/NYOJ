@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.oj;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/12 23:25
  * @Description: 通用的请求控制处理类
  */
@@ -31,13 +30,11 @@ public class CommonController {
     @Autowired
     private CommonService commonService;
 
-
     @GetMapping("/captcha")
     @AnonApi
     public CommonResult<CaptchaVO> getCaptcha() {
         return commonService.getCaptcha();
     }
-
 
     @GetMapping("/get-training-category")
     @AnonApi
@@ -53,7 +50,8 @@ public class CommonController {
 
     @GetMapping("/get-problem-tags-and-classification")
     @AnonApi
-    public CommonResult<List<ProblemTagVO>> getProblemTagsAndClassification(@RequestParam(value = "oj", defaultValue = "ME") String oj) {
+    public CommonResult<List<ProblemTagVO>> getProblemTagsAndClassification(
+            @RequestParam(value = "oj", defaultValue = "ME") String oj) {
         return commonService.getProblemTagsAndClassification(oj);
     }
 
@@ -63,11 +61,10 @@ public class CommonController {
         return commonService.getProblemTags(pid);
     }
 
-
     @GetMapping("/languages")
     @AnonApi
     public CommonResult<List<Language>> getLanguages(@RequestParam(value = "pid", required = false) Long pid,
-                                                     @RequestParam(value = "all", required = false) Boolean all) {
+            @RequestParam(value = "all", required = false) Boolean all) {
         return commonService.getLanguages(pid, all);
     }
 

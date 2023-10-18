@@ -31,7 +31,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 10:36
  * @Description:
  */
@@ -69,7 +69,6 @@ public class UserMessageManager {
         return userUnreadMsgCount;
     }
 
-
     public void cleanMsg(String type, Long id) throws StatusFailException {
 
         // 获取当前登录的用户
@@ -80,24 +79,26 @@ public class UserMessageManager {
         }
     }
 
-
     public IPage<UserMsgVO> getCommentMsg(Integer limit, Integer currentPage) {
 
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 5;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 5;
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         return getUserMsgList(userRolesVo.getUid(), "Discuss", limit, currentPage);
     }
 
-
     public IPage<UserMsgVO> getReplyMsg(Integer limit, Integer currentPage) {
 
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 5;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 5;
 
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
@@ -105,19 +106,19 @@ public class UserMessageManager {
         return getUserMsgList(userRolesVo.getUid(), "Reply", limit, currentPage);
     }
 
-
     public IPage<UserMsgVO> getLikeMsg(Integer limit, Integer currentPage) {
 
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 5;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 5;
 
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         return getUserMsgList(userRolesVo.getUid(), "Like", limit, currentPage);
     }
-
 
     private boolean cleanMsgByType(String type, Long id, String uid) {
 
@@ -141,13 +142,12 @@ public class UserMessageManager {
         return false;
     }
 
-
     private IPage<UserMsgVO> getUserMsgList(String uid, String action, int limit, int currentPage) {
         Page<UserMsgVO> page = new Page<>(currentPage, limit);
         IPage<UserMsgVO> userMsgList = msgRemindEntityService.getUserMsg(page, uid, action);
         if (userMsgList.getTotal() > 0) {
             switch (action) {
-                case "Discuss":  // 评论我的
+                case "Discuss": // 评论我的
                     return getUserDiscussMsgList(userMsgList);
                 case "Reply": // 回复我的
                     return getUserReplyMsgList(userMsgList);
@@ -160,7 +160,6 @@ public class UserMessageManager {
             return userMsgList;
         }
     }
-
 
     private IPage<UserMsgVO> getUserDiscussMsgList(IPage<UserMsgVO> userMsgList) {
 
@@ -262,7 +261,6 @@ public class UserMessageManager {
         applicationContext.getBean(UserMessageManager.class).updateUserMsgRead(userMsgList);
         return userMsgList;
     }
-
 
     @Async
     public void updateUserMsgRead(IPage<UserMsgVO> userMsgList) {

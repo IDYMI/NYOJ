@@ -1,7 +1,7 @@
 package top.hcode.hoj.judge;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/12/22 12:40
  * @Description:
  */

@@ -10,14 +10,14 @@ import lombok.experimental.Accessors;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/1/11 13:58
  * @Description:
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="File对象", description="")
+@ApiModel(value = "File对象", description = "")
 @TableName("`file`")
 public class File {
     private static final long serialVersionUID = 1L;

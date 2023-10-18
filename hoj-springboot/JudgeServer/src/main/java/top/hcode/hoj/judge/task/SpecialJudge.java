@@ -19,7 +19,7 @@ import top.hcode.hoj.util.Constants;
 import java.io.File;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/2 22:23
  * @Description: 特殊判题 支持testlib
  */
@@ -47,14 +47,15 @@ public class SpecialJudge extends AbstractJudge {
                 judgeGlobalDTO.getIoWriteFileName());
     }
 
-
     @Override
-    public JSONObject checkMultipleResult(SandBoxRes userSandBoxRes, SandBoxRes interactiveSandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) {
+    public JSONObject checkMultipleResult(SandBoxRes userSandBoxRes, SandBoxRes interactiveSandBoxRes,
+            JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) {
         return null;
     }
 
     @Override
-    public JSONObject checkResult(SandBoxRes sandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) throws SystemError {
+    public JSONObject checkResult(SandBoxRes sandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO)
+            throws SystemError {
 
         JSONObject result = new JSONObject();
         StringBuilder errMsg = new StringBuilder();
@@ -69,7 +70,8 @@ public class SpecialJudge extends AbstractJudge {
             } else {
 
                 // 对于当前测试样例，用户程序的输出对应生成的文件
-                String userOutputFilePath = judgeGlobalDTO.getRunDir() + File.separator + judgeDTO.getTestCaseNum() + ".out";
+                String userOutputFilePath = judgeGlobalDTO.getRunDir() + File.separator + judgeDTO.getTestCaseNum()
+                        + ".out";
                 FileWriter stdWriter = new FileWriter(userOutputFilePath);
                 stdWriter.write(sandBoxRes.getStdout());
 
@@ -120,7 +122,8 @@ public class SpecialJudge extends AbstractJudge {
         } else if (sandBoxRes.getExitCode() != 0) {
             result.set("status", Constants.Judge.STATUS_RUNTIME_ERROR.getStatus());
             if (sandBoxRes.getExitCode() < 32) {
-                errMsg.append(String.format("The program return exit status code: %s (%s)\n", sandBoxRes.getExitCode(), SandboxRun.signals.get(sandBoxRes.getExitCode())));
+                errMsg.append(String.format("The program return exit status code: %s (%s)\n", sandBoxRes.getExitCode(),
+                        SandboxRun.signals.get(sandBoxRes.getExitCode())));
             } else {
                 errMsg.append(String.format("The program return exit status code: %s\n", sandBoxRes.getExitCode()));
             }
@@ -146,19 +149,19 @@ public class SpecialJudge extends AbstractJudge {
         return result;
     }
 
-
     private JSONObject spjRunAndCheckResult(String userOutputFilePath,
-                                            String userOutputFileName,
-                                            String testCaseInputFilePath,
-                                            String testCaseInputFileName,
-                                            String testCaseOutputFilePath,
-                                            String testCaseOutputFileName,
-                                            String spjExeSrc,
-                                            LanguageConfig spjRunConfig) throws SystemError {
+            String userOutputFileName,
+            String testCaseInputFilePath,
+            String testCaseInputFileName,
+            String testCaseOutputFilePath,
+            String testCaseOutputFileName,
+            String spjExeSrc,
+            LanguageConfig spjRunConfig) throws SystemError {
 
         // 调用安全沙箱运行spj程序
         JSONArray spjJudgeResultList = SandboxRun.spjCheckResult(
-                parseRunCommand(spjRunConfig.getRunCommand(), testCaseInputFileName, userOutputFileName, testCaseOutputFileName),
+                parseRunCommand(spjRunConfig.getRunCommand(), testCaseInputFileName, userOutputFileName,
+                        testCaseOutputFileName),
                 spjRunConfig.getRunEnvs(),
                 userOutputFilePath,
                 userOutputFileName,

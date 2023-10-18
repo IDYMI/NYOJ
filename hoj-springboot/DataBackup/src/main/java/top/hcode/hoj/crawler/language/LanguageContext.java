@@ -6,7 +6,7 @@ import top.hcode.hoj.utils.Constants;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/27 21:15
  * @Description:
  */
@@ -31,7 +31,7 @@ public class LanguageContext {
         }
     }
 
-    public List<Language> buildLanguageList(){
+    public List<Language> buildLanguageList() {
         return languageStrategy.buildLanguageList();
     }
 

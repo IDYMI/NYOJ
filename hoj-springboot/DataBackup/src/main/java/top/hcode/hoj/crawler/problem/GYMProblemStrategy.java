@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/11/6 11:35
  * @Description:
  */
@@ -44,10 +44,12 @@ public class GYMProblemStrategy extends CFProblemStrategy {
 
     @Override
     public String getProblemSource(String html, String problemId, String contestNum, String problemNum) {
-        return String.format("<p>Problem：<a style='color:#1A5CC8' href='https://codeforces.com/gym/%s/problem/%s'>%s</a></p><p>" +
+        return String.format(
+                "<p>Problem：<a style='color:#1A5CC8' href='https://codeforces.com/gym/%s/problem/%s'>%s</a></p><p>" +
                         "Contest：" + ReUtil.get("(<a[^<>]+/gym/\\d+\">.+?</a>)", html, 1)
-                        .replace("/gym", HOST + "/gym")
-                        .replace("color: black", "color: #009688;") + "</p>",
+                                .replace("/gym", HOST + "/gym")
+                                .replace("color: black", "color: #009688;")
+                        + "</p>",
                 contestNum, problemNum, getJudgeName() + "-" + problemId);
     }
 
@@ -63,7 +65,8 @@ public class GYMProblemStrategy extends CFProblemStrategy {
     }
 
     @Override
-    public RemoteProblemInfo getProblemInfoByLogin(String problemId, String author, String username, String password) throws Exception {
+    public RemoteProblemInfo getProblemInfoByLogin(String problemId, String author, String username, String password)
+            throws Exception {
         login(username, password);
         if (!CollectionUtils.isEmpty(cookies)) {
             return this.getProblemInfo(problemId, author);
@@ -107,12 +110,13 @@ public class GYMProblemStrategy extends CFProblemStrategy {
         problem.setTimeLimit((int) (Double.parseDouble(matcher.group(3)) * 1000));
         problem.setMemoryLimit(Integer.parseInt(matcher.group(4)));
 
-        problem.setSource(String.format("<p>Problem：<a style='color:#1A5CC8' href='https://codeforces.com/gym/%s/attachments'>%s</a></p><p>" +
+        problem.setSource(String.format(
+                "<p>Problem：<a style='color:#1A5CC8' href='https://codeforces.com/gym/%s/attachments'>%s</a></p><p>" +
                         "Contest：" + ReUtil.get("(<a[^<>]+/gym/\\d+\">.+?</a>)", html, 1)
-                        .replace("/gym", HOST + "/gym")
-                        .replace("color: black", "color: #009688;") + "</p>",
+                                .replace("/gym", HOST + "/gym")
+                                .replace("color: black", "color: #009688;")
+                        + "</p>",
                 contestNum, getJudgeName() + "-" + problemId));
-
 
         regex = "\\/gym\\/" + contestNum + "\\/attachments\\/download\\S*?\\.pdf";
 
@@ -122,7 +126,7 @@ public class GYMProblemStrategy extends CFProblemStrategy {
             String pdfURI = "";
             try {
                 String uri = matcher.group(0);
-                if (uri.toLowerCase().contains("tutorials")){
+                if (uri.toLowerCase().contains("tutorials")) {
                     continue;
                 }
                 String fileName = IdUtil.fastSimpleUUID() + ".pdf";

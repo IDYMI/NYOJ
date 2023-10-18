@@ -18,14 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 17:00
  * @Description: 处理登录、注册、重置密码
  */
 @RestController
 @RequestMapping("/api")
 public class PassportController {
-
 
     @Autowired
     private PassportService passportService;
@@ -39,7 +38,8 @@ public class PassportController {
      */
     @PostMapping("/login")
     @AnonApi
-    public CommonResult<UserInfoVO> login(@Validated @RequestBody LoginDTO loginDto, HttpServletResponse response, HttpServletRequest request) {
+    public CommonResult<UserInfoVO> login(@Validated @RequestBody LoginDTO loginDto, HttpServletResponse response,
+            HttpServletRequest request) {
         return passportService.login(loginDto, response, request);
     }
 
@@ -55,7 +55,6 @@ public class PassportController {
         return passportService.getRegisterCode(email);
     }
 
-
     /**
      * @param registerDto
      * @MethodName register
@@ -68,7 +67,6 @@ public class PassportController {
     public CommonResult<Void> register(@Validated @RequestBody RegisterDTO registerDto) {
         return passportService.register(registerDto);
     }
-
 
     /**
      * @param applyResetPasswordDto
@@ -83,7 +81,6 @@ public class PassportController {
         return passportService.applyResetPassword(applyResetPasswordDto);
     }
 
-
     /**
      * @param resetPasswordDto
      * @MethodName resetPassword
@@ -96,7 +93,6 @@ public class PassportController {
     public CommonResult<Void> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDto) {
         return passportService.resetPassword(resetPasswordDto);
     }
-
 
     /**
      * @MethodName logout

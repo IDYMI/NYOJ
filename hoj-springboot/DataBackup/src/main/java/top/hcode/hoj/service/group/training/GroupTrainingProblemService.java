@@ -7,13 +7,14 @@ import top.hcode.hoj.pojo.entity.training.TrainingProblem;
 import java.util.HashMap;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
 public interface GroupTrainingProblemService {
 
-    public CommonResult<HashMap<String, Object>> getTrainingProblemList(Integer limit, Integer currentPage, String keyword, Boolean queryExisted, Long tid);
+    public CommonResult<HashMap<String, Object>> getTrainingProblemList(Integer limit, Integer currentPage,
+            String keyword, Boolean queryExisted, Long tid);
 
     public CommonResult<Void> updateTrainingProblem(TrainingProblem trainingProblem);
 

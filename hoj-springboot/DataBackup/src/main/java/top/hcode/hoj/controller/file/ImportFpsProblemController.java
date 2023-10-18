@@ -15,7 +15,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/10/5 19:45
  * @Description:
  */

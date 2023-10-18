@@ -5,7 +5,7 @@ import lombok.Data;
 import top.hcode.hoj.pojo.entity.judge.Judge;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 11:38
  * @Description:
  */

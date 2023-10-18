@@ -16,7 +16,7 @@ import top.hcode.hoj.service.oj.CommentService;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/5 15:41
  * @Description:
  */
@@ -27,16 +27,14 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-
     @GetMapping("/comments")
     @AnonApi
     public CommonResult<CommentListVO> getComments(@RequestParam(value = "cid", required = false) Long cid,
-                                                   @RequestParam(value = "did", required = false) Integer did,
-                                                   @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
-                                                   @RequestParam(value = "currentPage", required = false, defaultValue = "1") Integer currentPage) {
+            @RequestParam(value = "did", required = false) Integer did,
+            @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit,
+            @RequestParam(value = "currentPage", required = false, defaultValue = "1") Integer currentPage) {
         return commentService.getComments(cid, did, limit, currentPage);
     }
-
 
     @PostMapping("/comment")
     @RequiresPermissions("comment_add")
@@ -54,16 +52,16 @@ public class CommentController {
     @GetMapping("/comment-like")
     @RequiresAuthentication
     public CommonResult<Void> addCommentLike(@RequestParam("cid") Integer cid,
-                                                @RequestParam("toLike") Boolean toLike,
-                                                @RequestParam("sourceId") Integer sourceId,
-                                                @RequestParam("sourceType") String sourceType) {
+            @RequestParam("toLike") Boolean toLike,
+            @RequestParam("sourceId") Integer sourceId,
+            @RequestParam("sourceType") String sourceType) {
         return commentService.addCommentLike(cid, toLike, sourceId, sourceType);
     }
 
     @GetMapping("/reply")
     @AnonApi
     public CommonResult<List<ReplyVO>> getAllReply(@RequestParam("commentId") Integer commentId,
-                                                   @RequestParam(value = "cid", required = false) Long cid) {
+            @RequestParam(value = "cid", required = false) Long cid) {
         return commentService.getAllReply(commentId, cid);
     }
 

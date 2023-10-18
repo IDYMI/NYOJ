@@ -15,14 +15,14 @@ import lombok.experimental.Accessors;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/12 23:14
  * @Description:
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Language对象", description="")
+@ApiModel(value = "Language对象", description = "")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Language {

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/4/16 13:21
  * @Description: 判题流程解耦重构2.0，该类只负责题目测试数据的检查与初始化
  */
@@ -40,10 +40,10 @@ public class ProblemTestCaseUtils {
 
     // 本地无文件初始化测试数据，写成json文件
     public JSONObject initTestCase(List<HashMap<String, Object>> testCases,
-                                   Long problemId,
-                                   String version,
-                                   String judgeMode,
-                                   String judgeCaseMode) throws SystemError {
+            Long problemId,
+            String version,
+            String judgeMode,
+            String judgeCaseMode) throws SystemError {
 
         if (testCases == null || testCases.size() == 0) {
             throw new SystemError("题号为：" + problemId + "的评测数据为空！", null, "The test cases does not exist.");
@@ -94,9 +94,11 @@ public class ProblemTestCaseUtils {
                 // 原数据大小
                 jsonObject.set("outputSize", outputData.getBytes(StandardCharsets.UTF_8).length);
                 // 去掉全部空格的MD5，用来判断pe
-                jsonObject.set("allStrippedOutputMd5", DigestUtils.md5DigestAsHex(outputData.replaceAll("\\s+", "").getBytes(StandardCharsets.UTF_8)));
+                jsonObject.set("allStrippedOutputMd5",
+                        DigestUtils.md5DigestAsHex(outputData.replaceAll("\\s+", "").getBytes(StandardCharsets.UTF_8)));
                 // 默认去掉文末空格的MD5
-                jsonObject.set("EOFStrippedOutputMd5", DigestUtils.md5DigestAsHex(rtrim(outputData).getBytes(StandardCharsets.UTF_8)));
+                jsonObject.set("EOFStrippedOutputMd5",
+                        DigestUtils.md5DigestAsHex(rtrim(outputData).getBytes(StandardCharsets.UTF_8)));
             }
 
             testCaseList.add(jsonObject);
@@ -112,11 +114,10 @@ public class ProblemTestCaseUtils {
 
     // 本地有文件，进行数据初始化 生成json文件
     public JSONObject initLocalTestCase(String judgeMode,
-                                        String judgeCaseMode,
-                                        String version,
-                                        String testCasesDir,
-                                        List<ProblemCase> problemCaseList) {
-
+            String judgeCaseMode,
+            String version,
+            String testCasesDir,
+            List<ProblemCase> problemCaseList) {
 
         if (StringUtils.isEmpty(judgeCaseMode)) {
             judgeCaseMode = Constants.JudgeCaseMode.DEFAULT.getMode();
@@ -148,7 +149,8 @@ public class ProblemTestCaseUtils {
                 output = outputFile.readString()
                         .replaceAll("\r\n", "\n") // 避免window系统的换行问题
                         .replaceAll("\r", "\n"); // 避免mac系统的换行问题
-                FileWriter outFileWriter = new FileWriter(testCasesDir + File.separator + problemCase.getOutput(), CharsetUtil.UTF_8);
+                FileWriter outFileWriter = new FileWriter(testCasesDir + File.separator + problemCase.getOutput(),
+                        CharsetUtil.UTF_8);
                 outFileWriter.write(output);
             } else {
                 FileWriter fileWriter = new FileWriter(outputFilePath);
@@ -162,9 +164,11 @@ public class ProblemTestCaseUtils {
                 // 原数据大小
                 jsonObject.set("outputSize", output.getBytes(StandardCharsets.UTF_8).length);
                 // 去掉全部空格的MD5，用来判断pe
-                jsonObject.set("allStrippedOutputMd5", DigestUtils.md5DigestAsHex(output.replaceAll("\\s+", "").getBytes(StandardCharsets.UTF_8)));
+                jsonObject.set("allStrippedOutputMd5",
+                        DigestUtils.md5DigestAsHex(output.replaceAll("\\s+", "").getBytes(StandardCharsets.UTF_8)));
                 // 默认去掉文末空格的MD5
-                jsonObject.set("EOFStrippedOutputMd5", DigestUtils.md5DigestAsHex(rtrim(output).getBytes(StandardCharsets.UTF_8)));
+                jsonObject.set("EOFStrippedOutputMd5",
+                        DigestUtils.md5DigestAsHex(rtrim(output).getBytes(StandardCharsets.UTF_8)));
             }
 
             ((JSONArray) result.get("testCases")).put(jsonObject);
@@ -177,9 +181,9 @@ public class ProblemTestCaseUtils {
         return result;
     }
 
-
     // 获取指定题目的info数据
-    public JSONObject loadTestCaseInfo(Long problemId, String testCasesDir, String version, String judgeMode, String judgeCaseMode) throws SystemError {
+    public JSONObject loadTestCaseInfo(Long problemId, String testCasesDir, String version, String judgeMode,
+            String judgeCaseMode) throws SystemError {
         if (FileUtil.exist(testCasesDir + File.separator + "info")) {
             FileReader fileReader = new FileReader(testCasesDir + File.separator + "info", CharsetUtil.UTF_8);
             String infoStr = fileReader.readString();
@@ -196,10 +200,10 @@ public class ProblemTestCaseUtils {
 
     // 若没有测试数据，则尝试从数据库获取并且初始化到本地，如果数据库中该题目测试数据为空，rsync同步也出了问题，则直接判系统错误
     public JSONObject tryInitTestCaseInfo(String testCasesDir,
-                                          Long problemId,
-                                          String version,
-                                          String judgeMode,
-                                          String judgeCaseMode) throws SystemError {
+            Long problemId,
+            String version,
+            String judgeMode,
+            String judgeCaseMode) throws SystemError {
 
         QueryWrapper<ProblemCase> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("pid", problemId);
@@ -213,11 +217,12 @@ public class ProblemTestCaseUtils {
         if (StringUtils.isEmpty(problemCases.get(0).getInput())
                 || StringUtils.isEmpty(problemCases.get(0).getOutput())
                 || (problemCases.get(0).getInput().endsWith(".in")
-                        && (problemCases.get(0).getOutput().endsWith(".out") || problemCases.get(0).getOutput().endsWith(".ans"))
-                    )
-                || (problemCases.get(0).getInput().endsWith(".txt") && problemCases.get(0).getOutput().endsWith(".txt"))) {
+                        && (problemCases.get(0).getOutput().endsWith(".out")
+                                || problemCases.get(0).getOutput().endsWith(".ans")))
+                || (problemCases.get(0).getInput().endsWith(".txt")
+                        && problemCases.get(0).getOutput().endsWith(".txt"))) {
 
-            if (FileUtil.isEmpty(new File(testCasesDir))) { //如果本地对应文件夹也为空，说明文件丢失了
+            if (FileUtil.isEmpty(new File(testCasesDir))) { // 如果本地对应文件夹也为空，说明文件丢失了
                 throw new SystemError("problemID:[" + problemId + "] test case has not found.", null, null);
             } else {
                 return initLocalTestCase(judgeMode, judgeCaseMode, version, testCasesDir, problemCases);
@@ -241,7 +246,8 @@ public class ProblemTestCaseUtils {
 
     // 去除每行末尾的空白符
     public static String rtrim(String value) {
-        if (value == null) return null;
+        if (value == null)
+            return null;
         return EOL_PATTERN.matcher(StrUtil.trimEnd(value)).replaceAll("");
     }
 }

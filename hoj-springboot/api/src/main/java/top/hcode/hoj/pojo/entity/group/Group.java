@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -20,7 +20,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @ApiModel(value = "Group对象", description = "")
 @TableName("`group`")
-public class Group implements Serializable  {
+public class Group implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)

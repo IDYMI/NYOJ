@@ -12,22 +12,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/11/20 11:30
  * @Description:
  */
 @Service
-public class TrainingRegisterEntityServiceImpl extends ServiceImpl<TrainingRegisterMapper, TrainingRegister> implements TrainingRegisterEntityService {
+public class TrainingRegisterEntityServiceImpl extends ServiceImpl<TrainingRegisterMapper, TrainingRegister>
+        implements TrainingRegisterEntityService {
 
     @Resource
     private TrainingRegisterMapper trainingRegisterMapper;
 
-
     @Override
-    public List<String> getAlreadyRegisterUidList(Long tid){
+    public List<String> getAlreadyRegisterUidList(Long tid) {
         QueryWrapper<TrainingRegister> trainingRegisterQueryWrapper = new QueryWrapper<>();
         trainingRegisterQueryWrapper.eq("tid", tid);
-        return trainingRegisterMapper.selectList(trainingRegisterQueryWrapper).stream().map(TrainingRegister::getUid).collect(Collectors.toList());
+        return trainingRegisterMapper.selectList(trainingRegisterQueryWrapper).stream().map(TrainingRegister::getUid)
+                .collect(Collectors.toList());
     }
 
 }

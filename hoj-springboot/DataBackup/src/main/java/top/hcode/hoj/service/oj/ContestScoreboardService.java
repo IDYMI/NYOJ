@@ -6,7 +6,7 @@ import top.hcode.hoj.pojo.dto.ContestRankDTO;
 import top.hcode.hoj.pojo.vo.ContestOutsideInfoVO;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 22:18
  * @Description:
  */

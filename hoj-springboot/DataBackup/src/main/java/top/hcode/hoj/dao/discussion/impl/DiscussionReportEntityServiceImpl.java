@@ -12,12 +12,13 @@ import top.hcode.hoj.pojo.vo.DiscussionReportVO;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/11 21:46
  * @Description:
  */
 @Service
-public class DiscussionReportEntityServiceImpl extends ServiceImpl<DiscussionReportMapper, DiscussionReport> implements DiscussionReportEntityService {
+public class DiscussionReportEntityServiceImpl extends ServiceImpl<DiscussionReportMapper, DiscussionReport>
+        implements DiscussionReportEntityService {
 
     @Resource
     private DiscussionReportMapper discussionReportMapper;

@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -41,15 +41,16 @@ public class GroupContestController {
 
     @GetMapping("/get-contest-list")
     public CommonResult<IPage<ContestVO>> getContestList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                         @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                         @RequestParam(value = "gid", required = true) Long gid) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupContestService.getContestList(limit, currentPage, gid);
     }
 
     @GetMapping("/get-admin-contest-list")
-    public CommonResult<IPage<Contest>> getAdminContestList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                            @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                            @RequestParam(value = "gid", required = true) Long gid) {
+    public CommonResult<IPage<Contest>> getAdminContestList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupContestService.getAdminContestList(limit, currentPage, gid);
     }
 
@@ -75,17 +76,18 @@ public class GroupContestController {
 
     @PutMapping("/change-contest-visible")
     public CommonResult<Void> changeContestVisible(@RequestParam(value = "cid", required = true) Long cid,
-                                                   @RequestParam(value = "visible", required = true) Boolean visible) {
+            @RequestParam(value = "visible", required = true) Boolean visible) {
         return groupContestService.changeContestVisible(cid, visible);
     }
 
     @GetMapping("/get-contest-problem-list")
-    public CommonResult<HashMap<String, Object>> getContestProblemList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                                @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                                @RequestParam(value = "keyword", required = false) String keyword,
-                                                                @RequestParam(value = "cid", required = true) Long cid,
-                                                                @RequestParam(value = "problemType", required = false) Integer problemType,
-                                                                @RequestParam(value = "oj", required = false) String oj) {
+    public CommonResult<HashMap<String, Object>> getContestProblemList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "cid", required = true) Long cid,
+            @RequestParam(value = "problemType", required = false) Integer problemType,
+            @RequestParam(value = "oj", required = false) String oj) {
         return groupContestProblemService.getContestProblemList(limit, currentPage, keyword, cid, problemType, oj);
     }
 
@@ -97,7 +99,7 @@ public class GroupContestController {
 
     @GetMapping("/contest-problem")
     public CommonResult<ContestProblem> getContestProblem(@RequestParam(value = "pid", required = true) Long pid,
-                                                          @RequestParam(value = "cid", required = true) Long cid) {
+            @RequestParam(value = "cid", required = true) Long cid) {
 
         return groupContestProblemService.getContestProblem(pid, cid);
     }
@@ -110,7 +112,7 @@ public class GroupContestController {
 
     @DeleteMapping("/contest-problem")
     public CommonResult<Void> deleteContestProblem(@RequestParam(value = "pid", required = true) Long pid,
-                                                   @RequestParam(value = "cid", required = true) Long cid) {
+            @RequestParam(value = "cid", required = true) Long cid) {
         return groupContestProblemService.deleteContestProblem(pid, cid);
     }
 
@@ -121,15 +123,16 @@ public class GroupContestController {
 
     @PostMapping("/add-contest-problem-from-group")
     public CommonResult<Void> addProblemFromGroup(@RequestParam(value = "problemId", required = true) String problemId,
-                                                  @RequestParam(value = "cid", required = true) Long cid,
-                                                  @RequestParam(value = "displayId", required = true) String displayId) {
+            @RequestParam(value = "cid", required = true) Long cid,
+            @RequestParam(value = "displayId", required = true) String displayId) {
         return groupContestProblemService.addProblemFromGroup(problemId, cid, displayId);
     }
 
     @GetMapping("/get-contest-announcement-list")
-    public CommonResult<IPage<AnnouncementVO>> getContestAnnouncementList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                                          @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                                          @RequestParam(value = "cid", required = true) Long cid) {
+    public CommonResult<IPage<AnnouncementVO>> getContestAnnouncementList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "cid", required = true) Long cid) {
         return groupContestAnnouncementService.getContestAnnouncementList(limit, currentPage, cid);
     }
 
@@ -145,7 +148,7 @@ public class GroupContestController {
 
     @DeleteMapping("/contest-announcement")
     public CommonResult<Void> deleteContestAnnouncement(@RequestParam(value = "aid", required = true) Long aid,
-                                                        @RequestParam(value = "cid", required = true) Long cid) {
+            @RequestParam(value = "cid", required = true) Long cid) {
         return groupContestAnnouncementService.deleteContestAnnouncement(aid, cid);
     }
 }

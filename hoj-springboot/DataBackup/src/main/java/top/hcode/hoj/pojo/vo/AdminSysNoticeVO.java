@@ -7,12 +7,12 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/10/4 14:03
  * @Description:
  */
 @Data
-@ApiModel(value="系统通知消息", description="")
+@ApiModel(value = "系统通知消息", description = "")
 public class AdminSysNoticeVO {
 
     private Long id;

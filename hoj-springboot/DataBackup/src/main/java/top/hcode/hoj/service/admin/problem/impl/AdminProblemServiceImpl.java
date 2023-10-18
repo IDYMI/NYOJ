@@ -17,7 +17,7 @@ import top.hcode.hoj.service.admin.problem.AdminProblemService;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 16:33
  * @Description:
  */
@@ -29,7 +29,8 @@ public class AdminProblemServiceImpl implements AdminProblemService {
     private AdminProblemManager adminProblemManager;
 
     @Override
-    public CommonResult<IPage<Problem>> getProblemList(Integer limit, Integer currentPage, String keyword, Integer auth, String oj) {
+    public CommonResult<IPage<Problem>> getProblemList(Integer limit, Integer currentPage, String keyword, Integer auth,
+            String oj) {
         IPage<Problem> problemList = adminProblemManager.getProblemList(limit, currentPage, keyword, auth, oj);
         return CommonResult.successResponse(problemList);
     }

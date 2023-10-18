@@ -7,11 +7,11 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/10/27 21:09
  * @Description:
  */
-@ApiModel(value="ACM排行榜数据类ACMRankVO", description="")
+@ApiModel(value = "ACM排行榜数据类ACMRankVO", description = "")
 @Data
 public class ACMRankVO implements Serializable {
 
