@@ -1871,13 +1871,19 @@ const adminApi = {
     })
   },
 
-  admin_getTrainingList(currentPage, limit, keyword) {
+  admin_getTrainingList(currentPage, limit, keyword, categoryId, auth) {
     let params = {
       currentPage,
       limit
     }
     if (keyword) {
       params.keyword = keyword
+    }
+    if (categoryId != 0) {
+      params.categoryId = categoryId
+    }
+    if (auth != "All") {
+      params.auth = auth
     }
     return ajax('/api/admin/training/get-training-list', 'get', {
       params: params
@@ -2068,13 +2074,22 @@ const adminApi = {
       }
     })
   },
-  admin_getContestList(currentPage, limit, keyword) {
+  admin_getContestList(currentPage, limit, type, auth, status, keyword) {
     let params = {
       currentPage,
       limit
     }
     if (keyword) {
       params.keyword = keyword
+    }
+    if (type != "All") {
+      params.type = type
+    }
+    if (auth != "All") {
+      params.auth = auth
+    }
+    if (status != "All") {
+      params.status = status
     }
     return ajax('/api/admin/contest/get-contest-list', 'get', {
       params: params

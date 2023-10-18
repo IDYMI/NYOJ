@@ -347,6 +347,7 @@ export const m = {
   Upload_Problem_Failed: '上传题目失败',
 
   // /views/admin/training/TrainingList.vue
+  All_Traning: '全部训练',
   Update_Time: '更新时间',
   Order_Number: '序号',
   View_Training_Problem_List: '查看训练题目列表',
@@ -382,6 +383,7 @@ export const m = {
   Delete_Category_Tips: '你是否确定删除该分类？',
 
   // /views/admin/contest/ContestList.vue
+  All_Contest:'全部比赛',
   Start_Time: '开始时间',
   End_Time: '结束时间',
   Creator: '创建者',

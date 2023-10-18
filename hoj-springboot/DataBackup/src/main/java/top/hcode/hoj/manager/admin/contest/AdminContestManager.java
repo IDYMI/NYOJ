@@ -48,16 +48,28 @@ public class AdminContestManager {
     @Autowired
     private ContestValidator contestValidator;
 
-    public IPage<Contest> getContestList(Integer limit, Integer currentPage, String keyword) {
+    public IPage<Contest> getContestList(Integer limit, Integer currentPage, Integer type,
+            Integer auth, Integer status, String keyword) {
 
         if (currentPage == null || currentPage < 1)
             currentPage = 1;
         if (limit == null || limit < 1)
             limit = 10;
+
         IPage<Contest> iPage = new Page<>(currentPage, limit);
         QueryWrapper<Contest> queryWrapper = new QueryWrapper<>();
         // 过滤密码
         queryWrapper.select(Contest.class, info -> !info.getColumn().equals("pwd"));
+
+        if (type != null) {
+            queryWrapper.eq("type", type);
+        }
+        if (auth != null) {
+            queryWrapper.eq("auth", auth);
+        }
+        if (status != null) {
+            queryWrapper.eq("status", status);
+        }
         if (!StringUtils.isEmpty(keyword)) {
             keyword = keyword.trim();
             queryWrapper

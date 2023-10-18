@@ -15,17 +15,24 @@ import top.hcode.hoj.dao.training.MappingTrainingCategoryEntityService;
 import top.hcode.hoj.dao.training.TrainingCategoryEntityService;
 import top.hcode.hoj.dao.training.TrainingEntityService;
 import top.hcode.hoj.dao.training.TrainingRegisterEntityService;
+import top.hcode.hoj.mapper.TrainingMapper;
 import top.hcode.hoj.pojo.dto.TrainingDTO;
 import top.hcode.hoj.pojo.entity.training.MappingTrainingCategory;
 import top.hcode.hoj.pojo.entity.training.Training;
 import top.hcode.hoj.pojo.entity.training.TrainingCategory;
+import top.hcode.hoj.pojo.entity.training.TrainingProblem;
 import top.hcode.hoj.pojo.entity.training.TrainingRegister;
+import top.hcode.hoj.pojo.vo.TrainingVO;
 import top.hcode.hoj.shiro.AccountProfile;
 import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.validator.TrainingValidator;
 
 import javax.annotation.Resource;
+
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @Author: Himit_ZH
@@ -36,6 +43,9 @@ import java.util.Objects;
 @Component
 @Slf4j(topic = "hoj")
 public class AdminTrainingManager {
+
+    @Resource
+    private TrainingMapper trainingMapper;
 
     @Resource
     private TrainingEntityService trainingEntityService;
@@ -55,27 +65,47 @@ public class AdminTrainingManager {
     @Resource
     private TrainingValidator trainingValidator;
 
-    public IPage<Training> getTrainingList(Integer limit, Integer currentPage, String keyword) {
+    public IPage<Training> getTrainingList(Integer limit, Integer currentPage, String keyword, Long categoryId,
+            String auth) {
 
         if (currentPage == null || currentPage < 1)
             currentPage = 1;
         if (limit == null || limit < 1)
             limit = 10;
-        IPage<Training> iPage = new Page<>(currentPage, limit);
-        QueryWrapper<Training> queryWrapper = new QueryWrapper<>();
-        // 过滤密码
-        queryWrapper.select(Training.class, info -> !info.getColumn().equals("private_pwd"));
-        if (!StringUtils.isEmpty(keyword)) {
-            keyword = keyword.trim();
-            queryWrapper
-                    .like("title", keyword).or()
-                    .like("id", keyword).or()
-                    .like("`rank`", keyword);
-        }
 
-        queryWrapper.eq("is_group", false).orderByAsc("`rank`");
+        // 新建分页
+        Page<Training> page = new Page<>(currentPage, limit);
 
-        return trainingEntityService.page(iPage, queryWrapper);
+        List<Training> trainingList = trainingMapper.getAdminTrainingList(page, categoryId, auth, keyword);
+
+        page.setRecords(trainingList);
+
+        return page;
+
+        // IPage<Training> iPage = new Page<>(currentPage, limit);
+        // QueryWrapper<Training> queryWrapper = new QueryWrapper<>();
+        // // 过滤密码
+        // queryWrapper.select(Training.class, info -> !info.getColumn().equals("private_pwd"));
+
+        // if (auth != null && auth != "All") {
+        // queryWrapper.eq("auth", auth);
+        // }
+
+        // if (categoryId != null && categoryId != 0) {
+        // queryWrapper.eq("auth", auth);
+        // }
+
+        // if (!StringUtils.isEmpty(keyword)) {
+        // keyword = keyword.trim();
+        // queryWrapper
+        // .like("title", keyword).or()
+        // .like("id", keyword).or()
+        // .like("`rank`", keyword);
+        // }
+
+        // queryWrapper.eq("is_group", false).orderByAsc("`rank`");
+
+        // return trainingEntityService.page(iPage, queryWrapper);
     }
 
     public TrainingDTO getTraining(Long tid) throws StatusFailException, StatusForbiddenException {

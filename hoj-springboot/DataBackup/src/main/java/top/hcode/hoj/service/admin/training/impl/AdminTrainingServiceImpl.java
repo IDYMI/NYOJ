@@ -24,8 +24,10 @@ public class AdminTrainingServiceImpl implements AdminTrainingService {
     private AdminTrainingManager adminTrainingManager;
 
     @Override
-    public CommonResult<IPage<Training>> getTrainingList(Integer limit, Integer currentPage, String keyword) {
-        return CommonResult.successResponse(adminTrainingManager.getTrainingList(limit, currentPage, keyword));
+    public CommonResult<IPage<Training>> getTrainingList(Integer limit, Integer currentPage, String keyword,
+            Long categoryId, String auth) {
+        return CommonResult
+                .successResponse(adminTrainingManager.getTrainingList(limit, currentPage, keyword, categoryId, auth));
     }
 
     @Override

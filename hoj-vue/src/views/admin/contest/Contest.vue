@@ -664,7 +664,7 @@ export default {
         sealRankTime: "An hour", //封榜时间
         autoRealRank: true,
         auth: 1,
-        openPrint: true,
+        openPrint: false,
         rankShowName: "username",
         openAccountLimit: false,
         openRank: true,

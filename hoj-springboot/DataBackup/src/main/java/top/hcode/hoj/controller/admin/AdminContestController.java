@@ -49,9 +49,13 @@ public class AdminContestController {
     @RequiresAuthentication
     public CommonResult<IPage<Contest>> getContestList(@RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "currentPage", required = false) Integer currentPage,
+
+            @RequestParam(value = "type", required = false) Integer type,
+            @RequestParam(value = "auth", required = false) Integer auth,
+            @RequestParam(value = "status", required = false) Integer status,
             @RequestParam(value = "keyword", required = false) String keyword) {
 
-        return adminContestService.getContestList(limit, currentPage, keyword);
+        return adminContestService.getContestList(limit, currentPage, type, auth, status, keyword);
     }
 
     @GetMapping("")
