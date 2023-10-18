@@ -20,7 +20,12 @@ import java.util.List;
 public interface TrainingMapper extends BaseMapper<Training> {
 
     List<TrainingVO> getTrainingList(IPage page,
-                                     @Param("categoryId") Long categoryId,
-                                     @Param("auth") String auth,
-                                     @Param("keyword") String keyword);
+            @Param("categoryId") Long categoryId,
+            @Param("auth") String auth,
+            @Param("keyword") String keyword);
+
+    List<Training> getAdminTrainingList(IPage page,
+            @Param("categoryId") Long categoryId,
+            @Param("auth") String auth,
+            @Param("keyword") String keyword);
 }

@@ -37,8 +37,11 @@ public class AdminTrainingController {
     @RequiresAuthentication
     public CommonResult<IPage<Training>> getTrainingList(@RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "currentPage", required = false) Integer currentPage,
-            @RequestParam(value = "keyword", required = false) String keyword) {
-        return adminTrainingService.getTrainingList(limit, currentPage, keyword);
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(value = "auth", required = false) String auth
+            ) {
+        return adminTrainingService.getTrainingList(limit, currentPage, keyword, categoryId, auth);
     }
 
     @GetMapping("")

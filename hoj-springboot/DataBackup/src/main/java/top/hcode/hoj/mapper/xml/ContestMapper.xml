@@ -19,7 +19,7 @@
         </where>
         order by c.status ASC, c.start_time DESC
     </select>
-
+    
     <select id="getContestRegisterCount" resultType="top.hcode.hoj.pojo.vo.ContestRegisterCountVO">
         SELECT cr.cid as cid,COUNT(*) as count FROM contest_register cr,contest c
         <where>

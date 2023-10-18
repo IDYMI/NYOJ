@@ -5,6 +5,15 @@
         <span class="panel-title home-title">{{ $t("m.Contest_List") }}</span>
         <div class="filter-row">
           <span>
+            <el-button
+              type="primary"
+              size="small"
+              @click="goCreateContest"
+              icon="el-icon-plus"
+              >{{ $t("m.Create") }}
+            </el-button>
+          </span>
+          <span>
             <vxe-input
               v-model="keyword"
               :placeholder="$t('m.Enter_keyword')"
@@ -13,6 +22,56 @@
               @search-click="filterByKeyword"
               @keyup.enter.native="filterByKeyword"
             ></vxe-input>
+          </span>
+          <span>
+            <el-select
+              v-model="contestType"
+              @change="ContestListChangeFilter"
+              size="small"
+              style="width: 180px"
+            >
+              <el-option
+                :label="$t('m.All_Contest')"
+                :value="'All'"
+              ></el-option>
+
+              <el-option :label="'ACM'" :value="0"></el-option>
+              <el-option :label="'OI'" :value="1"></el-option>
+            </el-select>
+          </span>
+          <span>
+            <el-select
+              v-model="contestAuth"
+              @change="ContestListChangeFilter"
+              size="small"
+              style="width: 180px"
+            >
+              <el-option
+                :label="$t('m.All_Contest')"
+                :value="'All'"
+              ></el-option>
+
+              <el-option :label="$t('m.Public')" :value="0"></el-option>
+              <el-option :label="$t('m.Private')" :value="1"></el-option>
+              <el-option :label="$t('m.Protected')" :value="2"></el-option>
+            </el-select>
+          </span>
+          <span>
+            <el-select
+              v-model="contestStatus"
+              @change="ContestListChangeFilter"
+              size="small"
+              style="width: 180px"
+            >
+              <el-option
+                :label="$t('m.All_Contest')"
+                :value="'All'"
+              ></el-option>
+
+              <el-option :label="$t('m.Scheduled')" :value="-1"></el-option>
+              <el-option :label="$t('m.Running')" :value="0"></el-option>
+              <el-option :label="$t('m.Ended')" :value="1"></el-option>
+            </el-select>
           </span>
         </div>
       </div>
@@ -84,9 +143,7 @@
         </vxe-table-column>
         <vxe-table-column min-width="150" :title="$t('m.Option')">
           <template v-slot="{ row }">
-            <template
-              v-if="isMainAdminRole || userInfo.uid == row.uid"
-            >
+            <template v-if="isMainAdminRole || userInfo.uid == row.uid">
               <div style="margin-bottom: 10px">
                 <el-tooltip
                   effect="dark"
@@ -209,6 +266,9 @@ export default {
   name: "ContestList",
   data() {
     return {
+      contestType: "All", // 比赛类型
+      contestAuth: "All", // 赛制
+      contestStatus: "All", // 比赛状态
       pageSize: 10,
       total: 0,
       contestList: [],
@@ -252,16 +312,25 @@ export default {
     },
     getContestList(page) {
       this.loading = true;
-      api.admin_getContestList(page, this.pageSize, this.keyword).then(
-        (res) => {
-          this.loading = false;
-          this.total = res.data.data.total;
-          this.contestList = res.data.data.records;
-        },
-        (res) => {
-          this.loading = false;
-        }
-      );
+      api
+        .admin_getContestList(
+          page,
+          this.pageSize,
+          this.contestType,
+          this.contestAuth,
+          this.contestStatus,
+          this.keyword
+        )
+        .then(
+          (res) => {
+            this.loading = false;
+            this.total = res.data.data.total;
+            this.contestList = res.data.data.records;
+          },
+          (res) => {
+            this.loading = false;
+          }
+        );
     },
     openDownloadOptions(contestId) {
       this.downloadDialogVisible = true;
@@ -306,6 +375,13 @@ export default {
     },
     filterByKeyword() {
       this.currentChange(1);
+    },
+    goCreateContest() {
+      this.$router.push({ name: "admin-create-contest" });
+    },
+    ContestListChangeFilter() {
+      this.currentPage = 1;
+      this.getContestList();
     },
   },
 };

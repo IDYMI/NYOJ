@@ -7,7 +7,8 @@ import top.hcode.hoj.pojo.entity.training.Training;
 
 public interface AdminTrainingService {
 
-    public CommonResult<IPage<Training>> getTrainingList(Integer limit, Integer currentPage, String keyword);
+    public CommonResult<IPage<Training>> getTrainingList(Integer limit, Integer currentPage, String keyword,
+            Long categoryId, String auth);
 
     public CommonResult<TrainingDTO> getTraining(Long tid);
 
