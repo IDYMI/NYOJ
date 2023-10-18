@@ -99,21 +99,6 @@ public class HomeManager {
         return apiList;
     }
 
-    // /**
-    // * @MethodName editHomeCarousel
-    // * @Params
-    // * @Description 修改主页轮播图
-    // * @Return
-    // * @Since 2023/8/12
-    // */
-    // public void editHomeCarousel(Long id, String addUrl, String addHint) throws
-    // StatusFailException {
-    // boolean isOk = fileEntityService.editHomeCarousel(id, addUrl, addHint);
-    // if (!isOk) {
-    // throw new StatusFailException("更新失败");
-    // }
-    // }
-
     /**
      * @MethodName getRecentSevenACRank
      * @Params

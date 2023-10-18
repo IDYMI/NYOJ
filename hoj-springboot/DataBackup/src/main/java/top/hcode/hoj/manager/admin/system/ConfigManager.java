@@ -180,6 +180,18 @@ public class ConfigManager {
         }
     }
 
+    public void editHomeCarousel(Long id, String addLink, String addHint) throws StatusFailException {
+
+        File imgFile = fileEntityService.getById(id);
+        if (imgFile == null) {
+            throw new StatusFailException("文件id错误，图片不存在");
+        }
+        boolean isOk = fileEntityService.editHomeCarousel(id, addLink, addHint);
+        if (!isOk) {
+            throw new StatusFailException("更新失败！");
+        }
+    }
+
     public void setWebConfig(WebConfigDTO config) throws StatusFailException {
 
         WebConfig webConfig = nacosSwitchConfig.getWebConfig();

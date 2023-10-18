@@ -60,6 +60,16 @@ public class ConfigController {
     }
 
     @RequiresPermissions("system_info_admin")
+    @RequestMapping(value = "/home-carousel", method = RequestMethod.POST)
+    public CommonResult<Void> editHomeCarousel(
+            @RequestParam("id") Long id,
+            @RequestParam("addLink") String addLink,
+            @RequestParam("addHint") String addHint) {
+
+        return configService.editHomeCarousel(id, addLink, addHint);
+    }
+
+    @RequiresPermissions("system_info_admin")
     @RequestMapping(value = "/set-web-config", method = RequestMethod.PUT)
     public CommonResult<Void> setWebConfig(@RequestBody WebConfigDTO config) {
 

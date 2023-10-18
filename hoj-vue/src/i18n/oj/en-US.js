@@ -404,7 +404,6 @@ export const m = {
   Edit_Discussion: 'Edit Discussion',
   Delete_Discussion_Tips: 'This operation will delete the discussion, including the associated comments and replies. Do you want to continue?',
   Delete_successfully: 'Delete Successfully',
-  Edit_successfully: 'Edit Successfully',
   Post_successfully: 'Post Successfully',
   Send_successfully: 'Send Successfully',
   Can_not_exceed_255: 'length cannot exceed 255',
@@ -786,7 +785,7 @@ export const m = {
   Cancel_Group_Problem_Apply_Public_Tips: 'Do you want to cancel the application for this problem to be added to the public bank?',
 
   // /views/admin/general/SystemConfig.vue
-  Add_Url: 'Add Url',
-  Add_Hint: 'Add Hint',
+  Url: 'Add Url',
+  Hint: 'Add Hint',
   Edit_Home_Rotation_Chart: 'Edit Home Rotation Chart'
 }

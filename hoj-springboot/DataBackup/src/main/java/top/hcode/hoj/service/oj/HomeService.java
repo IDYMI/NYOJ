@@ -19,9 +19,6 @@ public interface HomeService {
 
     public CommonResult<List<HashMap<String, Object>>> getHomeCarousel();
 
-    // public CommonResult<Void> editHomeCarousel(Long id, String addUrl, String
-    // addHint);
-
     public CommonResult<List<ACMRankVO>> getRecentSevenACRank();
 
     @Deprecated
