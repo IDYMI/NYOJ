@@ -43,6 +43,16 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
+    public CommonResult<Void> editHomeCarousel(Long id, String addLink, String addHint) {
+        try {
+            configManager.editHomeCarousel(id, addLink, addHint);
+            return CommonResult.successResponse();
+        } catch (StatusFailException e) {
+            return CommonResult.errorResponse(e.getMessage());
+        }
+    }
+
+    @Override
     public CommonResult<WebConfigDTO> getWebConfig() {
         return CommonResult.successResponse(configManager.getWebConfig());
     }

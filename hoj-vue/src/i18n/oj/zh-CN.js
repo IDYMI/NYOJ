@@ -404,7 +404,6 @@ export const m = {
   Edit_Discussion: '编辑',
   Delete_Discussion_Tips: '此操作将删除讨论，包括相关的评论和回复。你要继续吗？',
   Delete_successfully: '删除成功',
-  Edit_successfully: '编辑成功',
   Post_successfully: '发布成功',
   Send_successfully: '发送成功',
   Can_not_exceed_255: '的长度不能超过255',
@@ -786,7 +785,7 @@ export const m = {
   Cancel_Group_Problem_Apply_Public_Tips: '您是否要取消申请该题目加入公开题库？',
 
   // /views/admin/general/SystemConfig.vue
-  Add_Url: '添加链接',
-  Add_Hint: '添加描述',
-  Edit_Home_Rotation_Chart: '编辑 首页轮播图 信息'
+  Url: '链接',
+  Hint2: '描述',
+  Edit_Home_Rotation_Chart: '编辑首页轮播图'
 }

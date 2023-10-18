@@ -34,6 +34,11 @@ public class FileEntityEntityServiceImpl extends ServiceImpl<FileMapper, File> i
     }
 
     @Override
+    public Boolean editHomeCarousel(Long id, String addLink, String addHint) {
+        return fileMapper.editHomeCarousel(id, addLink, addHint);
+    }
+
+    @Override
     public List<File> queryDeleteAvatarList() {
         return fileMapper.queryDeleteAvatarList();
     }

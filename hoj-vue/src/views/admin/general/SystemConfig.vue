@@ -121,13 +121,12 @@
               style="height: 146px; width: 146x"
               class="el-upload-list__item-thumbnail"
             /><span class="el-upload-list__item-actions">
-              <!-- @click="handleEdit(img, index)" -->
-              <!-- <span
+              <span
                 class="el-upload-list__item-edit"
                 @click="handleEditInfo(img)"
               >
                 <i class="el-icon-edit"></i>
-              </span> -->
+              </span>
 
               <span
                 class="el-upload-list__item-preview"
@@ -180,21 +179,20 @@
         :close-on-click-modal="false"
       >
         <el-form>
-          <el-form-item :label="$t('m.Add_Url')" required>
-            <el-input v-model="addLink" size="small"></el-input>
+          <el-form-item :label="$t('m.Url')" required>
+            <el-input v-model="link" size="small"></el-input>
           </el-form-item>
 
-          <el-form-item :label="$t('m.Add_Hint')" required>
-            <el-input v-model="addHint" size="small"></el-input>
+          <el-form-item :label="$t('m.Hint2')" required>
+            <el-input v-model="hint" size="small"></el-input>
           </el-form-item>
 
           <el-form-item style="text-align: center">
             <el-button
               type="primary"
-              icon="el-icon-plus"
-              @click="handleEdit(addLink, addHint)"
+              @click="handleEdit(link, hint)"
               :loading="handleEditLoading"
-              >{{ $t("m.Add") }}
+              >{{ $t("m.To_Update") }}
             </el-button>
           </el-form-item>
         </el-form>
@@ -403,8 +401,8 @@ export default {
       disabled: false,
       carouselImgList: [],
       EditImgId: "",
-      addLink: "",
-      addHint: "",
+      link: "",
+      hint: "",
       handleEditLoading: false,
       HandleEditVisible: false,
     };
@@ -451,19 +449,22 @@ export default {
     },
     handleEditInfo(file) {
       let id = file.id;
-      if (file.response != null && index != undefined) {
-        this.EditImgId = file.response.data.id;
-        this.HandleEditVisible = true;
+      // console.log(id);
+      if (id) {
+        this.EditImgId = id;
+        this.link = file.link;
+        this.hint = file.hint;
       }
+      this.HandleEditVisible = true;
     },
-    handleEdit(addLink = undefined, addHint = undefined) {
+    handleEdit(link = undefined, hint = undefined) {
       this.handleEditLoading = true;
 
       let id = this.EditImgId;
 
-      api.admin_editHomeCarousel(id, addLink, addHint).then(
+      api.admin_editHomeCarousel(id, link, hint).then(
         (res) => {
-          myMessage.success(this.$i18n.t("m.Edit_successfully"));
+          myMessage.success(this.$i18n.t("m.Update_Successfully"));
           this.HandleEditVisible = false;
           this.handleEditLoading = false;
         },
@@ -472,8 +473,8 @@ export default {
         }
       );
       this.EditImgId = "";
-      this.addLink = "";
-      this.addHint = "";
+      this.link = "";
+      this.hint = "";
     },
 
     handlePictureCardPreview(file) {

@@ -58,21 +58,6 @@ public class HomeController {
         return homeService.getHomeCarousel();
     }
 
-    // /**
-    // * @MethodName editHomeCarousel
-    // * @Params
-    // * @Description 修改主页轮播图
-    // * @Return
-    // * @Since 2023/8/12
-    // */
-    // @PostMapping("/home-carousel")
-    // public CommonResult<List<HashMap<String, Object>>>
-    // editHomeCarousel(@RequestParam("id") Long id,
-    // @RequestParam("addUrl") String addUrl,
-    // @RequestParam("addHint") String addHint) {
-    // return homeService.editHomeCarousel(id, addUrl, addHint);
-    // }
-
     /**
      * @MethodName getRecentSevenACRank
      * @Params * @param null

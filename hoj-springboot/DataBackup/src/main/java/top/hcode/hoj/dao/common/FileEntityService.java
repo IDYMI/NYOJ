@@ -26,5 +26,5 @@ public interface FileEntityService extends IService<File> {
             List<String> contestProblemDisplayIDList,
             String rankShowName);
 
-    // boolean editHomeCarousel(Long id, String addUrl, String addHint);
+    Boolean editHomeCarousel(Long id, String addLink, String addHint);
 }
