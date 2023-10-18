@@ -9,9 +9,8 @@ import top.hcode.hoj.pojo.entity.judge.Judge;
 
 import top.hcode.hoj.service.admin.rejudge.RejudgeService;
 
-
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/7 18:12
  * @Description:
  */

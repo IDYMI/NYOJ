@@ -9,12 +9,12 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/10/29 13:08
  * @Description:
  */
 @Data
-@ApiModel(value="返回的判题信息", description="")
+@ApiModel(value = "返回的判题信息", description = "")
 public class JudgeVO {
 
     @ApiModelProperty(value = "用户id")

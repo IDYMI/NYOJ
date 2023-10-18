@@ -12,7 +12,7 @@ import top.hcode.hoj.dao.RemoteJudgeAccountEntityService;
 import top.hcode.hoj.service.RemoteJudgeService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/12/7 23:57
  * @Description:
  */
@@ -44,7 +44,8 @@ public class RemoteJudgeServiceImpl implements RemoteJudgeService {
         }
     }
 
-    private void tryAgainUpdateAccount(UpdateWrapper<RemoteJudgeAccount> updateWrapper, String remoteJudge, String username) {
+    private void tryAgainUpdateAccount(UpdateWrapper<RemoteJudgeAccount> updateWrapper, String remoteJudge,
+            String username) {
         boolean retryable;
         int attemptNumber = 0;
         do {
@@ -55,7 +56,8 @@ public class RemoteJudgeServiceImpl implements RemoteJudgeService {
                 attemptNumber++;
                 retryable = attemptNumber < 8;
                 if (attemptNumber == 8) {
-                    log.error("Remote Judge：Change Account status to `true` Failed ----------->{}", "oj:" + remoteJudge + ",username:" + username);
+                    log.error("Remote Judge：Change Account status to `true` Failed ----------->{}",
+                            "oj:" + remoteJudge + ",username:" + username);
                     break;
                 }
                 try {
@@ -96,7 +98,8 @@ public class RemoteJudgeServiceImpl implements RemoteJudgeService {
                 attemptNumber++;
                 retryable = attemptNumber < 8;
                 if (attemptNumber == 8) {
-                    log.error("Remote Judge：Change CF Judge Server Status to `true` Failed! =======>{}", "ip:" + ip + ",port:" + port);
+                    log.error("Remote Judge：Change CF Judge Server Status to `true` Failed! =======>{}",
+                            "ip:" + ip + ",port:" + port);
                     break;
                 }
                 try {

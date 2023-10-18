@@ -12,7 +12,7 @@ import top.hcode.hoj.service.admin.training.AdminTrainingProblemService;
 import java.util.HashMap;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 20:53
  * @Description:
  */
@@ -23,8 +23,10 @@ public class AdminTrainingProblemServiceImpl implements AdminTrainingProblemServ
     private AdminTrainingProblemManager adminTrainingProblemManager;
 
     @Override
-    public CommonResult<HashMap<String, Object>> getProblemList(Integer limit, Integer currentPage, String keyword, Boolean queryExisted, Long tid) {
-        HashMap<String, Object> problemMap = adminTrainingProblemManager.getProblemList(limit, currentPage, keyword, queryExisted, tid);
+    public CommonResult<HashMap<String, Object>> getProblemList(Integer limit, Integer currentPage, String keyword,
+            Boolean queryExisted, Long tid) {
+        HashMap<String, Object> problemMap = adminTrainingProblemManager.getProblemList(limit, currentPage, keyword,
+                queryExisted, tid);
         return CommonResult.successResponse(problemMap);
     }
 

@@ -11,11 +11,11 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/10 20:31
  * @Description:
  */
-@ApiModel(value="公告数据", description="")
+@ApiModel(value = "公告数据", description = "")
 @Data
 public class AnnouncementVO {
     @TableId(value = "id", type = IdType.AUTO)

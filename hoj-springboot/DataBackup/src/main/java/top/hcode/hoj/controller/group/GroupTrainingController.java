@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -32,16 +32,18 @@ public class GroupTrainingController {
     private GroupTrainingProblemService groupTrainingProblemService;
 
     @GetMapping("/get-training-list")
-    public CommonResult<IPage<TrainingVO>> getTrainingList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                           @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                           @RequestParam(value = "gid", required = true) Long gid) {
+    public CommonResult<IPage<TrainingVO>> getTrainingList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupTrainingService.getTrainingList(limit, currentPage, gid);
     }
 
     @GetMapping("/get-admin-training-list")
-    public CommonResult<IPage<Training>> getAdminTrainingList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                              @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                              @RequestParam(value = "gid", required = true) Long gid) {
+    public CommonResult<IPage<Training>> getAdminTrainingList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupTrainingService.getAdminTrainingList(limit, currentPage, gid);
     }
 
@@ -67,16 +69,17 @@ public class GroupTrainingController {
 
     @PutMapping("/change-training-status")
     public CommonResult<Void> changeTrainingStatus(@RequestParam(value = "tid", required = true) Long tid,
-                                                   @RequestParam(value = "status", required = true) Boolean status) {
+            @RequestParam(value = "status", required = true) Boolean status) {
         return groupTrainingService.changeTrainingStatus(tid, status);
     }
 
     @GetMapping("/get-training-problem-list")
-    public CommonResult<HashMap<String, Object>> getTrainingProblemList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                                        @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                                        @RequestParam(value = "keyword", required = false) String keyword,
-                                                                        @RequestParam(value = "queryExisted", required = false, defaultValue = "true") Boolean queryExisted,
-                                                                        @RequestParam(value = "tid", required = true) Long tid) {
+    public CommonResult<HashMap<String, Object>> getTrainingProblemList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "queryExisted", required = false, defaultValue = "true") Boolean queryExisted,
+            @RequestParam(value = "tid", required = true) Long tid) {
         return groupTrainingProblemService.getTrainingProblemList(limit, currentPage, keyword, queryExisted, tid);
     }
 
@@ -87,7 +90,7 @@ public class GroupTrainingController {
 
     @DeleteMapping("/training-problem")
     public CommonResult<Void> deleteTrainingProblem(@RequestParam(value = "pid", required = true) Long pid,
-                                                    @RequestParam(value = "tid", required = true) Long tid) {
+            @RequestParam(value = "tid", required = true) Long tid) {
         return groupTrainingProblemService.deleteTrainingProblem(pid, tid);
     }
 
@@ -98,7 +101,7 @@ public class GroupTrainingController {
 
     @PostMapping("/add-training-problem-from-group")
     public CommonResult<Void> addProblemFromGroup(@RequestParam(value = "problemId", required = true) String problemId,
-                                                  @RequestParam(value = "tid", required = true) Long tid) {
+            @RequestParam(value = "tid", required = true) Long tid) {
         return groupTrainingProblemService.addProblemFromGroup(problemId, tid);
     }
 }

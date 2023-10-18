@@ -8,11 +8,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/10/28 12:05
  * @Description:
  */
-@ApiModel(value="用户在比赛的记录", description="")
+@ApiModel(value = "用户在比赛的记录", description = "")
 @Data
 public class ContestRecordVO implements Serializable {
 

@@ -10,7 +10,7 @@ import top.hcode.hoj.pojo.vo.*;
 import top.hcode.hoj.service.oj.AccountService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/10/23 12:00
  * @Description: 主要负责处理账号的相关操作
  */

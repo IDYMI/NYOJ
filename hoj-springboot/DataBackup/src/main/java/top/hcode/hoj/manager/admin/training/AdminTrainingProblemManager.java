@@ -29,7 +29,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 20:20
  * @Description:
  */
@@ -52,9 +52,12 @@ public class AdminTrainingProblemManager {
     @Resource
     private RemoteProblemManager remoteProblemManager;
 
-    public HashMap<String, Object> getProblemList(Integer limit, Integer currentPage, String keyword, Boolean queryExisted, Long tid) {
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+    public HashMap<String, Object> getProblemList(Integer limit, Integer currentPage, String keyword,
+            Boolean queryExisted, Long tid) {
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
 
         IPage<Problem> iPage = new Page<>(currentPage, limit);
         // 根据tid在TrainingProblem表中查询到对应pid集合
@@ -121,15 +124,15 @@ public class AdminTrainingProblemManager {
 
     public void deleteProblem(Long pid, Long tid) throws StatusFailException {
         boolean isOk = false;
-        //  训练id不为null，表示就是从比赛列表移除而已
+        // 训练id不为null，表示就是从比赛列表移除而已
         if (tid != null) {
             QueryWrapper<TrainingProblem> trainingProblemQueryWrapper = new QueryWrapper<>();
             trainingProblemQueryWrapper.eq("tid", tid).eq("pid", pid);
             isOk = trainingProblemEntityService.remove(trainingProblemQueryWrapper);
         } else {
-             /*
-                problem的id为其他表的外键的表中的对应数据都会被一起删除！
-              */
+            /*
+             * problem的id为其他表的外键的表中的对应数据都会被一起删除！
+             */
             isOk = problemEntityService.removeById(pid);
         }
 
@@ -207,7 +210,8 @@ public class AdminTrainingProblemManager {
         if (problem == null) {
             AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
             try {
-                ProblemStrategy.RemoteProblemInfo otherOJProblemInfo = remoteProblemManager.getOtherOJProblemInfo(name.toUpperCase(), problemId, userRolesVo.getUsername());
+                ProblemStrategy.RemoteProblemInfo otherOJProblemInfo = remoteProblemManager
+                        .getOtherOJProblemInfo(name.toUpperCase(), problemId, userRolesVo.getUsername());
                 if (otherOJProblemInfo != null) {
                     problem = remoteProblemManager.adminAddOtherOJProblem(otherOJProblemInfo, name);
                     if (problem == null) {

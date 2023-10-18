@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/27 15:21
  * @Description:
  */
@@ -17,19 +17,19 @@ import java.util.Map;
 @Accessors(chain = true)
 public class ImportProblemVO implements Serializable {
 
-    private HashMap<String,Object> problem;
+    private HashMap<String, Object> problem;
 
     private List<String> languages;
 
-    private List<HashMap<String,Object>> samples;
+    private List<HashMap<String, Object>> samples;
 
     private List<String> tags;
 
-    private List<HashMap<String,String>> codeTemplates;
+    private List<HashMap<String, String>> codeTemplates;
 
-    private HashMap<String,String> userExtraFile;
+    private HashMap<String, String> userExtraFile;
 
-    private HashMap<String,String> judgeExtraFile;
+    private HashMap<String, String> judgeExtraFile;
 
     private String judgeMode;
 

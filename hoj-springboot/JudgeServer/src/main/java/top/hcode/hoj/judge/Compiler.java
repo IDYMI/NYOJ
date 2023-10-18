@@ -16,14 +16,14 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/4/16 12:14
  * @Description: 判题流程解耦重构2.0，该类只负责编译
  */
 public class Compiler {
 
     public static String compile(LanguageConfig languageConfig, String code,
-                                 String language, HashMap<String, String> extraFiles) throws SystemError, CompileError, SubmitError {
+            String language, HashMap<String, String> extraFiles) throws SystemError, CompileError, SubmitError {
 
         if (languageConfig == null) {
             throw new RuntimeException("Unsupported language " + language);
@@ -42,8 +42,7 @@ public class Compiler {
                 extraFiles,
                 true,
                 false,
-                null
-        );
+                null);
         JSONObject compileResult = (JSONObject) result.get(0);
         if (compileResult.getInt("status").intValue() != Constants.Judge.STATUS_ACCEPTED.getStatus()) {
             throw new CompileError("Compile Error.", ((JSONObject) compileResult.get("files")).getStr("stdout"),
@@ -52,13 +51,15 @@ public class Compiler {
 
         String fileId = ((JSONObject) compileResult.get("fileIds")).getStr(languageConfig.getExeName());
         if (StringUtils.isEmpty(fileId)) {
-            throw new SubmitError("Executable file not found.", ((JSONObject) compileResult.get("files")).getStr("stdout"),
+            throw new SubmitError("Executable file not found.",
+                    ((JSONObject) compileResult.get("files")).getStr("stdout"),
                     ((JSONObject) compileResult.get("files")).getStr("stderr"));
         }
         return fileId;
     }
 
-    public static Boolean compileSpj(String code, Long pid, String language, HashMap<String, String> extraFiles) throws SystemError {
+    public static Boolean compileSpj(String code, Long pid, String language, HashMap<String, String> extraFiles)
+            throws SystemError {
 
         LanguageConfigLoader languageConfigLoader = SpringUtil.getBean(LanguageConfigLoader.class);
         LanguageConfig languageConfig = languageConfigLoader.getLanguageConfigByName("SPJ-" + language);
@@ -85,18 +86,18 @@ public class Compiler {
                 extraFiles,
                 false,
                 copyOutExe,
-                Constants.JudgeDir.SPJ_WORKPLACE_DIR.getContent() + File.separator + pid
-        );
+                Constants.JudgeDir.SPJ_WORKPLACE_DIR.getContent() + File.separator + pid);
         JSONObject compileResult = (JSONObject) res.get(0);
         if (compileResult.getInt("status").intValue() != Constants.Judge.STATUS_ACCEPTED.getStatus()) {
-            throw new SystemError("Special Judge Code Compile Error.", ((JSONObject) compileResult.get("files")).getStr("stdout"),
+            throw new SystemError("Special Judge Code Compile Error.",
+                    ((JSONObject) compileResult.get("files")).getStr("stdout"),
                     ((JSONObject) compileResult.get("files")).getStr("stderr"));
         }
         return true;
     }
 
-
-    public static Boolean compileInteractive(String code, Long pid, String language, HashMap<String, String> extraFiles) throws SystemError {
+    public static Boolean compileInteractive(String code, Long pid, String language, HashMap<String, String> extraFiles)
+            throws SystemError {
 
         LanguageConfigLoader languageConfigLoader = SpringUtil.getBean(LanguageConfigLoader.class);
         LanguageConfig languageConfig = languageConfigLoader.getLanguageConfigByName("INTERACTIVE-" + language);
@@ -123,11 +124,11 @@ public class Compiler {
                 extraFiles,
                 false,
                 copyOutExe,
-                Constants.JudgeDir.INTERACTIVE_WORKPLACE_DIR.getContent() + File.separator + pid
-        );
+                Constants.JudgeDir.INTERACTIVE_WORKPLACE_DIR.getContent() + File.separator + pid);
         JSONObject compileResult = (JSONObject) res.get(0);
         if (compileResult.getInt("status").intValue() != Constants.Judge.STATUS_ACCEPTED.getStatus()) {
-            throw new SystemError("Interactive Judge Code Compile Error.", ((JSONObject) compileResult.get("files")).getStr("stdout"),
+            throw new SystemError("Interactive Judge Code Compile Error.",
+                    ((JSONObject) compileResult.get("files")).getStr("stdout"),
                     ((JSONObject) compileResult.get("files")).getStr("stderr"));
         }
         return true;

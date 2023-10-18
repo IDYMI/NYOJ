@@ -14,7 +14,7 @@ import top.hcode.hoj.service.admin.discussion.AdminDiscussionService;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 16:05
  * @Description:
  */
@@ -47,10 +47,10 @@ public class AdminDiscussionServiceImpl implements AdminDiscussionService {
 
     @Override
     public CommonResult<IPage<DiscussionReportVO>> getDiscussionReport(Integer limit, Integer currentPage) {
-        IPage<DiscussionReportVO> discussionReportIPage = adminDiscussionManager.getDiscussionReport(limit, currentPage);
+        IPage<DiscussionReportVO> discussionReportIPage = adminDiscussionManager.getDiscussionReport(limit,
+                currentPage);
         return CommonResult.successResponse(discussionReportIPage);
     }
-
 
     @Override
     public CommonResult<Void> updateDiscussionReport(DiscussionReport discussionReport) {

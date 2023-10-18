@@ -13,7 +13,7 @@ import top.hcode.hoj.pojo.entity.training.Training;
 import top.hcode.hoj.service.admin.training.AdminTrainingService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 20:44
  * @Description:
  */

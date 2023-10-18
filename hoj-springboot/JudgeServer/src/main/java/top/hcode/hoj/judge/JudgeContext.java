@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/12 15:49
  * @Description:
  */
@@ -42,7 +42,7 @@ public class JudgeContext {
         LanguageConfig languageConfig = languageConfigLoader.getLanguageConfigByName(judge.getLanguage());
         if (languageConfig.getSrcName() == null
                 || (!languageConfig.getSrcName().endsWith(".c")
-                && !languageConfig.getSrcName().endsWith(".cpp"))) {
+                        && !languageConfig.getSrcName().endsWith(".cpp"))) {
             problem.setTimeLimit(problem.getTimeLimit() * 2);
             problem.setMemoryLimit(problem.getMemoryLimit() * 2);
         }
@@ -80,21 +80,22 @@ public class JudgeContext {
         LanguageConfig languageConfig = languageConfigLoader.getLanguageConfigByName(testJudgeReq.getLanguage());
         if (languageConfig.getSrcName() == null
                 || (!languageConfig.getSrcName().endsWith(".c")
-                && !languageConfig.getSrcName().endsWith(".cpp"))) {
+                        && !languageConfig.getSrcName().endsWith(".cpp"))) {
             testJudgeReq.setTimeLimit(testJudgeReq.getTimeLimit() * 2);
             testJudgeReq.setMemoryLimit(testJudgeReq.getMemoryLimit() * 2);
         }
         return judgeStrategy.testJudge(testJudgeReq);
     }
 
-    public Boolean compileSpj(String code, Long pid, String spjLanguage, HashMap<String, String> extraFiles) throws SystemError {
+    public Boolean compileSpj(String code, Long pid, String spjLanguage, HashMap<String, String> extraFiles)
+            throws SystemError {
         return Compiler.compileSpj(code, pid, spjLanguage, extraFiles);
     }
 
-    public Boolean compileInteractive(String code, Long pid, String interactiveLanguage, HashMap<String, String> extraFiles) throws SystemError {
+    public Boolean compileInteractive(String code, Long pid, String interactiveLanguage,
+            HashMap<String, String> extraFiles) throws SystemError {
         return Compiler.compileInteractive(code, pid, interactiveLanguage, extraFiles);
     }
-
 
     public void updateOtherTable(Long submitId,
             Integer status,

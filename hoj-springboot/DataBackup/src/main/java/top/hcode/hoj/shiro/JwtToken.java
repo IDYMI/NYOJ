@@ -3,7 +3,7 @@ package top.hcode.hoj.shiro;
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/7/19 22:58
  * @Description:
  */

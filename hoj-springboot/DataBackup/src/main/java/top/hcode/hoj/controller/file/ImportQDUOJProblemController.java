@@ -14,7 +14,7 @@ import top.hcode.hoj.service.file.ImportQDUOJProblemService;
 import org.apache.shiro.authz.annotation.Logical;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/10/5 19:44
  * @Description:
  */

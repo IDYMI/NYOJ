@@ -8,12 +8,11 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/27 21:14
  * @Description:
  */
 public abstract class LanguageStrategy {
-
 
     public abstract String getLanguageNameById(String id);
 

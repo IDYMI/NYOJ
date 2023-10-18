@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -22,9 +22,10 @@ public interface GroupMemberEntityService extends IService<GroupMember> {
 
     void addApplyNoticeToGroupRoot(Long gid, String groupName, String newMemberUid);
 
-    void addWelcomeNoticeToGroupNewMember(Long gid, String groupName,String memberUid);
+    void addWelcomeNoticeToGroupNewMember(Long gid, String groupName, String memberUid);
 
     void addRemoveNoticeToGroupMember(Long gid, String groupName, String operator, String memberUid);
 
-    void addDissolutionNoticeToGroupMember(Long gid, String groupName, List<String> groupMemberUidList, String operator);
+    void addDissolutionNoticeToGroupMember(Long gid, String groupName, List<String> groupMemberUidList,
+            String operator);
 }

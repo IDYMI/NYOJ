@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/11/19 21:56
  * @Description:
  */
@@ -22,7 +22,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="TrainingCategory对象", description="")
+@ApiModel(value = "TrainingCategory对象", description = "")
 public class TrainingCategory implements Serializable {
 
     private static final long serialVersionUID = 1L;

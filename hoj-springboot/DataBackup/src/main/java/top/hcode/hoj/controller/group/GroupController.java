@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -27,10 +27,10 @@ public class GroupController {
     @GetMapping("/get-group-list")
     @AnonApi
     public CommonResult<IPage<GroupVO>> getGroupList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                     @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                     @RequestParam(value = "keyword", required = false) String keyword,
-                                                     @RequestParam(value = "auth", required = false) Integer auth,
-                                                     @RequestParam(value = "onlyMine", required = false) Boolean onlyMine) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "auth", required = false) Integer auth,
+            @RequestParam(value = "onlyMine", required = false) Boolean onlyMine) {
         return groupService.getGroupList(limit, currentPage, keyword, auth, onlyMine);
     }
 

@@ -7,13 +7,14 @@ import top.hcode.hoj.pojo.vo.GroupVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
 public interface GroupService {
 
-    public CommonResult<IPage<GroupVO>> getGroupList(Integer limit, Integer currentPage, String keyword, Integer auth, Boolean onlyMine);
+    public CommonResult<IPage<GroupVO>> getGroupList(Integer limit, Integer currentPage, String keyword, Integer auth,
+            Boolean onlyMine);
 
     public CommonResult<Group> getGroup(Long gid);
 

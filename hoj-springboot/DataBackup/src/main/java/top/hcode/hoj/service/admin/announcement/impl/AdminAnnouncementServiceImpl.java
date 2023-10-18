@@ -12,7 +12,7 @@ import top.hcode.hoj.service.admin.announcement.AdminAnnouncementService;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 22:15
  * @Description:
  */

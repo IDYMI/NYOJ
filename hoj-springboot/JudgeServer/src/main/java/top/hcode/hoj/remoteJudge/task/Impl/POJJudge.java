@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/6/24 21:19
  * @Description:
  */
@@ -35,7 +35,8 @@ public class POJJudge extends RemoteJudgeStrategy {
     public static final String ERROR_URL = "/showcompileinfo?solution_id=%s";
     public static Map<String, String> headers = MapUtil
             .builder(new HashMap<String, String>())
-            .put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
+            .put("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
             .map();
 
     @Override
@@ -56,15 +57,16 @@ public class POJJudge extends RemoteJudgeStrategy {
                 .cookie(cookies);
 
         HttpResponse response = request.form(MapUtil.builder(new HashMap<String, Object>())
-                        .put("language", getLanguage(remoteJudgeDTO.getLanguage()))
-                        .put("submit", "Submit")
-                        .put("problem_id", remoteJudgeDTO.getCompleteProblemId())
-                        .put("source", Base64.encode(remoteJudgeDTO.getUserCode() + getRandomBlankString()))
-                        .put("encoded", 1).map())
+                .put("language", getLanguage(remoteJudgeDTO.getLanguage()))
+                .put("submit", "Submit")
+                .put("problem_id", remoteJudgeDTO.getCompleteProblemId())
+                .put("source", Base64.encode(remoteJudgeDTO.getUserCode() + getRandomBlankString()))
+                .put("encoded", 1).map())
                 .execute();
         remoteJudgeDTO.setSubmitStatus(response.getStatus());
         if (response.getStatus() != 302 && response.getStatus() != 200) {
-            String log = String.format("[POJ] [%s]: Failed to submit code, the http response status is [%s].", remoteJudgeDTO.getCompleteProblemId(), response.getStatus());
+            String log = String.format("[POJ] [%s]: Failed to submit code, the http response status is [%s].",
+                    remoteJudgeDTO.getCompleteProblemId(), response.getStatus());
             throw new RuntimeException(log);
         }
         // 下面的请求都是GET
@@ -154,7 +156,9 @@ public class POJJudge extends RemoteJudgeStrategy {
                 .put("password1", remoteJudgeDTO.getPassword()).map()).execute();
 
         if (response.getStatus() != 302) {
-            throw new RuntimeException("[POJ] Failed to login! The possible cause is connection failure, and the returned status code is " + response.getStatus());
+            throw new RuntimeException(
+                    "[POJ] Failed to login! The possible cause is connection failure, and the returned status code is "
+                            + response.getStatus());
         }
 
         HttpRequest homeRequest = HttpUtil.createGet(HOST);
@@ -162,7 +166,9 @@ public class POJJudge extends RemoteJudgeStrategy {
         HttpResponse homeResponse = homeRequest.execute();
         String body = homeResponse.body();
         if (!body.contains(remoteJudgeDTO.getUsername()) || !body.contains("Log Out")) {
-            throw new RuntimeException("[POJ] Failed to login! The possible cause is wrong account or password, account: " + remoteJudgeDTO.getUsername());
+            throw new RuntimeException(
+                    "[POJ] Failed to login! The possible cause is wrong account or password, account: "
+                            + remoteJudgeDTO.getUsername());
         }
         remoteJudgeDTO.setCookies(response.getCookies())
                 .setLoginStatus(response.getStatus());
@@ -191,7 +197,6 @@ public class POJJudge extends RemoteJudgeStrategy {
         }
     }
 
-
     public Long getMaxRunId(HttpRequest request, String userName, String problemId) {
         String url = String.format(STATUS_URL, userName, problemId);
         request.setUrl(HOST + url);
@@ -199,7 +204,6 @@ public class POJJudge extends RemoteJudgeStrategy {
         Matcher matcher = Pattern.compile("<tr align=center><td>(\\d+)").matcher(html);
         return matcher.find() ? Long.parseLong(matcher.group(1)) : -1L;
     }
-
 
     // TODO 添加结果对应的状态
     private static final Map<String, Constants.Judge> statusMap = new HashMap<String, Constants.Judge>() {

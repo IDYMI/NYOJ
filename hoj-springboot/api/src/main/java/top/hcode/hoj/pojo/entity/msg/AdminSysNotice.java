@@ -13,14 +13,14 @@ import lombok.experimental.Accessors;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/10/1 20:11
  * @Description:
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="AdminSysNotice", description="")
+@ApiModel(value = "AdminSysNotice", description = "")
 public class AdminSysNotice {
     private static final long serialVersionUID = 1L;
 

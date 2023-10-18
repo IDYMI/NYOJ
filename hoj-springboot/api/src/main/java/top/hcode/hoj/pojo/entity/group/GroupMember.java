@@ -14,14 +14,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="GroupMember对象", description="")
+@ApiModel(value = "GroupMember对象", description = "")
 public class GroupMember implements Serializable {
 
     private static final long serialVersionUID = 1L;

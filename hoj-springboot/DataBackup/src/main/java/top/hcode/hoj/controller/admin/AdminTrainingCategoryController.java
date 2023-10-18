@@ -12,7 +12,7 @@ import top.hcode.hoj.service.admin.training.AdminTrainingCategoryService;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/11/27 15:11
  * @Description:
  */

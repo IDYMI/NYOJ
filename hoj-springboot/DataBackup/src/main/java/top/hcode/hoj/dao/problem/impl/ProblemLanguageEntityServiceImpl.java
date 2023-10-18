@@ -7,10 +7,11 @@ import top.hcode.hoj.pojo.entity.problem.ProblemLanguage;
 import top.hcode.hoj.dao.problem.ProblemLanguageEntityService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/13 00:04
  * @Description:
  */
 @Service
-public class ProblemLanguageEntityServiceImpl extends ServiceImpl<ProblemLanguageMapper, ProblemLanguage> implements ProblemLanguageEntityService {
+public class ProblemLanguageEntityServiceImpl extends ServiceImpl<ProblemLanguageMapper, ProblemLanguage>
+        implements ProblemLanguageEntityService {
 }

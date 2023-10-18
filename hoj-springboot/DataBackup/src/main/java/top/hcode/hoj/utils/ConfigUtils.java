@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import top.hcode.hoj.pojo.vo.ConfigVO;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/2 23:17
  * @Description:
  */

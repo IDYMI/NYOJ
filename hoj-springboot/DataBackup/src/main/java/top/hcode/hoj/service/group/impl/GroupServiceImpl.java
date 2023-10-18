@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -26,7 +26,8 @@ public class GroupServiceImpl implements GroupService {
     private GroupManager groupManager;
 
     @Override
-    public CommonResult<IPage<GroupVO>> getGroupList(Integer limit, Integer currentPage, String keyword, Integer auth, Boolean onlyMine) {
+    public CommonResult<IPage<GroupVO>> getGroupList(Integer limit, Integer currentPage, String keyword, Integer auth,
+            Boolean onlyMine) {
         return CommonResult.successResponse(groupManager.getGroupList(limit, currentPage, keyword, auth, onlyMine));
     }
 

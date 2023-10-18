@@ -11,31 +11,33 @@ import top.hcode.hoj.pojo.entity.discussion.Discussion;
 import top.hcode.hoj.service.group.discussion.GroupDiscussionService;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
 @RestController
 @RequiresAuthentication
 @RequestMapping("/api/group")
-@HOJAccess({HOJAccessEnum.GROUP_DISCUSSION})
+@HOJAccess({ HOJAccessEnum.GROUP_DISCUSSION })
 public class GroupDiscussionController {
 
     @Autowired
     private GroupDiscussionService groupDiscussionService;
 
     @GetMapping("/get-discussion-list")
-    public CommonResult<IPage<Discussion>> getDiscussionList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                             @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                             @RequestParam(value = "gid", required = true) Long gid,
-                                                             @RequestParam(value = "pid", required = false) String pid) {
+    public CommonResult<IPage<Discussion>> getDiscussionList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "gid", required = true) Long gid,
+            @RequestParam(value = "pid", required = false) String pid) {
         return groupDiscussionService.getDiscussionList(limit, currentPage, gid, pid);
     }
 
     @GetMapping("/get-admin-discussion-list")
-    public CommonResult<IPage<Discussion>> getAdminDiscussionList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                                  @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                                  @RequestParam(value = "gid", required = true) Long gid) {
+    public CommonResult<IPage<Discussion>> getAdminDiscussionList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupDiscussionService.getAdminDiscussionList(limit, currentPage, gid);
     }
 

@@ -7,7 +7,7 @@ import top.hcode.hoj.pojo.entity.problem.Language;
 import top.hcode.hoj.dao.problem.LanguageEntityService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/12 23:23
  * @Description:
  */

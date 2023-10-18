@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 11:20
  * @Description:
  */
@@ -26,7 +26,7 @@ public class JudgeValidator {
     private AccessValidator accessValidator;
 
     private final static List<String> HOJ_LANGUAGE_LIST = Arrays.asList(
-            "C++", "C++ With O2", "C++ 17", "C++ 17 With O2","C++ 20", "C++ 20 With O2",
+            "C++", "C++ With O2", "C++ 17", "C++ 17 With O2", "C++ 20", "C++ 20 With O2",
             "C", "C With O2", "Python3", "Python2", "Java", "Golang", "C#", "PHP", "PyPy2", "PyPy3",
             "JavaScript Node", "JavaScript V8", "Ruby", "Rust");
 
@@ -111,9 +111,9 @@ public class JudgeValidator {
                     testJudgeDto.setLanguage("Python3");
                 } else if (dtoLanguage.contains("Python")) {
                     testJudgeDto.setLanguage("Python2");
-                }else if (dtoLanguage.contains("Node")){
+                } else if (dtoLanguage.contains("Node")) {
                     testJudgeDto.setLanguage("JavaScript Node");
-                }else if (dtoLanguage.contains("JavaScript")){
+                } else if (dtoLanguage.contains("JavaScript")) {
                     testJudgeDto.setLanguage("JavaScript V8");
                 }
             }

@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -28,9 +28,11 @@ public class GroupContestProblemServiceImpl implements GroupContestProblemServic
     private GroupContestProblemManager groupContestProblemManager;
 
     @Override
-    public CommonResult<HashMap<String, Object>> getContestProblemList(Integer limit, Integer currentPage, String keyword, Long cid, Integer problemType, String oj) {
+    public CommonResult<HashMap<String, Object>> getContestProblemList(Integer limit, Integer currentPage,
+            String keyword, Long cid, Integer problemType, String oj) {
         try {
-            return CommonResult.successResponse(groupContestProblemManager.getContestProblemList(limit, currentPage, keyword, cid, problemType, oj));
+            return CommonResult.successResponse(groupContestProblemManager.getContestProblemList(limit, currentPage,
+                    keyword, cid, problemType, oj));
         } catch (StatusForbiddenException e) {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         } catch (StatusNotFoundException e) {

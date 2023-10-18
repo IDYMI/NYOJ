@@ -3,7 +3,7 @@ package top.hcode.hoj.common.exception;
 import lombok.Data;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/4/16 13:52
  * @Description:
  */

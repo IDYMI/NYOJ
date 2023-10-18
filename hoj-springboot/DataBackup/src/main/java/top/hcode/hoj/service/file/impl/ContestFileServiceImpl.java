@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 15:53
  * @Description:
  */
@@ -22,13 +22,15 @@ public class ContestFileServiceImpl implements ContestFileService {
     private ContestFileManager contestFileManager;
 
     @Override
-    public void downloadContestRank(Long cid, Boolean forceRefresh, Boolean removeStar, Boolean isContainsAfterContestJudge,
-                                    HttpServletResponse response) throws StatusFailException, IOException, StatusForbiddenException {
+    public void downloadContestRank(Long cid, Boolean forceRefresh, Boolean removeStar,
+            Boolean isContainsAfterContestJudge,
+            HttpServletResponse response) throws StatusFailException, IOException, StatusForbiddenException {
         contestFileManager.downloadContestRank(cid, forceRefresh, removeStar, isContainsAfterContestJudge, response);
     }
 
     @Override
-    public void downloadContestACSubmission(Long cid, Boolean excludeAdmin, String splitType, HttpServletResponse response) throws StatusFailException, StatusForbiddenException {
+    public void downloadContestACSubmission(Long cid, Boolean excludeAdmin, String splitType,
+            HttpServletResponse response) throws StatusFailException, StatusForbiddenException {
         contestFileManager.downloadContestACSubmission(cid, excludeAdmin, splitType, response);
     }
 

@@ -11,7 +11,7 @@ import top.hcode.hoj.manager.file.ImportQDUOJProblemManager;
 import top.hcode.hoj.service.file.ImportQDUOJProblemService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 15:24
  * @Description:
  */

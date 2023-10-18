@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/1/7 22:27
  * @Description:用户主页的数据格式
  */
@@ -67,7 +67,7 @@ public class UserHomeVO {
     private List<Long> contestPidList;
 
     @ApiModelProperty(value = "日期对应的比赛名次数据列表")
-    private List<HashMap<String,Object>> dataList;
+    private List<HashMap<String, Object>> dataList;
 
     @ApiModelProperty(value = "难度=>[P1000,P1001]")
     private Map<Integer, List<UserHomeProblemVO>> solvedGroupByDifficulty;

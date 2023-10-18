@@ -14,7 +14,7 @@ import top.hcode.hoj.pojo.vo.AdminContestVO;
 import top.hcode.hoj.service.admin.contest.AdminContestService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 11:17
  * @Description:
  */

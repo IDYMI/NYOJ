@@ -14,7 +14,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.util.Optional;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/21 15:53
  * @Description:
  */
@@ -40,10 +40,9 @@ public class RedisAutoConfig {
     @Autowired
     private JedisPoolConfigure jedisPoolConfigure;
 
-
     @Bean
     public RedisConnectionFactory redisConnectionFactory(JedisPoolConfig jedisPool,
-                                                         RedisStandaloneConfiguration jedisConfig) {
+            RedisStandaloneConfiguration jedisConfig) {
         JedisConnectionFactory connectionFactory = new JedisConnectionFactory(jedisConfig);
         connectionFactory.setPoolConfig(jedisPool);
         return connectionFactory;
@@ -65,7 +64,8 @@ public class RedisAutoConfig {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(Optional.ofNullable(jedisPoolConfigure.getHost()).orElseGet(() -> redisHost));
         config.setPort(Optional.ofNullable(jedisPoolConfigure.getPort()).orElseGet(() -> redisPort));
-        config.setPassword(RedisPassword.of(Optional.ofNullable(jedisPoolConfigure.getPassword()).orElseGet(() -> redisPassword)));
+        config.setPassword(
+                RedisPassword.of(Optional.ofNullable(jedisPoolConfigure.getPassword()).orElseGet(() -> redisPassword)));
         return config;
     }
 

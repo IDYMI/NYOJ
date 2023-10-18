@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.oj;
 
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import top.hcode.hoj.pojo.entity.contest.ContestRecord;
 import top.hcode.hoj.service.oj.ContestAdminService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/9/20 13:15
  * @Description: 处理比赛管理模块的相关数据请求
  */
@@ -33,12 +32,11 @@ public class ContestAdminController {
     @GetMapping("/get-contest-ac-info")
     @RequiresAuthentication
     public CommonResult<IPage<ContestRecord>> getContestACInfo(@RequestParam("cid") Long cid,
-                                                               @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                               @RequestParam(value = "limit", required = false) Integer limit) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "limit", required = false) Integer limit) {
 
         return contestAdminService.getContestACInfo(cid, currentPage, limit);
     }
-
 
     /**
      * @MethodName checkContestACInfo
@@ -54,12 +52,11 @@ public class ContestAdminController {
         return contestAdminService.checkContestACInfo(checkACDto);
     }
 
-
     @GetMapping("/get-contest-print")
     @RequiresAuthentication
     public CommonResult<IPage<ContestPrint>> getContestPrint(@RequestParam("cid") Long cid,
-                                                             @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                             @RequestParam(value = "limit", required = false) Integer limit) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "limit", required = false) Integer limit) {
 
         return contestAdminService.getContestPrint(cid, currentPage, limit);
     }
@@ -75,7 +72,7 @@ public class ContestAdminController {
     @PutMapping("/check-contest-print-status")
     @RequiresAuthentication
     public CommonResult<Void> checkContestPrintStatus(@RequestParam("id") Long id,
-                                                      @RequestParam("cid") Long cid) {
+            @RequestParam("cid") Long cid) {
 
         return contestAdminService.checkContestPrintStatus(id, cid);
     }

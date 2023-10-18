@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 21:31
  * @Description:
  */
 public interface AdminUserService {
 
-    public CommonResult<IPage<UserRolesVO>> getUserList(Integer limit, Integer currentPage, Boolean onlyAdmin, String keyword);
+    public CommonResult<IPage<UserRolesVO>> getUserList(Integer limit, Integer currentPage, Boolean onlyAdmin,
+            String keyword);
 
     public CommonResult<Void> editUser(AdminEditUserDTO adminEditUserDto);
 
@@ -23,6 +24,6 @@ public interface AdminUserService {
 
     public CommonResult<Void> insertBatchUser(List<List<String>> users);
 
-    public CommonResult<Map<Object,Object>> generateUser(Map<String, Object> params);
+    public CommonResult<Map<Object, Object>> generateUser(Map<String, Object> params);
 
 }

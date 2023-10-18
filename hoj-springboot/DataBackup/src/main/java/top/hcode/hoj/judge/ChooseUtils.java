@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/24 17:30
  * @Description: 筛选可用判题机
  */
@@ -94,7 +94,6 @@ public class ChooseUtils {
         return null;
     }
 
-
     @Transactional(rollbackFor = Exception.class)
     @Deprecated
     public JudgeServer chooseFixedServer(Boolean isRemote, String fixedTag, Integer index, Integer total) {
@@ -141,7 +140,6 @@ public class ChooseUtils {
         return null;
     }
 
-
     /**
      * @param serviceId
      * @MethodName getInstances
@@ -162,10 +160,12 @@ public class ChooseUtils {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public RemoteJudgeAccount chooseRemoteAccount(String remoteOJAccountType, String username, Boolean isNeedAccountRejudge) {
+    public RemoteJudgeAccount chooseRemoteAccount(String remoteOJAccountType, String username,
+            Boolean isNeedAccountRejudge) {
 
         // 过滤出当前远程oj可用的账号列表 悲观锁
-        List<RemoteJudgeAccount> remoteJudgeAccountList = remoteJudgeAccountMapper.getAvailableAccount(remoteOJAccountType);
+        List<RemoteJudgeAccount> remoteJudgeAccountList = remoteJudgeAccountMapper
+                .getAvailableAccount(remoteOJAccountType);
 
         for (RemoteJudgeAccount remoteJudgeAccount : remoteJudgeAccountList) {
             // POJ已有submitId的重判需要使用原来的账号获取结果
@@ -195,7 +195,8 @@ public class ChooseUtils {
         remoteJudgeAccountQueryWrapper.eq("oj", remoteOJAccountType)
                 .last("for update");
 
-        List<RemoteJudgeAccount> remoteJudgeAccountList = remoteJudgeAccountMapper.selectList(remoteJudgeAccountQueryWrapper);
+        List<RemoteJudgeAccount> remoteJudgeAccountList = remoteJudgeAccountMapper
+                .selectList(remoteJudgeAccountQueryWrapper);
         int len = remoteJudgeAccountList.size();
         for (int i = 0; i < len && i < instances.size(); i++) {
             RemoteJudgeAccount remoteJudgeAccount = remoteJudgeAccountList.get(i);
@@ -210,6 +211,5 @@ public class ChooseUtils {
         }
         return null;
     }
-
 
 }

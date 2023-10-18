@@ -1,6 +1,5 @@
 package top.hcode.hoj.service.oj;
 
-
 import top.hcode.hoj.common.result.CommonResult;
 import top.hcode.hoj.pojo.dto.ApplyResetPasswordDTO;
 import top.hcode.hoj.pojo.dto.LoginDTO;
@@ -13,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 17:39
  * @Description:
  */

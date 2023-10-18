@@ -15,7 +15,7 @@ import top.hcode.hoj.service.oj.AccountService;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 19:35
  * @Description:
  */

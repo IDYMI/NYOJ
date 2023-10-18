@@ -10,7 +10,7 @@ import top.hcode.hoj.util.IpUtils;
 import java.util.HashMap;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/2/6 00:46
  * @Description:
  */
@@ -18,7 +18,6 @@ import java.util.HashMap;
 public class NacosConfig {
 
     private static final int cpuNum = Runtime.getRuntime().availableProcessors();
-
 
     @Value("${hoj-judge-server.max-task-num}")
     private Integer maxTaskNum;
@@ -38,7 +37,6 @@ public class NacosConfig {
     @Value("${hoj-judge-server.name}")
     private String name;
 
-
     /**
      * 用于改变程序自动获取的本机ip
      */
@@ -46,7 +44,7 @@ public class NacosConfig {
     @Primary
     public NacosDiscoveryProperties nacosProperties() {
         NacosDiscoveryProperties nacosDiscoveryProperties = new NacosDiscoveryProperties();
-        //此处我只改了ip，其他参数可以根据自己的需求改变
+        // 此处我只改了ip，其他参数可以根据自己的需求改变
         nacosDiscoveryProperties.setIp(IpUtils.getServiceIp());
         HashMap<String, String> meta = new HashMap<>();
         int max = cpuNum * 2 + 1;

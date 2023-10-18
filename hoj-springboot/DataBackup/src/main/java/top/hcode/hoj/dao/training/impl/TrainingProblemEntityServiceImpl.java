@@ -20,12 +20,13 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/11/20 12:25
  * @Description:
  */
 @Service
-public class TrainingProblemEntityServiceImpl extends ServiceImpl<TrainingProblemMapper, TrainingProblem> implements TrainingProblemEntityService {
+public class TrainingProblemEntityServiceImpl extends ServiceImpl<TrainingProblemMapper, TrainingProblem>
+        implements TrainingProblemEntityService {
 
     @Resource
     private TrainingProblemMapper trainingProblemMapper;

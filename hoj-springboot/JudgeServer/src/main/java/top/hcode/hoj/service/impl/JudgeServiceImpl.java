@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/12 15:54
  * @Description:
  */
@@ -59,7 +59,7 @@ public class JudgeServiceImpl implements JudgeService {
         boolean isUpdatedOk = judgeEntityService.update(judgeUpdateWrapper);
 
         // 没更新成功，则可能表示该评测被取消 或者 judge记录被删除了，则结束评测
-        if (!isUpdatedOk){
+        if (!isUpdatedOk) {
             judgeContext.updateOtherTable(judge.getSubmitId(),
                     Constants.Judge.STATUS_CANCELLED.getStatus(),
                     judge.getCid(),
@@ -74,24 +74,24 @@ public class JudgeServiceImpl implements JudgeService {
         // 进行判题操作
         QueryWrapper<Problem> problemQueryWrapper = new QueryWrapper<>();
         problemQueryWrapper.select("id",
-                        "type",
-                        "io_score",
-                        "difficulty",
-                        "judge_mode",
-                        "judge_case_mode",
-                        "time_limit",
-                        "memory_limit",
-                        "stack_limit",
-                        "user_extra_file",
-                        "judge_extra_file",
-                        "case_version",
-                        "spj_code",
-                        "spj_language",
-                        "problem_id",
-                        "is_remove_end_blank",
-                        "is_file_io",
-                        "io_read_file_name",
-                        "io_write_file_name")
+                "type",
+                "io_score",
+                "difficulty",
+                "judge_mode",
+                "judge_case_mode",
+                "time_limit",
+                "memory_limit",
+                "stack_limit",
+                "user_extra_file",
+                "judge_extra_file",
+                "case_version",
+                "spj_code",
+                "spj_language",
+                "problem_id",
+                "is_remove_end_blank",
+                "is_file_io",
+                "io_read_file_name",
+                "io_write_file_name")
                 .eq("id", judge.getPid());
         Problem problem = problemEntityService.getOne(problemQueryWrapper);
         Judge finalJudgeRes = judgeContext.Judge(problem, judge);
@@ -117,7 +117,6 @@ public class JudgeServiceImpl implements JudgeService {
         return judgeContext.testJudge(testJudgeReq);
     }
 
-
     @Override
     public void remoteJudge(ToJudgeDTO toJudgeDTO) {
         Judge judge = toJudgeDTO.getJudge();
@@ -128,7 +127,7 @@ public class JudgeServiceImpl implements JudgeService {
                 .ne("status", Constants.Judge.STATUS_CANCELLED.getStatus());
         boolean isUpdatedOk = judgeEntityService.update(judgeUpdateWrapper);
         // 没更新成功，则可能表示该评测被取消 或者 judge记录被删除了，则结束评测
-        if (!isUpdatedOk){
+        if (!isUpdatedOk) {
             judgeContext.updateOtherTable(judge.getSubmitId(),
                     Constants.Judge.STATUS_CANCELLED.getStatus(),
                     judge.getCid(),
@@ -143,12 +142,14 @@ public class JudgeServiceImpl implements JudgeService {
     }
 
     @Override
-    public Boolean compileSpj(String code, Long pid, String spjLanguage, HashMap<String, String> extraFiles) throws SystemError {
+    public Boolean compileSpj(String code, Long pid, String spjLanguage, HashMap<String, String> extraFiles)
+            throws SystemError {
         return judgeContext.compileSpj(code, pid, spjLanguage, extraFiles);
     }
 
     @Override
-    public Boolean compileInteractive(String code, Long pid, String interactiveLanguage, HashMap<String, String> extraFiles) throws SystemError {
+    public Boolean compileInteractive(String code, Long pid, String interactiveLanguage,
+            HashMap<String, String> extraFiles) throws SystemError {
         return judgeContext.compileInteractive(code, pid, interactiveLanguage, extraFiles);
     }
 }

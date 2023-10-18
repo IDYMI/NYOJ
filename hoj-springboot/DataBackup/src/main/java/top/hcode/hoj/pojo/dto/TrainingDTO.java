@@ -6,7 +6,7 @@ import top.hcode.hoj.pojo.entity.training.Training;
 import top.hcode.hoj.pojo.entity.training.TrainingCategory;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/11/22 21:49
  * @Description: 后台管理训练的传输类
  */

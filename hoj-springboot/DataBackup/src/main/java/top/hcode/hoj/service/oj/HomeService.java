@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 21:06
  * @Description:
  */
@@ -19,7 +19,8 @@ public interface HomeService {
 
     public CommonResult<List<HashMap<String, Object>>> getHomeCarousel();
 
-    // public CommonResult<Void> editHomeCarousel(Long id, String addUrl, String addHint);
+    // public CommonResult<Void> editHomeCarousel(Long id, String addUrl, String
+    // addHint);
 
     public CommonResult<List<ACMRankVO>> getRecentSevenACRank();
 

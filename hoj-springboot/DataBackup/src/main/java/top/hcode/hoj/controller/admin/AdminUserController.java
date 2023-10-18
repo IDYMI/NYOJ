@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller.admin;
 
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -14,9 +13,8 @@ import top.hcode.hoj.service.admin.user.AdminUserService;
 import java.util.List;
 import java.util.Map;
 
-
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/6 15:18
  * @Description:
  */
@@ -27,14 +25,13 @@ public class AdminUserController {
     @Autowired
     private AdminUserService adminUserService;
 
-
     @GetMapping("/get-user-list")
     @RequiresAuthentication
     @RequiresPermissions("user_admin")
     public CommonResult<IPage<UserRolesVO>> getUserList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                        @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                        @RequestParam(value = "onlyAdmin", defaultValue = "false") Boolean onlyAdmin,
-                                                        @RequestParam(value = "keyword", required = false) String keyword) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "onlyAdmin", defaultValue = "false") Boolean onlyAdmin,
+            @RequestParam(value = "keyword", required = false) String keyword) {
         return adminUserService.getUserList(limit, currentPage, onlyAdmin, keyword);
     }
 

@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/4/16 12:15
  * @Description: 判题流程解耦重构3.0，该类负责输入数据进入程序进行测评
  */
@@ -45,14 +45,14 @@ public class JudgeRun {
     private LanguageConfigLoader languageConfigLoader;
 
     public List<JSONObject> judgeAllCase(Long submitId,
-                                         Problem problem,
-                                         String judgeLanguage,
-                                         String testCasesDir,
-                                         JSONObject testCasesInfo,
-                                         String userFileId,
-                                         String userFileContent,
-                                         Boolean getUserOutput,
-                                         String judgeCaseMode)
+            Problem problem,
+            String judgeLanguage,
+            String testCasesDir,
+            JSONObject testCasesInfo,
+            String userFileId,
+            String userFileContent,
+            Boolean getUserOutput,
+            String judgeCaseMode)
             throws SystemError, ExecutionException, InterruptedException {
 
         if (testCasesInfo == null) {
@@ -67,7 +67,8 @@ public class JudgeRun {
         Constants.JudgeMode judgeMode = Constants.JudgeMode.getJudgeMode(problem.getJudgeMode());
 
         if (judgeMode == null) {
-            throw new RuntimeException("The judge mode of problem " + problem.getProblemId() + " error:" + problem.getJudgeMode());
+            throw new RuntimeException(
+                    "The judge mode of problem " + problem.getProblemId() + " error:" + problem.getJudgeMode());
         }
 
         // 用户输出的文件夹
@@ -75,7 +76,8 @@ public class JudgeRun {
 
         LanguageConfig runConfig = languageConfigLoader.getLanguageConfigByName(judgeLanguage);
         LanguageConfig spjConfig = languageConfigLoader.getLanguageConfigByName("SPJ-" + problem.getSpjLanguage());
-        LanguageConfig interactiveConfig = languageConfigLoader.getLanguageConfigByName("INTERACTIVE-" + problem.getSpjLanguage());
+        LanguageConfig interactiveConfig = languageConfigLoader
+                .getLanguageConfigByName("INTERACTIVE-" + problem.getSpjLanguage());
 
         final AbstractJudge abstractJudge = getAbstractJudge(judgeMode);
 
@@ -101,12 +103,11 @@ public class JudgeRun {
                 .ioWriteFileName(problem.getIoWriteFileName())
                 .build();
 
-
         // OI题的subtask最低分模式，则每个subtask组只要有一个case非AC 或者 percentage为 0.0则该组剩余评测点跳过，不再评测
         if (Constants.Contest.TYPE_OI.getCode().equals(problem.getType())
                 && Constants.JudgeCaseMode.SUBTASK_LOWEST.getMode().equals(judgeCaseMode)) {
             return subtaskJudgeAllCase(testcaseList, testCasesDir, judgeGlobalDTO, abstractJudge);
-        } else if (Constants.JudgeCaseMode.ERGODIC_WITHOUT_ERROR.getMode().equals(judgeCaseMode)){
+        } else if (Constants.JudgeCaseMode.ERGODIC_WITHOUT_ERROR.getMode().equals(judgeCaseMode)) {
             // 顺序评测测试点，遇到非AC就停止！
             return ergodicJudgeAllCase(testcaseList, testCasesDir, judgeGlobalDTO, abstractJudge);
         } else {
@@ -116,6 +117,7 @@ public class JudgeRun {
 
     /**
      * 默认会评测全部的测试点数据
+     * 
      * @param testcaseList
      * @param testCasesDir
      * @param judgeGlobalDTO
@@ -125,9 +127,9 @@ public class JudgeRun {
      * @throws InterruptedException
      */
     private List<JSONObject> defaultJudgeAllCase(JSONArray testcaseList,
-                                                 String testCasesDir,
-                                                 JudgeGlobalDTO judgeGlobalDTO,
-                                                 AbstractJudge abstractJudge) throws ExecutionException, InterruptedException {
+            String testCasesDir,
+            JudgeGlobalDTO judgeGlobalDTO,
+            AbstractJudge abstractJudge) throws ExecutionException, InterruptedException {
         List<FutureTask<JSONObject>> futureTasks = new ArrayList<>();
         for (int index = 0; index < testcaseList.size(); index++) {
             JSONObject testcase = (JSONObject) testcaseList.get(index);
@@ -177,6 +179,7 @@ public class JudgeRun {
 
     /**
      * 顺序评测，遇到非AC就停止评测
+     * 
      * @param testcaseList
      * @param testCasesDir
      * @param judgeGlobalDTO
@@ -186,9 +189,9 @@ public class JudgeRun {
      * @throws InterruptedException
      */
     private List<JSONObject> ergodicJudgeAllCase(JSONArray testcaseList,
-                                                 String testCasesDir,
-                                                 JudgeGlobalDTO judgeGlobalDTO,
-                                                 AbstractJudge abstractJudge) throws ExecutionException, InterruptedException {
+            String testCasesDir,
+            JudgeGlobalDTO judgeGlobalDTO,
+            AbstractJudge abstractJudge) throws ExecutionException, InterruptedException {
         List<JSONObject> judgeResList = new ArrayList<>();
         for (int index = 0; index < testcaseList.size(); index++) {
             JSONObject testcase = (JSONObject) testcaseList.get(index);
@@ -233,7 +236,7 @@ public class JudgeRun {
             }));
             judgeResList.add(judgeRes);
             Integer status = judgeRes.getInt("status");
-            if (!Constants.Judge.STATUS_ACCEPTED.getStatus().equals(status)){
+            if (!Constants.Judge.STATUS_ACCEPTED.getStatus().equals(status)) {
                 break;
             }
         }
@@ -242,6 +245,7 @@ public class JudgeRun {
 
     /**
      * 根据测试点的groupNum进行分组，每组按顺序评测，遇到非AC有评测点得分为0分，不再评测该组剩余的测试点
+     * 
      * @param testcaseList
      * @param testCasesDir
      * @param judgeGlobalDTO
@@ -251,9 +255,9 @@ public class JudgeRun {
      * @throws InterruptedException
      */
     private List<JSONObject> subtaskJudgeAllCase(JSONArray testcaseList,
-                                                 String testCasesDir,
-                                                 JudgeGlobalDTO judgeGlobalDTO,
-                                                 AbstractJudge abstractJudge) throws ExecutionException, InterruptedException {
+            String testCasesDir,
+            JudgeGlobalDTO judgeGlobalDTO,
+            AbstractJudge abstractJudge) throws ExecutionException, InterruptedException {
         Map<Integer, List<JudgeDTO>> judgeDTOMap = new LinkedHashMap<>();
         for (int index = 0; index < testcaseList.size(); index++) {
             JSONObject testcase = (JSONObject) testcaseList.get(index);
@@ -317,7 +321,7 @@ public class JudgeRun {
                 Double percentage = judgeRes.getDouble("percentage");
                 if (!Constants.Judge.STATUS_ACCEPTED.getStatus().equals(status)
                         && !(Constants.Judge.STATUS_PARTIAL_ACCEPTED.getStatus().equals(status)
-                        && percentage != null && percentage > 0.0)) {
+                                && percentage != null && percentage > 0.0)) {
                     // 有评测点得分为0分，不再评测该组其他测试点
                     while (iterator.hasNext()) {
                         JudgeDTO elseJudgeDTO = iterator.next();
@@ -343,13 +347,15 @@ public class JudgeRun {
 
     /**
      * 运行自测评测单个测试点（由接口传入 输入与输出的数据）
+     * 
      * @param userFileId
      * @param testJudgeReq
      * @return
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    public TestJudgeRes testJudgeCase(String userFileId, TestJudgeReq testJudgeReq) throws ExecutionException, InterruptedException {
+    public TestJudgeRes testJudgeCase(String userFileId, TestJudgeReq testJudgeReq)
+            throws ExecutionException, InterruptedException {
 
         // 默认给限制时间+200ms用来测评
         Long testTime = testJudgeReq.getTimeLimit() + 200L;
@@ -427,7 +433,7 @@ public class JudgeRun {
         List<JSONObject> result = new LinkedList<>();
         while (futureTasks.size() > 0) {
             Iterator<FutureTask<JSONObject>> iterable = futureTasks.iterator();
-            //遍历一遍
+            // 遍历一遍
             while (iterable.hasNext()) {
                 FutureTask<JSONObject> future = iterable.next();
                 if (future.isDone() && !future.isCancelled()) {

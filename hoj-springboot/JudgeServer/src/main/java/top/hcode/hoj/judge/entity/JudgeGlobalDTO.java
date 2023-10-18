@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/3 11:53
  * @Description: 一次评测全局通用的传输实体类
  */
@@ -77,7 +77,7 @@ public class JudgeGlobalDTO implements Serializable {
     /**
      * 交互程序或特判程序所需的额外文件 key:文件名，value：文件路径
      */
-    private HashMap<String,String> judgeExtraFiles;
+    private HashMap<String, String> judgeExtraFiles;
 
     /**
      * 普通评测的命令配置

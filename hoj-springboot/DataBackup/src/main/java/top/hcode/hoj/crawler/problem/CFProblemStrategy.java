@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/3/3 15:00
  * @Description:
  */
@@ -38,10 +38,13 @@ public class CFProblemStrategy extends ProblemStrategy {
     }
 
     public String getProblemSource(String html, String problemId, String contestId, String problemNum) {
-        return String.format("<p>Problem：<a style='color:#1A5CC8' href='https://codeforces.com/problemset/problem/%s/%s'>%s</a></p><p>" +
+        return String.format(
+                "<p>Problem：<a style='color:#1A5CC8' href='https://codeforces.com/problemset/problem/%s/%s'>%s</a></p><p>"
+                        +
                         "Contest：" + ReUtil.get("(<a[^<>]+/contest/\\d+\">.+?</a>)", html, 1)
-                        .replace("/contest", HOST + "/contest")
-                        .replace("color: black", "color: #009688;") + "</p>",
+                                .replace("/contest", HOST + "/contest")
+                                .replace("color: black", "color: #009688;")
+                        + "</p>",
                 contestId, problemNum, getJudgeName() + "-" + problemId);
     }
 
@@ -100,15 +103,19 @@ public class CFProblemStrategy extends ProblemStrategy {
 
         info.setMemoryLimit(Integer.parseInt(memoryLimitStr));
 
-        String tmpDesc = ReUtil.get("standard output\\s*</div>\\s*</div>\\s*<div>([\\s\\S]*?)</div>\\s*<div class=\"input-specification",
+        String tmpDesc = ReUtil.get(
+                "standard output\\s*</div>\\s*</div>\\s*<div>([\\s\\S]*?)</div>\\s*<div class=\"input-specification",
                 html, 1);
         if (StringUtils.isEmpty(tmpDesc)) {
-            tmpDesc = ReUtil.get("<div class=\"input-file\">([\\s\\S]*?)</div><div class=\"input-specification", html, 1);
+            tmpDesc = ReUtil.get("<div class=\"input-file\">([\\s\\S]*?)</div><div class=\"input-specification", html,
+                    1);
         }
 
         if (StringUtils.isEmpty(tmpDesc)) {
             // 交互题
-            tmpDesc = ReUtil.get("standard output\\s*</div>\\s*</div>\\s*<div>([\\s\\S]*?)</div>\\s*<div>\\s*<div class=\"section-title", html, 1);
+            tmpDesc = ReUtil.get(
+                    "standard output\\s*</div>\\s*</div>\\s*<div>([\\s\\S]*?)</div>\\s*<div>\\s*<div class=\"section-title",
+                    html, 1);
         }
 
         if (StringUtils.isEmpty(tmpDesc)) {
@@ -125,13 +132,19 @@ public class CFProblemStrategy extends ProblemStrategy {
 
         info.setDescription(tmpDesc);
 
-        String inputDesc = ReUtil.get("<div class=\"section-title\">\\s*Input\\s*</div>([\\s\\S]*?)</div>\\s*<div class=\"output-specification\">", html, 1);
+        String inputDesc = ReUtil.get(
+                "<div class=\"section-title\">\\s*Input\\s*</div>([\\s\\S]*?)</div>\\s*<div class=\"output-specification\">",
+                html, 1);
 
         if (StringUtils.isEmpty(inputDesc)) {
-            inputDesc = ReUtil.get("<div class=\"section-title\">\\s*Interaction\\s*</div>([\\s\\S]*?)</div>\\s*<div class=\"sample-tests\">", html, 1);
+            inputDesc = ReUtil.get(
+                    "<div class=\"section-title\">\\s*Interaction\\s*</div>([\\s\\S]*?)</div>\\s*<div class=\"sample-tests\">",
+                    html, 1);
         }
         if (StringUtils.isEmpty(inputDesc)) {
-            inputDesc = ReUtil.get("<div class=\"input-specification\">\\s*<div class=\"section-title\">\\s*Input\\s*</div>([\\s\\S]*?)</div>", html, 1);
+            inputDesc = ReUtil.get(
+                    "<div class=\"input-specification\">\\s*<div class=\"section-title\">\\s*Input\\s*</div>([\\s\\S]*?)</div>",
+                    html, 1);
         }
         if (!StringUtils.isEmpty(inputDesc)) {
             inputDesc = inputDesc.replaceAll("\\$\\$\\$", "\\$").trim();
@@ -139,16 +152,21 @@ public class CFProblemStrategy extends ProblemStrategy {
 
         info.setInput(inputDesc);
 
-        String outputDesc = ReUtil.get("<div class=\"section-title\">\\s*Output\\s*</div>([\\s\\S]*?)</div>\\s*<div class=\"sample-tests\">", html, 1);
+        String outputDesc = ReUtil.get(
+                "<div class=\"section-title\">\\s*Output\\s*</div>([\\s\\S]*?)</div>\\s*<div class=\"sample-tests\">",
+                html, 1);
         if (!StringUtils.isEmpty(outputDesc)) {
             outputDesc = outputDesc.replaceAll("\\$\\$\\$", "\\$").trim();
         }
         info.setOutput(outputDesc);
 
-        List<String> inputExampleList = ReUtil.findAll(Pattern.compile("<div class=\"input\">\\s*<div class=\"title\">\\s*Input\\s*</div>\\s*<pre>([\\s\\S]*?)</pre>\\s*</div>"), html, 1);
+        List<String> inputExampleList = ReUtil.findAll(Pattern.compile(
+                "<div class=\"input\">\\s*<div class=\"title\">\\s*Input\\s*</div>\\s*<pre>([\\s\\S]*?)</pre>\\s*</div>"),
+                html, 1);
 
-        List<String> outputExampleList = ReUtil.findAll(Pattern.compile("<div class=\"output\">\\s*<div class=\"title\">\\s*Output\\s*</div>\\s*<pre>([\\s\\S]*?)</pre>\\s*</div>"), html, 1);
-
+        List<String> outputExampleList = ReUtil.findAll(Pattern.compile(
+                "<div class=\"output\">\\s*<div class=\"title\">\\s*Output\\s*</div>\\s*<pre>([\\s\\S]*?)</pre>\\s*</div>"),
+                html, 1);
 
         StringBuilder sb = new StringBuilder();
 
@@ -171,7 +189,8 @@ public class CFProblemStrategy extends ProblemStrategy {
 
         info.setExamples(sb.toString());
 
-        String tmpHint = ReUtil.get("<div class=\"section-title\">\\s*Note\\s*</div>([\\s\\S]*?)</div>\\s*</div>", html, 1);
+        String tmpHint = ReUtil.get("<div class=\"section-title\">\\s*Note\\s*</div>([\\s\\S]*?)</div>\\s*</div>", html,
+                1);
         if (tmpHint != null) {
             info.setHint(tmpHint.replaceAll("\\$\\$\\$", "\\$").trim());
         }
@@ -188,7 +207,9 @@ public class CFProblemStrategy extends ProblemStrategy {
                 .setIsGroup(false)
                 .setDifficulty(1); // 默认为中等
 
-        List<String> allTags = ReUtil.findAll(Pattern.compile("<span class=\"tag-box\" style=\"font-size:1\\.2rem;\" title=\"[\\s\\S]*?\">([\\s\\S]*?)</span>"), html, 1);
+        List<String> allTags = ReUtil.findAll(Pattern.compile(
+                "<span class=\"tag-box\" style=\"font-size:1\\.2rem;\" title=\"[\\s\\S]*?\">([\\s\\S]*?)</span>"), html,
+                1);
         List<Tag> tagList = new LinkedList<>();
         for (String tmp : allTags) {
             tagList.add(new Tag().setName(tmp.trim()));
@@ -198,6 +219,5 @@ public class CFProblemStrategy extends ProblemStrategy {
                 .setTagList(tagList)
                 .setRemoteOJ(Constants.RemoteOJ.CODEFORCES);
     }
-
 
 }

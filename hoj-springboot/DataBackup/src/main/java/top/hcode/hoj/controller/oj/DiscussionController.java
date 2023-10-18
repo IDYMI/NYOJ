@@ -20,7 +20,7 @@ import org.apache.shiro.authz.annotation.Logical;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/05/04 10:14
  * @Description: 负责讨论与评论模块的数据接口
  */

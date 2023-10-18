@@ -13,12 +13,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
 @Service
-public class GroupContestEntityServiceImpl extends ServiceImpl<GroupContestMapper, Contest> implements GroupContestEntityService {
+public class GroupContestEntityServiceImpl extends ServiceImpl<GroupContestMapper, Contest>
+        implements GroupContestEntityService {
 
     @Autowired
     private GroupContestMapper groupContestMapper;

@@ -1,6 +1,5 @@
 package top.hcode.hoj.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -20,9 +19,8 @@ import top.hcode.hoj.service.JudgeService;
 import java.util.HashMap;
 import java.util.Objects;
 
-
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/10/29 22:22
  * @Description: 处理代码提交
  */
@@ -65,7 +63,6 @@ public class JudgeController {
         return CommonResult.successResponse("判题机评测完成！");
     }
 
-
     @PostMapping(value = "/test-judge")
     public CommonResult<TestJudgeRes> submitProblemTestJudge(@RequestBody TestJudgeReq testJudgeReq) {
 
@@ -85,7 +82,6 @@ public class JudgeController {
         return CommonResult.successResponse(judgeService.testJudge(testJudgeReq));
     }
 
-
     @PostMapping(value = "/compile-spj")
     public CommonResult<Void> compileSpj(@RequestBody CompileDTO compileDTO) {
 
@@ -94,7 +90,8 @@ public class JudgeController {
         }
 
         try {
-            judgeService.compileSpj(compileDTO.getCode(), compileDTO.getPid(), compileDTO.getLanguage(), compileDTO.getExtraFiles());
+            judgeService.compileSpj(compileDTO.getCode(), compileDTO.getPid(), compileDTO.getLanguage(),
+                    compileDTO.getExtraFiles());
             return CommonResult.successResponse(null, "编译成功！");
         } catch (SystemError systemError) {
             return CommonResult.errorResponse(systemError.getStderr(), ResultStatus.SYSTEM_ERROR);
@@ -109,7 +106,8 @@ public class JudgeController {
         }
 
         try {
-            judgeService.compileInteractive(compileDTO.getCode(), compileDTO.getPid(), compileDTO.getLanguage(), compileDTO.getExtraFiles());
+            judgeService.compileInteractive(compileDTO.getCode(), compileDTO.getPid(), compileDTO.getLanguage(),
+                    compileDTO.getExtraFiles());
             return CommonResult.successResponse(null, "编译成功！");
         } catch (SystemError systemError) {
             return CommonResult.errorResponse(systemError.getStderr(), ResultStatus.SYSTEM_ERROR);
@@ -126,7 +124,6 @@ public class JudgeController {
         if (!Objects.equals(toJudgeDTO.getToken(), judgeToken)) {
             return CommonResult.errorResponse("对不起！您使用的判题服务调用凭证不正确！访问受限！", ResultStatus.ACCESS_DENIED);
         }
-
 
         if (toJudgeDTO.getJudge() == null) {
             return CommonResult.errorResponse("请求参数不能为空！");

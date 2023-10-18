@@ -8,7 +8,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/10/30 11:12
  * @Description:
  */
@@ -56,7 +56,7 @@ public class IpUtils {
         InetAddress address = null;
         try {
             address = InetAddress.getLocalHost();
-            return address.getHostAddress(); //返回IP地址
+            return address.getHostAddress(); // 返回IP地址
         } catch (UnknownHostException e) {
             log.error("本地ip获取异常---------->{}", e.getMessage());
         }

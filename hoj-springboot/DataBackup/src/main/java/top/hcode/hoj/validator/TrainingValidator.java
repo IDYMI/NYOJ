@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 import java.util.Objects;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/21 20:55
  * @Description:
  */
@@ -47,8 +47,8 @@ public class TrainingValidator {
         validateTrainingAuth(training, userRolesVo);
     }
 
-
-    public void validateTrainingAuth(Training training, AccountProfile userRolesVo) throws StatusAccessDeniedException, StatusForbiddenException {
+    public void validateTrainingAuth(Training training, AccountProfile userRolesVo)
+            throws StatusAccessDeniedException, StatusForbiddenException {
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root"); // 是否为超级管理员
 
@@ -66,7 +66,8 @@ public class TrainingValidator {
 
             boolean isAuthor = training.getAuthor().equals(userRolesVo.getUsername()); // 是否为该私有训练的创建者
 
-            if (isRoot || isAuthor || (training.getIsGroup() && groupValidator.isGroupRoot(userRolesVo.getUid(), training.getGid()))) {
+            if (isRoot || isAuthor
+                    || (training.getIsGroup() && groupValidator.isGroupRoot(userRolesVo.getUid(), training.getGid()))) {
                 return;
             }
 
@@ -75,7 +76,8 @@ public class TrainingValidator {
         }
     }
 
-    private void checkTrainingRegister(Long tid, String uid) throws StatusAccessDeniedException, StatusForbiddenException {
+    private void checkTrainingRegister(Long tid, String uid)
+            throws StatusAccessDeniedException, StatusForbiddenException {
         QueryWrapper<TrainingRegister> trainingRegisterQueryWrapper = new QueryWrapper<>();
         trainingRegisterQueryWrapper.eq("tid", tid);
         trainingRegisterQueryWrapper.eq("uid", uid);
@@ -90,14 +92,14 @@ public class TrainingValidator {
         }
     }
 
-    public boolean isInTrainingOrAdmin(Training training, AccountProfile userRolesVo) throws StatusAccessDeniedException {
+    public boolean isInTrainingOrAdmin(Training training, AccountProfile userRolesVo)
+            throws StatusAccessDeniedException {
         if (Constants.Training.AUTH_PRIVATE.getValue().equals(training.getAuth())) {
             if (userRolesVo == null) {
                 throw new StatusAccessDeniedException("该训练属于私有题单，请先登录以校验权限！");
             }
             boolean isRoot = SecurityUtils.getSubject().hasRole("root"); // 是否为超级管理员
             boolean isAuthor = training.getAuthor().equals(userRolesVo.getUsername()); // 是否为该私有训练的创建者
-
 
             if (isRoot
                     || isAuthor
@@ -109,7 +111,8 @@ public class TrainingValidator {
             QueryWrapper<TrainingRegister> trainingRegisterQueryWrapper = new QueryWrapper<>();
             trainingRegisterQueryWrapper.eq("tid", training.getId());
             trainingRegisterQueryWrapper.eq("uid", userRolesVo.getUid());
-            TrainingRegister trainingRegister = trainingRegisterEntityService.getOne(trainingRegisterQueryWrapper, false);
+            TrainingRegister trainingRegister = trainingRegisterEntityService.getOne(trainingRegisterQueryWrapper,
+                    false);
 
             return trainingRegister != null && trainingRegister.getStatus();
 

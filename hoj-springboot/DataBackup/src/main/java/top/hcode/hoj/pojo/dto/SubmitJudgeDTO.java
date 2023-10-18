@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotBlank;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/10/30 11:03
  * @Description: 用户代码提交类
  */

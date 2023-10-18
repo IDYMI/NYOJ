@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 20:09
  * @Description:
  */
@@ -75,7 +75,6 @@ public class AdminTrainingRecordManager {
         syncNewProblemUserSubmissionToRecord(pid, tpId, tid, uidList);
     }
 
-
     @Async
     public void checkSyncRecord(Training training) {
         if (!Constants.Training.AUTH_PRIVATE.getValue().equals(training.getAuth())) {
@@ -101,7 +100,6 @@ public class AdminTrainingRecordManager {
             saveBatchNewRecordByJudgeList(judgeList, tid, tpId, null);
         }
     }
-
 
     private void syncAllUserProblemRecord(Long tid) {
         QueryWrapper<TrainingProblem> trainingProblemQueryWrapper = new QueryWrapper<>();
@@ -130,8 +128,8 @@ public class AdminTrainingRecordManager {
         saveBatchNewRecordByJudgeList(judgeList, tid, null, pidMapTPid);
     }
 
-
-    private void saveBatchNewRecordByJudgeList(List<Judge> judgeList, Long tid, Long tpId, HashMap<Long, Long> pidMapTPid) {
+    private void saveBatchNewRecordByJudgeList(List<Judge> judgeList, Long tid, Long tpId,
+            HashMap<Long, Long> pidMapTPid) {
         if (!CollectionUtils.isEmpty(judgeList)) {
             List<TrainingRecord> trainingRecordList = new ArrayList<>();
             for (Judge judge : judgeList) {

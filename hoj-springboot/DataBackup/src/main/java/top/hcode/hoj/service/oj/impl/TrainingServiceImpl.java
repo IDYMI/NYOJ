@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 20:40
  * @Description:
  */
@@ -31,8 +31,9 @@ public class TrainingServiceImpl implements TrainingService {
 
     @Override
     public CommonResult<IPage<TrainingVO>> getTrainingList(Integer limit, Integer currentPage,
-                                                           String keyword, Long categoryId, String auth) {
-        return CommonResult.successResponse(trainingManager.getTrainingList(limit, currentPage, keyword, categoryId, auth));
+            String keyword, Long categoryId, String auth) {
+        return CommonResult
+                .successResponse(trainingManager.getTrainingList(limit, currentPage, keyword, categoryId, auth));
     }
 
     @Override
@@ -83,7 +84,8 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
-    public CommonResult<IPage<TrainingRankVO>> getTrainingRank(Long tid, Integer limit, Integer currentPage, String keyword) {
+    public CommonResult<IPage<TrainingRankVO>> getTrainingRank(Long tid, Integer limit, Integer currentPage,
+            String keyword) {
         try {
             return CommonResult.successResponse(trainingManager.getTrainingRank(tid, limit, currentPage, keyword));
         } catch (StatusFailException e) {

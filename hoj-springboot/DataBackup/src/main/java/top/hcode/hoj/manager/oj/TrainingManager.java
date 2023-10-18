@@ -34,7 +34,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 17:12
  * @Description:
  */
@@ -86,14 +86,16 @@ public class TrainingManager {
      * @Since 2021/11/20
      */
     public IPage<TrainingVO> getTrainingList(Integer limit,
-                                             Integer currentPage,
-                                             String keyword,
-                                             Long categoryId,
-                                             String auth) {
+            Integer currentPage,
+            String keyword,
+            Long categoryId,
+            String auth) {
 
         // 页数，每页题数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 20;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 20;
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
@@ -105,7 +107,6 @@ public class TrainingManager {
         return trainingEntityService.getTrainingList(limit, currentPage, categoryId, auth, keyword, currentUid);
     }
 
-
     /**
      * @param tid
      * @MethodName getTraining
@@ -113,7 +114,8 @@ public class TrainingManager {
      * @Return
      * @Since 2021/11/20
      */
-    public TrainingVO getTraining(Long tid) throws StatusFailException, StatusAccessDeniedException, StatusForbiddenException {
+    public TrainingVO getTraining(Long tid)
+            throws StatusFailException, StatusAccessDeniedException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
         boolean isRoot = SecurityUtils.getSubject().hasRole("root");
@@ -133,14 +135,16 @@ public class TrainingManager {
         }
 
         TrainingVO trainingVo = BeanUtil.copyProperties(training, TrainingVO.class);
-        TrainingCategory trainingCategory = trainingCategoryEntityService.getTrainingCategoryByTrainingId(training.getId());
+        TrainingCategory trainingCategory = trainingCategoryEntityService
+                .getTrainingCategoryByTrainingId(training.getId());
         trainingVo.setCategoryName(trainingCategory.getName());
         trainingVo.setCategoryColor(trainingCategory.getColor());
         List<Long> trainingProblemIdList = trainingProblemEntityService.getTrainingProblemIdList(training.getId());
         trainingVo.setProblemCount(trainingProblemIdList.size());
 
         if (userRolesVo != null && trainingValidator.isInTrainingOrAdmin(training, userRolesVo)) {
-            Integer count = trainingProblemEntityService.getUserTrainingACProblemCount(userRolesVo.getUid(), gid, trainingProblemIdList);
+            Integer count = trainingProblemEntityService.getUserTrainingACProblemCount(userRolesVo.getUid(), gid,
+                    trainingProblemIdList);
             trainingVo.setAcCount(count);
         } else {
             trainingVo.setAcCount(0);
@@ -174,7 +178,8 @@ public class TrainingManager {
      * @Return
      * @Since 2021/11/20
      */
-    public void toRegisterTraining(RegisterTrainingDTO registerTrainingDto) throws StatusFailException, StatusForbiddenException {
+    public void toRegisterTraining(RegisterTrainingDTO registerTrainingDto)
+            throws StatusFailException, StatusForbiddenException {
 
         Long tid = registerTrainingDto.getTid();
         String password = registerTrainingDto.getPassword();
@@ -213,7 +218,6 @@ public class TrainingManager {
         }
     }
 
-
     /**
      * @param tid
      * @MethodName getTrainingAccess
@@ -244,7 +248,6 @@ public class TrainingManager {
         return accessVo;
     }
 
-
     /**
      * @param tid
      * @param limit
@@ -255,8 +258,8 @@ public class TrainingManager {
      * @Return
      * @Since 2021/11/22
      */
-    public IPage<TrainingRankVO> getTrainingRank(Long tid, Integer limit, Integer currentPage, String keyword) throws
-            StatusAccessDeniedException, StatusForbiddenException, StatusFailException {
+    public IPage<TrainingRankVO> getTrainingRank(Long tid, Integer limit, Integer currentPage, String keyword)
+            throws StatusAccessDeniedException, StatusForbiddenException, StatusFailException {
 
         Training training = trainingEntityService.getById(tid);
         if (training == null || !training.getStatus()) {
@@ -266,8 +269,10 @@ public class TrainingManager {
         trainingValidator.validateTrainingAuth(training);
 
         // 页数，每页数若为空，设置默认值
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 30;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 30;
 
         if (StrUtil.isNotBlank(keyword)) {
             keyword = keyword.toLowerCase();
@@ -279,7 +284,8 @@ public class TrainingManager {
                 keyword);
     }
 
-    private IPage<TrainingRankVO> getTrainingRank(Long tid, Long gid, String username, int currentPage, int limit, String keyword) {
+    private IPage<TrainingRankVO> getTrainingRank(Long tid, Long gid, String username, int currentPage, int limit,
+            String keyword) {
 
         Map<Long, String> tpIdMapDisplayId = getTPIdMapDisplayId(tid);
         List<TrainingRecordVO> trainingRecordVOList = trainingRecordEntityService.getTrainingRecord(tid);
@@ -344,7 +350,8 @@ public class TrainingManager {
                 if (trainingRecordVo.getStatus().intValue() == Constants.Judge.STATUS_ACCEPTED.getStatus()) {
                     int runTime = (int) problemSubmissionInfo.getOrDefault("runTime", 0);
                     if (runTime > trainingRecordVo.getUseTime()) {
-                        trainingRankVo.setTotalRunTime(trainingRankVo.getTotalRunTime() - runTime + trainingRecordVo.getUseTime());
+                        trainingRankVo.setTotalRunTime(
+                                trainingRankVo.getTotalRunTime() - runTime + trainingRecordVo.getUseTime());
                         problemSubmissionInfo.put("runTime", trainingRecordVo.getUseTime());
                     }
                 }
@@ -366,15 +373,16 @@ public class TrainingManager {
             trainingRankVo.getSubmissionInfo().put(displayId, problemSubmissionInfo);
         }
 
-        List<TrainingRankVO> orderResultList = result.stream().sorted(Comparator.comparing(TrainingRankVO::getAc, Comparator.reverseOrder()) // 先以总ac数降序
-                .thenComparing(TrainingRankVO::getTotalRunTime) //再以总耗时升序
-        ).collect(Collectors.toList());
+        List<TrainingRankVO> orderResultList = result.stream()
+                .sorted(Comparator.comparing(TrainingRankVO::getAc, Comparator.reverseOrder()) // 先以总ac数降序
+                        .thenComparing(TrainingRankVO::getTotalRunTime) // 再以总耗时升序
+                ).collect(Collectors.toList());
 
         // 计算好排行榜，然后进行分页
         Page<TrainingRankVO> page = new Page<>(currentPage, limit);
         int count = orderResultList.size();
         List<TrainingRankVO> pageList = new ArrayList<>();
-        //计算当前页第一条数据的下标
+        // 计算当前页第一条数据的下标
         int currId = currentPage > 1 ? (currentPage - 1) * limit : 0;
         for (int i = 0; i < limit && i < count - currId; i++) {
             pageList.add(orderResultList.get(currId + i));
@@ -394,14 +402,16 @@ public class TrainingManager {
         QueryWrapper<TrainingProblem> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("tid", tid);
         List<TrainingProblem> trainingProblemList = trainingProblemEntityService.list(queryWrapper);
-        return trainingProblemList.stream().collect(Collectors.toMap(TrainingProblem::getId, TrainingProblem::getDisplayId));
+        return trainingProblemList.stream()
+                .collect(Collectors.toMap(TrainingProblem::getId, TrainingProblem::getDisplayId));
     }
 
     /**
      * 启用，该操作会导致公开训练也记录
      */
     public void checkAndSyncTrainingRecord(Long pid, Long submitId, String uid) {
-        List<TrainingProblem> trainingProblemList = trainingProblemEntityService.getPrivateTrainingProblemListByPid(pid, uid);
+        List<TrainingProblem> trainingProblemList = trainingProblemEntityService.getPrivateTrainingProblemListByPid(pid,
+                uid);
         if (!CollectionUtils.isEmpty(trainingProblemList)) {
             List<TrainingRecord> trainingRecordList = new ArrayList<>();
             for (TrainingProblem trainingProblem : trainingProblemList) {

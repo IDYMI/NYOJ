@@ -11,14 +11,14 @@ import top.hcode.hoj.pojo.vo.TrainingVO;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 20:29
  * @Description:
  */
 public interface TrainingService {
 
     public CommonResult<IPage<TrainingVO>> getTrainingList(Integer limit, Integer currentPage,
-                                                           String keyword, Long categoryId, String auth);
+            String keyword, Long categoryId, String auth);
 
     public CommonResult<TrainingVO> getTraining(Long tid);
 
@@ -28,5 +28,6 @@ public interface TrainingService {
 
     public CommonResult<AccessVO> getTrainingAccess(Long tid);
 
-    public CommonResult<IPage<TrainingRankVO>> getTrainingRank(Long tid, Integer limit, Integer currentPage,String keyword);
+    public CommonResult<IPage<TrainingRankVO>> getTrainingRank(Long tid, Integer limit, Integer currentPage,
+            String keyword);
 }

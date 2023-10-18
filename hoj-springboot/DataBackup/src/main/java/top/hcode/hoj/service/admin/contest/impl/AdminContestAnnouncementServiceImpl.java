@@ -11,7 +11,7 @@ import top.hcode.hoj.pojo.vo.AnnouncementVO;
 import top.hcode.hoj.service.admin.contest.AdminContestAnnouncementService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 11:18
  * @Description:
  */
@@ -24,7 +24,8 @@ public class AdminContestAnnouncementServiceImpl implements AdminContestAnnounce
 
     @Override
     public CommonResult<IPage<AnnouncementVO>> getAnnouncementList(Integer limit, Integer currentPage, Long cid) {
-        IPage<AnnouncementVO> announcementList = adminContestAnnouncementManager.getAnnouncementList(limit, currentPage, cid);
+        IPage<AnnouncementVO> announcementList = adminContestAnnouncementManager.getAnnouncementList(limit, currentPage,
+                cid);
         return CommonResult.successResponse(announcementList);
     }
 

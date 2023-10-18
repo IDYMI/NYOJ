@@ -11,9 +11,8 @@ import top.hcode.hoj.pojo.entity.common.Announcement;
 import top.hcode.hoj.pojo.vo.AnnouncementVO;
 import top.hcode.hoj.shiro.AccountProfile;
 
-
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 21:40
  * @Description:
  */
@@ -26,8 +25,10 @@ public class AdminAnnouncementManager {
 
     public IPage<AnnouncementVO> getAnnouncementList(Integer limit, Integer currentPage) {
 
-        if (currentPage == null || currentPage < 1) currentPage = 1;
-        if (limit == null || limit < 1) limit = 10;
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 10;
         return announcementEntityService.getAnnouncementList(limit, currentPage, false);
 
     }
@@ -42,7 +43,6 @@ public class AdminAnnouncementManager {
         log.info("[{}],[{}],id:[{}],operatorUid:[{}],operatorUsername:[{}]",
                 "Admin_Announcement", "Delete", aid, userRolesVo.getUid(), userRolesVo.getUsername());
     }
-
 
     public void addAnnouncement(Announcement announcement) throws StatusFailException {
         boolean isOk = announcementEntityService.save(announcement);

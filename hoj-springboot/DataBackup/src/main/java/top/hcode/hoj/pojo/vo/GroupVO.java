@@ -7,12 +7,12 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
 
-@ApiModel(value="团队查询对象GroupVo", description="")
+@ApiModel(value = "团队查询对象GroupVo", description = "")
 @Data
 public class GroupVO {
     @ApiModelProperty(value = "团队id")

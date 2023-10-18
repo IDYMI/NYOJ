@@ -9,11 +9,11 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/10/2 20:50
  * @Description:
  */
-@ApiModel(value="用户的讨论贴被评论的、被点赞、评论被回复的消息VO", description="")
+@ApiModel(value = "用户的讨论贴被评论的、被点赞、评论被回复的消息VO", description = "")
 @Data
 public class UserMsgVO {
 

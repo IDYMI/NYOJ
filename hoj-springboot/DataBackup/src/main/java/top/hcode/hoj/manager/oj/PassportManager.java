@@ -45,7 +45,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/11 16:46
  * @Description:
  */
@@ -82,7 +82,8 @@ public class PassportManager {
     @Resource
     private NoticeManager noticeManager;
 
-    public UserInfoVO login(LoginDTO loginDto, HttpServletResponse response, HttpServletRequest request) throws StatusFailException {
+    public UserInfoVO login(LoginDTO loginDto, HttpServletResponse response, HttpServletRequest request)
+            throws StatusFailException {
         // 去掉账号密码首尾的空格
         loginDto.setPassword(loginDto.getPassword().trim());
         loginDto.setUsername(loginDto.getUsername().trim());
@@ -126,7 +127,7 @@ public class PassportManager {
         }
 
         String jwt = jwtUtils.generateToken(userRolesVo.getUid());
-        response.setHeader("Authorization", jwt); //放到信息头部
+        response.setHeader("Authorization", jwt); // 放到信息头部
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
 
         // 会话记录
@@ -152,8 +153,8 @@ public class PassportManager {
         return userInfoVo;
     }
 
-
-    public RegisterCodeVO getRegisterCode(String email) throws StatusAccessDeniedException, StatusFailException, StatusForbiddenException {
+    public RegisterCodeVO getRegisterCode(String email)
+            throws StatusAccessDeniedException, StatusFailException, StatusForbiddenException {
 
         WebConfig webConfig = nacosSwitchConfig.getWebConfig();
         if (!webConfig.getRegister()) { // 需要判断一下网站是否开启注册
@@ -188,7 +189,7 @@ public class PassportManager {
         }
 
         String numbers = RandomUtil.randomNumbers(6); // 随机生成6位数字的组合
-        redisUtils.set(Constants.Email.REGISTER_KEY_PREFIX.getValue() + email, numbers, 10 * 60);//默认验证码有效10分钟
+        redisUtils.set(Constants.Email.REGISTER_KEY_PREFIX.getValue() + email, numbers, 10 * 60);// 默认验证码有效10分钟
         emailManager.sendRegisterCode(email, numbers);
         redisUtils.set(lockKey, 0, 60);
 
@@ -198,7 +199,6 @@ public class PassportManager {
 
         return registerCodeVo;
     }
-
 
     @Transactional(rollbackFor = Exception.class)
     public void register(RegisterDTO registerDto) throws StatusAccessDeniedException, StatusFailException {
@@ -212,7 +212,7 @@ public class PassportManager {
             throw new StatusFailException("验证码不存在或已过期");
         }
 
-        if (!redisUtils.get(codeKey).equals(registerDto.getCode())) { //验证码判断
+        if (!redisUtils.get(codeKey).equals(registerDto.getCode())) { // 验证码判断
             throw new StatusFailException("验证码不正确");
         }
 
@@ -233,19 +233,19 @@ public class PassportManager {
         }
 
         String uuid = IdUtil.simpleUUID();
-        //为新用户设置uuid
+        // 为新用户设置uuid
         registerDto.setUuid(uuid);
         registerDto.setPassword(SecureUtil.md5(registerDto.getPassword().trim())); // 将密码MD5加密写入数据库
         registerDto.setUsername(registerDto.getUsername().trim());
         registerDto.setEmail(registerDto.getEmail().trim());
 
-        //往user_info表插入数据
+        // 往user_info表插入数据
         boolean addUser = userInfoEntityService.addUser(registerDto);
 
-        //往user_role表插入数据
+        // 往user_role表插入数据
         boolean addUserRole = userRoleEntityService.save(new UserRole().setRoleId(1002L).setUid(uuid));
 
-        //往user_record表插入数据
+        // 往user_record表插入数据
         boolean addUserRecord = userRecordEntityService.save(new UserRecord().setUid(uuid));
 
         if (addUser && addUserRole && addUserRecord) {
@@ -255,7 +255,6 @@ public class PassportManager {
             throw new StatusFailException("注册失败，请稍后重新尝试！");
         }
     }
-
 
     public void applyResetPassword(ApplyResetPasswordDTO applyResetPasswordDto) throws StatusFailException {
 
@@ -290,12 +289,11 @@ public class PassportManager {
         }
 
         String code = IdUtil.simpleUUID().substring(0, 21); // 随机生成20位数字与字母的组合
-        redisUtils.set(Constants.Email.RESET_PASSWORD_KEY_PREFIX.getValue() + userInfo.getUsername(), code, 10 * 60);//默认链接有效10分钟
+        redisUtils.set(Constants.Email.RESET_PASSWORD_KEY_PREFIX.getValue() + userInfo.getUsername(), code, 10 * 60);// 默认链接有效10分钟
         // 发送邮件
         emailManager.sendResetPassword(userInfo.getUsername(), code, email.trim());
         redisUtils.set(lockKey, 0, 90);
     }
-
 
     public void resetPassword(ResetPasswordDTO resetPasswordDto) throws StatusFailException {
         String username = resetPasswordDto.getUsername();
@@ -315,7 +313,7 @@ public class PassportManager {
             throw new StatusFailException("重置密码链接不存在或已过期，请重新发送重置邮件");
         }
 
-        if (!redisUtils.get(codeKey).equals(code)) { //验证码判断
+        if (!redisUtils.get(codeKey).equals(code)) { // 验证码判断
             throw new StatusFailException("重置密码的验证码不正确，请重新输入");
         }
 

@@ -12,14 +12,14 @@ import lombok.experimental.Accessors;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/3 22:41
  * @Description:
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="session对象", description="")
+@ApiModel(value = "session对象", description = "")
 public class Session {
 
     private static final long serialVersionUID = 1L;

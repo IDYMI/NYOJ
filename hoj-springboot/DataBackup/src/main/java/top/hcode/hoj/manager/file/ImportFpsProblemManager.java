@@ -36,7 +36,7 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 14:44
  * @Description:
  */
@@ -234,7 +234,6 @@ public class ImportFpsProblemManager {
             }
             problem.setExamples(sb.toString());
 
-
             QueryWrapper<Language> languageQueryWrapper = new QueryWrapper<>();
             languageQueryWrapper.eq("oj", "ME");
             List<Language> languageList = languageEntityService.list(languageQueryWrapper);
@@ -292,7 +291,8 @@ public class ImportFpsProblemManager {
                         .setInput(infileName).setOutput(outfileName));
             }
             if (CollectionUtils.isEmpty(problemSamples)) {
-                throw new StatusFailException("[" + problem.getTitle() + "] 题目的评测数据不能为空，请检查FPS文件内该题目是否有test_input和test_output!");
+                throw new StatusFailException(
+                        "[" + problem.getTitle() + "] 题目的评测数据不能为空，请检查FPS文件内该题目是否有test_input和test_output!");
             }
             String mode = Constants.JudgeMode.DEFAULT.getMode();
             if (problem.getSpjLanguage() != null) {
@@ -313,7 +313,6 @@ public class ImportFpsProblemManager {
         }
         return problemDTOList;
     }
-
 
     private Integer getTimeLimit(String version, Element item) {
         Element timeLimitNode = XmlUtil.getElement(item, "time_limit");

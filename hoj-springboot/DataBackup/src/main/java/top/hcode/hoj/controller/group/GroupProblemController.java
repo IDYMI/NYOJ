@@ -16,7 +16,7 @@ import top.hcode.hoj.service.group.problem.GroupProblemService;
 import java.util.List;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -30,15 +30,16 @@ public class GroupProblemController {
 
     @GetMapping("/get-problem-list")
     public CommonResult<IPage<ProblemVO>> getProblemList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                         @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                         @RequestParam(value = "gid", required = true) Long gid) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupProblemService.getProblemList(limit, currentPage, gid);
     }
 
     @GetMapping("/get-admin-problem-list")
-    public CommonResult<IPage<Problem>> getAdminProblemList(@RequestParam(value = "limit", required = false) Integer limit,
-                                                            @RequestParam(value = "currentPage", required = false) Integer currentPage,
-                                                            @RequestParam(value = "gid", required = true) Long gid) {
+    public CommonResult<IPage<Problem>> getAdminProblemList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "gid", required = true) Long gid) {
         return groupProblemService.getAdminProblemList(limit, currentPage, gid);
     }
 
@@ -64,7 +65,7 @@ public class GroupProblemController {
 
     @GetMapping("/get-problem-cases")
     public CommonResult<List<ProblemCase>> getProblemCases(@RequestParam("pid") Long pid,
-                                                           @RequestParam(value = "isUpload", defaultValue = "true") Boolean isUpload) {
+            @RequestParam(value = "isUpload", defaultValue = "true") Boolean isUpload) {
         return groupProblemService.getProblemCases(pid, isUpload);
     }
 
@@ -75,26 +76,25 @@ public class GroupProblemController {
 
     @PostMapping("/compile-spj")
     public CommonResult<Void> compileSpj(@RequestBody CompileDTO compileDTO,
-                                         @RequestParam("gid") Long gid) {
+            @RequestParam("gid") Long gid) {
         return groupProblemService.compileSpj(compileDTO, gid);
     }
 
     @PostMapping("/compile-interactive")
     public CommonResult<Void> compileInteractive(@RequestBody CompileDTO compileDTO,
-                                                 @RequestParam("gid") Long gid) {
+            @RequestParam("gid") Long gid) {
         return groupProblemService.compileInteractive(compileDTO, gid);
     }
 
     @PutMapping("/change-problem-auth")
     public CommonResult<Void> changeProblemAuth(@RequestParam(value = "pid", required = true) Long pid,
-                                                @RequestParam(value = "auth", required = true) Integer auth) {
+            @RequestParam(value = "auth", required = true) Integer auth) {
         return groupProblemService.changeProblemAuth(pid, auth);
     }
 
-
     @PutMapping("/apply-public")
     public CommonResult<Void> applyPublic(@RequestParam(value = "pid", required = true) Long pid,
-                                          @RequestParam(value = "isApplied", required = true) Boolean isApplied) {
+            @RequestParam(value = "isApplied", required = true) Boolean isApplied) {
         return groupProblemService.applyPublic(pid, isApplied);
     }
 }

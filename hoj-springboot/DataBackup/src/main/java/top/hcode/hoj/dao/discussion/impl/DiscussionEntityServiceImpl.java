@@ -14,12 +14,13 @@ import top.hcode.hoj.dao.msg.MsgRemindEntityService;
 import javax.annotation.Resource;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/4 22:31
  * @Description:
  */
 @Service
-public class DiscussionEntityServiceImpl extends ServiceImpl<DiscussionMapper, Discussion> implements DiscussionEntityService {
+public class DiscussionEntityServiceImpl extends ServiceImpl<DiscussionMapper, Discussion>
+        implements DiscussionEntityService {
 
     @Autowired
     private DiscussionMapper discussionMapper;

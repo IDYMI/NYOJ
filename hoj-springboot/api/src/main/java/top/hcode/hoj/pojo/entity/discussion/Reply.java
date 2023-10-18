@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/5 19:03
  * @Description:
  */
@@ -18,7 +18,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Reply对象", description="")
+@ApiModel(value = "Reply对象", description = "")
 public class Reply {
 
     private static final long serialVersionUID = 1L;

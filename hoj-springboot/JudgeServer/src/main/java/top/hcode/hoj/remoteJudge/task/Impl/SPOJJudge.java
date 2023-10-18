@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/27 23:19
  * @Description:
  */
@@ -33,16 +33,17 @@ public class SPOJJudge extends RemoteJudgeStrategy {
     public static final String SUBMISSION_RESULT_URL = "/status/ajax=1,ajaxdiff=1";
     public static final String CE_INFO_URL = "/error/%s";
 
-    private static final Map<String, Constants.Judge> statusMap = new HashMap<String, Constants.Judge>() {{
-        put("11", Constants.Judge.STATUS_COMPILE_ERROR);
-        put("12", Constants.Judge.STATUS_RUNTIME_ERROR);
-        put("13", Constants.Judge.STATUS_TIME_LIMIT_EXCEEDED);
-        put("14", Constants.Judge.STATUS_WRONG_ANSWER);
-        put("15", Constants.Judge.STATUS_ACCEPTED);
-    }};
+    private static final Map<String, Constants.Judge> statusMap = new HashMap<String, Constants.Judge>() {
+        {
+            put("11", Constants.Judge.STATUS_COMPILE_ERROR);
+            put("12", Constants.Judge.STATUS_RUNTIME_ERROR);
+            put("13", Constants.Judge.STATUS_TIME_LIMIT_EXCEEDED);
+            put("14", Constants.Judge.STATUS_WRONG_ANSWER);
+            put("15", Constants.Judge.STATUS_ACCEPTED);
+        }
+    };
 
     private static final Map<String, String> languageMap = new HashMap<>();
-
 
     @Override
     public void submit() {
@@ -97,9 +98,8 @@ public class SPOJJudge extends RemoteJudgeStrategy {
         String html = response.body();
         html = html.replaceAll("\\\\[nt]", "").replaceAll(">(run|edit|ideone it)<", "><")
                 .replaceAll("<.*?>", "").replace("&nbsp;", "")
-                .replaceAll("\n","")
+                .replaceAll("\n", "")
                 .trim();
-
 
         Pattern pattern = Pattern.compile("\"status_description\":\"[\\s\\S]*?\", \"id\":" + submitId +
                 ", \"status\":([\\s\\S]*?),\"time\":\"([\\s\\S]*?)\",\"mem\":\"([\\s\\S]*?)\",\"final\":\"([\\s\\S]*?)\"");
@@ -166,7 +166,6 @@ public class SPOJJudge extends RemoteJudgeStrategy {
         String key = language.substring(0, language.lastIndexOf(" ")).trim();
         return languageMap.get(key);
     }
-
 
     static {
         languageMap.put("Ada95 (gnat", "7");

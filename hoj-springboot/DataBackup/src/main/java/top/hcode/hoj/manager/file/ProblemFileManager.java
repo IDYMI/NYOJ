@@ -36,7 +36,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 14:40
  * @Description:
  */
@@ -87,7 +87,6 @@ public class ProblemFileManager {
         // 删除zip文件
         FileUtil.del(filePath);
 
-
         // 检查文件是否存在
         File testCaseFileList = new File(fileDir);
         File[] files = testCaseFileList.listFiles();
@@ -95,7 +94,6 @@ public class ProblemFileManager {
             FileUtil.del(fileDir);
             throw new StatusFailException("评测数据压缩包里文件不能为空！");
         }
-
 
         HashMap<String, File> problemInfo = new HashMap<>();
         HashMap<String, File> testcaseInfo = new HashMap<>();
@@ -208,7 +206,6 @@ public class ProblemFileManager {
                 problem.setJudgeExtraFile(judgeExtraFileJson.toString());
             }
 
-
             ProblemDTO problemDto = new ProblemDTO();
             problemDto.setProblem(problem)
                     .setCodeTemplates(codeTemplates)
@@ -260,7 +257,6 @@ public class ProblemFileManager {
         }
     }
 
-
     /**
      * @param pidList
      * @param response
@@ -293,11 +289,11 @@ public class ProblemFileManager {
         ExecutorService threadPool = new ThreadPoolExecutor(
                 2, // 核心线程数
                 4, // 最大线程数。最多几个线程并发。
-                3,//当非核心线程无任务时，几秒后结束该线程
-                TimeUnit.SECONDS,// 结束线程时间单位
-                new LinkedBlockingDeque<>(200), //阻塞队列，限制等候线程数
+                3, // 当非核心线程无任务时，几秒后结束该线程
+                TimeUnit.SECONDS, // 结束线程时间单位
+                new LinkedBlockingDeque<>(200), // 阻塞队列，限制等候线程数
                 Executors.defaultThreadFactory(),
-                new ThreadPoolExecutor.DiscardOldestPolicy());//队列满了，尝试去和最早的竞争，也不会抛出异常！
+                new ThreadPoolExecutor.DiscardOldestPolicy());// 队列满了，尝试去和最早的竞争，也不会抛出异常！
 
         List<FutureTask<Void>> futureTasks = new ArrayList<>();
 
@@ -306,7 +302,8 @@ public class ProblemFileManager {
             futureTasks.add(new FutureTask<>(new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
-                    String testcaseWorkDir = Constants.File.TESTCASE_BASE_FOLDER.getPath() + File.separator + "problem_" + pid;
+                    String testcaseWorkDir = Constants.File.TESTCASE_BASE_FOLDER.getPath() + File.separator + "problem_"
+                            + pid;
                     File file = new File(testcaseWorkDir);
 
                     List<HashMap<String, Object>> problemCases = new LinkedList<>();
@@ -362,7 +359,8 @@ public class ProblemFileManager {
                         }
                         FileUtil.copy(testcaseWorkDir, workDir, true);
                     }
-                    ImportProblemVO importProblemVo = problemEntityService.buildExportProblem(pid, problemCases, languageMap, tagMap);
+                    ImportProblemVO importProblemVo = problemEntityService.buildExportProblem(pid, problemCases,
+                            languageMap, tagMap);
                     String content = JSONUtil.toJsonStr(importProblemVo);
                     FileWriter fileWriter = new FileWriter(workDir + File.separator + "problem_" + pid + ".json");
                     fileWriter.write(content);
@@ -390,9 +388,10 @@ public class ProblemFileManager {
         // 将对应文件夹的文件压缩成zip
         ZipUtil.zip(workDir, Constants.File.FILE_DOWNLOAD_TMP_FOLDER.getPath() + File.separator + fileName);
         // 将zip变成io流返回给前端
-        FileReader fileReader = new FileReader(Constants.File.FILE_DOWNLOAD_TMP_FOLDER.getPath() + File.separator + fileName);
-        BufferedInputStream bins = new BufferedInputStream(fileReader.getInputStream());//放到缓冲流里面
-        OutputStream outs = null;//获取文件输出IO流
+        FileReader fileReader = new FileReader(
+                Constants.File.FILE_DOWNLOAD_TMP_FOLDER.getPath() + File.separator + fileName);
+        BufferedInputStream bins = new BufferedInputStream(fileReader.getInputStream());// 放到缓冲流里面
+        OutputStream outs = null;// 获取文件输出IO流
         BufferedOutputStream bouts = null;
         try {
             outs = response.getOutputStream();
@@ -401,7 +400,7 @@ public class ProblemFileManager {
             response.setHeader("Content-disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
             int bytesRead = 0;
             byte[] buffer = new byte[1024 * 10];
-            //开始向网络传输文件流
+            // 开始向网络传输文件流
             while ((bytesRead = bins.read(buffer, 0, 1024 * 10)) != -1) {
                 bouts.write(buffer, 0, bytesRead);
             }

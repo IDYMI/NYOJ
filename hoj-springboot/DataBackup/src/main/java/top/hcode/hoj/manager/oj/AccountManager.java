@@ -42,7 +42,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/10 16:53
  * @Description:
  */
@@ -186,7 +186,8 @@ public class AccountManager {
         userHomeInfo.setContestPidList(contestsPidList);
 
         // 获取用户最近一年参加比赛的榜单
-        List<HashMap<String,Object>> dataList= (List<HashMap<String,Object>>) getUserContestsRanking(uid, username).getDataList();
+        List<HashMap<String, Object>> dataList = (List<HashMap<String, Object>>) getUserContestsRanking(uid, username)
+                .getDataList();
         userHomeInfo.setDataList(dataList);
 
         QueryWrapper<Session> sessionQueryWrapper = new QueryWrapper<>();

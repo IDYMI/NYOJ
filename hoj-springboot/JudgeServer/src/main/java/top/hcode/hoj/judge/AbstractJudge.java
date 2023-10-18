@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/1/2 20:46
  * @Description:
  */
@@ -55,14 +55,16 @@ public abstract class AbstractJudge {
 
     public abstract JSONArray judgeCase(JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) throws SystemError;
 
-    private JSONObject process(JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO, JSONArray judgeResultList) throws SystemError {
+    private JSONObject process(JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO, JSONArray judgeResultList)
+            throws SystemError {
 
-        String stdoutName = BooleanUtils.isTrue(judgeGlobalDTO.getIsFileIO()) ? judgeGlobalDTO.getIoWriteFileName() : "stdout";
+        String stdoutName = BooleanUtils.isTrue(judgeGlobalDTO.getIsFileIO()) ? judgeGlobalDTO.getIoWriteFileName()
+                : "stdout";
         JSONObject judgeResult = (JSONObject) judgeResultList.get(0);
         SandBoxRes sandBoxRes = SandBoxRes.builder()
                 .stdout(((JSONObject) judgeResult.get("files")).getStr(stdoutName, ""))
                 .stderr(((JSONObject) judgeResult.get("files")).getStr("stderr"))
-                .time(judgeResult.getLong("time") / 1000000) //  ns->ms
+                .time(judgeResult.getLong("time") / 1000000) // ns->ms
                 .memory(judgeResult.getLong("memory") / 1024) // b-->kb
                 .exitCode(judgeResult.getInt("exitStatus"))
                 .status(judgeResult.getInt("status"))
@@ -72,13 +74,14 @@ public abstract class AbstractJudge {
         return checkResult(sandBoxRes, judgeDTO, judgeGlobalDTO);
     }
 
-    private JSONObject processMultiple(JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO, JSONArray judgeResultList) throws SystemError {
+    private JSONObject processMultiple(JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO, JSONArray judgeResultList)
+            throws SystemError {
 
         JSONObject userJudgeResult = (JSONObject) judgeResultList.get(0);
         SandBoxRes userSandBoxRes = SandBoxRes.builder()
                 .stdout(((JSONObject) userJudgeResult.get("files")).getStr("stdout"))
                 .stderr(((JSONObject) userJudgeResult.get("files")).getStr("stderr"))
-                .time(userJudgeResult.getLong("time") / 1000000) //  ns->ms
+                .time(userJudgeResult.getLong("time") / 1000000) // ns->ms
                 .memory(userJudgeResult.getLong("memory") / 1024) // b-->kb
                 .exitCode(userJudgeResult.getInt("exitStatus"))
                 .status(userJudgeResult.getInt("status"))
@@ -89,7 +92,7 @@ public abstract class AbstractJudge {
         SandBoxRes interactiveSandBoxRes = SandBoxRes.builder()
                 .stdout(((JSONObject) interactiveJudgeResult.get("files")).getStr("stdout"))
                 .stderr(((JSONObject) interactiveJudgeResult.get("files")).getStr("stderr"))
-                .time(interactiveJudgeResult.getLong("time") / 1000000) //  ns->ms
+                .time(interactiveJudgeResult.getLong("time") / 1000000) // ns->ms
                 .memory(interactiveJudgeResult.getLong("memory") / 1024) // b-->kb
                 .exitCode(interactiveJudgeResult.getInt("exitStatus"))
                 .status(interactiveJudgeResult.getInt("status"))
@@ -99,14 +102,16 @@ public abstract class AbstractJudge {
         return checkMultipleResult(userSandBoxRes, interactiveSandBoxRes, judgeDTO, judgeGlobalDTO);
     }
 
-    public abstract JSONObject checkResult(SandBoxRes sandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO) throws SystemError;
+    public abstract JSONObject checkResult(SandBoxRes sandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO)
+            throws SystemError;
 
-    public abstract JSONObject checkMultipleResult(SandBoxRes userSandBoxRes, SandBoxRes interactiveSandBoxRes, JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO);
+    public abstract JSONObject checkMultipleResult(SandBoxRes userSandBoxRes, SandBoxRes interactiveSandBoxRes,
+            JudgeDTO judgeDTO, JudgeGlobalDTO judgeGlobalDTO);
 
     protected static List<String> parseRunCommand(String command,
-                                                  String testCaseInputName,
-                                                  String userOutputName,
-                                                  String testCaseOutputName) {
+            String testCaseInputName,
+            String userOutputName,
+            String testCaseOutputName) {
 
         if (testCaseInputName != null) {
             command = command.replace("{std_input}",
@@ -172,10 +177,10 @@ public abstract class AbstractJudge {
         return res;
     }
 
-
     // 去除行末尾空白符
     protected String rtrim(String value) {
-        if (value == null) return null;
+        if (value == null)
+            return null;
         return EOL_PATTERN.matcher(StrUtil.trimEnd(value)).replaceAll("");
     }
 }

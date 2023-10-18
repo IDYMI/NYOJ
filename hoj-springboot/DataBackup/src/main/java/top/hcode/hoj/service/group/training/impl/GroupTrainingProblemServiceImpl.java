@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
@@ -26,9 +26,11 @@ public class GroupTrainingProblemServiceImpl implements GroupTrainingProblemServ
     private GroupTrainingProblemManager groupTrainingProblemManager;
 
     @Override
-    public CommonResult<HashMap<String, Object>> getTrainingProblemList(Integer limit, Integer currentPage, String keyword, Boolean queryExisted, Long tid) {
+    public CommonResult<HashMap<String, Object>> getTrainingProblemList(Integer limit, Integer currentPage,
+            String keyword, Boolean queryExisted, Long tid) {
         try {
-            return CommonResult.successResponse(groupTrainingProblemManager.getTrainingProblemList(limit, currentPage, keyword, queryExisted, tid));
+            return CommonResult.successResponse(
+                    groupTrainingProblemManager.getTrainingProblemList(limit, currentPage, keyword, queryExisted, tid));
         } catch (StatusForbiddenException e) {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         } catch (StatusNotFoundException e) {

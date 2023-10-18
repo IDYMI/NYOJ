@@ -13,14 +13,14 @@ import lombok.experimental.Accessors;
 import java.util.Date;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/5/11 21:43
  * @Description:
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="DiscussionReport对象", description="")
+@ApiModel(value = "DiscussionReport对象", description = "")
 public class DiscussionReport {
     private static final long serialVersionUID = 1L;
 

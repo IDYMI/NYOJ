@@ -9,13 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Author: LengYun
+ *
  * @Date: 2022/3/11 13:36
  * @Description:
  */
 public interface GroupContestProblemService {
 
-    public CommonResult<HashMap<String, Object>> getContestProblemList(Integer limit, Integer currentPage, String keyword, Long cid, Integer problemType, String oj);
+    public CommonResult<HashMap<String, Object>> getContestProblemList(Integer limit, Integer currentPage,
+            String keyword, Long cid, Integer problemType, String oj);
 
     public CommonResult<Map<Object, Object>> addProblem(ProblemDTO problemDto);
 

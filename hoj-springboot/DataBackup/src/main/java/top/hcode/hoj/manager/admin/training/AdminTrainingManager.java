@@ -35,7 +35,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2022/3/9 19:46
  * @Description:
  */
@@ -85,7 +85,8 @@ public class AdminTrainingManager {
         // IPage<Training> iPage = new Page<>(currentPage, limit);
         // QueryWrapper<Training> queryWrapper = new QueryWrapper<>();
         // // 过滤密码
-        // queryWrapper.select(Training.class, info -> !info.getColumn().equals("private_pwd"));
+        // queryWrapper.select(Training.class, info ->
+        // !info.getColumn().equals("private_pwd"));
 
         // if (auth != null && auth != "All") {
         // queryWrapper.eq("auth", auth);

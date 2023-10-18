@@ -13,9 +13,8 @@ import top.hcode.hoj.util.IpUtils;
 
 import java.util.HashMap;
 
-
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2021/2/19 22:11
  * @Description:项目启动加载类，启动完毕将该判题机加入到redis里面
  */
@@ -89,7 +88,8 @@ public class StartupRunner implements CommandLineRunner {
             log.error("初始化判题机信息到数据库失败，请重新启动试试！");
         } else {
             HashMap<String, Object> judgeServerInfo = judgeServerEntityService.getJudgeServerInfo();
-            log.info("HOJ-JudgeServer had successfully started! The judge config and sandbox config Info:" + judgeServerInfo);
+            log.info("HOJ-JudgeServer had successfully started! The judge config and sandbox config Info:"
+                    + judgeServerInfo);
         }
 
     }

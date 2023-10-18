@@ -7,10 +7,11 @@ import top.hcode.hoj.pojo.entity.problem.ProblemTag;
 import top.hcode.hoj.dao.problem.ProblemTagEntityService;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/13 23:22
  * @Description:
  */
 @Service
-public class ProblemTagEntityServiceImpl extends ServiceImpl<ProblemTagMapper, ProblemTag> implements ProblemTagEntityService {
+public class ProblemTagEntityServiceImpl extends ServiceImpl<ProblemTagMapper, ProblemTag>
+        implements ProblemTagEntityService {
 }

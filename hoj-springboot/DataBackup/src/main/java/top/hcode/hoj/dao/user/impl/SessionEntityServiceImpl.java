@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @Author: Himit_ZH
+ *
  * @Date: 2020/12/3 22:46
  * @Description:
  */
@@ -53,7 +53,8 @@ public class SessionEntityServiceImpl extends ServiceImpl<SessionMapper, Session
         Session lastSession = sessionList.get(1);
         // 如果两次登录的ip不相同，需要发通知给用户
         if (!nowSession.getIp().equals(lastSession.getIp())) {
-            String remoteLoginContent = getRemoteLoginContent(lastSession.getIp(), nowSession.getIp(), nowSession.getGmtCreate());
+            String remoteLoginContent = getRemoteLoginContent(lastSession.getIp(), nowSession.getIp(),
+                    nowSession.getGmtCreate());
             if (remoteLoginContent == null) {
                 return;
             }
