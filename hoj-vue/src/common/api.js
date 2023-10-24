@@ -340,10 +340,11 @@ const ojApi = {
     })
   },
   // 获取单个提交的信息
-  getSubmission(submitId) {
+  getSubmission(submitId, cid) {
     return ajax('/api/get-submission-detail', 'get', {
       params: {
-        submitId
+        submitId,
+        cid
       }
     })
   },
@@ -384,10 +385,11 @@ const ojApi = {
     })
   },
   // 获取单个提交的全部测试点详情
-  getAllCaseResult(submitId) {
+  getAllCaseResult(submitId, cid) {
     return ajax('/api/get-all-case-result', 'get', {
       params: {
         submitId,
+        cid
       }
     })
   },
@@ -428,10 +430,11 @@ const ojApi = {
     })
   },
 
-  submissionRejudge(submitId) {
+  submissionRejudge(submitId, cid) {
     return ajax('/api/admin/judge/rejudge', 'get', {
       params: {
-        submitId
+        submitId,
+        cid
       }
     })
   },

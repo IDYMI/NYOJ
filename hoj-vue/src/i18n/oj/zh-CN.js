@@ -479,6 +479,7 @@ export const m = {
   Contest_Rank_Setting: '榜单设置',
   Contest_Setting: '比赛设置',
   Contains_After_Contest: '包含赛后',
+  Synchronous_Rank: '同步赛榜单',
 
   // /views/oj/contest/children/ACMInfo.vue
   AC_Time: 'AC 时间',

@@ -62,13 +62,64 @@
                   ></el-switch>
                 </p>
               </template>
+
+              <!-- <template>
+                <p>
+                  <span>{{ $t("m.Synchronous_Rank") }}</span>
+                  <el-switch v-model="synchronousRank"></el-switch>
+                </p>
+              </template>
+              <template v-if="synchronousRank">
+                <div> -->
+                  <!-- 选择全部或取消选择全部的复选框 -->
+                  <!-- <input
+                    type="checkbox"
+                    v-model="selectAll"
+                    @change="toggleAll"
+                  />
+                  <label for="selectAll">Select All</label> -->
+
+                  <!-- 多选框列表 -->
+                  <!-- <div v-for="(item, index) in synchronousInfo" :key="index">
+                    <input
+                      type="checkbox"
+                      v-model="selectedItems"
+                      :value="index"
+                      @change="getSynchronousRank(page, false, null)"
+                    />
+                    <label>{{ item.school }}</label>
+                  </div> -->
+
+                  <!-- 显示选择的项目 -->
+                  <!-- <div>
+                    <strong>Selected items:</strong>
+                    <span v-for="index in selectedItems" :key="index"
+                      >{{ synchronousInfo[index].school }}
+                    </span>
+                  </div> -->
+                <!-- </div>
+              </template> -->
               <template v-if="isContestAdmin">
-                <el-button
-                  type="primary"
-                  size="small"
-                  @click="downloadRankCSV"
-                  >{{ $t("m.Download_as_CSV") }}</el-button
-                >
+                <el-row>
+                  <el-col :span="24">
+                    <el-button
+                      type="primary"
+                      size="small"
+                      @click="downloadRankCSV"
+                      >{{ $t("m.Download_as_CSV") }}</el-button
+                    >
+                  </el-col>
+                </el-row>
+                <!-- <p></p>
+                <el-row>
+                  <el-col :span="24">
+                    <el-button
+                      type="primary"
+                      size="small"
+                      >{{ $t("m.Synchronous_Rank") }}</el-button
+                    >
+                  </el-col>
+                </el-row> -->
               </template>
             </div>
           </el-popover>
@@ -153,7 +204,11 @@
                 </span>
               </el-tooltip>
               <span class="contest-rank-user-info">
-                <a @click="getUserHomeByUsername(row.uid, row.username)">
+                <a
+                  @click="
+                    getUserHomeByUsername(row.uid, row.username, row.remote)
+                  "
+                >
                   <span class="contest-username" :title="row.rankShowName">
                     <span
                       class="contest-rank-flag"
@@ -220,7 +275,11 @@
                 </span>
               </el-tooltip>
               <span class="contest-rank-user-info">
-                <a @click="getUserHomeByUsername(row.uid, row.username)">
+                <a
+                  @click="
+                    getUserHomeByUsername(row.uid, row.username, row.remote)
+                  "
+                >
                   <span class="contest-username" :title="row.rankShowName">
                     <span
                       class="contest-rank-flag"
@@ -500,6 +559,22 @@ export default {
         ],
         series: [],
       },
+      synchronousRank: false,
+      synchronousInfo: [
+        {
+          school: "SCPC",
+          link: "http://scpc.fun/contest/1115",
+          authorization:
+            "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiJlYjQwMGYzZmM4Njc0N2JkYWZiMjZiYjRjODg2MzgwNCIsImlhdCI6MTY5Nzc4Mjk3OCwiZXhwIjoxNjk3ODY5Mzc4fQ.GJSxx96La-Ro3m7e5MPBPJ11QT8O1YZyCHpF6NlFPlYqexolLDIJrFIBhwpYtNlgFpn5gaJk4rVcF4sxyvOH3A",
+        },
+        {
+          school: "NYOJ",
+          link: "",
+          authorization: "",
+        },
+      ],
+      selectAll: true,
+      selectedItems: [],
     };
   },
   created() {
@@ -515,6 +590,7 @@ export default {
       this.autoRefresh = true;
       this.handleAutoRefresh(true);
     }
+    this.toggleAll();
   },
   methods: {
     ...mapActions(["getContestProblems"]),
@@ -531,11 +607,13 @@ export default {
         query: { username: username, status: 0 },
       });
     },
-    getUserHomeByUsername(uid, username) {
-      this.$router.push({
-        name: "UserHome",
-        query: { username: username, uid: uid },
-      });
+    getUserHomeByUsername(uid, username, remote) {
+      if (!remote) {
+        this.$router.push({
+          name: "UserHome",
+          query: { username: username, uid: uid },
+        });
+      }
     },
     getContestProblemById(pid) {
       this.$router.push({
@@ -711,6 +789,16 @@ export default {
         }`
       );
     },
+    // 切换“选择全部/取消选择全部”
+    toggleAll() {
+      if (this.selectAll) {
+        // 如果选择全部，则将所有项添加到已选择的项中
+        this.selectedItems = this.synchronousInfo.map((item, index) => index);
+      } else {
+        // 如果取消选择全部，则清空已选择的项
+        this.selectedItems = [];
+      }
+    },
   },
   watch: {
     contestProblems(newVal, OldVal) {
@@ -720,6 +808,12 @@ export default {
     },
     isContainsAfterContestJudge(newVal, OldVal) {
       this.getContestRankData(this.page);
+    },
+    // 监听 selectedItems 的变化，更新每个选项的状态
+    selectedItems(newValues) {
+      this.checkboxItems.forEach((item) => {
+        item.value = newValues.includes(item.school);
+      });
     },
   },
   computed: {
@@ -738,6 +832,16 @@ export default {
 </script>
 
 <style scoped>
+label {
+  display: inline-block;
+  margin-right: 5px;
+  text-align: center; /* 将文字居中 */
+}
+
+/* 可选样式，用于将复选框和文字垂直居中 */
+input[type="checkbox"] {
+  vertical-align: middle;
+}
 .echarts {
   margin: 20px auto;
   height: 400px;

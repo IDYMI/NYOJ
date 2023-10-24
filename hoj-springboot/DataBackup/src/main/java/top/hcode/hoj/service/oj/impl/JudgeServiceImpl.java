@@ -69,9 +69,9 @@ public class JudgeServiceImpl implements JudgeService {
     }
 
     @Override
-    public CommonResult<SubmissionInfoVO> getSubmission(Long submitId) {
+    public CommonResult<SubmissionInfoVO> getSubmission(Long submitId, Long cid) {
         try {
-            return CommonResult.successResponse(judgeManager.getSubmission(submitId));
+            return CommonResult.successResponse(judgeManager.getSubmission(submitId, cid));
         } catch (StatusNotFoundException e) {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.NOT_FOUND);
         } catch (StatusAccessDeniedException e) {
@@ -138,9 +138,9 @@ public class JudgeServiceImpl implements JudgeService {
     }
 
     @Override
-    public CommonResult<JudgeCaseVO> getALLCaseResult(Long submitId) {
+    public CommonResult<JudgeCaseVO> getALLCaseResult(Long submitId, Long cid) {
         try {
-            return CommonResult.successResponse(judgeManager.getALLCaseResult(submitId));
+            return CommonResult.successResponse(judgeManager.getALLCaseResult(submitId, cid));
         } catch (StatusNotFoundException e) {
             return CommonResult.errorResponse(e.getMessage(), ResultStatus.NOT_FOUND);
         } catch (StatusForbiddenException e) {

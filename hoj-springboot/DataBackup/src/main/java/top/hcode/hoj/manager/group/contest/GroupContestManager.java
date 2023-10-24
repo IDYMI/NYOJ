@@ -21,6 +21,7 @@ import top.hcode.hoj.pojo.entity.contest.ContestRegister;
 import top.hcode.hoj.pojo.entity.group.Group;
 import top.hcode.hoj.pojo.vo.AdminContestVO;
 import top.hcode.hoj.pojo.vo.ContestAwardConfigVO;
+import top.hcode.hoj.pojo.vo.ContestSynchronousConfigVO;
 import top.hcode.hoj.pojo.vo.ContestVO;
 import top.hcode.hoj.shiro.AccountProfile;
 import top.hcode.hoj.utils.Constants;
@@ -167,6 +168,7 @@ public class GroupContestManager {
         } else {
             adminContestVo.setAwardConfigList(new ArrayList<>());
         }
+        adminContestVo.setSynchronousConfigList(new ArrayList<>());
 
         return adminContestVo;
     }
@@ -212,6 +214,7 @@ public class GroupContestManager {
             awardConfigList.sort(Comparator.comparingInt(ContestAwardConfigVO::getPriority));
             awardConfigJson.set("config", awardConfigList);
             contest.setAwardConfig(awardConfigJson.toString());
+            contest.setSynchronousConfig(new JSONObject().toString());
         }
 
         contest.setIsGroup(true);
@@ -274,6 +277,7 @@ public class GroupContestManager {
             JSONObject awardConfigJson = new JSONObject();
             awardConfigJson.set("config", awardConfigList);
             contest.setAwardConfig(awardConfigJson.toString());
+            contest.setSynchronousConfig(new JSONObject().toString());
         }
 
         boolean isOk = contestEntityService.saveOrUpdate(contest);

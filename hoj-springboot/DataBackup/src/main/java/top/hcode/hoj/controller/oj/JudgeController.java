@@ -68,8 +68,9 @@ public class JudgeController {
     @GetMapping("/get-submission-detail")
     @AnonApi
     public CommonResult<SubmissionInfoVO> getSubmission(
-            @RequestParam(value = "submitId", required = true) Long submitId) {
-        return judgeService.getSubmission(submitId);
+            @RequestParam(value = "submitId", required = true) Long submitId,
+            @RequestParam(value = "cid", required = false) Long cid) {
+        return judgeService.getSubmission(submitId, cid);
     }
 
     /**
@@ -157,7 +158,8 @@ public class JudgeController {
     @GetMapping("/get-all-case-result")
     @AnonApi
     public CommonResult<JudgeCaseVO> getALLCaseResult(
-            @RequestParam(value = "submitId", required = true) Long submitId) {
-        return judgeService.getALLCaseResult(submitId);
+            @RequestParam(value = "submitId", required = true) Long submitId,
+            @RequestParam(value = "cid", required = false) Long cid) {
+        return judgeService.getALLCaseResult(submitId, cid);
     }
 }

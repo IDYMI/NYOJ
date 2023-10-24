@@ -479,6 +479,7 @@ export const m = {
   Contest_Rank_Setting: 'Rank Setting',
   Contest_Setting: 'Contest Setting',
   Contains_After_Contest: 'Contains After Contest',
+  Synchronous_Rank: 'Synchronous Rank',
 
   // /views/oj/contest/children/ACMInfo.vue
   AC_Time: 'AC Time',

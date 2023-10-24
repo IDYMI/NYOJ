@@ -62,4 +62,7 @@ public class ACMContestRankVO {
 
     @ApiModelProperty(value = "有提交的题的提交详情")
     private HashMap<String, HashMap<String, Object>> submissionInfo;
+
+    @ApiModelProperty(value = "是否为远程OJ")
+    private Boolean remote;
 }
