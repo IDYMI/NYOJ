@@ -139,7 +139,8 @@
                 effect="dark"
                 :content="$t('m.Click_to_Manually_Judge')"
                 :disabled="
-                  hideManuallyJugdeTooltip || disabledManualJudge(row.status)
+                  hideManuallyJugdeTooltip ||
+                  disabledManualJudge(row.status, row.remote)
                 "
                 placement="top"
               >
@@ -149,7 +150,7 @@
                   trigger="click"
                   @show="hideManuallyJugdeTooltip = true"
                   @hide="hideManuallyJugdeTooltip = false"
-                  :disabled="disabledManualJudge(row.status)"
+                  :disabled="disabledManualJudge(row.status, row.remote)"
                 >
                   <div class="manual-judge-title">
                     <span>{{ $t("m.Manually_Jugde") }}</span>
@@ -361,7 +362,7 @@
           >
             <template v-slot="{ row }">
               <a
-                @click="goUserHome(row.username, row.uid)"
+                @click="goUserHome(row.username, row.uid, row.remote)"
                 style="color: rgb(87, 163, 243)"
                 >{{ row.username }}</a
               >
@@ -391,6 +392,7 @@
           >
             <template v-slot="{ row }">
               <vxe-button
+                v-if="!row.remote"
                 status="primary"
                 @click="handleRejudge(row)"
                 size="mini"
@@ -779,11 +781,13 @@ export default {
     goRoute(route) {
       this.$router.push(route);
     },
-    goUserHome(username, uid) {
-      this.$router.push({
-        path: "/user-home",
-        query: { uid, username },
-      });
+    goUserHome(username, uid, remote) {
+      if (!remote) {
+        this.$router.push({
+          path: "/user-home",
+          query: { uid, username },
+        });
+      }
     },
     handleStatusChange(status) {
       if (status == "All") {
@@ -803,7 +807,7 @@ export default {
     },
     handleRejudge(row) {
       this.submissions[row.index].loading = true;
-      api.submissionRejudge(row.submitId).then(
+      api.submissionRejudge(row.submitId, row.contestID).then(
         (res) => {
           let xTable = this.$refs.xTable;
           // 重判开始，需要将该提交的部分参数初始化
@@ -908,9 +912,10 @@ export default {
         return "own-submit-row";
       }
     },
-    disabledManualJudge(status) {
+    disabledManualJudge(status, remote) {
       return (
-        (!this.isMainAdminRole) ||
+        !this.isMainAdminRole ||
+        remote ||
         status == JUDGE_STATUS_RESERVE["Judging"] ||
         status == JUDGE_STATUS_RESERVE["Compiling"] ||
         status == JUDGE_STATUS_RESERVE["ce"]

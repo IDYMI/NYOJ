@@ -383,7 +383,7 @@ export const m = {
   Delete_Category_Tips: '你是否确定删除该分类？',
 
   // /views/admin/contest/ContestList.vue
-  All_Contest:'全部比赛',
+  All_Contest: '全部比赛',
   Start_Time: '开始时间',
   End_Time: '结束时间',
   Creator: '创建者',
@@ -447,6 +447,10 @@ export const m = {
   Contest_Award_Number: '人数',
   Contest_Award_Proportion: '占比',
   Allow_Submission_After_The_Contest_Ends: '是否允许比赛结束后提交',
+  Synchronous: '同步赛',
+  Synchronous_School: '同步赛的学校',
+  Synchronous_Link: '同步赛的链接',
+  Synchronous_Authorization: '同步赛的 Authorization （用于爬取信息）',
 
   // /views/admin/discussion/Discussion.vue
   Discussion_ID: '讨论ID',

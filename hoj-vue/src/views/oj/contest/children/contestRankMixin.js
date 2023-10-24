@@ -25,7 +25,7 @@ export default {
         limit: this.limit,
         cid: this.$route.params.contestID,
         forceRefresh: this.forceUpdate ? true : false,
-        removeStar: !this.showStarUser,
+        removeStar: !this.showStarUser, 
         concernedList: this.concernedList,
         keyword: this.keyword == null ? null : this.keyword.trim(),
         containsEnd: this.isContainsAfterContestJudge,

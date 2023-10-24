@@ -159,6 +159,8 @@ CREATE TABLE `contest` (
   `award_type` int(11) DEFAULT '0' COMMENT '奖项类型：0(不设置),1(设置占比),2(设置人数)',
   `award_config` text DEFAULT NULL COMMENT '奖项配置 json',
   `allow_end_submit` tinyint(1) DEFAULT '0' COMMENT '是否允许比赛结束后进行提交',
+  `synchronous` tinyint(1) default 0 null comment '是否开启同步赛',
+  `synchronous_config` text null comment '同步赛配置 json',
   `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`,`uid`),
@@ -396,6 +398,8 @@ CREATE TABLE `file` (
   `suffix` varchar(255) NOT NULL COMMENT '文件后缀格式',
   `folder_path` varchar(255) NOT NULL COMMENT '文件所在文件夹的路径',
   `file_path` varchar(255) DEFAULT NULL COMMENT '文件绝对路径',
+  `link` varchar(255) null comment '图片对应的跳转链接',
+  `hint` varchar(255) null comment '图片对应的文字描述',
   `type` varchar(255) DEFAULT NULL COMMENT '文件所属类型，例如avatar',
   `delete` tinyint(1) DEFAULT '0' COMMENT '是否删除',
   `gid` bigint(20) unsigned DEFAULT NULL,
@@ -768,6 +772,12 @@ CREATE TABLE `user_info` (
   `realname` varchar(100) DEFAULT NULL COMMENT '真实姓名',
   `gender` varchar(20) DEFAULT 'secrecy' NOT NULL  COMMENT '性别',
   `github` varchar(255) DEFAULT NULL COMMENT 'github地址',
+  `ui_language` varchar(255) null comment '界面语言',
+  `font_family` varchar(255) null comment '界面字体',
+  `code_language` varchar(255) null comment '代码语言',
+  `code_size` varchar(255) null comment '字体大小',
+  `ide_theme` varchar(255) null comment '编译器主题',
+  `code_template` longtext null comment '个人代码模板',
   `blog` varchar(255) DEFAULT NULL COMMENT '博客地址',
   `cf_username` varchar(255) DEFAULT NULL COMMENT 'cf的username',
   `email` varchar(320) DEFAULT NULL COMMENT '邮箱',
@@ -1068,8 +1078,8 @@ DELIMITER $$
 
 /*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `contest_trigger` BEFORE INSERT ON `contest` FOR EACH ROW BEGIN
 set new.status=(
-	CASE 
-	  WHEN NOW() < new.start_time THEN -1 
+	CASE
+	  WHEN NOW() < new.start_time THEN -1
 	  WHEN NOW() >= new.start_time AND NOW()<new.end_time THEN  0
 	  WHEN NOW() >= new.end_time THEN 1
 	END);
@@ -1097,10 +1107,10 @@ DELIMITER $$
 
 /*!50003 CREATE DEFINER=`root`@`localhost` PROCEDURE `contest_status`()
 BEGIN
-      UPDATE contest 
+      UPDATE contest
 	SET STATUS = (
-	CASE 
-	  WHEN NOW() < start_time THEN -1 
+	CASE
+	  WHEN NOW() < start_time THEN -1
 	  WHEN NOW() >= start_time AND NOW()<end_time THEN  0
 	  WHEN NOW() >= end_time THEN 1
 	END);

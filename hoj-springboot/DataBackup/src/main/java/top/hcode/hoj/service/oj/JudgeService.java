@@ -21,18 +21,18 @@ public interface JudgeService {
 
     public CommonResult<Judge> resubmit(Long submitId);
 
-    public CommonResult<SubmissionInfoVO> getSubmission(Long submitId);
+    public CommonResult<SubmissionInfoVO> getSubmission(Long submitId, Long cid);
 
     public CommonResult<TestJudgeVO> getTestJudgeResult(String testJudgeKey);
 
     public CommonResult<IPage<JudgeVO>> getJudgeList(Integer limit,
-                                                     Integer currentPage,
-                                                     Boolean onlyMine,
-                                                     String searchPid,
-                                                     Integer searchStatus,
-                                                     String searchUsername,
-                                                     Boolean completeProblemID,
-                                                     Long gid);
+            Integer currentPage,
+            Boolean onlyMine,
+            String searchPid,
+            Integer searchStatus,
+            String searchUsername,
+            Boolean completeProblemID,
+            Long gid);
 
     public CommonResult<Void> updateSubmission(Judge judge);
 
@@ -40,5 +40,5 @@ public interface JudgeService {
 
     public CommonResult<HashMap<Long, Object>> checkContestJudgeResult(SubmitIdListDTO submitIdListDto);
 
-    public CommonResult<JudgeCaseVO> getALLCaseResult(Long submitId);
+    public CommonResult<JudgeCaseVO> getALLCaseResult(Long submitId, Long cid);
 }

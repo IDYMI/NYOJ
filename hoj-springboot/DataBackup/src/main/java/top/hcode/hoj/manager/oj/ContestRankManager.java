@@ -35,6 +35,7 @@ public class ContestRankManager {
      * @param limit                       分页大小
      * @param keyword                     搜索关键词：匹配学校或榜单显示名称
      * @param isContainsAfterContestJudge 是否包含比赛结束后的提交
+     * @param nowtime                     比赛跳转榜单的时间
      * @desc 获取ACM比赛排行榜
      */
     public IPage<ACMContestRankVO> getContestACMRankPage(Boolean isOpenSealRank,

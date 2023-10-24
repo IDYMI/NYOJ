@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import java.util.Date;
  * @Description:
  */
 @Data
+@Accessors(chain = true)
 @ApiModel(value = "返回的判题信息", description = "")
 public class JudgeVO {
 
@@ -83,4 +85,7 @@ public class JudgeVO {
 
     @ApiModelProperty(value = "是否人工评测")
     private Boolean isManual;
+
+    @ApiModelProperty(value = "是否为远程OJ")
+    private Boolean remote;
 }

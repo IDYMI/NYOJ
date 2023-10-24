@@ -330,8 +330,6 @@ public class AccountManager {
         List<Long> contestPids = new ArrayList<>();
         for (Long contestPid : contestsPidList) {
             Contest contest = contestEntityService.getById(contestPid);
-            List<String> emptyStringList = new ArrayList<>();
-            List<Integer> emptyIntegerList = new ArrayList<>();
 
             // 进行排序计算得到用户的排名
             List<ACMContestRankVO> orderResultList = contestCalculateRankManager.calcACMRank(
@@ -339,9 +337,11 @@ public class AccountManager {
                     true,
                     contest,
                     userRolesVo.getUid(),
-                    emptyStringList,
-                    emptyIntegerList,
+                    null,
+                    null,
                     false, // 去除赛后提交
+                    null,
+                    false,
                     null);
 
             if (StrUtil.isNotBlank(username)) {

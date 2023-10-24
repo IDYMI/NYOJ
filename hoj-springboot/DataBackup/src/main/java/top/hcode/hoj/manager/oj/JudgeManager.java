@@ -44,6 +44,7 @@ import top.hcode.hoj.validator.ContestValidator;
 import top.hcode.hoj.validator.GroupValidator;
 import top.hcode.hoj.validator.JudgeValidator;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -99,6 +100,9 @@ public class JudgeManager {
 
     @Autowired
     private NacosSwitchConfig nacosSwitchConfig;
+
+    @Resource
+    private SynchronousManager synchronousManager;
 
     /**
      * @MethodName submitProblemJudge
@@ -313,10 +317,14 @@ public class JudgeManager {
      * @Description 获取单个提交记录的详情
      * @Since 2021/1/2
      */
-    public SubmissionInfoVO getSubmission(Long submitId) throws StatusNotFoundException, StatusAccessDeniedException {
+    public SubmissionInfoVO getSubmission(Long submitId, Long cid)
+            throws StatusNotFoundException, StatusAccessDeniedException {
 
         Judge judge = judgeEntityService.getById(submitId);
-        if (judge == null) {
+        // 同步赛结果
+        if (cid != null) {
+            judge = synchronousManager.getSynchronousSubmissionDetail(submitId, cid);
+        } else if (judge == null) {
             throw new StatusNotFoundException("此提交数据不存在！");
         }
 
@@ -404,8 +412,6 @@ public class JudgeManager {
             }
         }
 
-        Problem problem = problemEntityService.getById(judge.getPid());
-
         // 只允许用户查看ce错误,sf错误，se错误信息提示
         if (judge.getStatus().intValue() != Constants.Judge.STATUS_COMPILE_ERROR.getStatus() &&
                 judge.getStatus().intValue() != Constants.Judge.STATUS_SYSTEM_ERROR.getStatus() &&
@@ -413,7 +419,12 @@ public class JudgeManager {
             judge.setErrorMessage("The error message does not support viewing.");
         }
         submissionInfoVo.setSubmission(judge);
-        submissionInfoVo.setCodeShare(problem.getCodeShare());
+        if (cid == null) {
+            Problem problem = problemEntityService.getById(judge.getPid());
+            submissionInfoVo.setCodeShare(problem.getCodeShare());
+        } else {
+            submissionInfoVo.setCodeShare(false);
+        }
 
         return submissionInfoVo;
 
@@ -592,24 +603,29 @@ public class JudgeManager {
      * @Since 2020/10/29
      */
     @GetMapping("/get-all-case-result")
-    public JudgeCaseVO getALLCaseResult(Long submitId) throws StatusNotFoundException, StatusForbiddenException {
+    public JudgeCaseVO getALLCaseResult(Long submitId, Long cid)
+            throws StatusNotFoundException, StatusForbiddenException {
 
         Judge judge = judgeEntityService.getById(submitId);
 
-        if (judge == null) {
+        if (cid != null) {
+            judge = synchronousManager.getSynchronousSubmissionDetail(submitId, cid);
+        } else if (judge == null) {
             throw new StatusNotFoundException("此提交数据不存在！");
         }
 
-        Problem problem = problemEntityService.getById(judge.getPid());
+        QueryWrapper<JudgeCase> wrapper = new QueryWrapper<>();
 
-        // 如果该题不支持开放测试点结果查看
-        if (!problem.getOpenCaseResult()) {
-            return null;
+        if (cid == null) {
+            Problem problem = problemEntityService.getById(judge.getPid());
+            // 如果该题不支持开放测试点结果查看
+            if (!problem.getOpenCaseResult()) {
+                return null;
+            }
         }
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        QueryWrapper<JudgeCase> wrapper = new QueryWrapper<>();
         if (judge.getCid() == 0) { // 非比赛提交
             if (userRolesVo == null) { // 没有登录
                 wrapper.select("time", "memory", "score", "status", "user_output", "group_num", "seq", "mode");
@@ -657,11 +673,20 @@ public class JudgeManager {
 
         wrapper.eq("submit_id", submitId);
 
-        if (!problem.getIsRemote()) {
-            wrapper.last("order by seq asc");
+        if (cid == null) {
+            Problem problem = problemEntityService.getById(judge.getPid());
+            if (!problem.getIsRemote()) {
+                wrapper.last("order by seq asc");
+            }
         }
+
+        List<JudgeCase> judgeCaseList = new ArrayList();
         // 当前所有测试点只支持 空间 时间 状态码 IO得分 和错误信息提示查看而已
-        List<JudgeCase> judgeCaseList = judgeCaseEntityService.list(wrapper);
+        if (cid == null) {
+            judgeCaseList = judgeCaseEntityService.list(wrapper);
+        } else {
+            judgeCaseList = synchronousManager.getSynchronousCaseResultList(submitId, cid);
+        }
         JudgeCaseVO judgeCaseVo = new JudgeCaseVO();
         if (!CollectionUtils.isEmpty(judgeCaseList)) {
             String mode = judgeCaseList.get(0).getMode();

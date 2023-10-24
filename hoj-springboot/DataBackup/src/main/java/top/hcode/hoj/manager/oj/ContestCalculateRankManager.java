@@ -42,6 +42,9 @@ public class ContestCalculateRankManager {
     @Resource
     private ContestRecordEntityService contestRecordEntityService;
 
+    @Resource
+    private SynchronousManager synchronousManager;
+
     @Autowired
     private GroupMemberEntityService groupMemberEntityService;
 
@@ -176,6 +179,14 @@ public class ContestCalculateRankManager {
             concernedList.remove(currentUserId);
         }
 
+        // 是否开启同步赛
+        if (contest.getSynchronous() != null && contest.getSynchronous()) {
+            List<ACMContestRankVO> synchronousResultList = synchronousManager.getSynchronousRankList(contest,
+                    isContainsAfterContestJudge, removeStar);
+            // 将两个列表合并
+            orderResultList.addAll(synchronousResultList);
+        }
+
         int rankNum = 1;
         int len = orderResultList.size();
         ACMContestRankVO lastACMRankVo = null;
@@ -306,7 +317,8 @@ public class ContestCalculateRankManager {
                         .setNickname(contestRecord.getNickname())
                         .setAc(0)
                         .setTotalTime(0L)
-                        .setTotal(0);
+                        .setTotal(0)
+                        .setRemote(false);
 
                 HashMap<String, HashMap<String, Object>> submissionInfo = new HashMap<>();
                 ACMContestRankVo.setSubmissionInfo(submissionInfo);
