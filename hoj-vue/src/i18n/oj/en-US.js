@@ -559,7 +559,7 @@ export const m = {
   Security: 'Security',
   Security_Desc: 'The Sandbox is isolated by CGroup, and the website authority control is perfect',
   Diversity: 'Diversity',
-  Diversity_Desc: 'Support Codefoces, HDU, POJ, GYM, AtCoder, SPOJ remote judge',
+  Diversity_Desc: 'Support Codefoces, HDU, POJ, GYM, AtCoder, SPOJ, SCPC remote judge',
   Available: 'Available',
   Faulty: 'Faulty',
 

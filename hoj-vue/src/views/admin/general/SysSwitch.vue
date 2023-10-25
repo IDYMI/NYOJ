@@ -50,7 +50,7 @@
                     </el-form-item>
                     <el-form-item :label="$t('m.Non_Contest_Submission_Frequency')" label-width="320px">
                         <el-input-number
-                         v-model="switchConfig.defaultSubmitInterval" 
+                         v-model="switchConfig.defaultSubmitInterval"
                          :min="0">
                          </el-input-number>
                     </el-form-item>
@@ -102,19 +102,19 @@
                     </el-form-item>
                     <el-form-item :label="$t('m.Number_of_AC_required_for_ordinary_users_to_post')" label-width="320px">
                         <el-input-number
-                         v-model="switchConfig.defaultCreateDiscussionACInitValue" 
+                         v-model="switchConfig.defaultCreateDiscussionACInitValue"
                          :min="0">
                          </el-input-number>
                     </el-form-item>
                     <el-form-item :label="$t('m.Number_of_posts_that_users_can_create_per_day')" label-width="320px">
                         <el-input-number
-                         v-model="switchConfig.defaultCreateDiscussionDailyLimit" 
+                         v-model="switchConfig.defaultCreateDiscussionDailyLimit"
                          :min="0">
                          </el-input-number>
                     </el-form-item>
                     <el-form-item :label="$t('m.Number_of_AC_required_for_Comment_of_ordinary_users')" label-width="320px">
                         <el-input-number
-                         v-model="switchConfig.defaultCreateCommentACInitValue" 
+                         v-model="switchConfig.defaultCreateCommentACInitValue"
                          :min="0">
                          </el-input-number>
                     </el-form-item>
@@ -142,19 +142,19 @@
                 >
                     <el-form-item :label="$t('m.Number_of_Groups_that_users_can_create_per_day')" label-width="320px">
                         <el-input-number
-                         v-model="switchConfig.defaultCreateGroupDailyLimit" 
+                         v-model="switchConfig.defaultCreateGroupDailyLimit"
                          :min="0">
                          </el-input-number>
                     </el-form-item>
                     <el-form-item :label="$t('m.Total_number_of_groups_that_ordinary_users_can_create')" label-width="320px">
                         <el-input-number
-                         v-model="switchConfig.defaultCreateGroupLimit" 
+                         v-model="switchConfig.defaultCreateGroupLimit"
                          :min="0">
                          </el-input-number>
                     </el-form-item>
                     <el-form-item :label="$t('m.Number_of_AC_required_for_ordinary_users_to_create_group')" label-width="320px">
                         <el-input-number
-                         v-model="switchConfig.defaultCreateGroupACInitValue" 
+                         v-model="switchConfig.defaultCreateGroupACInitValue"
                          :min="0">
                          </el-input-number>
                     </el-form-item>
@@ -172,7 +172,7 @@
       </el-row>
       <el-row :gutter="15">
         <el-col :xs="24" :md="12" style="margin-top: 15px;">
-          <RemoteJudgeAccount 
+          <RemoteJudgeAccount
             :usernameList.sync="switchConfig.hduUsernameList"
             :passwordList.sync="switchConfig.hduPasswordList"
             :loading.sync="loading"
@@ -181,7 +181,7 @@
           </RemoteJudgeAccount>
         </el-col>
         <el-col :xs="24" :md="12" style="margin-top: 15px;">
-          <RemoteJudgeAccount 
+          <RemoteJudgeAccount
             :usernameList.sync="switchConfig.cfUsernameList"
             :passwordList.sync="switchConfig.cfPasswordList"
             :loading.sync="loading"
@@ -190,7 +190,7 @@
           </RemoteJudgeAccount>
         </el-col>
         <el-col :xs="24" :md="12" style="margin-top: 15px;">
-          <RemoteJudgeAccount 
+          <RemoteJudgeAccount
             :usernameList.sync="switchConfig.pojUsernameList"
             :passwordList.sync="switchConfig.pojPasswordList"
             :loading.sync="loading"
@@ -199,7 +199,7 @@
           </RemoteJudgeAccount>
         </el-col>
         <el-col :xs="24" :md="12" style="margin-top: 15px;">
-          <RemoteJudgeAccount 
+          <RemoteJudgeAccount
             :usernameList.sync="switchConfig.atcoderUsernameList"
             :passwordList.sync="switchConfig.atcoderPasswordList"
             :loading.sync="loading"
@@ -208,12 +208,21 @@
           </RemoteJudgeAccount>
         </el-col>
         <el-col :xs="24" :md="12" style="margin-top: 15px;">
-          <RemoteJudgeAccount 
+          <RemoteJudgeAccount
             :usernameList.sync="switchConfig.spojUsernameList"
             :passwordList.sync="switchConfig.spojPasswordList"
             :loading.sync="loading"
             @saveSwitchConfig="saveSwitchConfig"
             OJ="SPOJ">
+          </RemoteJudgeAccount>
+        </el-col>
+        <el-col :xs="24" :md="12" style="margin-top: 15px;">
+          <RemoteJudgeAccount
+            :usernameList.sync="switchConfig.scpcUsernameList"
+            :passwordList.sync="switchConfig.scpcPasswordList"
+            :loading.sync="loading"
+            @saveSwitchConfig="saveSwitchConfig"
+            OJ="SCPC">
           </RemoteJudgeAccount>
         </el-col>
       </el-row>
@@ -240,7 +249,7 @@ export default {
     let screenWidth = window.screen.width;
     if (screenWidth < 500) {
       this.labelPosition = 'top';
-    } 
+    }
   },
   mounted() {
     api.admin_getSwitchConfig().then((res) => {

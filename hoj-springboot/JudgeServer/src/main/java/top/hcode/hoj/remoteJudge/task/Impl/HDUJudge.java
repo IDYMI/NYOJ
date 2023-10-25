@@ -66,6 +66,7 @@ public class HDUJudge extends RemoteJudgeStrategy {
 
         HttpResponse response = request.execute();
         remoteJudgeDTO.setSubmitStatus(response.getStatus());
+        
         // 提交频率限制了 等待5秒再次提交
         if (response.getStatus() == 200 && response.body() != null && response.body().contains("Please don't re-submit")) {
             try {

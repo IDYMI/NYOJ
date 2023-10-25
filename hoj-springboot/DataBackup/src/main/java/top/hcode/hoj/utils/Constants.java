@@ -79,13 +79,29 @@ public class Constants {
         }
     }
 
+    public enum HOJSuperAdmin {
+        Username("NYOJ"),
+        Password("NYOJNYOJ");
+
+        private final String mode;
+
+        HOJSuperAdmin(String mode) {
+            this.mode = mode;
+        }
+
+        public String getMode() {
+            return mode;
+        }
+    }
+
     public enum RemoteOJ {
         HDU("HDU"),
         CODEFORCES("CF"),
         GYM("GYM"),
         POJ("POJ"),
         SPOJ("SPOJ"),
-        ATCODER("AC");
+        ATCODER("AC"),
+        SCPC("SCPC");
 
         private final String name;
 

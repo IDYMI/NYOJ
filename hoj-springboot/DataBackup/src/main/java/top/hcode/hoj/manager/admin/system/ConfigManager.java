@@ -445,6 +445,14 @@ public class ConfigManager {
                     config.getAtcoderPasswordList(),
                     Constants.RemoteOJ.ATCODER.getName());
         }
+        if (checkListDiff(config.getScpcUsernameList(), switchConfig.getScpcUsernameList()) ||
+                checkListDiff(config.getScpcPasswordList(), switchConfig.getScpcPasswordList())) {
+            switchConfig.setScpcUsernameList(config.getScpcUsernameList());
+            switchConfig.setScpcPasswordList(config.getScpcPasswordList());
+            changeRemoteJudgeAccount(config.getScpcUsernameList(),
+                    config.getScpcPasswordList(),
+                    Constants.RemoteOJ.SCPC.getName());
+        }
 
         boolean isOk = nacosSwitchConfig.publishSwitchConfig();
         if (!isOk) {

@@ -8,11 +8,8 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.json.JSONArray;
 
-import org.checkerframework.checker.units.qual.s;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.mysql.cj.xdevapi.JsonArray;
 
 import top.hcode.hoj.pojo.entity.judge.Judge;
 import top.hcode.hoj.pojo.entity.judge.JudgeCase;
@@ -20,7 +17,6 @@ import top.hcode.hoj.dao.contest.ContestEntityService;
 import top.hcode.hoj.pojo.entity.contest.Contest;
 import top.hcode.hoj.pojo.vo.ACMContestRankVO;
 import top.hcode.hoj.pojo.vo.ContestSynchronousConfigVO;
-import top.hcode.hoj.pojo.vo.JudgeCaseVO;
 import top.hcode.hoj.pojo.vo.JudgeVO;
 import top.hcode.hoj.pojo.vo.ContestProblemVO;
 
@@ -30,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * @param contest                     比赛的信息
@@ -91,6 +85,8 @@ public class SynchronousManager {
      */
     public HttpRequest getHttpRequest(ContestSynchronousConfigVO synchronousConfig, String api, String type)
             throws MalformedURLException {
+        // 清除当前线程的cookies缓存
+        HttpRequest.getCookieManager().getCookieStore().removeAll();
         String contestLink = synchronousConfig.getLink();
         // 请求头中的 authorization 信息
         String authorization = synchronousConfig.getAuthorization();
