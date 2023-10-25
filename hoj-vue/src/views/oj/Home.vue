@@ -490,6 +490,12 @@ export default {
           logo: require("@/assets/spoj-logo.png"),
           status: true,
         },
+        {
+          url: "http://scpc.fun",
+          name: "SCPC",
+          logo: require("@/assets/scpc-logo.png"),
+          status: true,
+        },
       ],
     };
   },

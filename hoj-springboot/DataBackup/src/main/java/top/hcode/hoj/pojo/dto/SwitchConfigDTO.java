@@ -112,4 +112,8 @@ public class SwitchConfigDTO {
     private List<String> spojUsernameList;
 
     private List<String> spojPasswordList;
+
+    private List<String> scpcUsernameList;
+
+    private List<String> scpcPasswordList;
 }

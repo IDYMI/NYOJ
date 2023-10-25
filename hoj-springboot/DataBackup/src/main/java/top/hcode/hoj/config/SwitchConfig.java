@@ -35,6 +35,10 @@ public class SwitchConfig {
 
     private List<String> spojPasswordList = new ArrayList<>();
 
+    private List<String> scpcUsernameList = new ArrayList<>();
+
+    private List<String> scpcPasswordList = new ArrayList<>();
+
     /**
      * 是否开启公开评论区
      */
@@ -105,7 +109,7 @@ public class SwitchConfig {
      */
     private Integer defaultCreateCommentACInitValue = 10;
 
-    public void formatStrRemoteAccount2Unicode(){
+    public void formatStrRemoteAccount2Unicode() {
         this.setHduUsernameList(format2Unicode(this.hduUsernameList));
         this.setHduPasswordList(format2Unicode(this.hduPasswordList));
         this.setPojUsernameList(format2Unicode(this.pojUsernameList));
@@ -116,9 +120,11 @@ public class SwitchConfig {
         this.setAtcoderPasswordList(format2Unicode(this.atcoderPasswordList));
         this.setSpojUsernameList(format2Unicode(this.spojUsernameList));
         this.setSpojPasswordList(format2Unicode(this.spojPasswordList));
+        this.setScpcUsernameList(format2Unicode(this.scpcUsernameList));
+        this.setScpcPasswordList(format2Unicode(this.scpcPasswordList));
     }
 
-    public void convertUnicodeRemoteAccount2Str(){
+    public void convertUnicodeRemoteAccount2Str() {
         this.setHduUsernameList(convertUnicode2Str(this.hduUsernameList));
         this.setHduPasswordList(convertUnicode2Str(this.hduPasswordList));
         this.setPojUsernameList(convertUnicode2Str(this.pojUsernameList));
@@ -129,8 +135,9 @@ public class SwitchConfig {
         this.setAtcoderPasswordList(convertUnicode2Str(this.atcoderPasswordList));
         this.setSpojUsernameList(convertUnicode2Str(this.spojUsernameList));
         this.setSpojPasswordList(convertUnicode2Str(this.spojPasswordList));
+        this.setScpcUsernameList(convertUnicode2Str(this.scpcUsernameList));
+        this.setScpcPasswordList(convertUnicode2Str(this.scpcPasswordList));
     }
-
 
     private List<String> format2Unicode(List<String> strList) {
         if (CollectionUtils.isEmpty(strList)) {

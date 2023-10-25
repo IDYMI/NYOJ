@@ -139,7 +139,7 @@ export default {
   },
   data() {
     return {
-      imgUrl: require("@/assets/NYOJ_Logo.png"),
+      imgUrl: require("@/assets/nyoj-logo.png"),
       isAdminView: false,
       showFooter: true,
     };

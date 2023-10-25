@@ -20,6 +20,8 @@ public class RemoteJudgeFactory {
                 return new SPOJJudge();
             case ATCODER_JUDGE:
                 return new AtCoderJudge();
+            case SCPC_JUDGE:
+                return new SCPCJudge();
             default:
                 return null;
         }

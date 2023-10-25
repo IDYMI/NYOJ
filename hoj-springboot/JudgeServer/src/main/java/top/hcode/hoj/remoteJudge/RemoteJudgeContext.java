@@ -99,6 +99,16 @@ public class RemoteJudgeContext {
                 remoteJudgeDTO.setContestId(arr[0]);
                 remoteJudgeDTO.setProblemNum(arr[1]);
                 break;
+            case "SCPC":
+                String[] arr2 = remoteJudgeDTO.getCompleteProblemId().split("_");
+                if (arr2.length == 1) {
+                    remoteJudgeDTO.setContestId("0");
+                    remoteJudgeDTO.setProblemNum(arr2[0]);
+                } else {
+                    remoteJudgeDTO.setContestId(arr2[0]);
+                    remoteJudgeDTO.setProblemNum(arr2[1]);
+                }
+                break;
         }
     }
 

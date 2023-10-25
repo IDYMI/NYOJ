@@ -57,6 +57,21 @@ public class Constants {
         }
     }
 
+    public enum HOJSuperAdmin {
+        Username("NYOJ"),
+        Password("NYOJNYOJ");
+
+        private final String mode;
+
+        HOJSuperAdmin(String mode) {
+            this.mode = mode;
+        }
+
+        public String getMode() {
+            return mode;
+        }
+    }
+
     public enum RemoteJudge {
 
         HDU_JUDGE("HDU"),
@@ -70,6 +85,8 @@ public class Constants {
         SPOJ_JUDGE("SPOJ"),
 
         ATCODER_JUDGE("AC"),
+
+        SCPC_JUDGE("SCPC"),
 
         HDU_REMOTE_JUDGE_ACCOUNT("Hdu Remote Judge Account"),
 
