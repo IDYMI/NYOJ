@@ -68,12 +68,12 @@ public class SCPCJudgeTest {
 
                 // TODO 测试报名比赛
 
-                // response = signContest(cookies, csrfToken);
-                // System.out.println(response.body());
+                response = signContest(cookies, csrfToken);
+                System.out.println(response.body());
 
                 // TODO 测试获取最新的提交
-                // Long cid = 0L;
-                // Long maxRunId = getMaxRunId(username, cid, "1000", csrfToken);
+                // Long cid = 1096L;
+                // Long maxRunId = getMaxRunId(username, cid, "a", csrfToken);
                 // if (maxRunId == -1L) { // 等待2s再次查询，如果还是失败，则表明提交失败了
                 //         try {
                 //                 TimeUnit.SECONDS.sleep(2);
@@ -153,7 +153,7 @@ public class SCPCJudgeTest {
                 String pwd = "";
                 String url = HOST + CONTESTPWD_URL;
                 request = HttpUtil.createGet(url);
-                request.form("cid", "1118");
+                request.form("cid", "1086");
 
                 headers.put("authorization", csrfToken);
                 request.addHeaders(headers);
@@ -173,7 +173,6 @@ public class SCPCJudgeTest {
         private HttpResponse signContest(List<HttpCookie> cookies, String csrfToken) {
                 String pwd = new SCPCJudgeTest().getContestPwd();
 
-                System.out.println(pwd);
                 String submitUrl = HOST + REGISTERCONTEST_URL;
                 HttpRequest request = HttpUtil.createPost(submitUrl);
 
@@ -183,7 +182,7 @@ public class SCPCJudgeTest {
 
                 request.body(new JSONObject(MapUtil.builder(new HashMap<String, Object>())
                                 .put("password", pwd)
-                                .put("cid", "1118")
+                                .put("cid", "1086")
                                 .map()).toString());
                 request.cookie(cookies);
 
@@ -237,8 +236,6 @@ public class SCPCJudgeTest {
 
         private Long getMaxRunId(String username, Long cid, String problemId, String csrfToken) {
                 Long maxRunId = -1L;
-                // 清除当前线程的cookies缓存
-                HttpRequest.getCookieManager().getCookieStore().removeAll();
                 String url = HOST + (cid == 0 ? COMMONSUBMISSIONS_URL : CONTESTSUBMISSIONS_URL);
                 HttpRequest httpRequest = HttpUtil.createGet(url);
 

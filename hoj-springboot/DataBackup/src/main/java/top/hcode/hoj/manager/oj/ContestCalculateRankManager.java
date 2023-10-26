@@ -187,12 +187,18 @@ public class ContestCalculateRankManager {
             orderResultList.addAll(synchronousResultList);
         }
 
+        // 重新排序
+        List<ACMContestRankVO> result = orderResultList.stream()
+                .sorted(Comparator.comparing(ACMContestRankVO::getAc, Comparator.reverseOrder()) // 先以总ac数降序
+                        .thenComparing(ACMContestRankVO::getTotalTime) // 再以总耗时升序
+                ).collect(Collectors.toList());
+
         int rankNum = 1;
-        int len = orderResultList.size();
+        int len = result.size();
         ACMContestRankVO lastACMRankVo = null;
         ContestAwardConfigVO configVo = null;
         for (int i = 0; i < len; i++) {
-            ACMContestRankVO currentACMRankVo = orderResultList.get(i);
+            ACMContestRankVO currentACMRankVo = result.get(i);
             if (!removeStar && starAccountMap.containsKey(currentACMRankVo.getUsername())) {
                 // 打星队伍排名为-1
                 currentACMRankVo.setRank(-1);
@@ -250,7 +256,7 @@ public class ContestCalculateRankManager {
                 }
             }
         }
-        topACMRankVoList.addAll(orderResultList);
+        topACMRankVoList.addAll(result);
         return topACMRankVoList;
     }
 

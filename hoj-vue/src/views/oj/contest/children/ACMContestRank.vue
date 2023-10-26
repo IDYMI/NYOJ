@@ -71,16 +71,16 @@
               </template>
               <template v-if="synchronousRank">
                 <div> -->
-                  <!-- 选择全部或取消选择全部的复选框 -->
-                  <!-- <input
+              <!-- 选择全部或取消选择全部的复选框 -->
+              <!-- <input
                     type="checkbox"
                     v-model="selectAll"
                     @change="toggleAll"
                   />
                   <label for="selectAll">Select All</label> -->
 
-                  <!-- 多选框列表 -->
-                  <!-- <div v-for="(item, index) in synchronousInfo" :key="index">
+              <!-- 多选框列表 -->
+              <!-- <div v-for="(item, index) in synchronousInfo" :key="index">
                     <input
                       type="checkbox"
                       v-model="selectedItems"
@@ -90,14 +90,14 @@
                     <label>{{ item.school }}</label>
                   </div> -->
 
-                  <!-- 显示选择的项目 -->
-                  <!-- <div>
+              <!-- 显示选择的项目 -->
+              <!-- <div>
                     <strong>Selected items:</strong>
                     <span v-for="index in selectedItems" :key="index"
                       >{{ synchronousInfo[index].school }}
                     </span>
                   </div> -->
-                <!-- </div>
+              <!-- </div>
               </template> -->
               <template v-if="isContestAdmin">
                 <el-row>
@@ -563,9 +563,8 @@ export default {
       synchronousInfo: [
         {
           school: "SCPC",
-          link: "http://scpc.fun/contest/1115",
-          authorization:
-            "eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiJlYjQwMGYzZmM4Njc0N2JkYWZiMjZiYjRjODg2MzgwNCIsImlhdCI6MTY5Nzc4Mjk3OCwiZXhwIjoxNjk3ODY5Mzc4fQ.GJSxx96La-Ro3m7e5MPBPJ11QT8O1YZyCHpF6NlFPlYqexolLDIJrFIBhwpYtNlgFpn5gaJk4rVcF4sxyvOH3A",
+          link: "",
+          authorization: "",
         },
         {
           school: "NYOJ",

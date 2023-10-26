@@ -569,66 +569,53 @@ public class ContestManager {
             List<JudgeVO> combinedList = new ArrayList<>(existingRecords);
             combinedList.addAll(synchronousResultList);
 
+            // 重新排序
+            List<JudgeVO> result = combinedList.stream()
+                    .sorted(Comparator.comparing(JudgeVO::getSubmitTime, Comparator.reverseOrder()) // 按照提交时间排序
+                    ).collect(Collectors.toList());
+
             // 重新分页
-            int total = combinedList.size();
+            int total = result.size();
             int fromIndex = (currentPage - 1) * limit;
             int toIndex = Math.min(fromIndex + limit, total);
-            List<JudgeVO> pagedList = combinedList.subList(fromIndex, toIndex);
+            List<JudgeVO> pagedList = result.subList(fromIndex, toIndex);
 
             newContestJudgeList.setRecords(pagedList);
             newContestJudgeList.setTotal(total);
-
-            if (newContestJudgeList.getTotal() == 0) { // 未查询到一条数据
-                return newContestJudgeList;
-            } else {
-                // 比赛还是进行阶段，同时不是超级管理员与比赛管理员，需要将除自己之外的提交的时间、空间、长度隐藏
-                if (contest.getStatus().intValue() == Constants.Contest.STATUS_RUNNING.getCode()
-                        && !isRoot && !userRolesVo.getUid().equals(contest.getUid())) {
-                    newContestJudgeList.getRecords().forEach(judgeVo -> {
-                        if (!judgeVo.getUid().equals(userRolesVo.getUid())) {
-                            judgeVo.setTime(null);
-                            judgeVo.setMemory(null);
-                            judgeVo.setLength(null);
-                        }
-                    });
-                }
-                return newContestJudgeList;
-            }
         }
 
-        if (contestJudgeList.getTotal() == 0) { // 未查询到一条数据
-            if (contest.getSynchronous() != null && contest.getSynchronous() && !onlyMine) {
+        if (contest.getSynchronous() != null && contest.getSynchronous() && !onlyMine) { // 同步赛
+            if (newContestJudgeList.getTotal() == 0) { // 未查询到一条数据
                 return newContestJudgeList;
-            } else {
-                return contestJudgeList;
             }
-        } else {
             // 比赛还是进行阶段，同时不是超级管理员与比赛管理员，需要将除自己之外的提交的时间、空间、长度隐藏
             if (contest.getStatus().intValue() == Constants.Contest.STATUS_RUNNING.getCode()
                     && !isRoot && !userRolesVo.getUid().equals(contest.getUid())) {
-                if (contest.getSynchronous() != null && contest.getSynchronous() && !onlyMine) {
-                    newContestJudgeList.getRecords().forEach(judgeVo -> {
-                        if (!judgeVo.getUid().equals(userRolesVo.getUid())) {
-                            judgeVo.setTime(null);
-                            judgeVo.setMemory(null);
-                            judgeVo.setLength(null);
-                        }
-                    });
-                } else {
-                    contestJudgeList.getRecords().forEach(judgeVo -> {
-                        if (!judgeVo.getUid().equals(userRolesVo.getUid())) {
-                            judgeVo.setTime(null);
-                            judgeVo.setMemory(null);
-                            judgeVo.setLength(null);
-                        }
-                    });
-                }
+                newContestJudgeList.getRecords().forEach(judgeVo -> {
+                    if (!judgeVo.getUid().equals(userRolesVo.getUid())) {
+                        judgeVo.setTime(null);
+                        judgeVo.setMemory(null);
+                        judgeVo.setLength(null);
+                    }
+                });
             }
-            if (contest.getSynchronous() != null && contest.getSynchronous() && !onlyMine) {
-                return newContestJudgeList;
-            } else {
+            return newContestJudgeList;
+        } else {
+            if (contestJudgeList.getTotal() == 0) { // 未查询到一条数据
                 return contestJudgeList;
             }
+            // 比赛还是进行阶段，同时不是超级管理员与比赛管理员，需要将除自己之外的提交的时间、空间、长度隐藏
+            if (contest.getStatus().intValue() == Constants.Contest.STATUS_RUNNING.getCode()
+                    && !isRoot && !userRolesVo.getUid().equals(contest.getUid())) {
+                contestJudgeList.getRecords().forEach(judgeVo -> {
+                    if (!judgeVo.getUid().equals(userRolesVo.getUid())) {
+                        judgeVo.setTime(null);
+                        judgeVo.setMemory(null);
+                        judgeVo.setLength(null);
+                    }
+                });
+            }
+            return contestJudgeList;
         }
     }
 

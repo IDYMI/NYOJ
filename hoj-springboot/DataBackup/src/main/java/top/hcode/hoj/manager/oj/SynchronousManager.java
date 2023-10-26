@@ -19,13 +19,16 @@ import top.hcode.hoj.pojo.vo.ACMContestRankVO;
 import top.hcode.hoj.pojo.vo.ContestSynchronousConfigVO;
 import top.hcode.hoj.pojo.vo.JudgeVO;
 import top.hcode.hoj.pojo.vo.ContestProblemVO;
+import top.hcode.hoj.pojo.entity.problem.Problem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.net.HttpCookie;
 import java.net.MalformedURLException;
 import java.net.URL;
+import top.hcode.hoj.utils.Constants;
 
 /**
  * @param contest                     比赛的信息
@@ -38,6 +41,31 @@ import java.net.URL;
  */
 @Component
 public class SynchronousManager {
+    public static final String HOST = "http://scpc.fun";
+    public static final String LOGIN_URL = "/api/login";
+    public static String csrfToken = "";
+    public static List<HttpCookie> cookies = new ArrayList<>();
+
+    public static Map<String, String> headers = MapUtil
+            .builder(new HashMap<String, String>())
+            .put("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
+            .map();
+
+    public void login() {
+        // 登录管理账号获取密码
+        HttpRequest request = HttpUtil.createPost(HOST + LOGIN_URL);
+        request.addHeaders(headers);
+
+        request.body(new JSONObject(MapUtil.builder(new HashMap<String, Object>())
+                .put("username", Constants.HOJSuperAdmin.Username.getMode())
+                .put("password", Constants.HOJSuperAdmin.Password.getMode())
+                .map()).toString());
+
+        HttpResponse response = request.execute();
+        csrfToken = response.headers().get("Authorization").get(0);
+        cookies = response.getCookies();
+    }
 
     @Autowired
     private ContestEntityService contestEntityService;
@@ -72,8 +100,8 @@ public class SynchronousManager {
 
     public List<JSONObject> getSynchronousConfigList(Contest contest) {
         // 获取比赛对应的同步赛信息
-        JSONObject jsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
-        List<JSONObject> result = jsonObject.get("config", List.class);
+        JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
+        List<JSONObject> result = SynchronousJsonObject.get("config", List.class);
 
         return result;
     }
@@ -85,14 +113,14 @@ public class SynchronousManager {
      */
     public HttpRequest getHttpRequest(ContestSynchronousConfigVO synchronousConfig, String api, String type)
             throws MalformedURLException {
-        // 清除当前线程的cookies缓存
+        // 清除当前的cookies缓存
         HttpRequest.getCookieManager().getCookieStore().removeAll();
+        // login();
         String contestLink = synchronousConfig.getLink();
         // 请求头中的 authorization 信息
         String authorization = synchronousConfig.getAuthorization();
         // 根域名
         String rootDomain = getRootDomain(contestLink);
-
         // 新建网络请求
         String link = rootDomain + api;
 
@@ -159,11 +187,11 @@ public class SynchronousManager {
 
                 // System.out.println(synchronousRankJson);
 
-                JSONObject rankJsonObject = new JSONObject(synchronousRankJson);
+                JSONObject JsonObject = new JSONObject(synchronousRankJson);
 
-                int status = rankJsonObject.getInt("status");
+                int status = JsonObject.getInt("status");
                 if (status == 200) {
-                    JSONObject data = rankJsonObject.getJSONObject("data");
+                    JSONObject data = JsonObject.getJSONObject("data");
                     JSONArray records = data.getJSONArray("records");
 
                     for (int i = 0; i < records.size(); i++) {
@@ -223,11 +251,11 @@ public class SynchronousManager {
 
                 // System.out.println(synchronousRankJson);
 
-                JSONObject rankJsonObject = new JSONObject(synchronousRankJson);
+                JSONObject JsonObject = new JSONObject(synchronousRankJson);
 
-                int status = rankJsonObject.getInt("status");
+                int status = JsonObject.getInt("status");
                 if (status == 200) {
-                    JSONObject data = rankJsonObject.getJSONObject("data");
+                    JSONObject data = JsonObject.getJSONObject("data");
                     JSONArray records = data.getJSONArray("records");
 
                     for (int i = 0; i < records.size(); i++) {
@@ -249,8 +277,8 @@ public class SynchronousManager {
         List<ContestProblemVO> synchronousContestProblemList = new ArrayList();
 
         // 获取比赛对应的同步赛信息
-        JSONObject jsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
-        List<JSONObject> synchronousConfigList = jsonObject.get("config", List.class);
+        JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
+        List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
 
         for (JSONObject object : synchronousConfigList) {
             try {
@@ -272,11 +300,11 @@ public class SynchronousManager {
 
                 // System.out.println(synchronousRankJson);
 
-                JSONObject rankJsonObject = new JSONObject(synchronousRankJson);
+                JSONObject JsonObject = new JSONObject(synchronousRankJson);
 
-                int status = rankJsonObject.getInt("status");
+                int status = JsonObject.getInt("status");
                 if (status == 200) {
-                    JSONArray records = rankJsonObject.getJSONArray("data");
+                    JSONArray records = JsonObject.getJSONArray("data");
 
                     for (int i = 0; i < records.size(); i++) {
                         JSONObject record = records.getJSONObject(i);
@@ -297,10 +325,10 @@ public class SynchronousManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        if (contest != null) {
+        if (contest != null && contest.getSynchronous()) {
             // 获取比赛对应的同步赛信息
-            JSONObject jsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
-            List<JSONObject> synchronousConfigList = jsonObject.get("config", List.class);
+            JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
+            List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
 
             for (JSONObject object : synchronousConfigList) {
                 try {
@@ -318,14 +346,13 @@ public class SynchronousManager {
 
                     // System.out.println(synchronousRankJson);
 
-                    JSONObject rankJsonObject = new JSONObject(synchronousRankJson);
+                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
 
-                    int status = rankJsonObject.getInt("status");
+                    int status = JsonObject.getInt("status");
                     if (status == 200) {
-                        JSONObject data = rankJsonObject.getJSONObject("data");
+                        JSONObject data = JsonObject.getJSONObject("data");
                         JSONObject record = data.getJSONObject("submission");
                         judge = parseSynchronousSubmissionDetail(record);
-                        return judge;
                     }
                 } catch (Exception e) {
                     // 处理异常情况，可以记录日志等
@@ -336,16 +363,65 @@ public class SynchronousManager {
         return judge;
     }
 
+    public Problem getSynchronousProblem(String displayId, Long cid) {
+        Problem problem = new Problem();
+
+        // 获取本场比赛的状态
+        Contest contest = contestEntityService.getById(cid);
+
+        if (contest != null && contest.getSynchronous()) {
+            // 获取比赛对应的同步赛信息
+            JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
+            List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
+
+            for (JSONObject object : synchronousConfigList) {
+                try {
+                    ContestSynchronousConfigVO synchronousConfig = JSONUtil.toBean(object,
+                            ContestSynchronousConfigVO.class);
+
+                    String api = "/api/get-contest-problem-details";
+                    HttpRequest request = getHttpRequest(synchronousConfig, api, "get");
+
+                    String contestUrl = synchronousConfig.getLink();
+                    String synchronousCid = getCid(contestUrl);
+
+                    displayId = displayId.split("_")[1];
+                    // param 信息
+                    request.form("displayId", displayId)
+                            .form("cid", synchronousCid).form("containsEnd", "true");
+
+                    HttpResponse response = request.execute();
+                    String synchronousRankJson = response.body();
+
+                    // System.out.println(synchronousRankJson);
+
+                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
+
+                    int status = JsonObject.getInt("status");
+                    if (status == 200) {
+                        JSONObject data = JsonObject.getJSONObject("data");
+                        JSONObject record = data.getJSONObject("problem");
+                        problem = parseSynchronousProblem(record);
+                    }
+                } catch (Exception e) {
+                    // 处理异常情况，可以记录日志等
+                    e.printStackTrace();
+                }
+            }
+        }
+        return problem;
+    }
+
     public List<JudgeCase> getSynchronousCaseResultList(Long submitId, Long cid) {
         List<JudgeCase> synchronousCaseResult = new ArrayList();
 
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        if (contest != null) {
+        if (contest != null && contest.getSynchronous()) {
             // 获取比赛对应的同步赛信息
-            JSONObject jsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
-            List<JSONObject> synchronousConfigList = jsonObject.get("config", List.class);
+            JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
+            List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
 
             for (JSONObject object : synchronousConfigList) {
                 try {
@@ -363,11 +439,11 @@ public class SynchronousManager {
 
                     // System.out.println(synchronousRankJson);
 
-                    JSONObject rankJsonObject = new JSONObject(synchronousRankJson);
+                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
 
-                    int status = rankJsonObject.getInt("status");
+                    int status = JsonObject.getInt("status");
                     if (status == 200) {
-                        JSONObject data = rankJsonObject.getJSONObject("data");
+                        JSONObject data = JsonObject.getJSONObject("data");
                         JSONArray records = data.getJSONArray("judgeCaseList");
 
                         for (int i = 0; i < records.size(); i++) {
@@ -383,53 +459,6 @@ public class SynchronousManager {
             }
         }
         return synchronousCaseResult;
-    }
-
-    public Judge rejudgeSynchronousProblem(Long submitId, Long cid) {
-
-        // 获取对应的提交记录
-        Judge judge = getSynchronousSubmissionDetail(submitId, cid);
-
-        // 获取本场比赛的状态
-        Contest contest = contestEntityService.getById(cid);
-
-        if (contest != null) {
-            // 获取比赛对应的同步赛信息
-            JSONObject jsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
-            List<JSONObject> synchronousConfigList = jsonObject.get("config", List.class);
-
-            for (JSONObject object : synchronousConfigList) {
-                try {
-                    ContestSynchronousConfigVO synchronousConfig = JSONUtil.toBean(object,
-                            ContestSynchronousConfigVO.class);
-
-                    String api = "/api/admin/judge/rejudge";
-                    HttpRequest request = getHttpRequest(synchronousConfig, api, "get");
-
-                    // param 信息
-                    request.form("submitId", submitId.toString());
-
-                    HttpResponse response = request.execute();
-                    String synchronousRankJson = response.body();
-
-                    // System.out.println(synchronousRankJson);
-
-                    JSONObject rankJsonObject = new JSONObject(synchronousRankJson);
-
-                    int status = rankJsonObject.getInt("status");
-                    if (status == 200) {
-                        JSONObject data = rankJsonObject.getJSONObject("data");
-                        JSONObject record = data.getJSONObject("submission");
-                        judge = parseSynchronousSubmissionDetail(record);
-                        return judge;
-                    }
-                } catch (Exception e) {
-                    // 处理异常情况，可以记录日志等
-                    e.printStackTrace();
-                }
-            }
-        }
-        return judge;
     }
 
     public static JudgeVO parseSynchronousSubmission(JSONObject record) {
@@ -558,4 +587,47 @@ public class SynchronousManager {
                 .setGmtModified(record.getDate("gmtModified"));
         return judgeCase;
     }
+
+    public static Problem parseSynchronousProblem(JSONObject record) {
+        Problem problem = new Problem();
+        problem.setId(record.getLong("id"));
+        problem.setProblemId(record.getStr("problemId"));
+        problem.setTitle(record.getStr("title"));
+        problem.setAuthor(record.getStr("author"));
+        problem.setType(record.getInt("type"));
+        problem.setJudgeMode(record.getStr("judgeMode"));
+        problem.setJudgeCaseMode(record.getStr("judgeCaseMode"));
+        problem.setTimeLimit(record.getInt("timeLimit"));
+        problem.setMemoryLimit(record.getInt("memoryLimit"));
+        problem.setStackLimit(record.getInt("stackLimit"));
+        problem.setDescription(record.getStr("description"));
+        problem.setInput(record.getStr("input"));
+        problem.setOutput(record.getStr("output"));
+        problem.setExamples(record.getStr("examples"));
+        problem.setIsRemote(record.getBool("isRemote"));
+        problem.setSource(record.getStr("source"));
+        problem.setDifficulty(record.getInt("difficulty"));
+        problem.setHint(record.getStr("hint"));
+        problem.setAuth(record.getInt("auth"));
+        problem.setIoScore(record.getInt("ioScore"));
+        problem.setCodeShare(record.getBool("codeShare"));
+        problem.setSpjCode(record.getStr("spjCode", null));
+        problem.setSpjLanguage(record.getStr("spjLanguage", null));
+        problem.setUserExtraFile(record.getStr("userExtraFile", null));
+        problem.setJudgeExtraFile(record.getStr("judgeExtraFile", null));
+        problem.setIsRemoveEndBlank(record.getBool("isRemoveEndBlank"));
+        problem.setOpenCaseResult(record.getBool("openCaseResult"));
+        problem.setIsUploadCase(record.getBool("isUploadCase"));
+        problem.setCaseVersion(record.getStr("caseVersion"));
+        problem.setModifiedUser(record.getStr("modifiedUser"));
+        problem.setIsGroup(record.getBool("isGroup"));
+        problem.setGid(record.getLong("gid", null));
+        problem.setApplyPublicProgress(record.getInt("applyPublicProgress", null));
+        problem.setIsFileIO(record.getBool("isFileIO"));
+        problem.setIoReadFileName(record.getStr("ioReadFileName", null));
+        problem.setIoWriteFileName(record.getStr("ioWriteFileName", null));
+
+        return problem;
+    }
+
 }
