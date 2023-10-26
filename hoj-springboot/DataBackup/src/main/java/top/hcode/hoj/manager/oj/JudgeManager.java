@@ -320,13 +320,20 @@ public class JudgeManager {
     public SubmissionInfoVO getSubmission(Long submitId, Long cid)
             throws StatusNotFoundException, StatusAccessDeniedException {
 
+        Boolean isSynchronous = false;
         Judge judge = judgeEntityService.getById(submitId);
-        // 同步赛结果
-        if (cid != null) {
+        Problem problem = new Problem();
+
+        if (judge == null && cid != null) {
+            // 获取同步赛对应的 judge 记录
             judge = synchronousManager.getSynchronousSubmissionDetail(submitId, cid);
+            isSynchronous = true;
         } else if (judge == null) {
             throw new StatusNotFoundException("此提交数据不存在！");
         }
+
+        problem = isSynchronous ? synchronousManager.getSynchronousProblem(judge.getDisplayPid(), cid)
+                : problemEntityService.getById(judge.getPid());
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
@@ -419,12 +426,7 @@ public class JudgeManager {
             judge.setErrorMessage("The error message does not support viewing.");
         }
         submissionInfoVo.setSubmission(judge);
-        if (cid == null) {
-            Problem problem = problemEntityService.getById(judge.getPid());
-            submissionInfoVo.setCodeShare(problem.getCodeShare());
-        } else {
-            submissionInfoVo.setCodeShare(false);
-        }
+        submissionInfoVo.setCodeShare(problem.getCodeShare());
 
         return submissionInfoVo;
 
@@ -606,36 +608,41 @@ public class JudgeManager {
     public JudgeCaseVO getALLCaseResult(Long submitId, Long cid)
             throws StatusNotFoundException, StatusForbiddenException {
 
+        Boolean isSynchronous = false;
         Judge judge = judgeEntityService.getById(submitId);
+        Problem problem = new Problem();
 
-        if (cid != null) {
+        if (judge == null && cid != null) {
+            // 获取同步赛对应的 judge 记录
             judge = synchronousManager.getSynchronousSubmissionDetail(submitId, cid);
+            isSynchronous = true;
         } else if (judge == null) {
             throw new StatusNotFoundException("此提交数据不存在！");
         }
 
-        QueryWrapper<JudgeCase> wrapper = new QueryWrapper<>();
+        problem = isSynchronous ? synchronousManager.getSynchronousProblem(judge.getDisplayPid(), cid)
+                : problemEntityService.getById(judge.getPid());
 
-        if (cid == null) {
-            Problem problem = problemEntityService.getById(judge.getPid());
+        if (problem.getOpenCaseResult() != null && !problem.getOpenCaseResult()) {
             // 如果该题不支持开放测试点结果查看
-            if (!problem.getOpenCaseResult()) {
-                return null;
-            }
+            return null;
         }
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        // 是否为超级管理员或者题目管理或者普通管理
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("problem_admin")
+                || SecurityUtils.getSubject().hasRole("admin");
+
+        QueryWrapper<JudgeCase> wrapper = new QueryWrapper<>();
 
         if (judge.getCid() == 0) { // 非比赛提交
             if (userRolesVo == null) { // 没有登录
                 wrapper.select("time", "memory", "score", "status", "user_output", "group_num", "seq", "mode");
             } else {
-                // 是否为超级管理员或者题目管理或者普通管理
-                boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                        || SecurityUtils.getSubject().hasRole("problem_admin")
-                        || SecurityUtils.getSubject().hasRole("admin");
-
-                if (!isRoot) { // 不是管理员
+                if (!isRoot
+                        && !SecurityUtils.getSubject().hasRole("admin")
+                        && !SecurityUtils.getSubject().hasRole("problem_admin")) { // 不是管理员
                     wrapper.select("time", "memory", "score", "status", "user_output", "group_num", "seq", "mode");
                 }
             }
@@ -643,11 +650,6 @@ public class JudgeManager {
             if (userRolesVo == null) {
                 throw new StatusForbiddenException("您还未登录！不可查看比赛提交的测试点详情！");
             }
-            // 是否为超级管理员或者题目管理或者普通管理
-            boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                    || SecurityUtils.getSubject().hasRole("problem_admin")
-                    || SecurityUtils.getSubject().hasRole("admin");
-
             if (!isRoot) {
                 Contest contest = contestEntityService.getById(judge.getCid());
                 // 如果不是比赛管理员 需要受到规则限制
@@ -673,20 +675,25 @@ public class JudgeManager {
 
         wrapper.eq("submit_id", submitId);
 
-        if (cid == null) {
-            Problem problem = problemEntityService.getById(judge.getPid());
-            if (!problem.getIsRemote()) {
-                wrapper.last("order by seq asc");
+        if (problem.getIsRemote() != null && !problem.getIsRemote()) {
+            wrapper.last("order by seq asc");
+        }
+
+        // 当前所有测试点只支持 空间 时间 状态码 IO得分 和错误信息提示查看而已
+        List<JudgeCase> judgeCaseList = new ArrayList<>();
+
+        if (!isSynchronous) {
+            List<JudgeCase> caselist = judgeCaseEntityService.list(wrapper);
+            if (!CollectionUtils.isEmpty(caselist)) {
+                judgeCaseList.addAll(caselist);
+            }
+        } else {// 如果是同步赛中的提交
+            List<JudgeCase> caselist = synchronousManager.getSynchronousCaseResultList(submitId, cid);
+            if (!CollectionUtils.isEmpty(caselist)) {
+                judgeCaseList.addAll(caselist);
             }
         }
 
-        List<JudgeCase> judgeCaseList = new ArrayList();
-        // 当前所有测试点只支持 空间 时间 状态码 IO得分 和错误信息提示查看而已
-        if (cid == null) {
-            judgeCaseList = judgeCaseEntityService.list(wrapper);
-        } else {
-            judgeCaseList = synchronousManager.getSynchronousCaseResultList(submitId, cid);
-        }
         JudgeCaseVO judgeCaseVo = new JudgeCaseVO();
         if (!CollectionUtils.isEmpty(judgeCaseList)) {
             String mode = judgeCaseList.get(0).getMode();
