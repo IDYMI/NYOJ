@@ -202,37 +202,10 @@
         <!-- 同步赛配置 -->
         <el-row :gutter="20">
           <el-col :md="8" :xs="24">
-            <el-form-item
-              :label="$t('m.Synchronous')"
-              v-show="contest.auth != 0"
-              :required="contest.auth != 0"
-            >
+            <el-form-item :label="$t('m.Synchronous')">
               <el-switch v-model="contest.synchronous"> </el-switch>
             </el-form-item>
           </el-col>
-          <!-- <template v-if="contest.synchronous">
-            <el-form :model="contest.synchronousConfigList">
-              <el-col :md="6" :xs="24">
-                <el-form-item :label="$t('m.Synchronous_Link')" prop="prefix">
-                  <el-input
-                    v-model="contest.synchronousConfigList.link"
-                    placeholder="Link"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :md="6" :xs="24">
-                <el-form-item
-                  :label="$t('m.Synchronous_Authorization')"
-                  prop="suffix"
-                >
-                  <el-input
-                    v-model="contest.synchronousConfigList.authorization"
-                    placeholder="Authorization"
-                  ></el-input>
-                </el-form-item>
-              </el-col>
-            </el-form>
-          </template> -->
           <el-col :span="24" v-if="contest.synchronous">
             <div style="margin-bottom: 10px">
               <el-button
