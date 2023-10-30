@@ -82,6 +82,14 @@ public class SynchronousManager {
         }
     }
 
+    public String getProtocol(String contestUrl) {
+        // 获取比赛的协议
+        URL url = getUrl(contestUrl);
+        String http_ = url.getProtocol();
+        System.out.println(http_);
+        return http_;
+    }
+
     public String getRootDomain(String contestUrl) {
         // 获取比赛的根域名
         URL url = getUrl(contestUrl);
@@ -119,10 +127,14 @@ public class SynchronousManager {
         String contestLink = synchronousConfig.getLink();
         // 请求头中的 authorization 信息
         String authorization = synchronousConfig.getAuthorization();
+
+        // 协议
+        String protocol = getProtocol(contestLink);
         // 根域名
         String rootDomain = getRootDomain(contestLink);
+
         // 新建网络请求
-        String link = rootDomain + api;
+        String link = protocol + "://" + rootDomain + api;
 
         // 处理可能的 MalformedURLException
         try {
@@ -130,9 +142,11 @@ public class SynchronousManager {
                 HttpRequest request = HttpUtil.createGet(link);
                 Map<String, String> headers = MapUtil
                         .builder(new HashMap<String, String>())
-                        .put("authorization", authorization)
+                        .put("Authorization", authorization)
                         .put("Url-Type", "general")
                         .put("Content-Type", "application/json")
+                        .put("User-Agent",
+                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
                         .map();
                 request.addHeaders(headers);
                 return request;
@@ -140,9 +154,11 @@ public class SynchronousManager {
                 HttpRequest request = HttpUtil.createPost(link);
                 Map<String, String> headers = MapUtil
                         .builder(new HashMap<String, String>())
-                        .put("authorization", authorization)
+                        .put("Authorization", authorization)
                         .put("Url-Type", "general")
                         .put("Content-Type", "application/json")
+                        .put("User-Agent",
+                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
                         .map();
                 request.addHeaders(headers);
                 return request;
@@ -155,7 +171,7 @@ public class SynchronousManager {
     }
 
     public List<ACMContestRankVO> getSynchronousRankList(Contest contest, boolean isContainsAfterContestJudge,
-            boolean removeStar) {
+            boolean removeStar, Long nowtime) {
         List<ACMContestRankVO> synchronousRankList = new ArrayList();
 
         List<JSONObject> synchronousConfigList = getSynchronousConfigList(contest);
@@ -180,24 +196,25 @@ public class SynchronousManager {
                         .put("removeStar", true)
                         .put("concernedList", new ArrayList<>())
                         .put("containsEnd", false)
+                        .put("time", nowtime)
                         .map()).toString());
 
                 HttpResponse response = request.execute();
                 String synchronousRankJson = response.body();
 
-                // System.out.println(synchronousRankJson);
+                if (response.isOk()) {
+                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
 
-                JSONObject JsonObject = new JSONObject(synchronousRankJson);
+                    int status = JsonObject.getInt("status");
+                    if (status == 200) {
+                        JSONObject data = JsonObject.getJSONObject("data");
+                        JSONArray records = data.getJSONArray("records");
 
-                int status = JsonObject.getInt("status");
-                if (status == 200) {
-                    JSONObject data = JsonObject.getJSONObject("data");
-                    JSONArray records = data.getJSONArray("records");
-
-                    for (int i = 0; i < records.size(); i++) {
-                        JSONObject record = records.getJSONObject(i);
-                        ACMContestRankVO rankVO = parseSynchronousRank(record);
-                        synchronousRankList.add(rankVO);
+                        for (int i = 0; i < records.size(); i++) {
+                            JSONObject record = records.getJSONObject(i);
+                            ACMContestRankVO rankVO = parseSynchronousRank(record);
+                            synchronousRankList.add(rankVO);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -249,19 +266,19 @@ public class SynchronousManager {
                 HttpResponse response = request.execute();
                 String synchronousRankJson = response.body();
 
-                // System.out.println(synchronousRankJson);
+                if (response.isOk()) {
+                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
 
-                JSONObject JsonObject = new JSONObject(synchronousRankJson);
+                    int status = JsonObject.getInt("status");
+                    if (status == 200) {
+                        JSONObject data = JsonObject.getJSONObject("data");
+                        JSONArray records = data.getJSONArray("records");
 
-                int status = JsonObject.getInt("status");
-                if (status == 200) {
-                    JSONObject data = JsonObject.getJSONObject("data");
-                    JSONArray records = data.getJSONArray("records");
-
-                    for (int i = 0; i < records.size(); i++) {
-                        JSONObject record = records.getJSONObject(i);
-                        JudgeVO judgeVO = parseSynchronousSubmission(record);
-                        synchronousSubmissionList.add(judgeVO);
+                        for (int i = 0; i < records.size(); i++) {
+                            JSONObject record = records.getJSONObject(i);
+                            JudgeVO judgeVO = parseSynchronousSubmission(record);
+                            synchronousSubmissionList.add(judgeVO);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -298,18 +315,18 @@ public class SynchronousManager {
                 HttpResponse response = request.execute();
                 String synchronousRankJson = response.body();
 
-                // System.out.println(synchronousRankJson);
+                if (response.isOk()) {
+                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
 
-                JSONObject JsonObject = new JSONObject(synchronousRankJson);
+                    int status = JsonObject.getInt("status");
+                    if (status == 200) {
+                        JSONArray records = JsonObject.getJSONArray("data");
 
-                int status = JsonObject.getInt("status");
-                if (status == 200) {
-                    JSONArray records = JsonObject.getJSONArray("data");
-
-                    for (int i = 0; i < records.size(); i++) {
-                        JSONObject record = records.getJSONObject(i);
-                        ContestProblemVO contestProblemVO = parseSynchronousContestProblem(record);
-                        synchronousContestProblemList.add(contestProblemVO);
+                        for (int i = 0; i < records.size(); i++) {
+                            JSONObject record = records.getJSONObject(i);
+                            ContestProblemVO contestProblemVO = parseSynchronousContestProblem(record);
+                            synchronousContestProblemList.add(contestProblemVO);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -344,15 +361,15 @@ public class SynchronousManager {
                     HttpResponse response = request.execute();
                     String synchronousRankJson = response.body();
 
-                    // System.out.println(synchronousRankJson);
+                    if (response.isOk()) {
+                        JSONObject JsonObject = new JSONObject(synchronousRankJson);
 
-                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
-
-                    int status = JsonObject.getInt("status");
-                    if (status == 200) {
-                        JSONObject data = JsonObject.getJSONObject("data");
-                        JSONObject record = data.getJSONObject("submission");
-                        judge = parseSynchronousSubmissionDetail(record);
+                        int status = JsonObject.getInt("status");
+                        if (status == 200) {
+                            JSONObject data = JsonObject.getJSONObject("data");
+                            JSONObject record = data.getJSONObject("submission");
+                            judge = parseSynchronousSubmissionDetail(record);
+                        }
                     }
                 } catch (Exception e) {
                     // 处理异常情况，可以记录日志等
@@ -393,15 +410,15 @@ public class SynchronousManager {
                     HttpResponse response = request.execute();
                     String synchronousRankJson = response.body();
 
-                    // System.out.println(synchronousRankJson);
+                    if (response.isOk()) {
+                        JSONObject JsonObject = new JSONObject(synchronousRankJson);
 
-                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
-
-                    int status = JsonObject.getInt("status");
-                    if (status == 200) {
-                        JSONObject data = JsonObject.getJSONObject("data");
-                        JSONObject record = data.getJSONObject("problem");
-                        problem = parseSynchronousProblem(record);
+                        int status = JsonObject.getInt("status");
+                        if (status == 200) {
+                            JSONObject data = JsonObject.getJSONObject("data");
+                            JSONObject record = data.getJSONObject("problem");
+                            problem = parseSynchronousProblem(record);
+                        }
                     }
                 } catch (Exception e) {
                     // 处理异常情况，可以记录日志等
@@ -437,19 +454,19 @@ public class SynchronousManager {
                     HttpResponse response = request.execute();
                     String synchronousRankJson = response.body();
 
-                    // System.out.println(synchronousRankJson);
+                    if (response.isOk()) {
+                        JSONObject JsonObject = new JSONObject(synchronousRankJson);
 
-                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
+                        int status = JsonObject.getInt("status");
+                        if (status == 200) {
+                            JSONObject data = JsonObject.getJSONObject("data");
+                            JSONArray records = data.getJSONArray("judgeCaseList");
 
-                    int status = JsonObject.getInt("status");
-                    if (status == 200) {
-                        JSONObject data = JsonObject.getJSONObject("data");
-                        JSONArray records = data.getJSONArray("judgeCaseList");
-
-                        for (int i = 0; i < records.size(); i++) {
-                            JSONObject record = records.getJSONObject(i);
-                            JudgeCase judgeCase = parseSynchronousCaseResult(record);
-                            synchronousCaseResult.add(judgeCase);
+                            for (int i = 0; i < records.size(); i++) {
+                                JSONObject record = records.getJSONObject(i);
+                                JudgeCase judgeCase = parseSynchronousCaseResult(record);
+                                synchronousCaseResult.add(judgeCase);
+                            }
                         }
                     }
                 } catch (Exception e) {

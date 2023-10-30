@@ -125,17 +125,20 @@ public class AdminContestManager {
             adminContestVo.setAwardConfigList(new ArrayList<>());
         }
 
-        if (contest.getSynchronous() != null && contest.getSynchronous()) {
+        if (contest.getSynchronous() != null) {
             try {
                 JSONObject jsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
                 List<ContestSynchronousConfigVO> synchronousConfigList = jsonObject.get("config", List.class);
 
+                adminContestVo.setSynchronous(contest.getSynchronous());
                 adminContestVo.setSynchronousConfigList(synchronousConfigList);
 
             } catch (Exception e) {
+                adminContestVo.setSynchronous(false);
                 adminContestVo.setSynchronousConfigList(new ArrayList<>());
             }
         } else {
+            adminContestVo.setSynchronous(false);
             adminContestVo.setSynchronousConfigList(new ArrayList<>());
         }
 
@@ -175,11 +178,13 @@ public class AdminContestManager {
             contest.setAwardConfig(awardConfigJson.toString());
         }
 
-        if (adminContestVo.getSynchronous() != null && adminContestVo.getSynchronous()) {
-            JSONObject synchronousConfigJson = new JSONObject();
+        if (adminContestVo.getSynchronous() != null) {
+            Boolean synchronous = adminContestVo.getSynchronous();
             List<ContestSynchronousConfigVO> synchronousConfigList = adminContestVo.getSynchronousConfigList();
-            synchronousConfigJson.set("config", synchronousConfigList);
-            contest.setSynchronousConfig(synchronousConfigJson.toString());
+            JSONObject awardConfigJson = new JSONObject();
+            awardConfigJson.set("config", synchronousConfigList);
+            contest.setSynchronous(synchronous);
+            contest.setSynchronousConfig(awardConfigJson.toString());
         }
 
         boolean isOk = contestEntityService.save(contest);
@@ -234,10 +239,12 @@ public class AdminContestManager {
             contest.setAwardConfig(awardConfigJson.toString());
         }
 
-        if (adminContestVo.getSynchronous() != null && adminContestVo.getSynchronous()) {
+        if (adminContestVo.getSynchronous() != null) {
+            Boolean synchronous = adminContestVo.getSynchronous();
             List<ContestSynchronousConfigVO> synchronousConfigList = adminContestVo.getSynchronousConfigList();
             JSONObject awardConfigJson = new JSONObject();
             awardConfigJson.set("config", synchronousConfigList);
+            contest.setSynchronous(synchronous);
             contest.setSynchronousConfig(awardConfigJson.toString());
         }
 
