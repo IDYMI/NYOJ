@@ -17,24 +17,20 @@
             <pre>{{ submission.errorMessage }}</pre>
           </div>
           <div v-else class="content">
-            <span class="span-row"
-              >{{ $t("m.Time") }}:
-              {{ submissionTimeFormat(submission.time) }}</span
-            >
-            <span class="span-row"
-              >{{ $t("m.Memory") }}:
-              {{ submissionMemoryFormat(submission.memory) }}</span
-            >
-            <span class="span-row"
-              >{{ $t("m.Length") }}:
-              {{ submissionLengthFormat(submission.length) }}</span
-            >
-            <span class="span-row"
-              >{{ $t("m.Language") }}: {{ submission.language }}</span
-            >
-            <span class="span-row"
-              >{{ $t("m.Author") }}: {{ submission.username }}</span
-            >
+            <span class="span-row">
+              {{ $t("m.Time") }}:
+              {{ submissionTimeFormat(submission.time) }}
+            </span>
+            <span class="span-row">
+              {{ $t("m.Memory") }}:
+              {{ submissionMemoryFormat(submission.memory) }}
+            </span>
+            <span class="span-row">
+              {{ $t("m.Length") }}:
+              {{ submissionLengthFormat(submission.length) }}
+            </span>
+            <span class="span-row">{{ $t("m.Language") }}: {{ submission.language }}</span>
+            <span class="span-row">{{ $t("m.Author") }}: {{ submission.username }}</span>
           </div>
         </template>
       </el-alert>
@@ -49,36 +45,28 @@
         style="padding-top: 13px"
         :loading="loadingTable"
       >
-        <vxe-table-column
-          field="submitId"
-          :title="$t('m.Run_ID')"
-          width="100"
-        ></vxe-table-column>
+        <vxe-table-column field="submitId" :title="$t('m.Run_ID')" width="100"></vxe-table-column>
         <vxe-table-column :title="$t('m.Submit_Time')" min-width="160">
           <template v-slot="{ row }">
             <span>{{ row.submitTime | localtime }}</span>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          field="pid"
-          :title="$t('m.Problem_ID')"
-          min-width="100"
-        >
+        <vxe-table-column field="pid" :title="$t('m.Problem_ID')" min-width="100">
           <template v-slot="{ row }">
-            <a @click="getProblemUri(row)" style="color: rgb(87, 163, 243)">{{
+            <a @click="getProblemUri(row)" style="color: rgb(87, 163, 243)">
+              {{
               row.displayPid
-            }}</a>
+              }}
+            </a>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          field="status"
-          :title="$t('m.Status')"
-          min-width="160"
-        >
+        <vxe-table-column field="status" :title="$t('m.Status')" min-width="160">
           <template v-slot="{ row }">
-            <span :class="getStatusColor(row.status)">{{
+            <span :class="getStatusColor(row.status)">
+              {{
               JUDGE_STATUS[row.status].name
-            }}</span>
+              }}
+            </span>
           </template>
         </vxe-table-column>
         <vxe-table-column :title="$t('m.Time')" min-width="96">
@@ -91,22 +79,21 @@
             <span>{{ submissionMemoryFormat(row.memory) }}</span>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          :title="$t('m.Score')"
-          min-width="64"
-          v-if="isIOProblem"
-        >
+        <vxe-table-column :title="$t('m.Score')" min-width="64" v-if="isIOProblem">
           <template v-slot="{ row }">
             <template v-if="row.score != null">
               <el-tooltip placement="top">
                 <div slot="content">
                   {{ $t("m.Problem_Score") }}：{{
-                    row.score != null ? row.score : $t("m.Nothing")
-                  }}<br />{{ $t("m.OI_Rank_Score") }}：{{
-                    row.oiRankScore != null ? row.oiRankScore : $t("m.Nothing")
-                  }}<br />
+                  row.score != null ? row.score : $t("m.Nothing")
+                  }}
+                  <br />
+                  {{ $t("m.OI_Rank_Score") }}：{{
+                  row.oiRankScore != null ? row.oiRankScore : $t("m.Nothing")
+                  }}
+                  <br />
                   {{
-                    $t("m.OI_Rank_Calculation_Rule")
+                  $t("m.OI_Rank_Calculation_Rule")
                   }}：(score*0.1+diffculty*2)
                 </div>
                 <span>{{ row.score }}</span>
@@ -153,17 +140,12 @@
               :name="item.groupNum"
             >
               <template slot="title">
-                <el-row
-                  class="subtask-title"
-                  :class="activeName == item.groupNum ? 'active' : ''"
-                >
+                <el-row class="subtask-title" :class="activeName == item.groupNum ? 'active' : ''">
                   <el-col :md="5" :sm="5" :xs="7">
                     <span>{{ $t("m.Subtask") }} #{{ item.groupNum }}</span>
                   </el-col>
                   <el-col :md="5" :sm="5" :xs="13">
-                    <span
-                      :class="'text-color-' + JUDGE_STATUS[item.status].color"
-                    >
+                    <span :class="'text-color-' + JUDGE_STATUS[item.status].color">
                       <template v-if="item.status == JUDGE_STATUS_RESERVE.ac">
                         <i class="el-icon-success"></i>
                         {{ JUDGE_STATUS[item.status].name }}
@@ -183,74 +165,55 @@
                             JUDGE_CASE_MODE.SUBTASK_AVERAGE
                           "
                         >
-                          {{ $t("m.Judge_Case_Subtask_Average_Mode") }}<br />
+                          {{ $t("m.Judge_Case_Subtask_Average_Mode") }}
+                          <br />
                         </template>
                         <template v-else>
-                          {{ $t("m.Judge_Case_Subtask_Lowest_Mode") }}<br />
+                          {{ $t("m.Judge_Case_Subtask_Lowest_Mode") }}
+                          <br />
                         </template>
-                        {{ $t("m.Score") }}：{{ item.score }}<br />
-                        {{ $t("m.AC") }}：{{ item.ac }}<br />
+                        {{ $t("m.Score") }}：{{ item.score }}
+                        <br />
+                        {{ $t("m.AC") }}：{{ item.ac }}
+                        <br />
                         {{ $t("m.Total") }}：{{ item.total }}
                       </div>
                       <span>
                         <template v-if="!isMobile">
-                          <i
-                            class="el-icon-s-claim"
-                            style="font-weight: 700 !important"
-                          >
+                          <i class="el-icon-s-claim" style="font-weight: 700 !important">
                             {{ item.score }} pts ({{ item.ac }}/{{
-                              item.total
-                            }})</i
-                          >
+                            item.total
+                            }})
+                          </i>
                         </template>
                         <template v-else>
                           <i
                             class="el-icon-s-claim"
                             style="font-weight: 700 !important"
-                          >
-                            {{ item.score }}</i
-                          >
+                          >{{ item.score }}</i>
                         </template>
                       </span>
                     </el-tooltip>
                   </el-col>
-                  <el-col
-                    :md="4"
-                    :sm="4"
-                    :xs="8"
-                    v-if="item.time != null && !isMobile"
-                  >
+                  <el-col :md="4" :sm="4" :xs="8" v-if="item.time != null && !isMobile">
                     <span>
                       <i
                         class="el-icon-time"
                         style="font-weight: 700 !important"
-                      >
-                        {{ submissionTimeFormat(item.time) }}</i
-                      >
+                      >{{ submissionTimeFormat(item.time) }}</i>
                     </span>
                   </el-col>
-                  <el-col
-                    :md="4"
-                    :sm="4"
-                    :xs="8"
-                    v-if="item.memory != null && !isMobile"
-                  >
+                  <el-col :md="4" :sm="4" :xs="8" v-if="item.memory != null && !isMobile">
                     <span>
                       <i
                         class="el-icon-cpu"
                         style="font-weight: 700 !important"
-                      >
-                        {{ submissionMemoryFormat(item.memory) }}</i
-                      >
+                      >{{ submissionMemoryFormat(item.memory) }}</i>
                     </span>
                   </el-col>
                 </el-row>
               </template>
-              <JudgeCase
-                :judgeCaseList="item.subtaskDetailList"
-                :isSubtask="true"
-              >
-              </JudgeCase>
+              <JudgeCase :judgeCaseList="item.subtaskDetailList" :isSubtask="true"></JudgeCase>
             </el-collapse-item>
           </el-collapse>
         </el-col>
@@ -279,8 +242,7 @@
             size="large"
             @click="doCopy"
             v-if="submission.code"
-            >{{ $t("m.Copy") }}</el-button
-          >
+          >{{ $t("m.Copy") }}</el-button>
           <template v-if="codeShare && isSubmissionOwner">
             <el-button
               v-if="submission.share"
@@ -288,18 +250,14 @@
               size="large"
               icon="el-icon-circle-close"
               @click="shareSubmission(false)"
-            >
-              {{ $t("m.Unshared") }}
-            </el-button>
+            >{{ $t("m.Unshared") }}</el-button>
             <el-button
               v-else-if="!submission.share"
               type="primary"
               size="large"
               icon="el-icon-share"
               @click="shareSubmission(true)"
-            >
-              {{ $t("m.Shared") }}
-            </el-button>
+            >{{ $t("m.Shared") }}</el-button>
           </template>
         </div>
       </el-col>

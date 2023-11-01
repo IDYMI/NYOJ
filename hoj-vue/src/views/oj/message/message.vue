@@ -1,18 +1,10 @@
 <template>
   <div>
-    <el-alert
-      type="success"
-      :closable="false"
-      center
-      class="msg-title"
-      effect="dark"
-    >
+    <el-alert type="success" :closable="false" center class="msg-title" effect="dark">
       <template slot="title">
-        <span
-          ><i class="el-icon-s-promotion">
-            {{ $t('m.Message_Center') }}</i
-          ></span
-        >
+        <span>
+          <i class="el-icon-s-promotion">{{ $t('m.Message_Center') }}</i>
+        </span>
       </template>
     </el-alert>
     <el-tabs
@@ -82,21 +74,21 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import MsgSvg from '@/components/oj/msg/msgSvg';
+import { mapGetters } from "vuex";
+import MsgSvg from "@/components/oj/msg/msgSvg";
 export default {
   components: {
     MsgSvg,
   },
   data() {
     return {
-      route_name: 'DiscussMsg',
+      route_name: "DiscussMsg",
     };
   },
   mounted() {
     this.route_name = this.$route.name;
-    if (this.route_name === 'Message') {
-      this.route_name = 'DiscussMsg';
+    if (this.route_name === "Message") {
+      this.route_name = "DiscussMsg";
     }
     this.$router.push({ name: this.route_name });
   },
@@ -109,7 +101,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['unreadMessage']),
+    ...mapGetters(["unreadMessage"]),
   },
 };
 </script>

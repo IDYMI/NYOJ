@@ -31,8 +31,7 @@
                 v-for="item in webLanguages"
                 :key="item"
                 :value="item.value"
-                >{{ item.label }}
-              </el-option>
+              >{{ item.label }}</el-option>
             </el-select>
           </el-form-item>
         </div>
@@ -51,9 +50,7 @@
               size="small"
               style="width: 100%"
             >
-              <el-option v-for="item in languages" :key="item" :value="item"
-                >{{ item }}
-              </el-option>
+              <el-option v-for="item in languages" :key="item" :value="item">{{ item }}</el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('m.IDE_Theme')" prop="code">
@@ -68,8 +65,7 @@
                 :key="item.label"
                 :label="$t('m.' + item.label)"
                 :value="item.value"
-                >{{ $t("m." + item.label) }}
-              </el-option>
+              >{{ $t("m." + item.label) }}</el-option>
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('m.Code_Size')" prop="password">
@@ -79,22 +75,19 @@
               size="small"
               style="width: 100%"
             >
-              <el-option v-for="item in fontSizes" :key="item" :value="item"
-                >{{ item }}
-              </el-option>
+              <el-option v-for="item in fontSizes" :key="item" :value="item">{{ item }}</el-option>
             </el-select>
           </el-form-item>
         </div>
       </el-col>
     </el-row>
-    <label class="el-form-item__label" style="float: none">{{
+    <label class="el-form-item__label" style="float: none">
+      {{
       $t("m.Default_Code_Template")
-    }}</label>
+      }}
+    </label>
     <div>
-      <code-mirror
-        v-model="formProfile.codeTemplate"
-        class="template_code"
-      ></code-mirror>
+      <code-mirror v-model="formProfile.codeTemplate" class="template_code"></code-mirror>
     </div>
     <label style="float: none">{{ $t("m.Your_Code_Template") }}</label>
     <div style="text-align: center; margin-top: 10px">
@@ -102,8 +95,7 @@
         type="primary"
         @click="updateUserPreferences"
         :loading="loadingSaveBtn"
-        >{{ $t("m.Save") }}</el-button
-      >
+      >{{ $t("m.Save") }}</el-button>
     </div>
   </el-form>
 </template>

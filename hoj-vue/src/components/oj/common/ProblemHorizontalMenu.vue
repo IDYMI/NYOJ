@@ -1,35 +1,20 @@
 <template>
-  <el-card
-    shadow="always"
-    id="problem-footer"
-  >
+  <el-card shadow="always" id="problem-footer">
     <div class="dataNav">
-      <button
-        class="dataNavPrev"
-        @click="navPrev"
-      ><i class="el-icon-arrow-left"></i></button>
-      <ul
-        class="dataNavList"
-        id="problem-footer-list"
-      >
-        <span
-          v-for="(item, index) in navList"
-          :key="index"
-        >
-          <el-tooltip
-            effect="dark"
-            placement="top"
-          >
+      <button class="dataNavPrev" @click="navPrev">
+        <i class="el-icon-arrow-left"></i>
+      </button>
+      <ul class="dataNavList" id="problem-footer-list">
+        <span v-for="(item, index) in navList" :key="index">
+          <el-tooltip effect="dark" placement="top">
             <div slot="content">
-              <div style="text-align:center">
-                {{item.problemId+'. '+item.title}}
-              </div>
+              <div style="text-align:center">{{item.problemId+'. '+item.title}}</div>
               <template v-if="item.status != null">
                 <div style="text-align:center">
                   {{JUDGE_STATUS[item.status].name}}
-                  <template v-if="item.score != null">
-                    ({{ item.score}} pts)
-                  </template>
+                  <template
+                    v-if="item.score != null"
+                  >({{ item.score}} pts)</template>
                 </div>
               </template>
             </div>
@@ -40,41 +25,27 @@
               :style="{transform:'translateX(-'+move+'px)'}"
             >
               <template v-if="item.status == 0">
-                <i
-                  class="el-icon-check"
-                  :style="getIconColor(item.status)"
-                ></i>
+                <i class="el-icon-check" :style="getIconColor(item.status)"></i>
               </template>
               <template v-else-if="item.status == -5">
-                <i
-                  class="fa fa-question"
-                  :style="getIconColor(item.status)"
-                ></i>
+                <i class="fa fa-question" :style="getIconColor(item.status)"></i>
               </template>
               <template v-else-if="item.status == -2">
-                <i
-                  class="el-icon-minus"
-                  :style="getIconColor(item.status)"
-                ></i>
+                <i class="el-icon-minus" :style="getIconColor(item.status)"></i>
               </template>
               <template v-else-if="item.status != null">
-                <i
-                  class="el-icon-close"
-                  :style="getIconColor(item.status)"
-                ></i>
+                <i class="el-icon-close" :style="getIconColor(item.status)"></i>
               </template>
               {{item.problemId}}
             </li>
           </el-tooltip>
         </span>
       </ul>
-      <button
-        class="dataNavNext"
-        @click="navNext"
-      ><i class="el-icon-arrow-right"></i></button>
+      <button class="dataNavNext" @click="navNext">
+        <i class="el-icon-arrow-right"></i>
+      </button>
     </div>
   </el-card>
-
 </template>
 
 <script>
@@ -206,14 +177,14 @@ export default {
     $route() {
       this.getFullScreenProblemList();
     },
-    pid(){
+    pid() {
       // 避免pid传递过慢，导致当前题目移动居中失败，需要监听pid变化再次判断
       let num = Math.floor((this.dataNavListViewWidth - 70) / 100);
       let index = this.getCurrentProblemInListIndex();
       if (index != -1 && index > num) {
         this.move = this.moveLen + (index - num) * 100;
       }
-    }
+    },
   },
 };
 </script>

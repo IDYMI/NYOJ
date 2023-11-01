@@ -1,11 +1,6 @@
 <template>
   <div>
-    <el-form
-      :model="formLogin"
-      :rules="rules"
-      ref="formLogin"
-      label-width="100px"
-    >
+    <el-form :model="formLogin" :rules="rules" ref="formLogin" label-width="100px">
       <el-form-item prop="username">
         <el-input
           v-model="formLogin.username"
@@ -31,8 +26,7 @@
         v-if="!needVerify"
         @click="handleLogin"
         :loading="btnLoginLoading"
-        >{{ $t("m.Login_Btn") }}</el-button
-      >
+      >{{ $t("m.Login_Btn") }}</el-button>
       <el-popover
         placement="bottom"
         width="350"
@@ -40,9 +34,11 @@
         trigger="click"
         v-else
       >
-        <el-button type="primary" :loading="btnLoginLoading" slot="reference">{{
+        <el-button type="primary" :loading="btnLoginLoading" slot="reference">
+          {{
           $t("m.Login_Btn")
-        }}</el-button>
+          }}
+        </el-button>
         <slide-verify
           :l="42"
           :r="10"
@@ -53,8 +49,7 @@
           :slider-text="$t('m.Slide_Verify')"
           ref="slideBlock"
           v-if="!verify.loginSuccess"
-        >
-        </slide-verify>
+        ></slide-verify>
         <el-alert
           :title="$t('m.Slide_Verify_Success')"
           type="success"
@@ -63,21 +58,18 @@
           :center="true"
           :closable="false"
           show-icon
-        >
-        </el-alert>
+        ></el-alert>
       </el-popover>
       <el-link
         v-if="websiteConfig.register"
         type="primary"
         @click="switchMode('Register')"
-        >{{ $t("m.Login_No_Account") }}</el-link
-      >
+      >{{ $t("m.Login_No_Account") }}</el-link>
       <el-link
         type="primary"
         @click="switchMode('ResetPwd')"
         style="float: right"
-        >{{ $t("m.Login_Forget_Password") }}</el-link
-      >
+      >{{ $t("m.Login_Forget_Password") }}</el-link>
     </div>
   </div>
 </template>

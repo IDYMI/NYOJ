@@ -11,39 +11,31 @@
     </div>
     <el-card class="box-card">
       <div class="recent-login">
-        <el-tooltip
-          :content="profile.recentLoginTime | localtime"
-          placement="top"
-        >
+        <el-tooltip :content="profile.recentLoginTime | localtime" placement="top">
           <el-tag type="success" effect="plain" size="medium">
             <i class="fa fa-circle">
               {{ $t("m.Recent_login_time")
-              }}{{ profile.recentLoginTime | fromNow }}</i
-            >
+              }}{{ profile.recentLoginTime | fromNow }}
+            </i>
           </el-tag>
         </el-tooltip>
       </div>
       <div class="user-info">
         <p>
-          <span class="emphasis"
-            ><i class="fa fa-user-circle-o" aria-hidden="true"></i>
-            {{ profile.username }}</span
-          >
+          <span class="emphasis">
+            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+            {{ profile.username }}
+          </span>
           <span class="gender-male male" v-if="profile.gender == 'male'">
             <i class="fa fa-mars"></i>
           </span>
-          <span
-            class="gender-male female"
-            v-else-if="profile.gender == 'female'"
-          >
+          <span class="gender-male female" v-else-if="profile.gender == 'female'">
             <i class="fa fa-venus"></i>
           </span>
         </p>
         <p v-if="profile.titleName">
           <span>
-            <el-tag effect="dark" size="small" :color="profile.titleColor">
-              {{ profile.titleName }}
-            </el-tag>
+            <el-tag effect="dark" size="small" :color="profile.titleColor">{{ profile.titleName }}</el-tag>
           </span>
         </p>
         <p v-if="profile.nickname">
@@ -52,31 +44,19 @@
               effect="plain"
               size="small"
               :type="nicknameColor(profile.nickname)"
-            >
-              {{ profile.nickname }}
-            </el-tag>
+            >{{ profile.nickname }}</el-tag>
           </span>
         </p>
-        <span class="default-info" v-if="profile.school"
-          ><i class="fa fa-graduation-cap" aria-hidden="true"></i>
-          {{ profile.school }}</span
-        >
+        <span class="default-info" v-if="profile.school">
+          <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+          {{ profile.school }}
+        </span>
         <span id="icons">
-          <a
-            :href="profile.github"
-            v-if="profile.github"
-            class="icon"
-            target="_blank"
-          >
-            <i class="fa fa-github"> {{ $t("m.Github") }}</i>
+          <a :href="profile.github" v-if="profile.github" class="icon" target="_blank">
+            <i class="fa fa-github">{{ $t("m.Github") }}</i>
           </a>
-          <a
-            :href="profile.blog"
-            v-if="profile.blog"
-            class="icon"
-            target="_blank"
-          >
-            <i class="fa fa-share-alt-square"> {{ $t("m.Blog") }}</i>
+          <a :href="profile.blog" v-if="profile.blog" class="icon" target="_blank">
+            <i class="fa fa-share-alt-square">{{ $t("m.Blog") }}</i>
           </a>
         </span>
         <hr id="split" />
@@ -114,15 +94,13 @@
                 <i class="fa fa-user-secret" aria-hidden="true"></i>
                 {{ $t("m.UserHome_Score") }}
               </p>
-              <p class="data-number">
-                {{ getSumScore(profile.scoreList) }}
-              </p>
+              <p class="data-number">{{ getSumScore(profile.scoreList) }}</p>
             </el-card>
           </el-col>
         </el-row>
         <el-card style="margin-top: 1rem" v-if="loadingCalendarHeatmap">
           <div class="card-title">
-            <i class="el-icon-data-analysis" style="color: #409eff"> </i>
+            <i class="el-icon-data-analysis" style="color: #409eff"></i>
             {{ $t("m.Thermal_energy_table_submitted_in_the_last_year") }}
           </div>
           <calendar-heatmap
@@ -137,66 +115,47 @@
               '#30a14e',
               '#216e39',
             ]"
-          >
-          </calendar-heatmap>
+          ></calendar-heatmap>
         </el-card>
         <el-card style="margin-top: 1rem" v-if="this.options.series.length">
           <div class="card-title">
-            <i class="el-icon-data-line" style="color: #409eff"> </i>
+            <i class="el-icon-data-line" style="color: #409eff"></i>
             {{ $t("m.Ended_contests_ranking_changes") }}
           </div>
           <div class="echarts">
-            <ECharts
-              :options="options"
-              ref="chart"
-              :autoresize="true"
-              @click="gotoEcharts"
-            ></ECharts>
+            <ECharts :options="options" ref="chart" :autoresize="true" @click="gotoEcharts"></ECharts>
           </div>
         </el-card>
         <el-tabs type="card" style="margin-top: 1rem">
           <el-tab-pane :label="$t('m.Personal_Profile')">
             <div class="signature-body">
-              <Markdown
-                v-if="profile.signature"
-                :isAvoidXss="true"
-                :content="profile.signature"
-              >
-              </Markdown>
+              <Markdown v-if="profile.signature" :isAvoidXss="true" :content="profile.signature"></Markdown>
               <div class="markdown-body" v-else>
                 <p>{{ $t("m.Not_set_yet") }}</p>
               </div>
             </div>
           </el-tab-pane>
-          <el-tab-pane :label="$t('m.UserHome_Solved_Problems')"
-            ><div id="problems">
-              <el-card
-                class="level-card"
-                v-if="profile.solvedGroupByDifficulty != null"
-              >
+          <el-tab-pane :label="$t('m.UserHome_Solved_Problems')">
+            <div id="problems">
+              <el-card class="level-card" v-if="profile.solvedGroupByDifficulty != null">
                 <div class="card-title" style="font-size: 1rem">
-                  <i class="el-icon-set-up" style="color: #409eff"> </i>
+                  <i class="el-icon-set-up" style="color: #409eff"></i>
                   {{ $t("m.Difficulty_Statistics") }}
                 </div>
                 <el-collapse accordion>
-                  <el-collapse-item
-                    v-for="(level, key) in PROBLEM_LEVEL"
-                    :key="key"
-                  >
+                  <el-collapse-item v-for="(level, key) in PROBLEM_LEVEL" :key="key">
                     <template slot="title">
                       <div style="width: 100%; text-align: left">
                         <el-tag
                           effect="dark"
                           :style="getLevelColor(key)"
                           size="medium"
-                        >
-                          {{ getLevelName(key) }}
-                        </el-tag>
+                        >{{ getLevelName(key) }}</el-tag>
                         <span class="card-p-count">
                           {{
-                            getProblemListCount(
-                              profile.solvedGroupByDifficulty[key]
-                            )
+                          getProblemListCount(
+                          profile.solvedGroupByDifficulty[key]
+                          )
                           }}
                           {{ $t("m.Problems") }}
                         </span>
@@ -214,8 +173,7 @@
                           :style="getLevelColor(key)"
                           @click="goProblem(value.problemId)"
                           size="small"
-                          >{{ value.problemId }}</el-button
-                        >
+                        >{{ value.problemId }}</el-button>
                       </div>
                     </div>
                   </el-collapse-item>
@@ -223,7 +181,9 @@
               </el-card>
 
               <template v-if="profile.solvedList.length">
-                <el-divider><i class="el-icon-circle-check"></i></el-divider>
+                <el-divider>
+                  <i class="el-icon-circle-check"></i>
+                </el-divider>
                 <div>
                   {{ $t("m.List_Solved_Problems") }}
                   <el-button
@@ -235,17 +195,8 @@
                   ></el-button>
                 </div>
                 <div class="btns">
-                  <div
-                    class="problem-btn"
-                    v-for="problemID of profile.solvedList"
-                    :key="problemID"
-                  >
-                    <el-button
-                      round
-                      @click="goProblem(problemID)"
-                      size="small"
-                      >{{ problemID }}</el-button
-                    >
+                  <div class="problem-btn" v-for="problemID of profile.solvedList" :key="problemID">
+                    <el-button round @click="goProblem(problemID)" size="small">{{ problemID }}</el-button>
                   </div>
                 </div>
               </template>
@@ -269,14 +220,12 @@
                   ></el-button>
                 </div>
                 <div class="btns">
-                  <div
-                    class="problem-btn"
-                    v-for="pid of profile.contestPidList"
-                    :key="pid"
-                  >
-                    <el-button round @click="goContest(pid)" size="small">{{
+                  <div class="problem-btn" v-for="pid of profile.contestPidList" :key="pid">
+                    <el-button round @click="goContest(pid)" size="small">
+                      {{
                       pid
-                    }}</el-button>
+                      }}
+                    </el-button>
                   </div>
                 </div>
               </template>

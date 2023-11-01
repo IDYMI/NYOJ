@@ -11,17 +11,9 @@
         :src="avatar"
       ></avatar>
       <template v-if="!avatarOption.imgSrc">
-        <el-upload
-          class="upload-container"
-          action=""
-          drag
-          :before-upload="handleSelectFile"
-        >
+        <el-upload class="upload-container" action drag :before-upload="handleSelectFile">
           <div style="padding: 20px 0">
-            <i
-              class="el-icon-upload"
-              style="color: #3399ff; font-size: 52px"
-            ></i>
+            <i class="el-icon-upload" style="color: #3399ff; font-size: 52px"></i>
             <p>{{ $t("m.Upload_avatar_hint") }}</p>
           </div>
         </el-upload>
@@ -42,8 +34,7 @@
                 :outputType="avatarOption.outputType"
                 :info="true"
                 @realTime="realTime"
-              >
-              </vueCropper>
+              ></vueCropper>
             </div>
             <div class="cropper-btn">
               <el-tooltip
@@ -53,11 +44,7 @@
                 trigger="hover"
                 placement="bottom"
               >
-                <el-button
-                  @click="rotate('left')"
-                  icon="el-icon-refresh-left"
-                  size="mini"
-                ></el-button>
+                <el-button @click="rotate('left')" icon="el-icon-refresh-left" size="mini"></el-button>
               </el-tooltip>
               <el-tooltip
                 class="item"
@@ -66,11 +53,7 @@
                 trigger="hover"
                 placement="bottom"
               >
-                <el-button
-                  @click="rotate('right')"
-                  icon="el-icon-refresh-right"
-                  size="mini"
-                ></el-button>
+                <el-button @click="rotate('right')" icon="el-icon-refresh-right" size="mini"></el-button>
               </el-tooltip>
               <el-tooltip
                 class="item"
@@ -79,11 +62,7 @@
                 trigger="hover"
                 placement="bottom"
               >
-                <el-button
-                  @click="reselect"
-                  icon="el-icon-refresh"
-                  size="mini"
-                ></el-button>
+                <el-button @click="reselect" icon="el-icon-refresh" size="mini"></el-button>
               </el-tooltip>
               <el-tooltip
                 class="item"
@@ -92,11 +71,7 @@
                 content="确定图像截取"
                 placement="bottom"
               >
-                <el-button
-                  @click="finishCrop"
-                  icon="el-icon-check"
-                  size="mini"
-                ></el-button>
+                <el-button @click="finishCrop" icon="el-icon-check" size="mini"></el-button>
               </el-tooltip>
             </div>
           </el-col>
@@ -109,11 +84,7 @@
           </el-col>
         </el-row>
       </template>
-      <el-dialog
-        :visible.sync="uploadModalVisible"
-        :title="$t('m.Upload')"
-        width="350px"
-      >
+      <el-dialog :visible.sync="uploadModalVisible" :title="$t('m.Upload')" width="350px">
         <div class="upload-modal">
           <p class="notice">{{ $t("m.Your_new_avatar") + ":" }}</p>
           <img :src="uploadImgSrc" />
@@ -123,8 +94,7 @@
             @click="uploadAvatar"
             :loading="loadingUploadBtn"
             type="primary"
-            >{{ $t("m.Upload") }}</el-button
-          >
+          >{{ $t("m.Upload") }}</el-button>
         </div>
       </el-dialog>
     </div>
@@ -162,38 +132,38 @@
           </el-form-item>
           <el-form-item :label="$t('m.Gender')">
             <el-radio-group v-model="formProfile.gender">
-              <el-radio label="male" border size="small">{{
+              <el-radio label="male" border size="small">
+                {{
                 $t("m.Male")
-              }}</el-radio>
-              <el-radio label="female" border size="small">{{
+                }}
+              </el-radio>
+              <el-radio label="female" border size="small">
+                {{
                 $t("m.Female")
-              }}</el-radio>
-              <el-radio label="secrecy" border size="small">{{
+                }}
+              </el-radio>
+              <el-radio label="secrecy" border size="small">
+                {{
                 $t("m.Secrecy")
-              }}</el-radio>
+                }}
+              </el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <label class="el-form-item__label" style="float: none">{{
+          <label class="el-form-item__label" style="float: none">
+            {{
             $t("m.Signature")
-          }}</label>
-          <Editor
-            :value.sync="formProfile.signature"
-            style="padding: 5px"
-          ></Editor>
+            }}
+          </label>
+          <Editor :value.sync="formProfile.signature" style="padding: 5px"></Editor>
         </el-col>
       </el-row>
     </el-form>
     <div style="text-align: center; margin-top: 10px">
-      <el-button
-        type="primary"
-        @click="updateUserInfo"
-        :loading="loadingSaveBtn"
-        >{{ $t("m.Save") }}</el-button
-      >
+      <el-button type="primary" @click="updateUserInfo" :loading="loadingSaveBtn">{{ $t("m.Save") }}</el-button>
     </div>
   </div>
 </template>

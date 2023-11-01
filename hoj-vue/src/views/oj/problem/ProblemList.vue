@@ -18,32 +18,20 @@
                 class="filter-mt"
               ></vxe-input>
             </el-col>
-            <el-col
-              :xs="12"
-              :sm="6"
-              style="text-align: center; padding-top: 6px"
-              class="filter-mt"
-            >
+            <el-col :xs="12" :sm="6" style="text-align: center; padding-top: 6px" class="filter-mt">
               <vxe-checkbox
                 v-model="tagVisible"
                 @change="changeTagVisible(tagVisible)"
-                >{{ $t("m.Show_Tags") }}</vxe-checkbox
-              >
+              >{{ $t("m.Show_Tags") }}</vxe-checkbox>
             </el-col>
-            <el-col
-              :xs="12"
-              :sm="6"
-              style="text-align: center"
-              class="filter-mt"
-            >
+            <el-col :xs="12" :sm="6" style="text-align: center" class="filter-mt">
               <el-button
                 type="primary"
                 size="small"
                 icon="el-icon-refresh"
                 round
                 @click="onReset"
-                >{{ $t("m.Reset") }}</el-button
-              >
+              >{{ $t("m.Reset") }}</el-button>
             </el-col>
           </el-row>
 
@@ -55,8 +43,7 @@
                 class="filter-item"
                 :effect="query.oj === 'All' ? 'dark' : 'plain'"
                 @click="filterByOJ('All')"
-                >{{ $t("m.All") }}</el-tag
-              >
+              >{{ $t("m.All") }}</el-tag>
               <el-tag
                 size="medium"
                 class="filter-item"
@@ -64,8 +51,7 @@
                   query.oj === 'Mine' || query.oj === '' ? 'dark' : 'plain'
                 "
                 @click="filterByOJ('Mine')"
-                >{{ $t("m.My_OJ") }}</el-tag
-              >
+              >{{ $t("m.My_OJ") }}</el-tag>
               <el-tag
                 size="medium"
                 class="filter-item"
@@ -73,8 +59,7 @@
                 :effect="query.oj == remoteOj.key ? 'dark' : 'plain'"
                 :key="index"
                 @click="filterByOJ(remoteOj.key)"
-                >{{ remoteOj.name }}</el-tag
-              >
+              >{{ remoteOj.name }}</el-tag>
             </div>
           </section>
 
@@ -90,8 +75,7 @@
                     : 'plain'
                 "
                 @click="filterByDifficulty('All')"
-                >{{ $t("m.All") }}</el-tag
-              >
+              >{{ $t("m.All") }}</el-tag>
               <el-tag
                 size="medium"
                 class="filter-item"
@@ -100,8 +84,7 @@
                 :style="getLevelBlockColor(key)"
                 :key="index"
                 @click="filterByDifficulty(key)"
-                >{{ getLevelName(key) }}</el-tag
-              >
+              >{{ getLevelName(key) }}</el-tag>
             </div>
           </section>
           <template v-if="filterTagList.length > 0 && buildFilterTagList">
@@ -117,9 +100,7 @@
                 @close="removeTag(tag)"
                 size="medium"
                 class="filter-item"
-              >
-                {{ tag.name }}
-              </el-tag>
+              >{{ tag.name }}</el-tag>
             </el-row>
           </template>
         </div>
@@ -132,70 +113,43 @@
           @cell-mouseenter="cellHover"
           :data="problemList"
         >
-          <vxe-table-column title="" width="30" v-if="isAuthenticated">
+          <vxe-table-column title width="30" v-if="isAuthenticated">
             <template v-slot="{ row }">
               <template v-if="isGetStatusOk">
-                <el-tooltip
-                  :content="JUDGE_STATUS[row.myStatus]['name']"
-                  placement="top"
-                >
+                <el-tooltip :content="JUDGE_STATUS[row.myStatus]['name']" placement="top">
                   <template v-if="row.myStatus == 0">
-                    <i
-                      class="el-icon-check"
-                      :style="getIconColor(row.myStatus)"
-                    ></i>
+                    <i class="el-icon-check" :style="getIconColor(row.myStatus)"></i>
                   </template>
 
                   <template v-else-if="row.myStatus != -10">
-                    <i
-                      class="el-icon-minus"
-                      :style="getIconColor(row.myStatus)"
-                    ></i>
+                    <i class="el-icon-minus" :style="getIconColor(row.myStatus)"></i>
                   </template>
                 </el-tooltip>
               </template>
             </template>
           </vxe-table-column>
-          <vxe-table-column
-            field="problemId"
-            :title="$t('m.Problem_ID')"
-            width="150"
-            show-overflow
-          ></vxe-table-column>
+          <vxe-table-column field="problemId" :title="$t('m.Problem_ID')" width="150" show-overflow></vxe-table-column>
 
-          <vxe-table-column
-            field="title"
-            :title="$t('m.Problem')"
-            min-width="150"
-            show-overflow
-          >
+          <vxe-table-column field="title" :title="$t('m.Problem')" min-width="150" show-overflow>
             <template v-slot="{ row }">
-              <a @click="getProblemUri(row.problemId)" class="title-a">{{
+              <a @click="getProblemUri(row.problemId)" class="title-a">
+                {{
                 row.title
-              }}</a>
+                }}
+              </a>
             </template>
           </vxe-table-column>
 
-          <vxe-table-column
-            field="difficulty"
-            :title="$t('m.Level')"
-            min-width="100"
-          >
+          <vxe-table-column field="difficulty" :title="$t('m.Level')" min-width="100">
             <template v-slot="{ row }">
               <span
                 class="el-tag el-tag--small"
                 :style="getLevelColor(row.difficulty)"
-                >{{ getLevelName(row.difficulty) }}</span
-              >
+              >{{ getLevelName(row.difficulty) }}</span>
             </template>
           </vxe-table-column>
 
-          <vxe-table-column
-            field="tag"
-            :title="$t('m.Tags')"
-            min-width="230"
-            visible="false"
-          >
+          <vxe-table-column field="tag" :title="$t('m.Tags')" min-width="230" visible="false">
             <template v-slot="{ row }">
               <span
                 class="el-tag el-tag--small"
@@ -206,21 +160,11 @@
                 v-for="tag in row.tags"
                 :key="tag.id"
                 @click="addTag(tag)"
-                >{{ tag.name }}</span
-              >
+              >{{ tag.name }}</span>
             </template>
           </vxe-table-column>
-          <vxe-table-column
-            field="total"
-            :title="$t('m.Total')"
-            min-width="80"
-          ></vxe-table-column>
-          <vxe-table-column
-            field="ac"
-            :title="$t('m.AC_Rate')"
-            min-width="120"
-            align="center"
-          >
+          <vxe-table-column field="total" :title="$t('m.Total')" min-width="80"></vxe-table-column>
+          <vxe-table-column field="ac" :title="$t('m.AC_Rate')" min-width="120" align="center">
             <template v-slot="{ row }">
               <span>
                 <el-tooltip
@@ -260,8 +204,7 @@
               effect="dark"
               size="small"
               :color="JUDGE_STATUS[record.status].rgb"
-              >{{ JUDGE_STATUS[record.status].short }}</el-tag
-            >
+            >{{ JUDGE_STATUS[record.status].short }}</el-tag>
           </el-col>
           <el-col :xs="19" :sm="20" :md="18" :lg="20">
             <el-progress
@@ -275,9 +218,11 @@
       </el-card>
       <el-card :padding="10" style="margin-top: 20px">
         <div slot="header" style="text-align: center">
-          <span class="taglist-title">{{
+          <span class="taglist-title">
+            {{
             findOJName() + " " + $t("m.Tags")
-          }}</span>
+            }}
+          </span>
           <div style="margin: 10px 0">
             <el-input
               size="medium"
@@ -287,16 +232,11 @@
               @keyup.enter.native="filterSearchTag"
               @input="filterSearchTag"
               clearable
-            >
-            </el-input>
+            ></el-input>
           </div>
         </div>
         <template v-if="searchTagClassificationList.length > 0">
-          <el-row
-            :gutter="10"
-            v-for="(item, index) in secondClassificationTemp"
-            :key="index"
-          >
+          <el-row :gutter="10" v-for="(item, index) in secondClassificationTemp" :key="index">
             <el-col
               v-for="(tagsAndClassification, i) in item"
               :key="i"
@@ -309,10 +249,7 @@
                   : 12
               "
             >
-              <el-collapse
-                v-model="activeTagClassificationIdList"
-                style="margin-top: 10px"
-              >
+              <el-collapse v-model="activeTagClassificationIdList" style="margin-top: 10px">
                 <el-collapse-item
                   :title="
                     getTagClassificationName(
@@ -340,8 +277,7 @@
                       'color:#FFF;background-color:' +
                       (tag.color ? tag.color : '#409eff')
                     "
-                    >{{ tag.name }}
-                  </el-button>
+                  >{{ tag.name }}</el-button>
                 </el-collapse-item>
               </el-collapse>
             </el-col>
@@ -581,8 +517,8 @@ export default {
       );
     },
     getTagList(oj) {
-      if (oj == 'Mine') {
-        oj = 'ME';
+      if (oj == "Mine") {
+        oj = "ME";
       }
       this.loadings.tag = true;
       api.getProblemTagsAndClassification(oj).then(
@@ -691,8 +627,8 @@ export default {
     },
     pickone() {
       let oj = this.query.oj;
-      if (oj == 'Mine') {
-        oj = 'ME';
+      if (oj == "Mine") {
+        oj = "ME";
       }
       api.pickone(oj).then((res) => {
         myMessage.success(this.$i18n.t("m.Good_luck_to_you"));

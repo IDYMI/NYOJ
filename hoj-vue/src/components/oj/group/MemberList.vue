@@ -1,50 +1,22 @@
 <template>
   <div>
-    <vxe-table
-      stripe
-      auto-resize
-      :data="adminMemberList"
-      :loading="loading"
-      align="center"
-    >
-      <vxe-table-column
-        min-width="150"
-        field="username"
-        show-overflow
-        :title="$t('m.Username')"
-      >
-        <template v-slot="{ row }"
-          ><el-link
+    <vxe-table stripe auto-resize :data="adminMemberList" :loading="loading" align="center">
+      <vxe-table-column min-width="150" field="username" show-overflow :title="$t('m.Username')">
+        <template v-slot="{ row }">
+          <el-link
             type="primary"
             @click="goUserHome(row.username)"
             style="font-size: 13px"
-            >{{ row.username }}</el-link
-          >
+          >{{ row.username }}</el-link>
         </template>
       </vxe-table-column>
-      <vxe-table-column
-        min-width="150"
-        field="gmtCreate"
-        :title="$t('m.Created_Time')"
-      >
-        <template v-slot="{ row }">
-          {{ row.gmtCreate | localtime }}
-        </template>
+      <vxe-table-column min-width="150" field="gmtCreate" :title="$t('m.Created_Time')">
+        <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
       </vxe-table-column>
-      <vxe-table-column
-        min-width="150"
-        field="gmtModify"
-        :title="$t('m.Modified_Time')"
-      >
-        <template v-slot="{ row }">
-          {{ row.gmtModify | localtime }}
-        </template>
+      <vxe-table-column min-width="150" field="gmtModify" :title="$t('m.Modified_Time')">
+        <template v-slot="{ row }">{{ row.gmtModify | localtime }}</template>
       </vxe-table-column>
-      <vxe-table-column
-        min-width="100"
-        field="auth"
-        :title="$t('m.Member_Auth')"
-      >
+      <vxe-table-column min-width="100" field="auth" :title="$t('m.Member_Auth')">
         <template v-slot="{ row }">
           <el-select
             v-model="row.auth"
@@ -106,12 +78,7 @@
       </vxe-table-column>
       <vxe-table-column :title="$t('m.Option')" min-width="150">
         <template v-slot="{ row }">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            :content="$t('m.View_Reason')"
-            placement="top"
-          >
+          <el-tooltip class="item" effect="dark" :content="$t('m.View_Reason')" placement="top">
             <el-button
               icon="el-icon-search"
               @click.native="viewReason(row.reason)"

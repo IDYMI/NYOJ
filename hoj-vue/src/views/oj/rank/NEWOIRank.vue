@@ -11,9 +11,11 @@
             </li>
             <li>
               <router-link to="/new-oi-rank" exact-active-class="selected">
-                <span class="panel-title-oi">{{
+                <span class="panel-title-oi">
+                  {{
                   $t("m.NEW_OI_Ranklist")
-                }}</span>
+                  }}
+                </span>
               </router-link>
             </li>
           </ul>
@@ -28,12 +30,7 @@
           v-model="searchUser"
           @keyup.enter.native="getRankData(1)"
         >
-          <el-button
-            slot="append"
-            icon="el-icon-search"
-            class="search-btn"
-            @click="getRankData(1)"
-          ></el-button>
+          <el-button slot="append" icon="el-icon-search" class="search-btn" @click="getRankData(1)"></el-button>
         </el-input>
       </el-card>
       <vxe-table
@@ -65,29 +62,20 @@
             <a
               @click="getInfoByUsername(row.uid, row.username)"
               style="color: #2d8cf0"
-              >{{ row.username }}</a
-            >
+            >{{ row.username }}</a>
             <span style="margin-left: 2px" v-if="row.titleName">
-              <el-tag effect="dark" size="small" :color="row.titleColor">
-                {{ row.titleName }}
-              </el-tag>
+              <el-tag effect="dark" size="small" :color="row.titleColor">{{ row.titleName }}</el-tag>
             </span>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          field="nickname"
-          :title="$t('m.Nickname')"
-          width="160"
-        >
+        <vxe-table-column field="nickname" :title="$t('m.Nickname')" width="160">
           <template v-slot="{ row }">
             <el-tag
               effect="plain"
               size="small"
               v-if="row.nickname"
               :type="nicknameColor(row.nickname)"
-            >
-              {{ row.nickname }}
-            </el-tag>
+            >{{ row.nickname }}</el-tag>
           </template>
         </vxe-table-column>
         <vxe-table-column :title="$t('m.Score')" min-width="80">
@@ -95,17 +83,10 @@
             <span>{{ row.score }}</span>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          :title="$t('m.AC') + '/' + $t('m.Total')"
-          min-width="100"
-        >
+        <vxe-table-column :title="$t('m.AC') + '/' + $t('m.Total')" min-width="100">
           <template v-slot="{ row }">
             <span>
-              <a
-                @click="goUserACStatus(row.username)"
-                style="color: rgb(87, 163, 243)"
-                >{{ row.ac }}</a
-              >
+              <a @click="goUserACStatus(row.username)" style="color: rgb(87, 163, 243)">{{ row.ac }}</a>
               <span>/{{ row.total }}</span>
             </span>
           </template>
@@ -122,9 +103,11 @@
           align="left"
         >
           <template v-slot="{ row }">
-            <span v-katex class="rank-signature-body" v-if="row.signature">{{
+            <span v-katex class="rank-signature-body" v-if="row.signature">
+              {{
               row.signature
-            }}</span>
+              }}
+            </span>
           </template>
         </vxe-table-column>
       </vxe-table>

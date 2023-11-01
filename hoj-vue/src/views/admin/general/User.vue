@@ -10,8 +10,7 @@
               icon="el-icon-delete-solid"
               @click="deleteUsers(null)"
               size="small"
-              >{{ $t("m.Delete") }}
-            </el-button>
+            >{{ $t("m.Delete") }}</el-button>
           </span>
           <span>
             <vxe-input
@@ -30,8 +29,7 @@
               :width="40"
               @change="filterByAdmin"
               :inactive-text="$t('m.All')"
-            >
-            </el-switch>
+            ></el-switch>
           </span>
         </div>
       </div>
@@ -51,12 +49,7 @@
         @checkbox-all="handlechangeAll"
       >
         <vxe-table-column type="checkbox" width="60"></vxe-table-column>
-        <vxe-table-column
-          field="username"
-          :title="$t('m.User')"
-          min-width="200"
-          show-overflow
-        >
+        <vxe-table-column field="username" :title="$t('m.User')" min-width="200" show-overflow>
           <template v-slot="{ row }">
             <span>{{ row.username }}</span>
             <span style="margin-left: 2px">
@@ -65,83 +58,49 @@
                 size="small"
                 v-if="row.titleName"
                 :color="row.titleColor"
-              >
-                {{ row.titleName }}
-              </el-tag>
+              >{{ row.titleName }}</el-tag>
             </span>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          field="realname"
-          :title="$t('m.RealName')"
-          min-width="140"
-          show-overflow
-        ></vxe-table-column>
-        <vxe-table-column
-          field="email"
-          :title="$t('m.Email')"
-          min-width="150"
-          show-overflow
-        ></vxe-table-column>
-        <vxe-table-column
-          field="gmtCreate"
-          :title="$t('m.Created_Time')"
-          min-width="150"
-        >
-          <template v-slot="{ row }">
-            {{ row.gmtCreate | localtime }}
-          </template>
+        <vxe-table-column field="realname" :title="$t('m.RealName')" min-width="140" show-overflow></vxe-table-column>
+        <vxe-table-column field="email" :title="$t('m.Email')" min-width="150" show-overflow></vxe-table-column>
+        <vxe-table-column field="gmtCreate" :title="$t('m.Created_Time')" min-width="150">
+          <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
         </vxe-table-column>
-        <vxe-table-column
-          field="role"
-          :title="$t('m.User_Type')"
-          min-width="100"
-        >
-          <template v-slot="{ row }">
-            {{ getRole(row.roles) | parseRole }}
-          </template>
+        <vxe-table-column field="role" :title="$t('m.User_Type')" min-width="100">
+          <template v-slot="{ row }">{{ getRole(row.roles) | parseRole }}</template>
         </vxe-table-column>
-        <vxe-table-column
-          field="status"
-          :title="$t('m.Status')"
-          min-width="100"
-        >
+        <vxe-table-column field="status" :title="$t('m.Status')" min-width="100">
           <template v-slot="{ row }">
-            <el-tag effect="dark" color="#19be6b" v-if="row.status == 0">{{
+            <el-tag effect="dark" color="#19be6b" v-if="row.status == 0">
+              {{
               $t("m.Normal")
-            }}</el-tag>
-            <el-tag effect="dark" color="#ed3f14" v-else>{{
+              }}
+            </el-tag>
+            <el-tag effect="dark" color="#ed3f14" v-else>
+              {{
               $t("m.Disable")
-            }}</el-tag>
+              }}
+            </el-tag>
           </template>
         </vxe-table-column>
         <vxe-table-column :title="$t('m.Option')" min-width="150">
           <template v-slot="{ row }">
-            <el-tooltip
-              effect="dark"
-              :content="$t('m.Edit_User')"
-              placement="top"
-            >
+            <el-tooltip effect="dark" :content="$t('m.Edit_User')" placement="top">
               <el-button
                 icon="el-icon-edit-outline"
                 size="mini"
                 @click.native="openUserDialog(row)"
                 type="primary"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
-            <el-tooltip
-              effect="dark"
-              :content="$t('m.Delete_User')"
-              placement="top"
-            >
+            <el-tooltip effect="dark" :content="$t('m.Delete_User')" placement="top">
               <el-button
                 icon="el-icon-delete-solid"
                 size="mini"
                 @click.native="deleteUsers([row.uid])"
                 type="danger"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
           </template>
         </vxe-table-column>
@@ -155,8 +114,7 @@
           :total="total"
           @size-change="onPageSizeChange"
           :page-sizes="[10, 30, 50, 100]"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </el-card>
 
@@ -172,26 +130,21 @@
       <p>5. {{ $t("m.Import_User_Tips5") }}</p>
       <el-upload
         v-if="!uploadUsers.length"
-        action=""
+        action
         :show-file-list="false"
         accept=".csv"
         :before-upload="handleUsersCSV"
       >
-        <el-button size="small" icon="el-icon-folder-opened" type="primary">{{
+        <el-button size="small" icon="el-icon-folder-opened" type="primary">
+          {{
           $t("m.Choose_File")
-        }}</el-button>
+          }}
+        </el-button>
       </el-upload>
       <template v-else>
         <vxe-table :data="uploadUsersPage" stripe auto-resize>
-          <vxe-table-column
-            :title="$t('m.Username')"
-            field="username"
-            min-width="96"
-            show-overflow
-          >
-            <template v-slot="{ row }">
-              {{ row[0] }}
-            </template>
+          <vxe-table-column :title="$t('m.Username')" field="username" min-width="96" show-overflow>
+            <template v-slot="{ row }">{{ row[0] }}</template>
           </vxe-table-column>
           <vxe-table-column
             :title="$t('m.Password')"
@@ -199,19 +152,10 @@
             min-width="130"
             show-overflow
           >
-            <template v-slot="{ row }">
-              {{ row[1] }}
-            </template>
+            <template v-slot="{ row }">{{ row[1] }}</template>
           </vxe-table-column>
-          <vxe-table-column
-            :title="$t('m.Email')"
-            field="email"
-            min-width="120"
-            show-overflow
-          >
-            <template v-slot="{ row }">
-              {{ row[2] }}
-            </template>
+          <vxe-table-column :title="$t('m.Email')" field="email" min-width="120" show-overflow>
+            <template v-slot="{ row }">{{ row[2] }}</template>
           </vxe-table-column>
           <vxe-table-column
             :title="$t('m.RealName')"
@@ -219,19 +163,10 @@
             min-width="150"
             show-overflow
           >
-            <template v-slot="{ row }">
-              {{ row[3] }}
-            </template>
+            <template v-slot="{ row }">{{ row[3] }}</template>
           </vxe-table-column>
-          <vxe-table-column
-            :title="$t('m.Gender')"
-            field="gender"
-            min-width="60"
-            show-overflow
-          >
-            <template v-slot="{ row }">
-              {{ row[4] }}
-            </template>
+          <vxe-table-column :title="$t('m.Gender')" field="gender" min-width="60" show-overflow>
+            <template v-slot="{ row }">{{ row[4] }}</template>
           </vxe-table-column>
           <vxe-table-column
             :title="$t('m.Nickname')"
@@ -239,19 +174,10 @@
             min-width="100"
             show-overflow
           >
-            <template v-slot="{ row }">
-              {{ row[5] }}
-            </template>
+            <template v-slot="{ row }">{{ row[5] }}</template>
           </vxe-table-column>
-          <vxe-table-column
-            :title="$t('m.School')"
-            field="school"
-            min-width="100"
-            show-overflow
-          >
-            <template v-slot="{ row }">
-              {{ row[6] }}
-            </template>
+          <vxe-table-column :title="$t('m.School')" field="school" min-width="100" show-overflow>
+            <template v-slot="{ row }">{{ row[6] }}</template>
           </vxe-table-column>
         </vxe-table>
 
@@ -261,23 +187,20 @@
             size="small"
             icon="el-icon-upload"
             @click="handleUsersUpload"
-            >{{ $t("m.Upload_All") }}
-          </el-button>
+          >{{ $t("m.Upload_All") }}</el-button>
           <el-button
             type="danger"
             size="small"
             icon="el-icon-delete"
             @click="handleResetData"
-            >{{ $t("m.Clear_All") }}
-          </el-button>
+          >{{ $t("m.Clear_All") }}</el-button>
           <el-pagination
             class="page"
             layout="prev, pager, next"
             :page-size="uploadUsersPageSize"
             :current-page.sync="uploadUsersCurrentPage"
             :total="uploadUsers.length"
-          >
-          </el-pagination>
+          ></el-pagination>
         </div>
       </template>
     </el-card>
@@ -287,49 +210,30 @@
       <div slot="header">
         <span class="panel-title home-title">{{ $t("m.Generate_User") }}</span>
       </div>
-      <el-form
-        :model="formGenerateUser"
-        ref="formGenerateUser"
-        :rules="formGenerateRules"
-      >
+      <el-form :model="formGenerateUser" ref="formGenerateUser" :rules="formGenerateRules">
         <el-row :gutter="10">
           <el-col :md="5" :xs="24">
             <el-form-item :label="$t('m.Prefix')" prop="prefix">
-              <el-input
-                v-model="formGenerateUser.prefix"
-                placeholder="Prefix"
-              ></el-input>
+              <el-input v-model="formGenerateUser.prefix" placeholder="Prefix"></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="5" :xs="24">
             <el-form-item :label="$t('m.Suffix')" prop="suffix">
-              <el-input
-                v-model="formGenerateUser.suffix"
-                placeholder="Suffix"
-              ></el-input>
+              <el-input v-model="formGenerateUser.suffix" placeholder="Suffix"></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="5" :xs="24">
             <el-form-item :label="$t('m.Start_Number')" prop="number_from">
-              <el-input-number
-                v-model="formGenerateUser.number_from"
-                style="width: 100%"
-              ></el-input-number>
+              <el-input-number v-model="formGenerateUser.number_from" style="width: 100%"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :md="5" :xs="24">
             <el-form-item :label="$t('m.End_Number')" prop="number_to">
-              <el-input-number
-                v-model="formGenerateUser.number_to"
-                style="width: 100%"
-              ></el-input-number>
+              <el-input-number v-model="formGenerateUser.number_to" style="width: 100%"></el-input-number>
             </el-form-item>
           </el-col>
           <el-col :md="4" :xs="24">
-            <el-form-item
-              :label="$t('m.Password_Length')"
-              prop="password_length"
-            >
+            <el-form-item :label="$t('m.Password_Length')" prop="password_length">
               <el-input
                 v-model.number="formGenerateUser.password_length"
                 :placeholder="$t('m.Password_Length')"
@@ -345,18 +249,16 @@
             icon="fa fa-users"
             :loading="loadingGenerate"
             size="small"
-          >
-            {{ $t("m.Generate_and_Export") }}
-          </el-button>
+          >{{ $t("m.Generate_and_Export") }}</el-button>
           <span
             class="userPreview"
             v-if="formGenerateUser.number_from <= formGenerateUser.number_to"
           >
             {{ $t("m.The_usernames_will_be") }}
             {{
-              formGenerateUser.prefix +
-              formGenerateUser.number_from +
-              formGenerateUser.suffix
+            formGenerateUser.prefix +
+            formGenerateUser.number_from +
+            formGenerateUser.suffix
             }},
             <span
               v-if="
@@ -364,10 +266,10 @@
               "
             >
               {{
-                formGenerateUser.prefix +
-                (formGenerateUser.number_from + 1) +
-                formGenerateUser.suffix +
-                "..."
+              formGenerateUser.prefix +
+              (formGenerateUser.number_from + 1) +
+              formGenerateUser.suffix +
+              "..."
               }}
             </span>
             <span
@@ -376,9 +278,9 @@
               "
             >
               {{
-                formGenerateUser.prefix +
-                formGenerateUser.number_to +
-                formGenerateUser.suffix
+              formGenerateUser.prefix +
+              formGenerateUser.number_to +
+              formGenerateUser.suffix
               }}
             </span>
           </span>
@@ -387,11 +289,7 @@
     </el-card>
 
     <!--编辑用户的对话框-->
-    <el-dialog
-      :title="$t('m.User')"
-      :visible.sync="showUserDialog"
-      width="350px"
-    >
+    <el-dialog :title="$t('m.User')" :visible.sync="showUserDialog" width="350px">
       <el-form
         :model="selectUser"
         label-width="100px"
@@ -421,16 +319,11 @@
                 :active-value="true"
                 :inactive-value="false"
                 v-model="selectUser.setNewPwd"
-              >
-              </el-switch>
+              ></el-switch>
             </el-form-item>
           </el-col>
           <el-col :span="24" v-if="selectUser.setNewPwd == 1">
-            <el-form-item
-              :label="$t('m.General_New_Password')"
-              required
-              prop="password"
-            >
+            <el-form-item :label="$t('m.General_New_Password')" required prop="password">
               <el-input
                 v-model="selectUser.password"
                 :placeholder="$t('m.General_New_Password')"
@@ -441,51 +334,15 @@
           <el-col :span="24">
             <el-form-item :label="$t('m.User_Type')">
               <el-select v-model="selectUser.type" size="small">
-                <el-option
-                  label="超级管理员"
-                  :value="1000"
-                  :key="1000"
-                ></el-option>
-                <el-option
-                  label="普通管理员"
-                  :value="1001"
-                  :key="1001"
-                ></el-option>
-                <el-option
-                  label="题目管理员"
-                  :value="1008"
-                  :key="1008"
-                ></el-option>
-                <el-option
-                  label="用户(默认)"
-                  :value="1002"
-                  :key="1002"
-                ></el-option>
-                <el-option
-                  label="用户(禁止提交)"
-                  :value="1003"
-                  :key="1003"
-                ></el-option>
-                <el-option
-                  label="用户(禁止发讨论)"
-                  :value="1004"
-                  :key="1004"
-                ></el-option>
-                <el-option
-                  label="用户(禁言)"
-                  :value="1005"
-                  :key="1005"
-                ></el-option>
-                <el-option
-                  label="用户(禁止提交&禁止发讨论)"
-                  :value="1006"
-                  :key="1006"
-                ></el-option>
-                <el-option
-                  label="用户(禁止提交&禁言)"
-                  :value="1007"
-                  :key="1007"
-                ></el-option>
+                <el-option label="超级管理员" :value="1000" :key="1000"></el-option>
+                <el-option label="普通管理员" :value="1001" :key="1001"></el-option>
+                <el-option label="题目管理员" :value="1008" :key="1008"></el-option>
+                <el-option label="用户(默认)" :value="1002" :key="1002"></el-option>
+                <el-option label="用户(禁止提交)" :value="1003" :key="1003"></el-option>
+                <el-option label="用户(禁止发讨论)" :value="1004" :key="1004"></el-option>
+                <el-option label="用户(禁言)" :value="1005" :key="1005"></el-option>
+                <el-option label="用户(禁止提交&禁止发讨论)" :value="1006" :key="1006"></el-option>
+                <el-option label="用户(禁止提交&禁言)" :value="1007" :key="1007"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -494,9 +351,7 @@
               <el-input v-model="selectUser.titleName" size="small"></el-input>
             </el-form-item>
             <el-form-item :label="$t('m.Title_Color')">
-              <el-color-picker
-                v-model="selectUser.titleColor"
-              ></el-color-picker>
+              <el-color-picker v-model="selectUser.titleColor"></el-color-picker>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -507,19 +362,22 @@
                 :active-text="$t('m.Normal')"
                 :inactive-text="$t('m.Disable')"
                 v-model="selectUser.status"
-              >
-              </el-switch>
+              ></el-switch>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="danger" @click.native="showUserDialog = false">{{
+        <el-button type="danger" @click.native="showUserDialog = false">
+          {{
           $t("m.Cancel")
-        }}</el-button>
-        <el-button type="primary" @click.native="saveUser">{{
+          }}
+        </el-button>
+        <el-button type="primary" @click.native="saveUser">
+          {{
           $t("m.OK")
-        }}</el-button>
+          }}
+        </el-button>
       </span>
     </el-dialog>
   </div>

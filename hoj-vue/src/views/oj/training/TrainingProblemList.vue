@@ -9,79 +9,47 @@
       align="center"
       @cell-click="goTrainingProblem"
     >
-      <vxe-table-column
-        field="status"
-        title=""
-        width="50"
-        v-if="isAuthenticated"
-      >
+      <vxe-table-column field="status" title width="50" v-if="isAuthenticated">
         <template v-slot="{ row }">
           <template v-if="isGetStatusOk">
-            <el-tooltip
-              :content="JUDGE_STATUS[row.myStatus]['name']"
-              placement="top"
-            >
+            <el-tooltip :content="JUDGE_STATUS[row.myStatus]['name']" placement="top">
               <template v-if="row.myStatus == 0">
-                <i
-                  class="el-icon-check"
-                  :style="getIconColor(row.myStatus)"
-                ></i>
+                <i class="el-icon-check" :style="getIconColor(row.myStatus)"></i>
               </template>
 
               <template v-else-if="row.myStatus != -10">
-                <i
-                  class="el-icon-minus"
-                  :style="getIconColor(row.myStatus)"
-                ></i>
+                <i class="el-icon-minus" :style="getIconColor(row.myStatus)"></i>
               </template>
             </el-tooltip>
           </template>
         </template>
       </vxe-table-column>
-      <vxe-table-column
-        field="problemId"
-        :title="$t('m.Problem_ID')"
-        width="150"
-        show-overflow
-      >
-      </vxe-table-column>
-      <vxe-table-column
-        field="title"
-        :title="$t('m.Title')"
-        min-width="150"
-        show-overflow
-      ></vxe-table-column>
+      <vxe-table-column field="problemId" :title="$t('m.Problem_ID')" width="150" show-overflow></vxe-table-column>
+      <vxe-table-column field="title" :title="$t('m.Title')" min-width="150" show-overflow></vxe-table-column>
 
-      <vxe-table-column
-        field="difficulty"
-        :title="$t('m.Level')"
-        min-width="100"
-      >
+      <vxe-table-column field="difficulty" :title="$t('m.Level')" min-width="100">
         <template v-slot="{ row }">
           <span
             class="el-tag el-tag--small"
             :style="getLevelColor(row.difficulty)"
-            >{{ getLevelName(row.difficulty) }}</span
-          >
+          >{{ getLevelName(row.difficulty) }}</span>
         </template>
       </vxe-table-column>
 
       <vxe-table-column field="tag" min-width="100">
-        <template v-slot:header
-          ><el-link
+        <template v-slot:header>
+          <el-link
             type="primary"
             v-if="!showTags"
             :underline="false"
             @click="showTags = !showTags"
-            >{{ $t('m.Show_Tags') }}</el-link
-          >
+          >{{ $t('m.Show_Tags') }}</el-link>
           <el-link
             type="danger"
             v-else
             @click="showTags = !showTags"
             :underline="false"
-            >{{ $t('m.Hide_Tags') }}</el-link
-          >
+          >{{ $t('m.Hide_Tags') }}</el-link>
         </template>
         <template v-slot="{ row }">
           <div v-if="showTags">
@@ -93,8 +61,7 @@
               "
               v-for="tag in row.tags"
               :key="tag.id"
-              >{{ tag.name }}</span
-            >
+            >{{ tag.name }}</span>
           </div>
         </template>
       </vxe-table-column>
@@ -102,11 +69,7 @@
       <vxe-table-column field="ac" :title="$t('m.AC_Rate')" min-width="120">
         <template v-slot="{ row }">
           <span>
-            <el-tooltip
-              effect="dark"
-              :content="row.ac + '/' + row.total"
-              placement="top"
-            >
+            <el-tooltip effect="dark" :content="row.ac + '/' + row.total" placement="top">
               <el-progress
                 :text-inside="true"
                 :stroke-width="20"
@@ -121,24 +84,24 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
-import utils from '@/common/utils';
-import { JUDGE_STATUS } from '@/common/constants';
-import api from '@/common/api';
+import { mapState, mapGetters } from "vuex";
+import utils from "@/common/utils";
+import { JUDGE_STATUS } from "@/common/constants";
+import api from "@/common/api";
 export default {
-  name: 'TrainingProblemList',
+  name: "TrainingProblemList",
   data() {
     return {
       JUDGE_STATUS: {},
       isGetStatusOk: false,
-      testcolor: 'rgba(0, 206, 209, 1)',
+      testcolor: "rgba(0, 206, 209, 1)",
       showTags: false,
-      groupID:null,
+      groupID: null,
     };
   },
-  created(){
+  created() {
     let gid = this.$route.params.groupID;
-    if(gid){
+    if (gid) {
       this.groupID = gid;
     }
   },
@@ -148,7 +111,7 @@ export default {
   },
   methods: {
     getTrainingProblemList() {
-      this.$store.dispatch('getTrainingProblemList').then((res) => {
+      this.$store.dispatch("getTrainingProblemList").then((res) => {
         if (this.isAuthenticated) {
           // 如果已登录，则需要查询对当前页面题目列表中各个题目的提交情况
           let pidList = [];
@@ -157,31 +120,33 @@ export default {
               pidList.push(this.problemList[index].pid);
             }
             this.isGetStatusOk = false;
-            api.getUserProblemStatus(pidList, false,null,this.groupID).then((res) => {
-              let result = res.data.data;
-              for (let index = 0; index < this.problemList.length; index++) {
-                this.problemList[index]['myStatus'] =
-                  result[this.problemList[index].pid]['status'];
-              }
-              this.isGetStatusOk = true;
-            });
+            api
+              .getUserProblemStatus(pidList, false, null, this.groupID)
+              .then((res) => {
+                let result = res.data.data;
+                for (let index = 0; index < this.problemList.length; index++) {
+                  this.problemList[index]["myStatus"] =
+                    result[this.problemList[index].pid]["status"];
+                }
+                this.isGetStatusOk = true;
+              });
           }
         }
       });
     },
     goTrainingProblem(event) {
-      if(this.groupID){
+      if (this.groupID) {
         this.$router.push({
-          name: 'GroupTrainingProblemDetails',
+          name: "GroupTrainingProblemDetails",
           params: {
             trainingID: this.$route.params.trainingID,
             problemID: event.row.problemId,
-            groupID: this.groupID
+            groupID: this.groupID,
           },
         });
-      }else{
+      } else {
         this.$router.push({
-          name: 'TrainingProblemDetails',
+          name: "TrainingProblemDetails",
           params: {
             trainingID: this.$route.params.trainingID,
             problemID: event.row.problemId,
@@ -194,7 +159,7 @@ export default {
     },
     getIconColor(status) {
       return (
-        'font-weight: 600;font-size: 16px;color:' + JUDGE_STATUS[status].rgb
+        "font-weight: 600;font-size: 16px;color:" + JUDGE_STATUS[status].rgb
       );
     },
     getLevelColor(difficulty) {
@@ -212,9 +177,9 @@ export default {
   },
   computed: {
     ...mapState({
-      problemList: (state) => state.training.trainingProblemList
+      problemList: (state) => state.training.trainingProblemList,
     }),
-    ...mapGetters(['isAuthenticated']),
+    ...mapGetters(["isAuthenticated"]),
   },
 };
 </script>

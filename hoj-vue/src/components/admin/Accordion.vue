@@ -10,18 +10,14 @@
       <slot></slot>
     </div>
     <footer @click="changeVisible">
-      <i
-        :class="{ rotate: !isOpen }"
-        class="el-icon-caret-top"
-        style="color:#2d8cf0"
-      ></i>
+      <i :class="{ rotate: !isOpen }" class="el-icon-caret-top" style="color:#2d8cf0"></i>
     </footer>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Accordion',
+  name: "Accordion",
   props: {
     title: {
       type: String,
@@ -40,7 +36,7 @@ export default {
   methods: {
     changeVisible() {
       this.isOpen = !this.isOpen;
-      this.$emit('changeVisible', this.index, this.isOpen);
+      this.$emit("changeVisible", this.index, this.isOpen);
     },
   },
 };

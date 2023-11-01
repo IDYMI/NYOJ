@@ -1,11 +1,7 @@
 <!--评论模块-->
 <template>
   <div>
-    <div
-      v-if="cid"
-      class="comment-top container"
-      :style="cid ? 'max-width: 100% !important;' : ''"
-    >
+    <div v-if="cid" class="comment-top container" :style="cid ? 'max-width: 100% !important;' : ''">
       <el-alert
         type="warning"
         effect="dark"
@@ -14,26 +10,21 @@
         style="background-color: rgb(14, 176, 201)!important;"
       >
         <template slot="title">
-          <span class="title">{{
+          <span class="title">
+            {{
             $i18n.t('m.Announcement_of_contest_Q_and_A_area')
-          }}</span></template
-        >
+            }}
+          </span>
+        </template>
         <template slot>
-          <p>
-            1. {{ $i18n.t('m.Announcement_of_contest_Q_and_A_area_tips1') }}
-          </p>
-          <p>
-            2. {{ $i18n.t('m.Announcement_of_contest_Q_and_A_area_tips2') }}
-          </p>
-          <p>
-            3. {{ $i18n.t('m.Announcement_of_contest_Q_and_A_area_tips3') }}
-          </p>
+          <p>1. {{ $i18n.t('m.Announcement_of_contest_Q_and_A_area_tips1') }}</p>
+          <p>2. {{ $i18n.t('m.Announcement_of_contest_Q_and_A_area_tips2') }}</p>
+          <p>3. {{ $i18n.t('m.Announcement_of_contest_Q_and_A_area_tips3') }}</p>
         </template>
       </el-alert>
     </div>
     <!-- <div class="container" :style="cid ? 'max-width: 100% !important;' : ''"> -->
-      <div class="container" style="max-width: 100% !important;">
-
+    <div class="container" style="max-width: 100% !important;">
       <div class="own-input">
         <el-input
           v-model="ownInputComment"
@@ -41,8 +32,7 @@
           :rows="8"
           id="own-textarea"
           :placeholder="$t('m.Come_and_write_down_your_comments') + '~😘'"
-        >
-        </el-input>
+        ></el-input>
         <div class="input-bottom">
           <span title="emoji">
             <el-popover
@@ -58,17 +48,13 @@
                   v-for="(item, index) in faceList"
                   :key="index"
                   class="emotionItem"
-                  >{{ item }}</a
-                >
+                >{{ item }}</a>
               </div>
               <i class="fa fa-smile-o emotionSelect" slot="reference"></i>
             </el-popover>
           </span>
-          <span
-            class="markdown-key"
-            :title="$t('m.Inline_Code')"
-            @click="addContentTips(0, false)"
-            ><svg
+          <span class="markdown-key" :title="$t('m.Inline_Code')" @click="addContentTips(0, false)">
+            <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               width="1em"
@@ -80,14 +66,10 @@
                 fill-rule="evenodd"
                 d="M5.5 5h1.866a.5.5 0 01.486.617l-.96 4a.5.5 0 01-.486.383H5.5a.5.5 0 01-.5-.5v-4a.5.5 0 01.5-.5zm8 0h1.866a.5.5 0 01.486.617l-.96 4a.5.5 0 01-.486.383H13.5a.5.5 0 01-.5-.5v-4a.5.5 0 01.5-.5z"
                 clip-rule="evenodd"
-              ></path>
+              />
             </svg>
           </span>
-          <span
-            class="markdown-key"
-            :title="$t('m.Code_Block')"
-            @click="addContentTips(1, false)"
-          >
+          <span class="markdown-key" :title="$t('m.Code_Block')" @click="addContentTips(1, false)">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -100,14 +82,11 @@
                 fill-rule="evenodd"
                 d="M3.64 10.98c.147 0 .312-.022.495-.066.183-.044.348-.12.495-.23.147-.11.271-.269.374-.474.103-.205.154-.462.154-.77V5.084c0-.499.077-.928.231-1.287.154-.36.363-.66.627-.902s.565-.422.902-.539c.337-.117.69-.176 1.056-.176H9.58v1.848H8.37c-.425 0-.693.14-.803.418-.11.279-.165.58-.165.902v4.136c0 .425-.08.788-.242 1.09-.161.3-.352.545-.572.736-.22.19-.455.337-.704.44-.25.103-.462.161-.638.176v.044c.176.015.389.062.638.143.25.08.484.216.704.407.22.19.41.447.572.77.161.323.242.74.242 1.254v4.004c0 .323.055.623.165.902.11.279.378.418.803.418h1.21v1.848H7.974c-.367 0-.719-.059-1.056-.176a2.573 2.573 0 01-.902-.539 2.586 2.586 0 01-.627-.902c-.154-.36-.231-.788-.231-1.287V14.61c0-.352-.051-.638-.154-.858a1.494 1.494 0 00-.374-.517 1.18 1.18 0 00-.495-.253 2.143 2.143 0 00-.495-.066V10.98zm16.72 2.04c-.161 0-.33.022-.506.066a1.184 1.184 0 00-.484.253 1.494 1.494 0 00-.374.517c-.103.22-.154.506-.154.858v4.202c0 .499-.077.928-.231 1.287-.154.36-.363.66-.627.902a2.573 2.573 0 01-.902.54c-.337.116-.69.175-1.056.175H14.42v-1.848h1.21c.425 0 .693-.14.803-.418.11-.279.165-.58.165-.902v-4.004c0-.513.08-.931.242-1.254.161-.323.352-.58.572-.77.22-.19.455-.326.704-.407.25-.08.462-.128.638-.143v-.044a2.225 2.225 0 01-.638-.176 2.567 2.567 0 01-.704-.44c-.22-.19-.41-.436-.572-.737-.161-.3-.242-.664-.242-1.089V5.452c0-.323-.055-.623-.165-.902-.11-.279-.378-.418-.803-.418h-1.21V2.284h1.606c.367 0 .719.059 1.056.176.337.117.638.297.902.539.264.242.473.543.627.902.154.36.231.788.231 1.287v4.356c0 .308.051.565.154.77.103.205.227.363.374.473.147.11.308.187.484.231.176.044.345.066.506.066v1.936z"
                 clip-rule="evenodd"
-              ></path>
+              />
             </svg>
           </span>
-          <span
-            class="markdown-key"
-            :title="$t('m.Link')"
-            @click="addContentTips(2, false)"
-            ><svg
+          <span class="markdown-key" :title="$t('m.Link')" @click="addContentTips(2, false)">
+            <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               width="1em"
@@ -119,13 +98,15 @@
                 fill-rule="evenodd"
                 d="M13 7a1 1 0 011-1h2a6 6 0 010 12h-2a1 1 0 110-2h2a4 4 0 000-8h-2a1 1 0 01-1-1zm-3 10a1 1 0 01-1 1H8A6 6 0 018 6h1a1 1 0 010 2H8a4 4 0 100 8h1a1 1 0 011 1zm-1-6h6a1 1 0 110 2H9a1 1 0 110-2z"
                 clip-rule="evenodd"
-              ></path></svg
-          ></span>
+              />
+            </svg>
+          </span>
           <span
             class="markdown-key"
             :title="$t('m.Unordered_list')"
             @click="addContentTips(3, false)"
-            ><svg
+          >
+            <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               width="1em"
@@ -137,13 +118,15 @@
                 fill-rule="evenodd"
                 d="M8 7a1 1 0 110-2h13a1 1 0 110 2H8zm0 6a1 1 0 110-2h13a1 1 0 110 2H8zm0 6a1 1 0 110-2h13a1 1 0 110 2H8zM2.952 6.85a1.201 1.201 0 111.698-1.7 1.201 1.201 0 01-1.698 1.7zm0 6a1.201 1.201 0 111.698-1.7 1.201 1.201 0 01-1.698 1.7zm0 6a1.201 1.201 0 111.698-1.7 1.201 1.201 0 01-1.698 1.7z"
                 clip-rule="evenodd"
-              ></path></svg
-          ></span>
+              />
+            </svg>
+          </span>
           <span
             class="markdown-key"
             :title="$t('m.Ordered_List')"
             @click="addContentTips(4, false)"
-            ><svg
+          >
+            <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               width="1em"
@@ -155,21 +138,20 @@
                 fill-rule="evenodd"
                 d="M7 6a1 1 0 011-1h13a1 1 0 110 2H8a1 1 0 01-1-1zm1 13a1 1 0 110-2h13a1 1 0 010 2H8zm0-6a1 1 0 110-2h13a1 1 0 010 2H8zM2.756 4.98l.236-1.18h2.22l-.92 4.6h-1.38l.684-3.42h-.84zm2.823 8.3l-.235 1.192H1.756l.174-.87.073-.117 1.911-1.498c.219-.178.368-.324.445-.434a.49.49 0 00.099-.287.208.208 0 00-.083-.18c-.067-.052-.176-.082-.335-.082a.897.897 0 00-.398.094 1.02 1.02 0 00-.342.272l-.12.144-.968-.702.118-.162c.193-.264.456-.473.786-.625.327-.15.684-.225 1.068-.225.318 0 .602.053.85.16.255.11.456.267.6.47.146.206.22.44.22.698 0 .298-.083.58-.247.839-.158.25-.424.518-.797.807l-.653.506h1.422zm-3.063 3.7l.245-1.18h3.345l-.166.867-.06.11-.93.869a1.205 1.205 0 01.737 1.144c-.001.327-.098.622-.29.881a1.856 1.856 0 01-.774.593c-.322.139-.685.208-1.087.208-.328 0-.636-.045-.924-.135a2.06 2.06 0 01-.743-.4l-.132-.114.688-1.05.173.147c.12.103.267.185.442.245.177.06.364.091.562.091.251 0 .435-.044.554-.124a.31.31 0 00.146-.282c0-.086-.025-.135-.08-.171-.076-.05-.213-.079-.41-.079h-.687l.173-.88.06-.108.674-.632H2.516z"
                 clip-rule="evenodd"
-              ></path></svg
-          ></span>
+              />
+            </svg>
+          </span>
           <span class="own-btn-comment">
-            <el-button class="btn" type="primary" round @click="commitComment"
-              ><i class="el-icon-edit">
-                {{ $t('m.Submit_Comment') }}</i
-              ></el-button
-            >
+            <el-button class="btn" type="primary" round @click="commitComment">
+              <i class="el-icon-edit">{{ $t('m.Submit_Comment') }}</i>
+            </el-button>
           </span>
         </div>
       </div>
       <h3 class="comment-total">
         <div class="text">
-          <span>{{ $t('m.All_Comment') }}</span
-          ><span class="number">{{ totalComment }}</span>
+          <span>{{ $t('m.All_Comment') }}</span>
+          <span class="number">{{ totalComment }}</span>
         </div>
       </h3>
       <div
@@ -180,10 +162,7 @@
         v-loading="loading"
       >
         <div class="info">
-          <span
-            @click="getInfoByUsername(item.fromUid, item.fromName)"
-            class="user-info"
-          >
+          <span @click="getInfoByUsername(item.fromUid, item.fromName)" class="user-info">
             <avatar
               :username="item.fromName"
               :inline="true"
@@ -200,25 +179,24 @@
                 class="user-info"
                 @click="getInfoByUsername(item.fromUid, item.fromName)"
                 :title="item.fromName"
-                >{{ item.fromName }}</span
-              >
+              >{{ item.fromName }}</span>
               <span v-if="item.fromTitleName" style="margin-right: 4px;">
-                <el-tag effect="dark" size="small" :color="item.fromTitleColor">
-                  {{ item.fromTitleName }}
-                </el-tag>
+                <el-tag
+                  effect="dark"
+                  size="small"
+                  :color="item.fromTitleColor"
+                >{{ item.fromTitleName }}</el-tag>
               </span>
               <span
                 class="role-root role"
                 title="Super Administrator"
                 v-if="item.fromRole == 'root'"
-                >SPA</span
-              >
+              >SPA</span>
               <span
                 class="role-admin role"
                 title="Administrator"
                 v-if="item.fromRole == 'admin'"
-                >ADM</span
-              >
+              >ADM</span>
             </div>
             <div class="date">
               <el-tooltip :content="item.gmtCreate | localtime" placement="top">
@@ -228,11 +206,7 @@
           </div>
         </div>
         <div class="info-bottom">
-          <Markdown
-            class="content markdown-content"
-            :isAvoidXss="true"
-            :content="item.content">
-          </Markdown>
+          <Markdown class="content markdown-content" :isAvoidXss="true" :content="item.content"></Markdown>
           <div class="control">
             <span
               class="like"
@@ -240,9 +214,11 @@
               @click="likeClick(item)"
             >
               <i class="iconfont fa fa-thumbs-o-up"></i>
-              <span class="like-num">{{
+              <span class="like-num">
+                {{
                 item.likeNum > 0 ? item.likeNum + $t('m.Like') : $t('m.Like')
-              }}</span>
+                }}
+              </span>
             </span>
             <span
               class="comment-opt comment-reply"
@@ -264,11 +240,7 @@
             </span>
           </div>
           <div class="reply">
-            <div
-              class="item"
-              v-for="(reply, replyIndex) in item.replyList"
-              :key="replyIndex"
-            >
+            <div class="item" v-for="(reply, replyIndex) in item.replyList" :key="replyIndex">
               <div class="reply-content">
                 <span
                   class="from-name"
@@ -283,62 +255,45 @@
                     color="#FFF"
                     :src="reply.fromAvatar"
                   ></avatar>
-                  <span style="vertical-align: middle;">{{
+                  <span style="vertical-align: middle;">
+                    {{
                     reply.fromName
-                  }}</span>
+                    }}
+                  </span>
                 </span>
-                <span
-                  v-if="reply.fromTitleName"
-                  style="margin-right: 4px;"
-                  class="hidden-xs-only"
-                >
+                <span v-if="reply.fromTitleName" style="margin-right: 4px;" class="hidden-xs-only">
                   <el-tag
                     effect="dark"
                     size="small"
                     :color="reply.fromTitleColor"
-                  >
-                    {{ reply.fromTitleName }}
-                  </el-tag>
+                  >{{ reply.fromTitleName }}</el-tag>
                 </span>
                 <span
                   class="role-root role"
                   title="Super Administrator"
                   v-if="reply.fromRole == 'root'"
-                  >SPA</span
-                >
+                >SPA</span>
                 <span
                   class="role-admin role"
                   title="Administrator"
                   v-if="reply.fromRole == 'admin'"
-                  >ADM</span
-                >
+                >ADM</span>
                 <span class="reply-text">{{ $t('m.Reply') }}</span>
                 <span
                   class="to-name"
                   :title="reply.toName"
                   @click="getInfoByUsername(reply.toUid, reply.toName)"
-                  >@{{ reply.toName }}</span
-                >
+                >@{{ reply.toName }}</span>
               </div>
               <div style="padding: 8px 0;margin-left: 34px;">
-                <Markdown
-                  class="markdown-content"
-                  :isAvoidXss="true"
-                  :content="reply.content">
-                </Markdown>
+                <Markdown class="markdown-content" :isAvoidXss="true" :content="reply.content"></Markdown>
               </div>
               <div class="reply-bottom">
-                <el-tooltip
-                  :content="reply.gmtCreate | localtime"
-                  placement="top"
-                >
+                <el-tooltip :content="reply.gmtCreate | localtime" placement="top">
                   <span>{{ reply.gmtCreate | fromNow }}</span>
                 </el-tooltip>
 
-                <span
-                  class="reply-opt reply-text"
-                  @click="showCommentInput(item, reply)"
-                >
+                <span class="reply-opt reply-text" @click="showCommentInput(item, reply)">
                   <i class="iconfont el-icon-chat-square"></i>
                   <span>{{ $t('m.Reply') }}</span>
                 </span>
@@ -353,17 +308,19 @@
               </div>
             </div>
             <div class="view-more item" v-if="item.totalReplyNum > 3">
-              {{ $t('m.Reply_Total') }}<b> {{ item.totalReplyNum }} </b
-              >{{ $t('m.Replies') }},
+              {{ $t('m.Reply_Total') }}
+              <b>{{ item.totalReplyNum }}</b>
+              {{ $t('m.Replies') }},
               <a
                 class="btn-more"
                 @click="showAllReply(item)"
                 v-if="!item.hadOpen"
-                >{{ $t('m.Click_Show_All') }}</a
-              >
-              <a class="btn-more" @click="pickWayReply(item)" v-else>{{
+              >{{ $t('m.Click_Show_All') }}</a>
+              <a class="btn-more" @click="pickWayReply(item)" v-else>
+                {{
                 $t('m.Pick_up')
-              }}</a>
+                }}
+              </a>
             </div>
             <transition name="fade">
               <div class="input-wrapper" v-if="showItemId === item.id">
@@ -374,8 +331,7 @@
                   autofocus
                   id="reply-textarea"
                   :placeholder="replyPlaceholder"
-                >
-                </el-input>
+                ></el-input>
                 <div class="input-bottom">
                   <span title="emoji">
                     <el-popover
@@ -391,20 +347,17 @@
                           v-for="(item, index) in faceList"
                           :key="index"
                           class="emotionItem"
-                          >{{ item }}</a
-                        >
+                        >{{ item }}</a>
                       </div>
-                      <i
-                        class="fa fa-smile-o emotionSelect"
-                        slot="reference"
-                      ></i>
+                      <i class="fa fa-smile-o emotionSelect" slot="reference"></i>
                     </el-popover>
                   </span>
                   <span
                     class="markdown-key"
                     :title="$t('m.Inline_Code')"
                     @click="addContentTips(0, true)"
-                    ><svg
+                  >
+                    <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       width="1em"
@@ -416,7 +369,7 @@
                         fill-rule="evenodd"
                         d="M5.5 5h1.866a.5.5 0 01.486.617l-.96 4a.5.5 0 01-.486.383H5.5a.5.5 0 01-.5-.5v-4a.5.5 0 01.5-.5zm8 0h1.866a.5.5 0 01.486.617l-.96 4a.5.5 0 01-.486.383H13.5a.5.5 0 01-.5-.5v-4a.5.5 0 01.5-.5z"
                         clip-rule="evenodd"
-                      ></path>
+                      />
                     </svg>
                   </span>
                   <span
@@ -436,14 +389,11 @@
                         fill-rule="evenodd"
                         d="M3.64 10.98c.147 0 .312-.022.495-.066.183-.044.348-.12.495-.23.147-.11.271-.269.374-.474.103-.205.154-.462.154-.77V5.084c0-.499.077-.928.231-1.287.154-.36.363-.66.627-.902s.565-.422.902-.539c.337-.117.69-.176 1.056-.176H9.58v1.848H8.37c-.425 0-.693.14-.803.418-.11.279-.165.58-.165.902v4.136c0 .425-.08.788-.242 1.09-.161.3-.352.545-.572.736-.22.19-.455.337-.704.44-.25.103-.462.161-.638.176v.044c.176.015.389.062.638.143.25.08.484.216.704.407.22.19.41.447.572.77.161.323.242.74.242 1.254v4.004c0 .323.055.623.165.902.11.279.378.418.803.418h1.21v1.848H7.974c-.367 0-.719-.059-1.056-.176a2.573 2.573 0 01-.902-.539 2.586 2.586 0 01-.627-.902c-.154-.36-.231-.788-.231-1.287V14.61c0-.352-.051-.638-.154-.858a1.494 1.494 0 00-.374-.517 1.18 1.18 0 00-.495-.253 2.143 2.143 0 00-.495-.066V10.98zm16.72 2.04c-.161 0-.33.022-.506.066a1.184 1.184 0 00-.484.253 1.494 1.494 0 00-.374.517c-.103.22-.154.506-.154.858v4.202c0 .499-.077.928-.231 1.287-.154.36-.363.66-.627.902a2.573 2.573 0 01-.902.54c-.337.116-.69.175-1.056.175H14.42v-1.848h1.21c.425 0 .693-.14.803-.418.11-.279.165-.58.165-.902v-4.004c0-.513.08-.931.242-1.254.161-.323.352-.58.572-.77.22-.19.455-.326.704-.407.25-.08.462-.128.638-.143v-.044a2.225 2.225 0 01-.638-.176 2.567 2.567 0 01-.704-.44c-.22-.19-.41-.436-.572-.737-.161-.3-.242-.664-.242-1.089V5.452c0-.323-.055-.623-.165-.902-.11-.279-.378-.418-.803-.418h-1.21V2.284h1.606c.367 0 .719.059 1.056.176.337.117.638.297.902.539.264.242.473.543.627.902.154.36.231.788.231 1.287v4.356c0 .308.051.565.154.77.103.205.227.363.374.473.147.11.308.187.484.231.176.044.345.066.506.066v1.936z"
                         clip-rule="evenodd"
-                      ></path>
+                      />
                     </svg>
                   </span>
-                  <span
-                    class="markdown-key"
-                    :title="$t('m.Link')"
-                    @click="addContentTips(2, true)"
-                    ><svg
+                  <span class="markdown-key" :title="$t('m.Link')" @click="addContentTips(2, true)">
+                    <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       width="1em"
@@ -455,13 +405,15 @@
                         fill-rule="evenodd"
                         d="M13 7a1 1 0 011-1h2a6 6 0 010 12h-2a1 1 0 110-2h2a4 4 0 000-8h-2a1 1 0 01-1-1zm-3 10a1 1 0 01-1 1H8A6 6 0 018 6h1a1 1 0 010 2H8a4 4 0 100 8h1a1 1 0 011 1zm-1-6h6a1 1 0 110 2H9a1 1 0 110-2z"
                         clip-rule="evenodd"
-                      ></path></svg
-                  ></span>
+                      />
+                    </svg>
+                  </span>
                   <span
                     class="markdown-key"
                     :title="$t('m.Unordered_list')"
                     @click="addContentTips(3, true)"
-                    ><svg
+                  >
+                    <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       width="1em"
@@ -473,13 +425,15 @@
                         fill-rule="evenodd"
                         d="M8 7a1 1 0 110-2h13a1 1 0 110 2H8zm0 6a1 1 0 110-2h13a1 1 0 110 2H8zm0 6a1 1 0 110-2h13a1 1 0 110 2H8zM2.952 6.85a1.201 1.201 0 111.698-1.7 1.201 1.201 0 01-1.698 1.7zm0 6a1.201 1.201 0 111.698-1.7 1.201 1.201 0 01-1.698 1.7zm0 6a1.201 1.201 0 111.698-1.7 1.201 1.201 0 01-1.698 1.7z"
                         clip-rule="evenodd"
-                      ></path></svg
-                  ></span>
+                      />
+                    </svg>
+                  </span>
                   <span
                     class="markdown-key"
                     :title="$t('m.Ordered_List')"
                     @click="addContentTips(4, true)"
-                    ><svg
+                  >
+                    <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       width="1em"
@@ -491,8 +445,9 @@
                         fill-rule="evenodd"
                         d="M7 6a1 1 0 011-1h13a1 1 0 110 2H8a1 1 0 01-1-1zm1 13a1 1 0 110-2h13a1 1 0 010 2H8zm0-6a1 1 0 110-2h13a1 1 0 010 2H8zM2.756 4.98l.236-1.18h2.22l-.92 4.6h-1.38l.684-3.42h-.84zm2.823 8.3l-.235 1.192H1.756l.174-.87.073-.117 1.911-1.498c.219-.178.368-.324.445-.434a.49.49 0 00.099-.287.208.208 0 00-.083-.18c-.067-.052-.176-.082-.335-.082a.897.897 0 00-.398.094 1.02 1.02 0 00-.342.272l-.12.144-.968-.702.118-.162c.193-.264.456-.473.786-.625.327-.15.684-.225 1.068-.225.318 0 .602.053.85.16.255.11.456.267.6.47.146.206.22.44.22.698 0 .298-.083.58-.247.839-.158.25-.424.518-.797.807l-.653.506h1.422zm-3.063 3.7l.245-1.18h3.345l-.166.867-.06.11-.93.869a1.205 1.205 0 01.737 1.144c-.001.327-.098.622-.29.881a1.856 1.856 0 01-.774.593c-.322.139-.685.208-1.087.208-.328 0-.636-.045-.924-.135a2.06 2.06 0 01-.743-.4l-.132-.114.688-1.05.173.147c.12.103.267.185.442.245.177.06.364.091.562.091.251 0 .435-.044.554-.124a.31.31 0 00.146-.282c0-.086-.025-.135-.08-.171-.076-.05-.213-.079-.41-.079h-.687l.173-.88.06-.108.674-.632H2.516z"
                         clip-rule="evenodd"
-                      ></path></svg
-                  ></span>
+                      />
+                    </svg>
+                  </span>
                   <span class="btn-control">
                     <el-button
                       class="btn"
@@ -500,16 +455,14 @@
                       round
                       @click="cancel"
                       size="small"
-                      >{{ $t('m.Cancel') }}</el-button
-                    >
+                    >{{ $t('m.Cancel') }}</el-button>
                     <el-button
                       class="btn"
                       type="primary"
                       round
                       @click="commitReply(item.id)"
                       size="small"
-                      >{{ $t('m.OK') }}</el-button
-                    >
+                    >{{ $t('m.OK') }}</el-button>
                   </span>
                 </div>
               </div>
@@ -519,20 +472,20 @@
       </div>
     </div>
     <div class="container loading-text" v-if="showloading">
-      <a style="background: #fff;padding:10px;" @click="loadMoreComment"
-        ><span>{{ $t('m.Load_More') }}...</span></a
-      >
+      <a style="background: #fff;padding:10px;" @click="loadMoreComment">
+        <span>{{ $t('m.Load_More') }}...</span>
+      </a>
     </div>
   </div>
 </template>
 
 <script>
-import Avatar from 'vue-avatar';
-import { mapGetters, mapState } from 'vuex';
-import myMessage from '@/common/message';
-import api from '@/common/api';
-import { addCodeBtn } from '@/common/codeblock';
-import Markdown from '@/components/oj/common/Markdown';
+import Avatar from "vue-avatar";
+import { mapGetters, mapState } from "vuex";
+import myMessage from "@/common/message";
+import api from "@/common/api";
+import { addCodeBtn } from "@/common/codeblock";
+import Markdown from "@/components/oj/common/Markdown";
 export default {
   props: {
     did: {
@@ -548,19 +501,19 @@ export default {
   },
   components: {
     Avatar,
-    Markdown
+    Markdown,
   },
   data() {
     return {
-      replyInputComment: '',
-      ownInputComment: '',
-      showItemId: '',
+      replyInputComment: "",
+      ownInputComment: "",
+      showItemId: "",
       faceList: [],
       comments: [],
       commentLikeMap: {},
       facelistVisiable: false,
       replyFacelistVisiable: false,
-      replyPlaceholder: '',
+      replyPlaceholder: "",
       query: {
         limit: 10,
         currentPage: 1,
@@ -571,19 +524,19 @@ export default {
       totalComment: 0,
       replyObj: {
         commentId: 0,
-        content: '',
-        toUid: '',
-        toName: '',
-        toAvatar: '',
+        content: "",
+        toUid: "",
+        toName: "",
+        toAvatar: "",
       },
       replyQuoteId: null,
-      replyQuoteType: 'Comment',
+      replyQuoteType: "Comment",
       loading: false,
     };
   },
 
   created() {
-    const appData = require('./emoji.json');
+    const appData = require("./emoji.json");
     for (let i in appData) {
       this.faceList.push(appData[i]);
     }
@@ -595,7 +548,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['userInfo', 'isAuthenticated', 'isAdminRole']),
+    ...mapGetters(["userInfo", "isAuthenticated", "isAdminRole"]),
     avatar() {
       return this.$store.getters.userInfo.avatar;
     },
@@ -604,7 +557,7 @@ export default {
     init() {
       let queryParams = Object.assign({}, this.query);
       this.replyPlaceholder = this.$i18n.t(
-        'm.Come_and_write_down_your_comments'
+        "m.Come_and_write_down_your_comments"
       );
       this.loading = true;
       api.getCommentList(queryParams).then(
@@ -637,11 +590,11 @@ export default {
       let toLike = this.commentLikeMap[item.id] != true;
 
       let sourceId = this.did;
-      let sourceType = 'Discussion';
+      let sourceType = "Discussion";
 
       if (this.cid != null) {
         sourceId = this.cid;
-        sourceType = 'Contest';
+        sourceType = "Contest";
       }
 
       api.toLikeComment(item.id, toLike, sourceId, sourceType).then((res) => {
@@ -659,7 +612,7 @@ export default {
      * 点击取消按钮
      */
     cancel() {
-      this.showItemId = '';
+      this.showItemId = "";
     },
 
     /**
@@ -667,16 +620,20 @@ export default {
      */
     commitComment() {
       if (!this.isAuthenticated) {
-        myMessage.warning(this.$i18n.t('m.Please_login_first'));
-        this.$store.dispatch('changeModalStatus', { visible: true });
+        myMessage.warning(this.$i18n.t("m.Please_login_first"));
+        this.$store.dispatch("changeModalStatus", { visible: true });
         return;
       }
-      if (this.ownInputComment.replace(/(^s*)|(s*$)/g, '').length == 0) {
-        myMessage.warning(this.$i18n.t('m.Content_cannot_be_empty'));
+      if (this.ownInputComment.replace(/(^s*)|(s*$)/g, "").length == 0) {
+        myMessage.warning(this.$i18n.t("m.Content_cannot_be_empty"));
         return;
       }
-      if(this.ownInputComment.length > 10000){
-        myMessage.error(this.$i18n.t("m.Comment_Content") + " " +this.$i18n.t("m.Can_not_exceed_10000"));
+      if (this.ownInputComment.length > 10000) {
+        myMessage.error(
+          this.$i18n.t("m.Comment_Content") +
+            " " +
+            this.$i18n.t("m.Can_not_exceed_10000")
+        );
         return;
       }
       let comment = {
@@ -688,8 +645,8 @@ export default {
         this.comments = [res.data.data].concat(this.comments);
         this.totalComment++;
         this.total++;
-        myMessage.success(this.$i18n.t('m.Comment_Successfully'));
-        this.ownInputComment = '';
+        myMessage.success(this.$i18n.t("m.Comment_Successfully"));
+        this.ownInputComment = "";
         this.$nextTick((_) => {
           addCodeBtn();
         });
@@ -702,16 +659,20 @@ export default {
 
     commitReply() {
       if (!this.isAuthenticated) {
-        myMessage.warning(this.$i18n.t('m.Please_login_first'));
-        this.$store.dispatch('changeModalStatus', { visible: true });
+        myMessage.warning(this.$i18n.t("m.Please_login_first"));
+        this.$store.dispatch("changeModalStatus", { visible: true });
         return;
       }
-      if (this.replyInputComment.replace(/(^s*)|(s*$)/g, '').length == 0) {
-        myMessage.warning(this.$i18n.t('m.Content_cannot_be_empty'));
+      if (this.replyInputComment.replace(/(^s*)|(s*$)/g, "").length == 0) {
+        myMessage.warning(this.$i18n.t("m.Content_cannot_be_empty"));
         return;
       }
-      if(this.replyInputComment.length > 10000){
-        myMessage.error(this.$i18n.t("m.Reply_Content") + " " +this.$i18n.t("m.Can_not_exceed_10000"));
+      if (this.replyInputComment.length > 10000) {
+        myMessage.error(
+          this.$i18n.t("m.Reply_Content") +
+            " " +
+            this.$i18n.t("m.Can_not_exceed_10000")
+        );
         return;
       }
       this.replyObj.content = this.replyInputComment;
@@ -743,8 +704,8 @@ export default {
           addCodeBtn();
         });
         this.totalComment++;
-        myMessage.success(this.$i18n.t('m.Reply_Successfully'));
-        this.replyInputComment = '';
+        myMessage.success(this.$i18n.t("m.Reply_Successfully"));
+        this.replyInputComment = "";
       });
     },
 
@@ -754,26 +715,26 @@ export default {
      * reply: 当前回复的评论
      */
     showCommentInput(item, reply) {
-      this.replyInputComment = '';
+      this.replyInputComment = "";
       if (reply) {
-        this.replyPlaceholder = '@' + reply.fromName;
+        this.replyPlaceholder = "@" + reply.fromName;
         // 对当前需要回复评论对象进行赋值
         this.replyObj.commentId = item.id;
         this.replyObj.toUid = reply.fromUid;
         this.replyObj.toName = reply.fromName;
         this.replyObj.toAvatar = reply.fromAvatar;
         this.replyQuoteId = reply.id;
-        this.replyQuoteType = 'Reply';
+        this.replyQuoteType = "Reply";
       } else {
         this.replyPlaceholder = this.$i18n.t(
-          'm.Come_and_write_down_your_comments'
+          "m.Come_and_write_down_your_comments"
         );
         this.replyObj.commentId = item.id;
         this.replyObj.toUid = item.fromUid;
         this.replyObj.toName = item.fromName;
         this.replyObj.toAvatar = item.fromAvatar;
         this.replyQuoteId = item.id;
-        this.replyQuoteType = 'Comment';
+        this.replyQuoteType = "Comment";
       }
       this.showItemId = item.id;
     },
@@ -783,24 +744,24 @@ export default {
      */
 
     deleteComment(comment, commentIndex) {
-      this.$confirm(this.$i18n.t('m.Delete_Comment_Tips'), 'Tips', {
-        confirmButtonText: this.$i18n.t('m.OK'),
-        cancelButtonText: this.$i18n.t('m.Cancel'),
-        type: 'warning',
+      this.$confirm(this.$i18n.t("m.Delete_Comment_Tips"), "Tips", {
+        confirmButtonText: this.$i18n.t("m.OK"),
+        cancelButtonText: this.$i18n.t("m.Cancel"),
+        type: "warning",
       })
         .then(() => {
           let commentDeleteData = {
             id: comment.id,
             fromUid: comment.fromUid,
             did: this.did,
-            cid: this.cid
+            cid: this.cid,
           };
           api.deleteComment(commentDeleteData).then((res) => {
             this.totalComment--;
             this.total--;
             this.totalComment -= comment.replyList.length;
             this.comments.splice(commentIndex, 1);
-            myMessage.success(this.$i18n.t('m.Delete_successfully'));
+            myMessage.success(this.$i18n.t("m.Delete_successfully"));
           });
         })
         .catch(() => {});
@@ -811,10 +772,10 @@ export default {
      */
 
     deleteReply(reply, commentIndex, replyIndex) {
-      this.$confirm(this.$i18n.t('m.Delete_Reply_Tips'), 'Tips', {
-        confirmButtonText: this.$i18n.t('m.OK'),
-        cancelButtonText: this.$i18n.t('m.Cancel'),
-        type: 'warning',
+      this.$confirm(this.$i18n.t("m.Delete_Reply_Tips"), "Tips", {
+        confirmButtonText: this.$i18n.t("m.OK"),
+        cancelButtonText: this.$i18n.t("m.Cancel"),
+        type: "warning",
       })
         .then(() => {
           let replyDeleteData = {
@@ -822,7 +783,7 @@ export default {
             reply: reply,
           };
           api.deleteReply(replyDeleteData).then((res) => {
-            myMessage.success(this.$i18n.t('m.Delete_successfully'));
+            myMessage.success(this.$i18n.t("m.Delete_successfully"));
             if (!this.comments[commentIndex].backupReplyList) {
               api
                 .getAllReply(this.comments[commentIndex].id, this.cid)
@@ -849,9 +810,8 @@ export default {
                   commentIndex
                 ].backupReplyList.slice(0, 3);
               } else {
-                this.comments[commentIndex].replyList = this.comments[
-                  commentIndex
-                ].backupReplyList;
+                this.comments[commentIndex].replyList =
+                  this.comments[commentIndex].backupReplyList;
               }
               this.comments[commentIndex].totalReplyNum--;
               this.totalComment--;
@@ -868,9 +828,9 @@ export default {
     getEmo(index, isOwn) {
       var textArea;
       if (isOwn) {
-        textArea = document.getElementById('own-textarea');
+        textArea = document.getElementById("own-textarea");
       } else {
-        textArea = document.getElementById('reply-textarea');
+        textArea = document.getElementById("reply-textarea");
       }
       function changeSelectedText(obj, str) {
         if (window.getSelection) {
@@ -898,22 +858,22 @@ export default {
     },
 
     addContentTips(num, isReply) {
-      let tips = '';
+      let tips = "";
       switch (num) {
         case 0:
-          tips = '`your inline code...`';
+          tips = "`your inline code...`";
           break;
         case 1:
-          tips = '\n```\ncode block\n```\n';
+          tips = "\n```\ncode block\n```\n";
           break;
         case 2:
-          tips = '[HOJ](https://hcode.top)';
+          tips = "[HOJ](https://hcode.top)";
           break;
         case 3:
-          tips = '\n- ...';
+          tips = "\n- ...";
           break;
         case 4:
-          tips = '\n1. ...';
+          tips = "\n1. ...";
           break;
       }
       if (isReply) {
@@ -929,7 +889,7 @@ export default {
 
     getInfoByUsername(uid, username) {
       this.$router.push({
-        path: '/user-home',
+        path: "/user-home",
         query: { uid, username },
       });
     },
@@ -966,7 +926,12 @@ export default {
     ...mapState({
       contest: (state) => state.contest.contest,
     }),
-    ...mapGetters(['isAuthenticated', 'userInfo', 'isAdminRole','isContestAdmin']),
+    ...mapGetters([
+      "isAuthenticated",
+      "userInfo",
+      "isAdminRole",
+      "isContestAdmin",
+    ]),
     showloading() {
       if (this.query.currentPage * this.query.limit >= this.total) {
         return false;

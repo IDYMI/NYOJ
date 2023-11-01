@@ -3,18 +3,13 @@
     <el-col :span="24">
       <el-card shadow="never">
         <div slot="header">
-          <span class="panel-title home-title">
-            {{ title }}
-          </span>
+          <span class="panel-title home-title">{{ title }}</span>
         </div>
         <el-form label-position="top">
           <el-row :gutter="20">
             <el-col :span="24">
               <el-form-item :label="$t('m.Contest_Title')" required>
-                <el-input
-                  v-model="contest.title"
-                  :placeholder="$t('m.Contest_Title')"
-                ></el-input>
+                <el-input v-model="contest.title" :placeholder="$t('m.Contest_Title')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -29,8 +24,7 @@
                   @change="changeDuration"
                   type="datetime"
                   :placeholder="$t('m.Contest_Start_Time')"
-                >
-                </el-date-picker>
+                ></el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :md="8" :xs="24">
@@ -40,14 +34,13 @@
                   @change="changeDuration"
                   type="datetime"
                   :placeholder="$t('m.Contest_End_Time')"
-                >
-                </el-date-picker>
+                ></el-date-picker>
               </el-form-item>
             </el-col>
 
             <el-col :md="8" :xs="24">
               <el-form-item :label="$t('m.Contest_Duration')" required>
-                <el-input v-model="durationText" disabled> </el-input>
+                <el-input v-model="durationText" disabled></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -61,35 +54,28 @@
                   :label="0"
                   @change="setSealRankTimeDefaultValue"
                   :disabled="disableRuleType"
-                  >ACM</el-radio
-                >
+                >ACM</el-radio>
                 <el-radio
                   class="radio"
                   v-model="contest.type"
                   :label="1"
                   :disabled="disableRuleType"
                   @change="setSealRankTimeDefaultValue"
-                  >OI</el-radio
-                >
+                >OI</el-radio>
               </el-form-item>
             </el-col>
             <el-col :md="8" :xs="24">
-              <el-form-item
-                :label="$t('m.OI_Rank_Score_Type')"
-                v-show="contest.type == 1"
-              >
+              <el-form-item :label="$t('m.OI_Rank_Score_Type')" v-show="contest.type == 1">
                 <el-radio
                   class="radio"
                   v-model="contest.oiRankScoreType"
                   label="Recent"
-                  >{{ $t("m.OI_Rank_Score_Type_Recent") }}</el-radio
-                >
+                >{{ $t("m.OI_Rank_Score_Type_Recent") }}</el-radio>
                 <el-radio
                   class="radio"
                   v-model="contest.oiRankScoreType"
                   label="Highest"
-                  >{{ $t("m.OI_Rank_Score_Type_Highest") }}</el-radio
-                >
+                >{{ $t("m.OI_Rank_Score_Type_Highest") }}</el-radio>
               </el-form-item>
             </el-col>
           </el-row>
@@ -100,8 +86,7 @@
                   v-model="contest.sealRank"
                   active-color="#13ce66"
                   inactive-color="#ff4949"
-                >
-                </el-switch>
+                ></el-switch>
               </el-form-item>
             </el-col>
 
@@ -110,10 +95,9 @@
                 <el-switch
                   v-model="contest.sealRank"
                   active-color="#13ce66"
-                  inactive-color=""
+                  inactive-color
                   @change="setSealRankTimeDefaultValue"
-                >
-                </el-switch>
+                ></el-switch>
               </el-form-item>
             </el-col>
 
@@ -134,56 +118,40 @@
                     :value="1"
                     :disabled="contest.duration < 3600"
                   ></el-option>
-                  <el-option
-                    :label="$t('m.Contest_Seal_All_Hour')"
-                    :value="2"
-                  ></el-option>
+                  <el-option :label="$t('m.Contest_Seal_All_Hour')" :value="2"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
 
             <el-col :md="8" :xs="24">
-              <el-form-item
-                :label="$t('m.Auto_Real_Rank')"
-                required
-                v-show="contest.sealRank"
-              >
+              <el-form-item :label="$t('m.Auto_Real_Rank')" required v-show="contest.sealRank">
                 <el-switch
                   v-model="contest.autoRealRank"
                   :active-text="$t('m.Real_Rank_After_Contest')"
                   :inactive-text="$t('m.Seal_Rank_After_Contest')"
-                >
-                </el-switch>
+                ></el-switch>
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-row>
             <el-col :md="8" :xs="24">
-              <el-form-item
-                :label="$t('m.Contest_Outside_ScoreBoard')"
-                required
-              >
+              <el-form-item :label="$t('m.Contest_Outside_ScoreBoard')" required>
                 <el-switch
                   v-model="contest.openRank"
                   :active-text="$t('m.Open')"
                   :inactive-text="$t('m.Close')"
-                >
-                </el-switch>
+                ></el-switch>
               </el-form-item>
             </el-col>
 
             <el-col :md="8" :xs="24">
-              <el-form-item
-                :label="$t('m.Allow_Submission_After_The_Contest_Ends')"
-                required
-              >
+              <el-form-item :label="$t('m.Allow_Submission_After_The_Contest_Ends')" required>
                 <el-switch
                   v-model="contest.allowEndSubmit"
                   :active-text="$t('m.Open')"
                   :inactive-text="$t('m.Close')"
-                >
-                </el-switch>
+                ></el-switch>
               </el-form-item>
             </el-col>
 
@@ -193,8 +161,7 @@
                   v-model="contest.openPrint"
                   :active-text="$t('m.Support_Offline_Print')"
                   :inactive-text="$t('m.Not_Support_Print')"
-                >
-                </el-switch>
+                ></el-switch>
               </el-form-item>
             </el-col>
           </el-row>
@@ -203,15 +170,21 @@
             <el-col :span="24">
               <el-form-item :label="$t('m.Rank_Show_Name')" required>
                 <el-radio-group v-model="contest.rankShowName">
-                  <el-radio label="username">{{
+                  <el-radio label="username">
+                    {{
                     $t("m.Show_Username")
-                  }}</el-radio>
-                  <el-radio label="nickname">{{
+                    }}
+                  </el-radio>
+                  <el-radio label="nickname">
+                    {{
                     $t("m.Show_Nickname")
-                  }}</el-radio>
-                  <el-radio label="realname">{{
+                    }}
+                  </el-radio>
+                  <el-radio label="realname">
+                    {{
                     $t("m.Show_Realname")
-                  }}</el-radio>
+                    }}
+                  </el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
@@ -227,8 +200,7 @@
                   size="medium"
                   @close="removeStarUser(username)"
                   style="margin-right: 7px; margin-top: 4px"
-                  >{{ username }}</el-tag
-                >
+                >{{ username }}</el-tag>
                 <el-input
                   v-if="inputVisible"
                   size="medium"
@@ -237,14 +209,8 @@
                   :trigger-on-focus="true"
                   @keyup.enter.native="addStarUser"
                   @blur="addStarUser"
-                >
-                </el-input>
-                <el-tooltip
-                  effect="dark"
-                  :content="$t('m.Add')"
-                  placement="top"
-                  v-else
-                >
+                ></el-input>
+                <el-tooltip effect="dark" :content="$t('m.Add')" placement="top" v-else>
                   <el-button
                     class="button-new-tag"
                     size="small"
@@ -270,10 +236,7 @@
                 v-show="contest.auth != 0"
                 :required="contest.auth != 0"
               >
-                <el-input
-                  v-model="contest.pwd"
-                  :placeholder="$t('m.Contest_Password')"
-                ></el-input>
+                <el-input v-model="contest.pwd" :placeholder="$t('m.Contest_Password')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :md="8" :xs="24">
@@ -282,7 +245,7 @@
                 v-show="contest.auth != 0"
                 :required="contest.auth != 0"
               >
-                <el-switch v-model="contest.openAccountLimit"> </el-switch>
+                <el-switch v-model="contest.openAccountLimit"></el-switch>
               </el-form-item>
             </el-col>
 
@@ -290,59 +253,43 @@
               <el-form :model="formRule">
                 <el-col :md="6" :xs="24">
                   <el-form-item :label="$t('m.Prefix')" prop="prefix">
-                    <el-input
-                      v-model="formRule.prefix"
-                      placeholder="Prefix"
-                    ></el-input>
+                    <el-input v-model="formRule.prefix" placeholder="Prefix"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :md="6" :xs="24">
                   <el-form-item :label="$t('m.Suffix')" prop="suffix">
-                    <el-input
-                      v-model="formRule.suffix"
-                      placeholder="Suffix"
-                    ></el-input>
+                    <el-input v-model="formRule.suffix" placeholder="Suffix"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :md="6" :xs="24">
-                  <el-form-item
-                    :label="$t('m.Start_Number')"
-                    prop="number_from"
-                  >
-                    <el-input-number
-                      v-model="formRule.number_from"
-                      style="width: 100%"
-                    ></el-input-number>
+                  <el-form-item :label="$t('m.Start_Number')" prop="number_from">
+                    <el-input-number v-model="formRule.number_from" style="width: 100%"></el-input-number>
                   </el-form-item>
                 </el-col>
                 <el-col :md="6" :xs="24">
                   <el-form-item :label="$t('m.End_Number')" prop="number_to">
-                    <el-input-number
-                      v-model="formRule.number_to"
-                      style="width: 100%"
-                    ></el-input-number>
+                    <el-input-number v-model="formRule.number_to" style="width: 100%"></el-input-number>
                   </el-form-item>
                 </el-col>
 
-                <div
-                  class="userPreview"
-                  v-if="formRule.number_from <= formRule.number_to"
-                >
+                <div class="userPreview" v-if="formRule.number_from <= formRule.number_to">
                   {{ $t("m.The_allowed_account_will_be") }}
                   {{
-                    formRule.prefix + formRule.number_from + formRule.suffix
+                  formRule.prefix + formRule.number_from + formRule.suffix
                   }},
-                  <span v-if="formRule.number_from + 1 < formRule.number_to">
+                  <span
+                    v-if="formRule.number_from + 1 < formRule.number_to"
+                  >
                     {{
-                      formRule.prefix +
-                      (formRule.number_from + 1) +
-                      formRule.suffix +
-                      "..."
+                    formRule.prefix +
+                    (formRule.number_from + 1) +
+                    formRule.suffix +
+                    "..."
                     }}
                   </span>
-                  <span v-if="formRule.number_from + 1 <= formRule.number_to">
-                    {{ formRule.prefix + formRule.number_to + formRule.suffix }}
-                  </span>
+                  <span
+                    v-if="formRule.number_from + 1 <= formRule.number_to"
+                  >{{ formRule.prefix + formRule.number_to + formRule.suffix }}</span>
                 </div>
 
                 <el-col :md="24" :xs="24">
@@ -352,30 +299,17 @@
                       :placeholder="$t('m.Extra_Account_Tips')"
                       :rows="8"
                       v-model="formRule.extra_account"
-                    >
-                    </el-input>
+                    ></el-input>
                   </el-form-item>
                 </el-col>
               </el-form>
             </template>
             <el-col :md="24" :xs="24">
               <el-form-item :label="$t('m.Contest_Award')" required>
-                <el-select
-                  v-model="contest.awardType"
-                  @change="contestAwardTypeChange"
-                >
-                  <el-option
-                    :label="$t('m.Contest_Award_Null')"
-                    :value="0"
-                  ></el-option>
-                  <el-option
-                    :label="$t('m.Contest_Award_Set_Proportion')"
-                    :value="1"
-                  ></el-option>
-                  <el-option
-                    :label="$t('m.Contest_Award_Set_Number')"
-                    :value="2"
-                  ></el-option>
+                <el-select v-model="contest.awardType" @change="contestAwardTypeChange">
+                  <el-option :label="$t('m.Contest_Award_Null')" :value="0"></el-option>
+                  <el-option :label="$t('m.Contest_Award_Set_Proportion')" :value="1"></el-option>
+                  <el-option :label="$t('m.Contest_Award_Set_Number')" :value="2"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -417,25 +351,20 @@
                   :title="$t('m.Contest_Award_Priority')"
                   :edit-render="{ name: 'input', attrs: { type: 'number' } }"
                   sortable
-                >
-                </vxe-table-column>
+                ></vxe-table-column>
                 <vxe-table-column
                   field="name"
                   min-width="150"
                   :title="$t('m.Contest_Award_Name')"
                   :edit-render="{ name: 'input', attrs: { type: 'text' } }"
-                >
-                </vxe-table-column>
+                ></vxe-table-column>
                 <vxe-table-column
                   field="background"
                   min-width="150"
                   :title="$t('m.Contest_Award_Background')"
                 >
                   <template v-slot="{ row }">
-                    <el-color-picker
-                      v-model="row.background"
-                      size="small"
-                    ></el-color-picker>
+                    <el-color-picker v-model="row.background" size="small"></el-color-picker>
                   </template>
                 </vxe-table-column>
                 <vxe-table-column
@@ -444,18 +373,11 @@
                   :title="$t('m.Contest_Award_Color')"
                 >
                   <template v-slot="{ row }">
-                    <el-color-picker
-                      v-model="row.color"
-                      size="small"
-                    ></el-color-picker>
+                    <el-color-picker v-model="row.color" size="small"></el-color-picker>
                   </template>
                 </vxe-table-column>
 
-                <vxe-table-column
-                  field="show"
-                  min-width="150"
-                  :title="$t('m.Contest_Award_Show')"
-                >
+                <vxe-table-column field="show" min-width="150" :title="$t('m.Contest_Award_Show')">
                   <template v-slot="{ row }">
                     <RankBox
                       :name="row.name"
@@ -490,17 +412,18 @@
                       v-model="row.num"
                       size="small"
                       v-else
-                    >
-                    </el-input>
+                    ></el-input>
                   </template>
                 </vxe-table-column>
               </vxe-table>
             </el-col>
           </el-row>
         </el-form>
-        <el-button type="primary" @click.native="submit">{{
+        <el-button type="primary" @click.native="submit">
+          {{
           $t("m.Save")
-        }}</el-button>
+          }}
+        </el-button>
       </el-card>
     </el-col>
   </el-row>

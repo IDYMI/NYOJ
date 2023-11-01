@@ -1,62 +1,31 @@
 <template>
   <div>
-    <vxe-table
-      stripe
-      auto-resize
-      :data="adminAnnouncementList"
-      :loading="loading"
-      align="center"
-    >
-      <vxe-table-column min-width="50" field="id" title="ID">
-      </vxe-table-column>
+    <vxe-table stripe auto-resize :data="adminAnnouncementList" :loading="loading" align="center">
+      <vxe-table-column min-width="50" field="id" title="ID"></vxe-table-column>
       <vxe-table-column
         min-width="150"
         field="title"
         show-overflow
         :title="$t('m.Announcement_Title')"
-      >
+      ></vxe-table-column>
+      <vxe-table-column min-width="150" field="gmtCreate" :title="$t('m.Created_Time')">
+        <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
       </vxe-table-column>
-      <vxe-table-column
-        min-width="150"
-        field="gmtCreate"
-        :title="$t('m.Created_Time')"
-      >
-        <template v-slot="{ row }">
-          {{ row.gmtCreate | localtime }}
-        </template>
+      <vxe-table-column min-width="150" field="gmtModified" :title="$t('m.Modified_Time')">
+        <template v-slot="{ row }">{{ row.gmtModified | localtime }}</template>
       </vxe-table-column>
-      <vxe-table-column
-        min-width="150"
-        field="gmtModified"
-        :title="$t('m.Modified_Time')"
-      >
-        <template v-slot="{ row }">
-          {{ row.gmtModified | localtime }}
-        </template>
-      </vxe-table-column>
-      <vxe-table-column
-        min-width="150"
-        field="username"
-        show-overflow
-        :title="$t('m.Author')"
-      >
-      </vxe-table-column>
-      <vxe-table-column
-        min-width="100"
-        field="status"
-        :title="$t('m.Announcement_visible')"
-      >
+      <vxe-table-column min-width="150" field="username" show-overflow :title="$t('m.Author')"></vxe-table-column>
+      <vxe-table-column min-width="100" field="status" :title="$t('m.Announcement_visible')">
         <template v-slot="{ row }">
           <el-switch
             v-model="row.status"
-            active-text=""
-            inactive-text=""
+            active-text
+            inactive-text
             :active-value="0"
             :inactive-value="1"
             @change="handleVisibleSwitch(row)"
             :disabled="!isGroupRoot && row.uid != userInfo.uid"
-          >
-          </el-switch>
+          ></el-switch>
         </template>
       </vxe-table-column>
       <vxe-table-column :title="$t('m.Option')" min-width="150">
@@ -107,14 +76,13 @@
       @open="onOpenEditDialog"
       style="text-align: left"
     >
-      <el-form label-position="top" :model="announcement" >
+      <el-form label-position="top" :model="announcement">
         <el-form-item :label="$t('m.Announcement_Title')" required>
           <el-input
             v-model="announcement.title"
             :placeholder="$t('m.Announcement_Title')"
             class="title-input"
-          >
-          </el-input>
+          ></el-input>
         </el-form-item>
         <el-form-item :label="$t('m.Announcement_Content')" required>
           <Editor :value.sync="announcement.content"></Editor>
@@ -125,44 +93,44 @@
             v-model="announcement.status"
             :active-value="0"
             :inactive-value="1"
-            active-text=""
-            inactive-text=""
-          >
-          </el-switch>
+            active-text
+            inactive-text
+          ></el-switch>
         </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button
           type="danger"
           @click.native="showEditAnnouncementDialog = false"
-          >{{ $t('m.Cancel') }}</el-button
-        >
-        <el-button type="primary" @click.native="submitAnnouncement">{{
+        >{{ $t('m.Cancel') }}</el-button>
+        <el-button type="primary" @click.native="submitAnnouncement">
+          {{
           $t('m.OK')
-        }}</el-button>
+          }}
+        </el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import api from '@/common/api';
-import mMessage from '@/common/message';
-import Editor from '@/components/admin/Editor.vue';
-import AnnouncementList from '@/components/oj/group/AnnouncementList.vue';
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import api from "@/common/api";
+import mMessage from "@/common/message";
+import Editor from "@/components/admin/Editor.vue";
+import AnnouncementList from "@/components/oj/group/AnnouncementList.vue";
 export default {
-  name: 'GroupAnnouncementList',
+  name: "GroupAnnouncementList",
   components: {
     Pagination,
     Editor,
-    AnnouncementList
+    AnnouncementList,
   },
   props: {
     contestId: {
       type: Number,
-      default: null
+      default: null,
     },
   },
   data() {
@@ -171,18 +139,18 @@ export default {
       adminTotal: 0,
       currentPage: 1,
       limit: 10,
-      mode: 'create',
+      mode: "create",
       adminAnnouncementList: [],
       announcement: {
         id: null,
-        title: '',
-        content: '',
+        title: "",
+        content: "",
         status: 0,
-        uid: '',
+        uid: "",
       },
-      announcementDialogTitle: 'Edit Announcement',
+      announcementDialogTitle: "Edit Announcement",
       loading: false,
-      routeName: '',
+      routeName: "",
     };
   },
   mounted() {
@@ -206,43 +174,55 @@ export default {
     },
     getGroupAdminAnnouncementList() {
       this.loading = true;
-      api.getGroupAdminAnnouncementList(this.currentPage, this.limit, this.$route.params.groupID).then(
-        (res) => {
-          this.adminAnnouncementList = res.data.data.records;
-          this.adminTotal = res.data.data.total;
-          this.loading = false;
-        },
-        (err) => {
-          this.loading = false;
-        }
-      );
+      api
+        .getGroupAdminAnnouncementList(
+          this.currentPage,
+          this.limit,
+          this.$route.params.groupID
+        )
+        .then(
+          (res) => {
+            this.adminAnnouncementList = res.data.data.records;
+            this.adminTotal = res.data.data.total;
+            this.loading = false;
+          },
+          (err) => {
+            this.loading = false;
+          }
+        );
     },
     getGroupContestAnnouncementList() {
       this.loading = true;
-      api.getGroupContestAnnouncementList(this.currentPage, this.limit, this.contestId).then(
-        (res) => {
-          this.adminAnnouncementList = res.data.data.records;
-          this.adminTotal = res.data.data.total;
-          this.loading = false;
-        },
-        (err) => {
-          this.loading = false;
-        }
-      );
+      api
+        .getGroupContestAnnouncementList(
+          this.currentPage,
+          this.limit,
+          this.contestId
+        )
+        .then(
+          (res) => {
+            this.adminAnnouncementList = res.data.data.records;
+            this.adminTotal = res.data.data.total;
+            this.loading = false;
+          },
+          (err) => {
+            this.loading = false;
+          }
+        );
     },
     onOpenEditDialog() {
       setTimeout(() => {
         if (document.createEvent) {
-          let event = document.createEvent('HTMLEvents');
-          event.initEvent('resize', true, true);
+          let event = document.createEvent("HTMLEvents");
+          event.initEvent("resize", true, true);
           window.dispatchEvent(event);
         } else if (document.createEventObject) {
-          window.fireEvent('onresize');
+          window.fireEvent("onresize");
         }
       }, 0);
     },
     submitAnnouncement(data = undefined) {
-      let funcName = '';
+      let funcName = "";
       if (!data.id) {
         data = this.announcement;
       }
@@ -255,42 +235,48 @@ export default {
         };
         requestData = announcement;
         funcName =
-          this.mode === 'edit'
-            ? 'updateGroupContestAnnouncement'
-            : 'addGroupContestAnnouncement';
+          this.mode === "edit"
+            ? "updateGroupContestAnnouncement"
+            : "addGroupContestAnnouncement";
       } else {
         funcName =
-          this.mode === 'edit'
-            ? 'updateGroupAnnouncement'
-            : 'addGroupAnnouncement';
+          this.mode === "edit"
+            ? "updateGroupAnnouncement"
+            : "addGroupAnnouncement";
         requestData = data;
       }
       api[funcName](requestData)
         .then((res) => {
           this.showEditAnnouncementDialog = false;
-          mMessage.success(this.$i18n.t('m.Post_successfully'));
+          mMessage.success(this.$i18n.t("m.Post_successfully"));
           this.currentChange(1);
         })
         .catch();
     },
     deleteAnnouncement(announcementId) {
-      this.$confirm(this.$i18n.t('m.Delete_Announcement_Tips'), this.$i18n.t('m.Warning'), {
-        confirmButtonText: this.$i18n.t('m.OK'),
-        cancelButtonText: this.$i18n.t('m.Cancel'),
-        type: 'warning',
-      })
+      this.$confirm(
+        this.$i18n.t("m.Delete_Announcement_Tips"),
+        this.$i18n.t("m.Warning"),
+        {
+          confirmButtonText: this.$i18n.t("m.OK"),
+          cancelButtonText: this.$i18n.t("m.Cancel"),
+          type: "warning",
+        }
+      )
         .then(() => {
           this.loading = true;
           if (this.contestId) {
-            api.deleteGroupContestAnnouncement(announcementId, this.contestId).then((res) => {
-              this.loading = true;
-              mMessage.success(this.$i18n.t('m.Delete_successfully'));
-              this.init();
-            });
+            api
+              .deleteGroupContestAnnouncement(announcementId, this.contestId)
+              .then((res) => {
+                this.loading = true;
+                mMessage.success(this.$i18n.t("m.Delete_successfully"));
+                this.init();
+              });
           } else {
             api.deleteGroupAnnouncement(announcementId).then((res) => {
               this.loading = true;
-              mMessage.success(this.$i18n.t('m.Delete_successfully'));
+              mMessage.success(this.$i18n.t("m.Delete_successfully"));
               this.init();
             });
           }
@@ -302,21 +288,21 @@ export default {
     openAnnouncementDialog(row) {
       this.showEditAnnouncementDialog = true;
       if (row !== null) {
-        this.announcementDialogTitle = this.$i18n.t('m.Edit_Announcement');
+        this.announcementDialogTitle = this.$i18n.t("m.Edit_Announcement");
         this.announcement = Object.assign({}, row);
-        this.mode = 'edit';
+        this.mode = "edit";
       } else {
-        this.announcementDialogTitle = this.$i18n.t('m.Create_Announcement');
-        this.announcement.title = '';
+        this.announcementDialogTitle = this.$i18n.t("m.Create_Announcement");
+        this.announcement.title = "";
         this.announcement.status = 0;
-        this.announcement.content = '';
+        this.announcement.content = "";
         this.announcement.uid = this.userInfo.uid;
         this.announcement.username = this.userInfo.username;
-        this.mode = 'add';
+        this.mode = "add";
       }
     },
     handleVisibleSwitch(row) {
-      this.mode = 'edit';
+      this.mode = "edit";
       this.submitAnnouncement({
         id: row.id,
         title: row.title,
@@ -327,7 +313,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['userInfo', 'isGroupRoot']),
+    ...mapGetters(["userInfo", "isGroupRoot"]),
   },
 };
 </script>

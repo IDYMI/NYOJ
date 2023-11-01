@@ -1,8 +1,7 @@
-
 import $ from 'jquery'
 import myMessage from '@/common/message';
 export const addCodeBtn = _ => {
-	//markdown代码存放在pre code 标签对中
+  //markdown代码存放在pre code 标签对中
   $('pre code').each(function () {
     let lines = $(this).text().split('\n').length - 1
     //添加有序列表
@@ -29,4 +28,3 @@ export const addCodeBtn = _ => {
     myMessage.success('success')
   })
 }
-

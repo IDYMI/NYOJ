@@ -4,25 +4,20 @@
       <el-col :md="12" :sm="24">
         <el-card class="container">
           <div slot="header">
-            <span class="panel-title home-title">{{
+            <span class="panel-title home-title">
+              {{
               $t('m.Compiler') + ' & ' + $t('m.Example')
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="content">
             <ul>
               <li v-for="lang in languages" :key="lang.name">
                 {{ lang.name }} ( {{ lang.description }} )
-                <p style="color: #409EFF;font-size:16px">
-                  {{ $t('m.Compiler') }}
-                </p>
+                <p style="color: #409EFF;font-size:16px">{{ $t('m.Compiler') }}</p>
                 <pre>{{ lang.compileCommand }}</pre>
-                <p style="color: #409EFF;font-size:16px">
-                  A+B {{ $t('m.Problem') }}
-                </p>
-                <Highlight
-                  :code="lang.template"
-                  :language="lang.name"
-                ></Highlight>
+                <p style="color: #409EFF;font-size:16px">A+B {{ $t('m.Problem') }}</p>
+                <Highlight :code="lang.template" :language="lang.name"></Highlight>
               </li>
             </ul>
           </div>
@@ -31,9 +26,11 @@
       <el-col :md="12" :sm="24">
         <el-card class="container">
           <div slot="header">
-            <span class="panel-title home-title">{{
+            <span class="panel-title home-title">
+              {{
               $t('m.Result_Explanation')
-            }}</span>
+              }}
+            </span>
           </div>
           <ul class="result">
             <li>
@@ -53,52 +50,64 @@
               ：{{ $t('m.Judging_Description') }}
             </li>
             <li>
-              <span :class="getStatusColor(-2)">Compile Error</span> :
+              <span :class="getStatusColor(-2)">Compile Error</span>
+              :
               {{ $t('m.Compile_Error_Description') }}
             </li>
             <li>
-              <span :class="getStatusColor(-3)">Presentation Error</span> :
+              <span :class="getStatusColor(-3)">Presentation Error</span>
+              :
               {{ $t('m.Persentation_Error_Description') }}
             </li>
             <li>
-              <span :class="getStatusColor(8)">Partial Accepted</span> :
+              <span :class="getStatusColor(8)">Partial Accepted</span>
+              :
               {{ $t('m.Partial_Accepted_Description') }}
             </li>
             <li>
-              <span :class="getStatusColor(0)">Accepted</span> :
+              <span :class="getStatusColor(0)">Accepted</span>
+              :
               {{ $t('m.Accepted_Description') }}
             </li>
             <li>
-              <span :class="getStatusColor(-1)">Wrong Answer</span> :
+              <span :class="getStatusColor(-1)">Wrong Answer</span>
+              :
               {{ $t('m.Wrong_Answer_Description') }}
             </li>
             <li>
-              <span :class="getStatusColor(3)">Runtime Error</span> :
+              <span :class="getStatusColor(3)">Runtime Error</span>
+              :
               {{ $t('m.Runtime_Error_Description') }}
             </li>
             <li>
-              <span :class="getStatusColor(1)">Time Limit Exceeded</span> :
+              <span :class="getStatusColor(1)">Time Limit Exceeded</span>
+              :
               {{ $t('m.Time_Limit_Exceeded_Description') }}
             </li>
             <li>
-              <span :class="getStatusColor(2)">Memory Limit Exceeded</span> :
+              <span :class="getStatusColor(2)">Memory Limit Exceeded</span>
+              :
               {{ $t('m.Memory_Limit_Exceeded_Description') }}
             </li>
             <li>
-              <span :class="getStatusColor(4)">System Error</span> :
+              <span :class="getStatusColor(4)">System Error</span>
+              :
               {{ $t('m.System_Error_Description') }}
             </li>
             <li>
-              <span :class="getStatusColor(-4)">Cancelled</span> :
+              <span :class="getStatusColor(-4)">Cancelled</span>
+              :
               {{ $t('m.Cancelled_Description') }}
             </li>
           </ul>
         </el-card>
         <el-card class="container">
           <div slot="header">
-            <span class="panel-title home-title">{{
+            <span class="panel-title home-title">
+              {{
               $t('m.Compile_Explanation')
-            }}</span>
+              }}
+            </span>
           </div>
           <ul class="result">
             <li>1. {{ $t('m.Compile_Tips1') }}</li>
@@ -113,10 +122,10 @@
 </template>
 
 <script>
-import utils from '@/common/utils';
-import { JUDGE_STATUS } from '@/common/constants';
-import { addCodeBtn } from '@/common/codeblock';
-const Highlight = () => import('@/components/oj/common/Highlight');
+import utils from "@/common/utils";
+import { JUDGE_STATUS } from "@/common/constants";
+import { addCodeBtn } from "@/common/codeblock";
+const Highlight = () => import("@/components/oj/common/Highlight");
 export default {
   components: {
     Highlight,
@@ -136,14 +145,14 @@ export default {
   },
   methods: {
     getStatusColor(status) {
-      return 'el-tag el-tag--medium status-' + JUDGE_STATUS[status].color;
+      return "el-tag el-tag--medium status-" + JUDGE_STATUS[status].color;
     },
   },
   beforeRouteEnter(to, from, next) {
     utils.getLanguages(true).then((languages) => {
       next((vm) => {
-        vm.languages = languages.filter(function(element, index, array) {
-          return element.oj == 'ME';
+        vm.languages = languages.filter(function (element, index, array) {
+          return element.oj == "ME";
         });
       });
     });

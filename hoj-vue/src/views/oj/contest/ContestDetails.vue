@@ -30,11 +30,7 @@
                 style="margin-left: 10px"
                 placement="top"
               >
-                <el-button
-                  size="small"
-                  type="primary"
-                  @click="toGroupContestList(contest.gid)"
-                >
+                <el-button size="small" type="primary" @click="toGroupContestList(contest.gid)">
                   <i class="fa fa-users"></i>
                   {{ $t("m.Group_Contest_Tag") }}
                 </el-button>
@@ -42,11 +38,8 @@
             </el-col>
             <el-col :span="10" style="text-align: right">
               <el-button size="small" plain v-if="contest.count != null">
-                <i
-                  class="el-icon-user-solid"
-                  style="color: rgb(48, 145, 242)"
-                ></i
-                >x{{ contest.count }}
+                <i class="el-icon-user-solid" style="color: rgb(48, 145, 242)"></i>
+                x{{ contest.count }}
               </el-button>
               <template v-if="contest.type == 0">
                 <el-button size="small" :type="'primary'">
@@ -98,7 +91,7 @@
               v-model="progressValue"
               :format-tooltip="formatTooltip"
               :step="timeStep"
-            ></el-slider> -->
+            ></el-slider>-->
             <Timebar
               :progressValue="progressValue"
               :Tooltip="formatTooltip()"
@@ -116,9 +109,7 @@
           </el-row>
           <div class="contest-config" v-if="isShowContestSetting">
             <el-popover trigger="hover" placement="left-start">
-              <el-button round size="small" slot="reference">
-                {{ $t("m.Contest_Setting") }}
-              </el-button>
+              <el-button round size="small" slot="reference">{{ $t("m.Contest_Setting") }}</el-button>
               <div class="contest-config-switches">
                 <p>
                   <span>{{ $t("m.Contains_Submission_After_Contest") }}</span>
@@ -135,24 +126,21 @@
 
       <el-tabs @tab-click="tabClick" v-model="route_name">
         <el-tab-pane name="ContestDetails" lazy>
-          <span slot="label"
-            ><i class="el-icon-s-home"></i>&nbsp;{{ $t("m.Overview") }}</span
-          >
+          <span slot="label">
+            <i class="el-icon-s-home"></i>
+            &nbsp;{{ $t("m.Overview") }}
+          </span>
           <el-card
             v-if="passwordFormVisible"
             class="password-form-card"
             style="text-align: center; margin-bottom: 15px"
           >
             <div slot="header">
-              <span class="panel-title" style="color: #e6a23c"
-                ><i class="el-icon-warning">
-                  {{ $t("m.Password_Required") }}</i
-                ></span
-              >
+              <span class="panel-title" style="color: #e6a23c">
+                <i class="el-icon-warning">{{ $t("m.Password_Required") }}</i>
+              </span>
             </div>
-            <p class="password-form-tips">
-              {{ $t("m.To_Enter_Need_Password") }}
-            </p>
+            <p class="password-form-tips">{{ $t("m.To_Enter_Need_Password") }}</p>
             <el-form>
               <el-input
                 v-model="contestPassword"
@@ -165,76 +153,57 @@
                 type="primary"
                 @click="checkPassword"
                 style="float: right"
-                >{{ $t("m.Enter") }}</el-button
-              >
+              >{{ $t("m.Enter") }}</el-button>
             </el-form>
           </el-card>
           <el-card class="box-card">
-            <Markdown
-              :isAvoidXss="contest.gid != null"
-              :content="contest.description"
-            >
-            </Markdown>
+            <Markdown :isAvoidXss="contest.gid != null" :content="contest.description"></Markdown>
           </el-card>
         </el-tab-pane>
 
-        <el-tab-pane
-          name="ContestProblemList"
-          lazy
-          :disabled="contestMenuDisabled"
-        >
-          <span slot="label"
-            ><i class="fa fa-list" aria-hidden="true"></i>&nbsp;{{
-              $t("m.Problem")
-            }}</span
-          >
+        <el-tab-pane name="ContestProblemList" lazy :disabled="contestMenuDisabled">
+          <span slot="label">
+            <i class="fa fa-list" aria-hidden="true"></i>
+            &nbsp;{{
+            $t("m.Problem")
+            }}
+          </span>
           <transition name="el-zoom-in-bottom">
-            <router-view
-              v-if="route_name === 'ContestProblemList'"
-            ></router-view>
+            <router-view v-if="route_name === 'ContestProblemList'"></router-view>
           </transition>
         </el-tab-pane>
 
-        <el-tab-pane
-          name="ContestSubmissionList"
-          lazy
-          :disabled="contestMenuDisabled"
-        >
-          <span slot="label"
-            ><i class="el-icon-menu"></i>&nbsp;{{ $t("m.Status") }}</span
-          >
+        <el-tab-pane name="ContestSubmissionList" lazy :disabled="contestMenuDisabled">
+          <span slot="label">
+            <i class="el-icon-menu"></i>
+            &nbsp;{{ $t("m.Status") }}
+          </span>
           <transition name="el-zoom-in-bottom">
-            <router-view
-              v-if="route_name === 'ContestSubmissionList'"
-            ></router-view>
+            <router-view v-if="route_name === 'ContestSubmissionList'"></router-view>
           </transition>
         </el-tab-pane>
 
         <el-tab-pane name="ContestRank" lazy :disabled="contestMenuDisabled">
-          <span slot="label"
-            ><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;{{
-              $t("m.NavBar_Rank")
-            }}</span
-          >
+          <span slot="label">
+            <i class="fa fa-bar-chart" aria-hidden="true"></i>
+            &nbsp;{{
+            $t("m.NavBar_Rank")
+            }}
+          </span>
           <transition name="el-zoom-in-bottom">
             <router-view v-if="route_name === 'ContestRank'"></router-view>
           </transition>
         </el-tab-pane>
 
-        <el-tab-pane
-          name="ContestAnnouncementList"
-          lazy
-          :disabled="contestMenuDisabled"
-        >
-          <span slot="label"
-            ><i class="fa fa-bullhorn" aria-hidden="true"></i>&nbsp;{{
-              $t("m.Announcement")
-            }}</span
-          >
+        <el-tab-pane name="ContestAnnouncementList" lazy :disabled="contestMenuDisabled">
+          <span slot="label">
+            <i class="fa fa-bullhorn" aria-hidden="true"></i>
+            &nbsp;{{
+            $t("m.Announcement")
+            }}
+          </span>
           <transition name="el-zoom-in-bottom">
-            <router-view
-              v-if="route_name === 'ContestAnnouncementList'"
-            ></router-view>
+            <router-view v-if="route_name === 'ContestAnnouncementList'"></router-view>
           </transition>
         </el-tab-pane>
 
@@ -244,11 +213,12 @@
           :disabled="contestMenuDisabled"
           v-if="websiteConfig.openContestComment"
         >
-          <span slot="label"
-            ><i class="fa fa-commenting" aria-hidden="true"></i>&nbsp;{{
-              $t("m.Comment")
-            }}</span
-          >
+          <span slot="label">
+            <i class="fa fa-commenting" aria-hidden="true"></i>
+            &nbsp;{{
+            $t("m.Comment")
+            }}
+          </span>
           <transition name="el-zoom-in-bottom">
             <router-view v-if="route_name === 'ContestComment'"></router-view>
           </transition>
@@ -260,9 +230,10 @@
           :disabled="contestMenuDisabled"
           v-if="contest.openPrint"
         >
-          <span slot="label"
-            ><i class="el-icon-printer"></i>&nbsp;{{ $t("m.Print") }}</span
-          >
+          <span slot="label">
+            <i class="el-icon-printer"></i>
+            &nbsp;{{ $t("m.Print") }}
+          </span>
           <transition name="el-zoom-in-bottom">
             <router-view v-if="route_name === 'ContestPrint'"></router-view>
           </transition>
@@ -274,11 +245,12 @@
           :disabled="contestMenuDisabled"
           v-if="showAdminHelper"
         >
-          <span slot="label"
-            ><i class="el-icon-s-help" aria-hidden="true"></i>&nbsp;{{
-              $t("m.Admin_Helper")
-            }}</span
-          >
+          <span slot="label">
+            <i class="el-icon-s-help" aria-hidden="true"></i>
+            &nbsp;{{
+            $t("m.Admin_Helper")
+            }}
+          </span>
           <transition name="el-zoom-in-bottom">
             <router-view v-if="route_name === 'ContestACInfo'"></router-view>
           </transition>
@@ -290,15 +262,14 @@
           :disabled="contestMenuDisabled"
           v-if="isContestAdmin && contest.openPrint"
         >
-          <span slot="label"
-            ><i class="el-icon-printer"></i>&nbsp;{{
-              $t("m.Admin_Print")
-            }}</span
-          >
+          <span slot="label">
+            <i class="el-icon-printer"></i>
+            &nbsp;{{
+            $t("m.Admin_Print")
+            }}
+          </span>
           <transition name="el-zoom-in-bottom">
-            <router-view
-              v-if="route_name === 'ContestAdminPrint'"
-            ></router-view>
+            <router-view v-if="route_name === 'ContestAdminPrint'"></router-view>
           </transition>
         </el-tab-pane>
 
@@ -308,28 +279,22 @@
           :disabled="contestMenuDisabled"
           v-if="isContestAdmin"
         >
-          <span slot="label"
-            ><i class="el-icon-refresh" aria-hidden="true"></i>&nbsp;{{
-              $t("m.Rejudge")
-            }}</span
-          >
+          <span slot="label">
+            <i class="el-icon-refresh" aria-hidden="true"></i>
+            &nbsp;{{
+            $t("m.Rejudge")
+            }}
+          </span>
           <transition name="el-zoom-in-bottom">
-            <router-view
-              v-if="route_name === 'ContestRejudgeAdmin'"
-            ></router-view>
+            <router-view v-if="route_name === 'ContestRejudgeAdmin'"></router-view>
           </transition>
         </el-tab-pane>
 
-        <el-tab-pane
-          name="ScrollBoard"
-          lazy
-          :disabled="contestMenuDisabled"
-          v-if="showScrollBoard"
-        >
-          <span slot="label"
-            ><i class="el-icon-video-camera-solid" aria-hidden="true"></i
-            >&nbsp;{{ $t("m.ScrollBoard") }}</span
-          >
+        <el-tab-pane name="ScrollBoard" lazy :disabled="contestMenuDisabled" v-if="showScrollBoard">
+          <span slot="label">
+            <i class="el-icon-video-camera-solid" aria-hidden="true"></i>
+            &nbsp;{{ $t("m.ScrollBoard") }}
+          </span>
           <transition name="el-zoom-in-bottom">
             <router-view v-if="route_name === 'ScrollBoard'"></router-view>
           </transition>

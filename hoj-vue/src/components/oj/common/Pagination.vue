@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'pagination',
+  name: "pagination",
   props: {
     total: {
       required: true,
@@ -45,7 +45,7 @@ export default {
     layout: {
       require: false,
       type: String,
-      default: 'prev, pager, next',
+      default: "prev, pager, next",
     },
     isMobile: {
       type: Boolean,
@@ -65,12 +65,12 @@ export default {
       if (page < 1) {
         page = 1;
       }
-      this.$emit('update:current', page);
-      this.$emit('on-change', page);
+      this.$emit("update:current", page);
+      this.$emit("on-change", page);
     },
     onPageSizeChange(pageSize) {
-      this.$emit('update:pageSize', pageSize);
-      this.$emit('on-page-size-change', pageSize);
+      this.$emit("update:pageSize", pageSize);
+      this.$emit("on-page-size-change", pageSize);
     },
   },
 };

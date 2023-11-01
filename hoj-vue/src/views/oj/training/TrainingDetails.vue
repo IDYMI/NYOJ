@@ -19,38 +19,27 @@
             ></el-progress>
           </el-tooltip>
         </div>
-        <div class="count">
-          {{ training.acCount + " / " + training.problemCount }}
-        </div>
+        <div class="count">{{ training.acCount + " / " + training.problemCount }}</div>
       </template>
     </el-card>
     <div class="card-top">
       <el-tabs @tab-click="tabClick" v-model="route_name">
-        <el-tab-pane
-          :name="groupID ? 'GroupTrainingDetails' : 'TrainingDetails'"
-          lazy
-        >
-          <span slot="label"
-            ><i class="el-icon-s-home"></i>&nbsp;{{
-              $t("m.Training_Introduction")
-            }}</span
-          >
+        <el-tab-pane :name="groupID ? 'GroupTrainingDetails' : 'TrainingDetails'" lazy>
+          <span slot="label">
+            <i class="el-icon-s-home"></i>
+            &nbsp;{{
+            $t("m.Training_Introduction")
+            }}
+          </span>
           <el-row :gutter="30">
             <el-col :sm="24" :md="7">
-              <el-card
-                v-if="trainingPasswordFormVisible"
-                class="password-form-card"
-              >
+              <el-card v-if="trainingPasswordFormVisible" class="password-form-card">
                 <div slot="header">
-                  <span class="panel-title" style="color: #e6a23c"
-                    ><i class="el-icon-warning">
-                      {{ $t("m.Password_Required") }}</i
-                    ></span
-                  >
+                  <span class="panel-title" style="color: #e6a23c">
+                    <i class="el-icon-warning">{{ $t("m.Password_Required") }}</i>
+                  </span>
                 </div>
-                <h3>
-                  {{ $t("m.To_Enter_Training_Need_Password") }}
-                </h3>
+                <h3>{{ $t("m.To_Enter_Training_Need_Password") }}</h3>
                 <el-form>
                   <el-input
                     v-model="trainingPassword"
@@ -64,8 +53,7 @@
                     @click="checkPassword"
                     :loading="btnLoading"
                     style="margin: 5px"
-                    >{{ $t("m.OK") }}</el-button
-                  >
+                  >{{ $t("m.OK") }}</el-button>
                 </el-form>
               </el-card>
               <el-card>
@@ -86,9 +74,7 @@
                       <el-tag
                         :type="TRAINING_TYPE[training.auth]['color']"
                         effect="dark"
-                      >
-                        {{ $t("m.Training_" + training.auth) }}
-                      </el-tag>
+                      >{{ $t("m.Training_" + training.auth) }}</el-tag>
                     </span>
                   </div>
                   <div>
@@ -96,8 +82,8 @@
                       <span>{{ $t("m.Training_Category") }}</span>
                     </span>
                     <span>
-                      <span
-                        ><el-tag
+                      <span>
+                        <el-tag
                           size="medium"
                           class="category-item"
                           :style="
@@ -106,9 +92,8 @@
                             ';background-color: ' +
                             training.categoryColor
                           "
-                          >{{ training.categoryName }}</el-tag
-                        ></span
-                      >
+                        >{{ training.categoryName }}</el-tag>
+                      </span>
                     </span>
                   </div>
 
@@ -125,13 +110,12 @@
                       <span>{{ $t("m.Author") }}</span>
                     </span>
                     <span>
-                      <span
-                        ><el-link
+                      <span>
+                        <el-link
                           type="info"
                           @click="goUserHome(training.author)"
-                          >{{ training.author }}</el-link
-                        ></span
-                      >
+                        >{{ training.author }}</el-link>
+                      </span>
                     </span>
                   </div>
                   <div>
@@ -148,12 +132,13 @@
             <el-col :sm="24" :md="17">
               <el-card>
                 <div slot="header">
-                  <span class="panel-title">{{
+                  <span class="panel-title">
+                    {{
                     $t("m.Training_Introduction")
-                  }}</span>
+                    }}
+                  </span>
                 </div>
-                <Markdown :isAvoidXss="groupID" :content="training.description">
-                </Markdown>
+                <Markdown :isAvoidXss="groupID" :content="training.description"></Markdown>
               </el-card>
             </el-col>
           </el-row>
@@ -164,11 +149,12 @@
           lazy
           :disabled="trainingMenuDisabled"
         >
-          <span slot="label"
-            ><i class="fa fa-list" aria-hidden="true"></i>&nbsp;{{
-              $t("m.Problem_List")
-            }}</span
-          >
+          <span slot="label">
+            <i class="fa fa-list" aria-hidden="true"></i>
+            &nbsp;{{
+            $t("m.Problem_List")
+            }}
+          </span>
           <transition name="el-zoom-in-bottom">
             <router-view
               v-if="
@@ -184,11 +170,12 @@
           lazy
           :disabled="trainingMenuDisabled"
         >
-          <span slot="label"
-            ><i class="fa fa-bar-chart" aria-hidden="true"></i>&nbsp;{{
-              $t("m.Record_List")
-            }}</span
-          >
+          <span slot="label">
+            <i class="fa fa-bar-chart" aria-hidden="true"></i>
+            &nbsp;{{
+            $t("m.Record_List")
+            }}
+          </span>
           <transition name="el-zoom-in-bottom">
             <router-view
               v-if="

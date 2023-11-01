@@ -2,9 +2,10 @@
   <el-card shadow :padding="10">
     <div slot="header">
       <span class="panel-title" v-if="isContest">{{ title }}</span>
-      <span v-else class="home-title panel-title"
-        ><i class="el-icon-data-board"></i> {{ title }}</span
-      >
+      <span v-else class="home-title panel-title">
+        <i class="el-icon-data-board"></i>
+        {{ title }}
+      </span>
       <span style="float: right">
         <el-button
           v-if="listVisible"
@@ -13,24 +14,18 @@
           size="small"
           icon="el-icon-refresh"
           :loading="btnLoading"
-          >{{ $t("m.Refresh") }}</el-button
-        >
+        >{{ $t("m.Refresh") }}</el-button>
         <el-button
           v-else
           type="primary"
           icon="el-icon-back"
           @click="goBack"
           size="small"
-          >{{ $t("m.Back") }}</el-button
-        >
+        >{{ $t("m.Back") }}</el-button>
       </span>
     </div>
     <transition-group name="el-zoom-in-bottom">
-      <div
-        class="no-announcement"
-        v-if="!announcements.length"
-        key="no-announcement"
-      >
+      <div class="no-announcement" v-if="!announcements.length" key="no-announcement">
         <el-empty :description="$t('m.No_Announcements')"></el-empty>
       </div>
       <template v-if="listVisible">
@@ -38,9 +33,7 @@
           <li v-for="announcement in announcements" :key="announcement.title">
             <div class="flex-container">
               <div class="title">
-                <a class="entry" @click="goAnnouncement(announcement)">
-                  {{ announcement.title }}</a
-                >
+                <a class="entry" @click="goAnnouncement(announcement)">{{ announcement.title }}</a>
               </div>
 
               <div class="info">
@@ -62,8 +55,7 @@
           :total="total"
           :page-size="limit"
           @on-change="getAnnouncementList"
-        >
-        </Pagination>
+        ></Pagination>
       </template>
 
       <template v-else>

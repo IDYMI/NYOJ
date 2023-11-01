@@ -1,9 +1,5 @@
 <template>
-  <codemirror
-    v-model="currentValue"
-    :options="options"
-    ref="editor"
-  ></codemirror>
+  <codemirror v-model="currentValue" :options="options" ref="editor"></codemirror>
 </template>
 <script>
 import { codemirror, CodeMirror } from "vue-codemirror-lite";
@@ -99,9 +95,9 @@ export default {
           // "Alt-Shift-f": function (cm) {
           //   CodeMirror.commands["selectAll"](cm);
           //   var range = {
-	        //     from: editor.getCursor(true),
-	        //     to: editor.getCursor(false)
-	        // }
+          //     from: editor.getCursor(true),
+          //     to: editor.getCursor(false)
+          // }
           //   cm.autoFormatRange(range.from, range.to);
           //   cm.commentRange(false, range.from, range.to);
           // },

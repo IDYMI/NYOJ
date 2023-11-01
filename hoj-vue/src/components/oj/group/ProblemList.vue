@@ -8,21 +8,14 @@
       align="center"
       v-if="!editPage"
     >
-      <vxe-table-column min-width="64" field="id" title="ID">
-      </vxe-table-column>
+      <vxe-table-column min-width="64" field="id" title="ID"></vxe-table-column>
       <vxe-table-column
         min-width="100"
         field="problemId"
         :title="$t('m.Display_ID')"
         v-if="!contestId"
-      >
-      </vxe-table-column>
-      <vxe-table-column
-        min-width="150"
-        :title="$t('m.Original_Display')"
-        v-else
-        align="left"
-      >
+      ></vxe-table-column>
+      <vxe-table-column min-width="150" :title="$t('m.Original_Display')" v-else align="left">
         <template v-slot="{ row }">
           <p v-if="contestId">{{ $t("m.Display_ID") }}：{{ row.problemId }}</p>
           <p v-if="contestId">{{ $t("m.Title") }}：{{ row.title }}</p>
@@ -35,60 +28,41 @@
         :title="$t('m.Title')"
         show-overflow
         v-if="!contestId"
-      >
-      </vxe-table-column>
-      <vxe-table-column
-        min-width="150"
-        :title="$t('m.Contest_Display')"
-        v-else
-        align="left"
-      >
+      ></vxe-table-column>
+      <vxe-table-column min-width="150" :title="$t('m.Contest_Display')" v-else align="left">
         <template v-slot="{ row }">
           <p v-if="contestProblemMap[row.id]">
             {{ $t("m.Display_ID") }}：{{
-              contestProblemMap[row.id]["displayId"]
+            contestProblemMap[row.id]["displayId"]
             }}
           </p>
-          <p v-if="contestProblemMap[row.id]">
-            {{ $t("m.Title") }}：{{ contestProblemMap[row.id]["displayTitle"] }}
-          </p>
+          <p
+            v-if="contestProblemMap[row.id]"
+          >{{ $t("m.Title") }}：{{ contestProblemMap[row.id]["displayTitle"] }}</p>
           <span v-if="contestProblemMap[row.id]">
-            {{ $t("m.Balloon_Color") }}：<el-color-picker
+            {{ $t("m.Balloon_Color") }}：
+            <el-color-picker
               v-model="contestProblemMap[row.id].color"
               show-alpha
               :predefine="predefineColors"
               size="small"
               style="vertical-align: middle"
               @change="changeProblemColor(contestProblemMap[row.id])"
-            >
-            </el-color-picker>
+            ></el-color-picker>
           </span>
           <span v-else>{{ row.title }}</span>
         </template>
       </vxe-table-column>
-      <vxe-table-column
-        field="author"
-        min-width="130"
-        :title="$t('m.Author')"
-        show-overflow
-      >
-      </vxe-table-column>
-      <vxe-table-column
-        min-width="130"
-        :title="$t('m.Created_Time')"
-        v-if="!contestId"
-      >
-        <template v-slot="{ row }">
-          {{ row.gmtCreate | localtime }}
-        </template>
+      <vxe-table-column field="author" min-width="130" :title="$t('m.Author')" show-overflow></vxe-table-column>
+      <vxe-table-column min-width="130" :title="$t('m.Created_Time')" v-if="!contestId">
+        <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
       </vxe-table-column>
       <vxe-table-column
         min-width="96"
         field="modifiedUser"
         :title="$t('m.Modified_User')"
         show-overflow
-      >
-      </vxe-table-column>
+      ></vxe-table-column>
       <vxe-table-column min-width="120" :title="$t('m.Auth')">
         <template v-slot="{ row }">
           <el-select
@@ -102,11 +76,7 @@
           >
             <el-option :label="$t('m.Public_Problem')" :value="1"></el-option>
             <el-option :label="$t('m.Private_Problem')" :value="2"></el-option>
-            <el-option
-              :label="$t('m.Contest_Problem')"
-              :value="3"
-              :disabled="!contestId"
-            ></el-option>
+            <el-option :label="$t('m.Contest_Problem')" :value="3" :disabled="!contestId"></el-option>
           </el-select>
         </template>
       </vxe-table-column>
@@ -125,8 +95,7 @@
               size="mini"
               @click.native="goEditProblem(row.id)"
               type="primary"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
           <el-tooltip
             effect="dark"
@@ -141,8 +110,7 @@
               size="mini"
               @click.native="downloadTestCase(row.id)"
               type="success"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
           <p></p>
           <el-tooltip
@@ -160,22 +128,15 @@
               size="mini"
               @click.native="applyPublic(row.id, row.applyPublicProgress)"
               type="warning"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
-          <el-tooltip
-            effect="dark"
-            :content="$t('m.Remove')"
-            placement="top"
-            v-if="contestId"
-          >
+          <el-tooltip effect="dark" :content="$t('m.Remove')" placement="top" v-if="contestId">
             <el-button
               icon="el-icon-close"
               size="mini"
               @click.native="removeProblem(row.id)"
               type="warning"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
           <el-tooltip
             effect="dark"
@@ -190,8 +151,7 @@
               size="mini"
               @click.native="deleteProblem(row.id)"
               type="danger"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
         </template>
       </vxe-table-column>

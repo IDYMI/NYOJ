@@ -9,18 +9,18 @@
       ></el-input>
     </el-form-item>
 
-    <el-form-item label="Output"> </el-form-item>
+    <el-form-item label="Output"></el-form-item>
     <div v-html="text"></div>
   </el-form>
 </template>
 
 <script>
 export default {
-  name: '',
+  name: "",
   data() {
     return {
-      input: '$c = \\pm\\sqrt{a^2 + b^2}$',
-      text: '',
+      input: "$c = \\pm\\sqrt{a^2 + b^2}$",
+      text: "",
     };
   },
   mounted() {

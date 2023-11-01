@@ -10,31 +10,17 @@
           class="problem-left"
           :id="'problem-left' + '-' + $route.name"
         >
-          <el-tabs
-            v-model="activeName"
-            type="border-card"
-            @tab-click="handleClickTab"
-          >
+          <el-tabs v-model="activeName" type="border-card" @tab-click="handleClickTab">
             <el-tab-pane name="problemDetail" v-loading="loading">
-              <span slot="label"
-                ><i class="fa fa-list-alt">
-                  {{ $t("m.Problem_Description") }}</i
-                >
+              <span slot="label">
+                <i class="fa fa-list-alt">{{ $t("m.Problem_Description") }}</i>
               </span>
-              <div
-                :padding="10"
-                shadow
-                :id="'js-left' + '-' + $route.name"
-                class="js-left"
-              >
+              <div :padding="10" shadow :id="'js-left' + '-' + $route.name" class="js-left">
                 <div slot="header" class="panel-title">
-                  <span>{{ problemData.problem.title }}</span
-                  ><br />
+                  <span>{{ problemData.problem.title }}</span>
+                  <br />
                   <div class="problem-tag">
-                    <span
-                      v-if="problemData.problem.isFileIO"
-                      style="padding-right: 10px"
-                    >
+                    <span v-if="problemData.problem.isFileIO" style="padding-right: 10px">
                       <el-popover placement="bottom" trigger="hover">
                         <el-tag
                           slot="reference"
@@ -42,9 +28,8 @@
                           type="warning"
                           style="cursor: pointer"
                           effect="dark"
-                          ><i class="el-icon-document">
-                            {{ $t("m.File_IO") }}</i
-                          >
+                        >
+                          <i class="el-icon-document">{{ $t("m.File_IO") }}</i>
                         </el-tag>
                         <table style="white-space: nowrap">
                           <tbody>
@@ -65,25 +50,24 @@
                       </el-popover>
                     </span>
                     <span v-if="contestID && !contestEnded">
-                      <el-tag effect="plain" size="medium">{{
+                      <el-tag effect="plain" size="medium">
+                        {{
                         $t("m.Contest_Problem")
-                      }}</el-tag>
+                        }}
+                      </el-tag>
                     </span>
                     <span v-else-if="problemData.tags.length > 0">
-                      <el-popover
-                        placement="right-start"
-                        width="60"
-                        trigger="hover"
-                      >
+                      <el-popover placement="right-start" width="60" trigger="hover">
                         <el-tag
                           slot="reference"
                           size="medium"
                           type="primary"
                           style="cursor: pointer"
                           effect="plain"
-                          >{{ $t("m.Show_Tags") }}
-                          <i class="el-icon-caret-bottom"></i
-                        ></el-tag>
+                        >
+                          {{ $t("m.Show_Tags") }}
+                          <i class="el-icon-caret-bottom"></i>
+                        </el-tag>
                         <el-tag
                           v-for="(tag, index) in problemData.tags"
                           :key="index"
@@ -91,113 +75,113 @@
                           :color="tag.color ? tag.color : '#409eff'"
                           effect="dark"
                           style="margin-right: 5px; margin-top: 2px"
-                          >{{ tag.name }}</el-tag
-                        >
+                        >{{ tag.name }}</el-tag>
                       </el-popover>
                     </span>
                     <span v-else-if="problemData.tags.length == 0">
-                      <el-tag effect="plain" size="medium">{{
+                      <el-tag effect="plain" size="medium">
+                        {{
                         $t("m.No_tag")
-                      }}</el-tag>
+                        }}
+                      </el-tag>
                     </span>
                   </div>
 
                   <div class="problem-menu">
                     <span v-if="isShowProblemDiscussion">
-                      <el-link
-                        type="primary"
-                        :underline="false"
-                        @click="goProblemDiscussion"
-                        ><i class="fa fa-comments" aria-hidden="true"></i>
-                        {{ $t("m.Problem_Discussion") }}</el-link
-                      >
+                      <el-link type="primary" :underline="false" @click="goProblemDiscussion">
+                        <i class="fa fa-comments" aria-hidden="true"></i>
+                        {{ $t("m.Problem_Discussion") }}
+                      </el-link>
                     </span>
                     <span>
                       <el-link
                         type="primary"
                         :underline="false"
                         @click="graphVisible = !graphVisible"
-                        ><i class="fa fa-pie-chart" aria-hidden="true"></i>
-                        {{ $t("m.Statistic") }}</el-link
                       >
+                        <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                        {{ $t("m.Statistic") }}
+                      </el-link>
                     </span>
                     <span>
-                      <el-link
-                        type="primary"
-                        :underline="false"
-                        @click="goProblemSubmission"
-                        ><i class="fa fa-bars" aria-hidden="true"></i>
-                        {{ $t("m.Solutions") }}</el-link
-                      >
+                      <el-link type="primary" :underline="false" @click="goProblemSubmission">
+                        <i class="fa fa-bars" aria-hidden="true"></i>
+                        {{ $t("m.Solutions") }}
+                      </el-link>
                     </span>
                   </div>
                   <div class="question-intr">
                     <template v-if="!isCFProblem">
-                      <span
-                        >{{ $t("m.Time_Limit") }}：C/C++
+                      <span>
+                        {{ $t("m.Time_Limit") }}：C/C++
                         {{ problemData.problem.timeLimit }}MS，{{
-                          $t("m.Other")
+                        $t("m.Other")
                         }}
-                        {{ problemData.problem.timeLimit * 2 }}MS</span
-                      ><br />
-                      <span
-                        >{{ $t("m.Memory_Limit") }}：C/C++
+                        {{ problemData.problem.timeLimit * 2 }}MS
+                      </span>
+                      <br />
+                      <span>
+                        {{ $t("m.Memory_Limit") }}：C/C++
                         {{ problemData.problem.memoryLimit }}MB，{{
-                          $t("m.Other")
+                        $t("m.Other")
                         }}
-                        {{ problemData.problem.memoryLimit * 2 }}MB</span
-                      ><br />
+                        {{ problemData.problem.memoryLimit * 2 }}MB
+                      </span>
+                      <br />
                     </template>
 
                     <template v-else>
-                      <span
-                        >{{ $t("m.Time_Limit") }}：{{
-                          problemData.problem.timeLimit
-                        }}MS</span
-                      >
+                      <span>
+                        {{ $t("m.Time_Limit") }}：{{
+                        problemData.problem.timeLimit
+                        }}MS
+                      </span>
                       <br />
-                      <span
-                        >{{ $t("m.Memory_Limit") }}：{{
-                          problemData.problem.memoryLimit
-                        }}MB</span
-                      ><br />
+                      <span>
+                        {{ $t("m.Memory_Limit") }}：{{
+                        problemData.problem.memoryLimit
+                        }}MB
+                      </span>
+                      <br />
                     </template>
                     <template v-if="problemData.problem.difficulty != null">
-                      <span
-                        >{{ $t("m.Level") }}：<span
+                      <span>
+                        {{ $t("m.Level") }}：
+                        <span
                           class="el-tag el-tag--small"
                           :style="getLevelColor(problemData.problem.difficulty)"
-                          >{{
-                            getLevelName(problemData.problem.difficulty)
-                          }}</span
-                        ></span
-                      >
+                        >
+                          {{
+                          getLevelName(problemData.problem.difficulty)
+                          }}
+                        </span>
+                      </span>
                       <br />
                     </template>
                     <template v-if="problemData.problem.type == 1">
-                      <span
-                        >{{ $t("m.Score") }}：{{ problemData.problem.ioScore }}
-                      </span>
+                      <span>{{ $t("m.Score") }}：{{ problemData.problem.ioScore }}</span>
                       <span v-if="!contestID" style="margin-left: 5px">
                         {{ $t("m.OI_Rank_Score") }}：{{
-                          calcOIRankScore(
-                            problemData.problem.ioScore,
-                            problemData.problem.difficulty
-                          )
+                        calcOIRankScore(
+                        problemData.problem.ioScore,
+                        problemData.problem.difficulty
+                        )
                         }}(0.1*{{ $t("m.Score") }}+2*{{ $t("m.Level") }})
                       </span>
                       <br />
                     </template>
 
                     <template v-if="problemData.problem.author">
-                      <span
-                        >{{ $t("m.Created") }}：<el-link
+                      <span>
+                        {{ $t("m.Created") }}：
+                        <el-link
                           type="info"
                           class="author-name"
                           @click="goUserHome(problemData.problem.author)"
-                          >{{ problemData.problem.author }}</el-link
-                        ></span
-                      ><br />
+                        >{{ problemData.problem.author }}</el-link>
+                      </span>
+                      <br />
                     </template>
                   </div>
                 </div>
@@ -209,8 +193,7 @@
                       class="md-content"
                       :isAvoidXss="problemData.problem.gid != null"
                       :content="problemData.problem.description"
-                    >
-                    </Markdown>
+                    ></Markdown>
                   </template>
 
                   <template v-if="problemData.problem.input">
@@ -219,8 +202,7 @@
                       class="md-content"
                       :isAvoidXss="problemData.problem.gid != null"
                       :content="problemData.problem.input"
-                    >
-                    </Markdown>
+                    ></Markdown>
                   </template>
 
                   <template v-if="problemData.problem.output">
@@ -229,15 +211,11 @@
                       class="md-content"
                       :isAvoidXss="problemData.problem.gid != null"
                       :content="problemData.problem.output"
-                    >
-                    </Markdown>
+                    ></Markdown>
                   </template>
 
                   <template v-if="problemData.problem.examples">
-                    <div
-                      v-for="(example, index) of problemData.problem.examples"
-                      :key="index"
-                    >
+                    <div v-for="(example, index) of problemData.problem.examples" :key="index">
                       <div class="flex-container example">
                         <div class="example-input">
                           <p class="title">
@@ -278,38 +256,29 @@
                         class="hint-content"
                         :isAvoidXss="problemData.problem.gid != null"
                         :content="problemData.problem.hint"
-                      >
-                      </Markdown>
+                      ></Markdown>
                     </el-card>
                   </template>
 
                   <template v-if="problemData.problem.source && !contestID">
                     <p class="title">{{ $t("m.Source") }}</p>
                     <template v-if="problemData.problem.gid != null">
-                      <p
-                        class="md-content"
-                        v-dompurify-html="problemData.problem.source"
-                      ></p>
+                      <p class="md-content" v-dompurify-html="problemData.problem.source"></p>
                     </template>
                     <template v-else>
-                      <p
-                        class="md-content"
-                        v-html="problemData.problem.source"
-                      ></p>
+                      <p class="md-content" v-html="problemData.problem.source"></p>
                     </template>
                   </template>
                 </div>
               </div>
             </el-tab-pane>
             <el-tab-pane name="mySubmission">
-              <span slot="label"
-                ><i class="el-icon-time"></i> {{ $t("m.My_Submission") }}</span
-              >
+              <span slot="label">
+                <i class="el-icon-time"></i>
+                {{ $t("m.My_Submission") }}
+              </span>
               <template v-if="!isAuthenticated">
-                <div
-                  style="margin: 20px 0px; margin-left: -20px"
-                  id="js-submission"
-                >
+                <div style="margin: 20px 0px; margin-left: -20px" id="js-submission">
                   <el-alert
                     :title="$t('m.Please_login_first')"
                     type="warning"
@@ -317,8 +286,7 @@
                     :closable="false"
                     :description="$t('m.Login_to_view_your_submission_history')"
                     show-icon
-                  >
-                  </el-alert>
+                  ></el-alert>
                 </div>
               </template>
               <template v-else>
@@ -331,30 +299,22 @@
                     border="inner"
                     :loading="loadingTable"
                   >
-                    <vxe-table-column
-                      :title="$t('m.Submit_Time')"
-                      min-width="96"
-                    >
+                    <vxe-table-column :title="$t('m.Submit_Time')" min-width="96">
                       <template v-slot="{ row }">
                         <span>
-                          <el-tooltip
-                            :content="row.submitTime | localtime"
-                            placement="top"
-                          >
+                          <el-tooltip :content="row.submitTime | localtime" placement="top">
                             <span>{{ row.submitTime | fromNow }}</span>
                           </el-tooltip>
                         </span>
                       </template>
                     </vxe-table-column>
-                    <vxe-table-column
-                      field="status"
-                      :title="$t('m.Status')"
-                      min-width="160"
-                    >
+                    <vxe-table-column field="status" :title="$t('m.Status')" min-width="160">
                       <template v-slot="{ row }">
-                        <span :class="getStatusColor(row.status)">{{
+                        <span :class="getStatusColor(row.status)">
+                          {{
                           JUDGE_STATUS[row.status].name
-                        }}</span>
+                          }}
+                        </span>
                       </template>
                     </vxe-table-column>
                     <vxe-table-column :title="$t('m.Time')" min-width="96">
@@ -378,29 +338,30 @@
                             effect="plain"
                             size="medium"
                             :type="JUDGE_STATUS[row.status]['type']"
-                            >{{ row.score }}</el-tag
-                          >
+                          >{{ row.score }}</el-tag>
                         </template>
                         <template v-else-if="row.score != null">
                           <el-tooltip placement="top">
                             <div slot="content">
                               {{ $t("m.Problem_Score") }}：{{
-                                row.score != null ? row.score : $t("m.Unknown")
-                              }}<br />{{ $t("m.OI_Rank_Score") }}：{{
-                                row.oiRankScore != null
-                                  ? row.oiRankScore
-                                  : $t("m.Unknown")
-                              }}<br />
+                              row.score != null ? row.score : $t("m.Unknown")
+                              }}
+                              <br />
+                              {{ $t("m.OI_Rank_Score") }}：{{
+                              row.oiRankScore != null
+                              ? row.oiRankScore
+                              : $t("m.Unknown")
+                              }}
+                              <br />
                               {{
-                                $t("m.OI_Rank_Calculation_Rule")
+                              $t("m.OI_Rank_Calculation_Rule")
                               }}：(score*0.1+difficulty*2)
                             </div>
                             <el-tag
                               effect="plain"
                               size="medium"
                               :type="JUDGE_STATUS[row.status]['type']"
-                              >{{ row.score }}</el-tag
-                            >
+                            >{{ row.score }}</el-tag>
                           </el-tooltip>
                         </template>
                         <template
@@ -423,8 +384,7 @@
                             effect="plain"
                             size="medium"
                             :type="JUDGE_STATUS[row.status]['type']"
-                            >--</el-tag
-                          >
+                          >--</el-tag>
                         </template>
                       </template>
                     </vxe-table-column>
@@ -441,11 +401,7 @@
                           :content="$t('m.View_submission_details')"
                           placement="top"
                         >
-                          <el-button
-                            type="text"
-                            @click="showSubmitDetail(row)"
-                            >{{ row.language }}</el-button
-                          >
+                          <el-button type="text" @click="showSubmitDetail(row)">{{ row.language }}</el-button>
                         </el-tooltip>
                       </template>
                     </vxe-table-column>
@@ -461,8 +417,8 @@
             </el-tab-pane>
 
             <el-tab-pane name="extraFile" v-if="userExtraFile">
-              <span slot="label"
-                ><i class="fa fa-file-code-o"> {{ $t("m.Problem_Annex") }}</i>
+              <span slot="label">
+                <i class="fa fa-file-code-o">{{ $t("m.Problem_Annex") }}</i>
               </span>
               <div id="js-extraFile">
                 <el-divider></el-divider>
@@ -474,7 +430,7 @@
                     :disable-transitions="false"
                     @click="showExtraFileContent(key, value)"
                   >
-                    <i class="fa fa-file-code-o"> {{ key }}</i>
+                    <i class="fa fa-file-code-o">{{ key }}</i>
                   </el-tag>
                 </div>
                 <el-divider></el-divider>
@@ -543,12 +499,7 @@
           class="problem-right"
           :id="'problem-right' + '-' + $route.name"
         >
-          <el-card
-            :padding="10"
-            id="submit-code"
-            shadow="always"
-            class="submit-detail"
-          >
+          <el-card :padding="10" id="submit-code" shadow="always" class="submit-detail">
             <CodeMirror
               :value.sync="code"
               :languages="problemData.languages"
@@ -580,13 +531,10 @@
                       show-icon
                       effect="dark"
                       :closable="false"
-                      >{{ $t("m.Please_login_first") }}</el-alert
-                    >
+                    >{{ $t("m.Please_login_first") }}</el-alert>
                   </div>
                   <div class="status" v-if="statusVisible">
-                    <template
-                      v-if="result.status == JUDGE_STATUS_RESERVE['sf']"
-                    >
+                    <template v-if="result.status == JUDGE_STATUS_RESERVE['sf']">
                       <span>{{ $t("m.Status") }}:</span>
                       <el-tag
                         effect="dark"
@@ -597,16 +545,13 @@
                         {{ submissionStatus.text }}
                       </el-tag>
                     </template>
-                    <template
-                      v-else-if="result.status == JUDGE_STATUS_RESERVE['snr']"
-                    >
+                    <template v-else-if="result.status == JUDGE_STATUS_RESERVE['snr']">
                       <el-alert
                         type="warning"
                         show-icon
                         effect="dark"
                         :closable="false"
-                        >{{ $t("m.Submitted_Not_Result") }}</el-alert
-                      >
+                      >{{ $t("m.Submitted_Not_Result") }}</el-alert>
                     </template>
                     <template
                       v-else-if="
@@ -618,9 +563,7 @@
                           this.contestRuleType == RULE_TYPE.ACM)
                       "
                     >
-                      <span style="font-size: 14px; font-weight: bolder"
-                        >{{ $t("m.Status") }}:</span
-                      >
+                      <span style="font-size: 14px; font-weight: bolder">{{ $t("m.Status") }}:</span>
                       <el-tooltip
                         class="item"
                         effect="dark"
@@ -653,23 +596,17 @@
                               this.result.status == JUDGE_STATUS_RESERVE.ac
                             "
                           >
-                            <i class="el-icon-success">
-                              {{ submissionStatus.text }}</i
-                            >
+                            <i class="el-icon-success">{{ submissionStatus.text }}</i>
                           </template>
                           <template
                             v-else-if="
                               this.result.status == JUDGE_STATUS_RESERVE.pa
                             "
                           >
-                            <i class="el-icon-remove">
-                              {{ submissionStatus.text }}</i
-                            >
+                            <i class="el-icon-remove">{{ submissionStatus.text }}</i>
                           </template>
                           <template v-else>
-                            <i class="el-icon-error">
-                              {{ submissionStatus.text }}</i
-                            >
+                            <i class="el-icon-error">{{ submissionStatus.text }}</i>
                           </template>
                         </el-tag>
                       </el-tooltip>
@@ -686,8 +623,7 @@
                         show-icon
                         effect="dark"
                         :closable="false"
-                        >{{ $t("m.Submitted_successfully") }}</el-alert
-                      >
+                      >{{ $t("m.Submitted_successfully") }}</el-alert>
                     </template>
                   </div>
                   <div
@@ -702,8 +638,7 @@
                       show-icon
                       effect="dark"
                       :closable="false"
-                      >{{ $t("m.You_have_solved_the_problem") }}</el-alert
-                    >
+                    >{{ $t("m.You_have_solved_the_problem") }}</el-alert>
                   </div>
                   <div
                     v-else-if="
@@ -718,8 +653,7 @@
                       show-icon
                       effect="dark"
                       :closable="false"
-                      >{{ $t("m.You_have_submitted_a_solution") }}</el-alert
-                    >
+                    >{{ $t("m.You_have_submitted_a_solution") }}</el-alert>
                   </div>
                   <div v-if="contestEnded && !statusVisible">
                     <el-alert
@@ -727,19 +661,14 @@
                       show-icon
                       effect="dark"
                       :closable="false"
-                      >{{ $t("m.Contest_has_ended") }}</el-alert
-                    >
+                    >{{ $t("m.Contest_has_ended") }}</el-alert>
                   </div>
                 </el-col>
 
                 <el-col :sm="24" :md="14" :lg="14" style="margin-top: 4px">
                   <template v-if="captchaRequired">
                     <div class="captcha-container">
-                      <el-tooltip
-                        v-if="captchaRequired"
-                        content="Click to refresh"
-                        placement="top"
-                      >
+                      <el-tooltip v-if="captchaRequired" content="Click to refresh" placement="top">
                         <img :src="captchaSrc" @click="getCaptchaSrc" />
                       </el-tooltip>
                       <el-input v-model="captchaCode" class="captcha-code" />
@@ -783,11 +712,9 @@
                         d="M1022.06544 583.40119c0 11.0558-4.034896 20.61962-12.111852 28.696576-8.077979 8.077979-17.639752 12.117992-28.690436 12.117992L838.446445 624.215758c0 72.690556-14.235213 134.320195-42.718941 184.89915l132.615367 133.26312c8.076956 8.065699 12.117992 17.634636 12.117992 28.690436 0 11.050684-4.034896 20.614503-12.117992 28.691459-7.653307 8.065699-17.209964 12.106736-28.690436 12.106736-11.475356 0-21.040199-4.041036-28.690436-12.106736L744.717737 874.15318c-2.124384 2.118244-5.308913 4.88424-9.558703 8.283664-4.259 3.3984-13.180184 9.463536-26.78504 18.171871-13.598716 8.715499-27.415396 16.473183-41.439808 23.276123-14.029528 6.797823-31.462572 12.966313-52.289923 18.49319-20.827351 5.517667-41.446971 8.28571-61.842487 8.28571L552.801776 379.38668l-81.611739 0 0 571.277058c-21.668509 0-43.250036-2.874467-64.707744-8.615215-21.473057-5.734608-39.960107-12.749372-55.476499-21.039175-15.518438-8.289804-29.541827-16.572444-42.077328-24.867364-12.541641-8.290827-21.781072-15.193027-27.739784-20.714787l-9.558703-8.93244L154.95056 998.479767c-8.500605 8.921183-18.699897 13.386892-30.606065 13.386892-10.201339 0-19.335371-3.40454-27.409257-10.202363-8.079002-7.652284-12.437264-17.10968-13.080923-28.372188-0.633427-11.263531 2.659573-21.143553 9.893324-29.647227l128.787178-144.727219c-24.650423-48.464805-36.980239-106.699114-36.980239-174.710091L42.738895 624.207571c-11.057847 0-20.61655-4.041036-28.690436-12.111852-8.079002-8.082072-12.120039-17.640776-12.120039-28.696576 0-11.050684 4.041036-20.61962 12.120039-28.689413 8.073886-8.072863 17.632589-12.107759 28.690436-12.107759l142.81466 0L185.553555 355.156836l-110.302175-110.302175c-8.074909-8.077979-12.113899-17.640776-12.113899-28.691459 0-11.04966 4.044106-20.61962 12.113899-28.690436 8.071839-8.076956 17.638729-12.123109 28.691459-12.123109 11.056823 0 20.612457 4.052293 28.692482 12.123109l110.302175 110.302175 538.128077 0 110.303198-110.302175c8.070816-8.076956 17.632589-12.123109 28.690436-12.123109 11.050684 0 20.617573 4.052293 28.689413 12.123109 8.077979 8.070816 12.119015 17.640776 12.119015 28.690436 0 11.050684-4.041036 20.614503-12.119015 28.691459l-110.302175 110.302175 0 187.448206 142.815683 0c11.0558 0 20.618597 4.034896 28.690436 12.113899 8.076956 8.069793 12.117992 17.638729 12.117992 28.683273l0 0L1022.06544 583.40119 1022.06544 583.40119zM716.021162 216.158085 307.968605 216.158085c0-56.526411 19.871583-104.667851 59.616796-144.414087 39.733956-39.746236 87.88256-59.611679 144.411017-59.611679 56.529481 0 104.678084 19.865443 144.413064 59.611679C696.156742 111.48921 716.021162 159.631674 716.021162 216.158085L716.021162 216.158085 716.021162 216.158085 716.021162 216.158085z"
                         p-id="1657"
                         :fill="openTestCaseDrawer ? '#ffffff' : '#67c23a'"
-                      ></path>
+                      />
                     </svg>
-                    <span style="vertical-align: middle">
-                      {{ $t("m.Online_Test") }}
-                    </span>
+                    <span style="vertical-align: middle">{{ $t("m.Online_Test") }}</span>
                   </el-tag>
                 </el-col>
               </el-row>
@@ -803,17 +730,18 @@
       :tid="trainingID"
       ref="problemHorizontalMenu"
       :gid="groupID"
-    >
-    </ProblemHorizontalMenu>
+    ></ProblemHorizontalMenu>
 
     <el-dialog :visible.sync="graphVisible" width="400px">
       <div id="pieChart-detail">
         <ECharts :options="largePie" :initOptions="largePieInitOpts"></ECharts>
       </div>
       <div slot="footer">
-        <el-button type="ghost" @click="graphVisible = false" size="small">{{
+        <el-button type="ghost" @click="graphVisible = false" size="small">
+          {{
           $t("m.Close")
-        }}</el-button>
+          }}
+        </el-button>
       </div>
     </el-dialog>
 
@@ -831,9 +759,7 @@
           round
           style="margin-left: 130px"
           @click="checkContestPassword"
-        >
-          {{ $t("m.Submit") }}
-        </el-button>
+        >{{ $t("m.Submit") }}</el-button>
       </el-form>
     </el-dialog>
   </div>

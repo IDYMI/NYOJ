@@ -7,33 +7,42 @@
           <a href="https://gitee.com/himitzh0730/hoj" target="_blank"
             >Hcode Online Judge</a
           >
-        </h1> -->
+        </h1>-->
         <p>
           {{ $t("m.Leader_BackEnd_FrontEnd_Engineer") }} /Himit_ZH
-          <a href="https://github.com/HimitZH" class="icon" target="_blank"
-            ><i class="fa fa-github"></i>
+          <a
+            href="https://github.com/HimitZH"
+            class="icon"
+            target="_blank"
+          >
+            <i class="fa fa-github"></i>
           </a>
           冷蕴
-          <a href="https://github.com/IUaenaSong" class="icon" target="_blank"
-            ><i class="fa fa-github"></i>
+          <a href="https://github.com/IUaenaSong" class="icon" target="_blank">
+            <i class="fa fa-github"></i>
           </a>
         </p>
         <p>
           {{ $t("m.Group_Function_Development_Contributor") }} /Riba2534
-          <a href="https://github.com/riba2534" class="icon" target="_blank"
-            ><i class="fa fa-github"></i>
+          <a
+            href="https://github.com/riba2534"
+            class="icon"
+            target="_blank"
+          >
+            <i class="fa fa-github"></i>
           </a>
           DYM_
-          <a href="https://github.com/IDYMI" class="icon" target="_blank"
-            ><i class="fa fa-github"></i>
+          <a href="https://github.com/IDYMI" class="icon" target="_blank">
+            <i class="fa fa-github"></i>
           </a>
           Coyude
-          <a href="https://github.com/coyude" class="icon" target="_blank"
-            ><i class="fa fa-github"></i>
+          <a href="https://github.com/coyude" class="icon" target="_blank">
+            <i class="fa fa-github"></i>
           </a>
         </p>
         <p class="teal-text">
-          <i class="el-icon-circle-check"></i> {{ $t("m.Open_Source") }}
+          <i class="el-icon-circle-check"></i>
+          {{ $t("m.Open_Source") }}
         </p>
       </paper-card>
     </div>
@@ -45,7 +54,8 @@
             <small>{{ $t('m.Distributed_Desc') }}</small>
           </p>
           <p class="teal-text">
-            <i class="el-icon-circle-check"></i> {{ $t('m.Available') }}
+            <i class="el-icon-circle-check"></i>
+            {{ $t('m.Available') }}
           </p>
         </paper-card>
       </el-col>
@@ -56,7 +66,8 @@
             <small>{{ $t('m.Customization_Desc') }}</small>
           </p>
           <p class="teal-text">
-            <i class="el-icon-circle-check"></i> {{ $t('m.Available') }}
+            <i class="el-icon-circle-check"></i>
+            {{ $t('m.Available') }}
           </p>
         </paper-card>
       </el-col>
@@ -67,7 +78,8 @@
             <small>{{ $t('m.Security_Desc') }}</small>
           </p>
           <p class="teal-text">
-            <i class="el-icon-circle-check"></i> {{ $t('m.Available') }}
+            <i class="el-icon-circle-check"></i>
+            {{ $t('m.Available') }}
           </p>
         </paper-card>
       </el-col>
@@ -78,7 +90,8 @@
             <small>{{ $t('m.Diversity_Desc') }}</small>
           </p>
           <p class="teal-text">
-            <i class="el-icon-circle-check"></i> {{ $t('m.Available') }}
+            <i class="el-icon-circle-check"></i>
+            {{ $t('m.Available') }}
           </p>
         </paper-card>
       </el-col>
@@ -92,7 +105,7 @@
   max-width: 100%;
   margin: 0 auto;
 }
-paper-card[type='server'] {
+paper-card[type="server"] {
   display: block;
   text-align: center;
   border-radius: 4px;
