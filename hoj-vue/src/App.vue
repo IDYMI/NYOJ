@@ -24,8 +24,7 @@
                   v-html="websiteConfig.description"
                   v-katex
                   v-highlight
-                >
-                </span>
+                ></span>
               </el-col>
               <el-col class="hr-none">
                 <el-divider></el-divider>
@@ -36,9 +35,11 @@
                   <a @click="goRoute('/status')">{{ $t("m.Judging_Queue") }}</a>
                 </p>
                 <p>
-                  <a @click="goRoute('/developer')">{{
+                  <a @click="goRoute('/developer')">
+                    {{
                     $t("m.System_Info")
-                  }}</a>
+                    }}
+                  </a>
                 </p>
               </el-col>
               <el-col class="hr-none">
@@ -47,16 +48,12 @@
               <el-col :md="6" :xs="24">
                 <h1>{{ $t("m.Support") }}</h1>
                 <p>
-                  <i class="fa fa-info-circle" aria-hidden="true"></i
-                  ><a href="/discussion-detail/28" target="_blank">
-                    {{ $t("m.Help") }}</a
-                  >
+                  <i class="fa fa-info-circle" aria-hidden="true"></i>
+                  <a href="/discussion-detail/28" target="_blank">{{ $t("m.Help") }}</a>
                 </p>
                 <p>
                   <i class="el-icon-document"></i>
-                  <a @click="goRoute('/introduction')">
-                    {{ $t("m.NavBar_About") }}</a
-                  >
+                  <a @click="goRoute('/introduction')">{{ $t("m.NavBar_About") }}</a>
                 </p>
               </el-col>
               <!-- <el-col
@@ -76,7 +73,7 @@
             </el-col>
             <el-col class="hr-none">
               <el-divider></el-divider>
-            </el-col> -->
+              </el-col>-->
             </el-row>
           </div>
           <div class="mundb-footer">
@@ -84,23 +81,22 @@
               style="color: #1e9fff"
               :href="websiteConfig.recordUrl"
               target="_blank"
-              >{{ websiteConfig.recordName }}</a
-            >
+            >{{ websiteConfig.recordName }}</a>
             Powered by
             <a
               :href="websiteConfig.projectUrl"
               style="color: #1e9fff"
               target="_blank"
-              >{{ websiteConfig.projectName }}</a
-            >
+            >{{ websiteConfig.projectName }}</a>
             <span style="margin-left: 10px">
               <el-dropdown @command="changeWebLanguage" placement="top">
                 <span class="el-dropdown-link">
                   <i class="fa fa-globe" aria-hidden="true">
                     {{
-                      this.webLanguage == "zh-CN" ? "简体中文" : "English"
-                    }}</i
-                  ><i class="el-icon-arrow-up el-icon--right"></i>
+                    this.webLanguage == "zh-CN" ? "简体中文" : "English"
+                    }}
+                  </i>
+                  <i class="el-icon-arrow-up el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="zh-CN">简体中文</el-dropdown-item>

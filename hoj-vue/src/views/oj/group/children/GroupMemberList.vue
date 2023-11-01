@@ -12,57 +12,28 @@
             size="small"
             @click="adminPage = !adminPage"
             :icon="adminPage ? 'el-icon-back' : 'el-icon-s-opportunity'"
-            >{{ adminPage ? $t('m.Back') : $t('m.Member_Admin') }}</el-button
-          >
+          >{{ adminPage ? $t('m.Back') : $t('m.Member_Admin') }}</el-button>
         </el-col>
       </el-row>
     </div>
     <div v-if="!adminPage">
-      <vxe-table
-        stripe
-        auto-resize
-        :data="memberList"
-        :loading="loading"
-        align="center"
-      >
-        <vxe-table-column
-          min-width="150"
-          field="username"
-          show-overflow
-          :title="$t('m.Username')"
-        >
-          <template v-slot="{ row }"
-            ><el-link
+      <vxe-table stripe auto-resize :data="memberList" :loading="loading" align="center">
+        <vxe-table-column min-width="150" field="username" show-overflow :title="$t('m.Username')">
+          <template v-slot="{ row }">
+            <el-link
               type="primary"
               @click="goUserHome(row.username)"
               style="font-size: 13px;"
-              >{{ row.username }}</el-link
-            >
+            >{{ row.username }}</el-link>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          min-width="150"
-          field="gmtCreate"
-          :title="$t('m.Join_Time')"
-        >
-          <template v-slot="{ row }">
-            {{ row.gmtCreate | localtime }}
-          </template>
+        <vxe-table-column min-width="150" field="gmtCreate" :title="$t('m.Join_Time')">
+          <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
         </vxe-table-column>
-        <vxe-table-column
-          min-width="150"
-          field="gmtModify"
-          :title="$t('m.Change_Time')"
-        >
-          <template v-slot="{ row }">
-            {{ row.gmtModify | localtime }}
-          </template>
+        <vxe-table-column min-width="150" field="gmtModify" :title="$t('m.Change_Time')">
+          <template v-slot="{ row }">{{ row.gmtModify | localtime }}</template>
         </vxe-table-column>
-        <vxe-table-column
-          min-width="100"
-          field="auth"
-          :title="$t('m.Member_Auth')"
-        >
+        <vxe-table-column min-width="100" field="auth" :title="$t('m.Member_Auth')">
           <template v-slot="{ row }">
             <el-select v-model="row.auth" disabled size="small">
               <el-option :label="$t('m.Applying')" :value="1"></el-option>
@@ -88,13 +59,13 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import api from '@/common/api';
-import Editor from '@/components/admin/Editor.vue';
-import MemberList from '@/components/oj/group/MemberList';
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import api from "@/common/api";
+import Editor from "@/components/admin/Editor.vue";
+import MemberList from "@/components/oj/group/MemberList";
 export default {
-  name: 'GroupMemberList',
+  name: "GroupMemberList",
   components: {
     Pagination,
     Editor,
@@ -127,7 +98,7 @@ export default {
     },
     goUserHome(username) {
       this.$router.push({
-        path: '/user-home',
+        path: "/user-home",
         query: { username },
       });
     },
@@ -152,7 +123,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['userInfo', 'isSuperAdmin', 'isGroupAdmin']),
+    ...mapGetters(["userInfo", "isSuperAdmin", "isGroupAdmin"]),
   },
 };
 </script>

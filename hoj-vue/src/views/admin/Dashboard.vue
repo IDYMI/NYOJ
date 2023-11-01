@@ -15,17 +15,19 @@
                 ></avatar>
               </el-col>
               <el-col :span="16">
-                <span class="panel-title admin-info-name">{{
+                <span class="panel-title admin-info-name">
+                  {{
                   userInfo.username
-                }}</span>
+                  }}
+                </span>
                 <p>
                   <el-tag effect="dark" size="small" type="warning">
                     {{
-                      isSuperAdmin == true
-                        ? $t("m.Super_Admin")
-                        : isProblemAdmin == true
-                        ? $t("m.All_Problem_Admin")
-                        : $t("m.Admin")
+                    isSuperAdmin == true
+                    ? $t("m.Super_Admin")
+                    : isProblemAdmin == true
+                    ? $t("m.All_Problem_Admin")
+                    : $t("m.Admin")
                     }}
                   </el-tag>
                 </p>
@@ -79,99 +81,76 @@
         </div>
         <el-card>
           <div slot="header">
-            <span class="panel-title home-title">{{
+            <span class="panel-title home-title">
+              {{
               $t("m.Backend_System")
-            }}</span>
+              }}
+            </span>
           </div>
           <el-row>
             <el-col :xs="24" :md="8">
-              <span
-                >{{ $t("m.Server_Number") }}：
-                <el-tag effect="dark" color="#2d8cf0" size="mini">{{
+              <span>
+                {{ $t("m.Server_Number") }}：
+                <el-tag effect="dark" color="#2d8cf0" size="mini">
+                  {{
                   generalInfo.backupService.length
-                }}</el-tag>
+                  }}
+                </el-tag>
               </span>
             </el-col>
             <el-col :xs="24" :md="8">
-              <span
-                >{{ $t("m.Nacos_Status") }}：
+              <span>
+                {{ $t("m.Nacos_Status") }}：
                 <el-tag
                   effect="dark"
                   color="#19be6b"
                   size="mini"
                   v-if="generalInfo.nacos.status == 'UP'"
-                  >{{ generalInfo.nacos.status }}</el-tag
-                >
-                <el-tag effect="dark" color="#f90" size="mini" v-else>{{
+                >{{ generalInfo.nacos.status }}</el-tag>
+                <el-tag effect="dark" color="#f90" size="mini" v-else>
+                  {{
                   generalInfo.nacos.status
-                }}</el-tag>
+                  }}
+                </el-tag>
               </span>
             </el-col>
             <el-col :xs="24" :md="8">
-              <span
-                >{{ $t("m.HTTPS_Status") }}：
+              <span>
+                {{ $t("m.HTTPS_Status") }}：
                 <el-tag
                   :type="https ? 'success' : 'danger'"
                   size="small"
                   effect="dark"
-                >
-                  {{ https ? "Enabled" : "Disabled" }}
-                </el-tag>
+                >{{ https ? "Enabled" : "Disabled" }}</el-tag>
               </span>
             </el-col>
           </el-row>
           <h2 class="home-title">{{ $t("m.Backend_Service") }}</h2>
-          <vxe-table
-            stripe
-            auto-resize
-            :data="generalInfo.backupService"
-            align="center"
-          >
+          <vxe-table stripe auto-resize :data="generalInfo.backupService" align="center">
             <vxe-table-column :title="$t('m.Name')" min-width="130">
               <template v-slot="{ row }">
                 <span>{{ row["serviceId"] }}</span>
               </template>
             </vxe-table-column>
-            <vxe-table-column
-              field="host"
-              :title="$t('m.Host')"
-              min-width="110"
-            ></vxe-table-column>
-            <vxe-table-column
-              field="port"
-              :title="$t('m.Port')"
-              min-width="80"
-            ></vxe-table-column>
-            <vxe-table-column
-              min-width="80"
-              field="backupCores"
-              :title="$t('m.CPU_Core')"
-            >
-            </vxe-table-column>
+            <vxe-table-column field="host" :title="$t('m.Host')" min-width="110"></vxe-table-column>
+            <vxe-table-column field="port" :title="$t('m.Port')" min-width="80"></vxe-table-column>
+            <vxe-table-column min-width="80" field="backupCores" :title="$t('m.CPU_Core')"></vxe-table-column>
 
             <vxe-table-column
               min-width="100"
               field="backupPercentCpuLoad"
               :title="$t('m.CPU_Usage')"
-            >
-            </vxe-table-column>
+            ></vxe-table-column>
 
             <vxe-table-column
               min-width="100"
               field="backupPercentMemoryLoad"
               :title="$t('m.Mem_Usage')"
-            >
-            </vxe-table-column>
-            <vxe-table-column
-              field="secure"
-              :title="$t('m.Secure')"
-              min-width="80"
-            >
+            ></vxe-table-column>
+            <vxe-table-column field="secure" :title="$t('m.Secure')" min-width="80">
               <template v-slot="{ row }">
                 <el-tooltip content="是否触发保护阈值" placement="top">
-                  <el-tag effect="dark" color="#ed3f14" v-if="row.secure"
-                    >True</el-tag
-                  >
+                  <el-tag effect="dark" color="#ed3f14" v-if="row.secure">True</el-tag>
                   <el-tag effect="dark" color="#2d8cf0" v-else>False</el-tag>
                 </el-tooltip>
               </template>
@@ -182,11 +161,12 @@
                   effect="dark"
                   color="#19be6b"
                   v-if="row.metadata['nacos.healthy'] == 'true'"
-                  >{{ $t("m.Healthy") }}</el-tag
-                >
-                <el-tag effect="dark" color="#f90" v-else>{{
+                >{{ $t("m.Healthy") }}</el-tag>
+                <el-tag effect="dark" color="#f90" v-else>
+                  {{
                   $t("m.Unhealthy")
-                }}</el-tag>
+                  }}
+                </el-tag>
               </template>
             </vxe-table-column>
           </vxe-table>
@@ -200,9 +180,7 @@
       </div>
       <div style="margin-bottom: 10px; font-size: 15px">
         {{ $t("m.Server_Number") }}：
-        <el-tag effect="dark" color="rgb(25, 190, 107)" size="mini">
-          {{ judgeInfo.length }}
-        </el-tag>
+        <el-tag effect="dark" color="rgb(25, 190, 107)" size="mini">{{ judgeInfo.length }}</el-tag>
       </div>
       <vxe-table stripe auto-resize :data="judgeInfo" align="center">
         <vxe-table-column type="seq" width="50"></vxe-table-column>
@@ -222,33 +200,16 @@
           </template>
         </vxe-table-column>
 
-        <vxe-table-column
-          min-width="80"
-          field="cpuCores"
-          :title="$t('m.CPU_Core')"
-        >
-        </vxe-table-column>
+        <vxe-table-column min-width="80" field="cpuCores" :title="$t('m.CPU_Core')"></vxe-table-column>
 
-        <vxe-table-column
-          min-width="100"
-          field="percentCpuLoad"
-          :title="$t('m.CPU_Usage')"
-        >
-        </vxe-table-column>
+        <vxe-table-column min-width="100" field="percentCpuLoad" :title="$t('m.CPU_Usage')"></vxe-table-column>
 
-        <vxe-table-column
-          min-width="110"
-          field="percentMemoryLoad"
-          :title="$t('m.Mem_Usage')"
-        >
-        </vxe-table-column>
+        <vxe-table-column min-width="110" field="percentMemoryLoad" :title="$t('m.Mem_Usage')"></vxe-table-column>
 
         <vxe-table-column :title="$t('m.Secure')" min-width="80">
           <template v-slot="{ row }">
             <el-tooltip content="是否触发保护阈值" placement="top">
-              <el-tag effect="dark" color="#ed3f14" v-if="row.service.secure"
-                >True</el-tag
-              >
+              <el-tag effect="dark" color="#ed3f14" v-if="row.service.secure">True</el-tag>
               <el-tag effect="dark" color="#2d8cf0" v-else>False</el-tag>
             </el-tooltip>
           </template>
@@ -259,11 +220,12 @@
               effect="dark"
               color="#19be6b"
               v-if="row.service.metadata['nacos.healthy'] == 'true'"
-              >{{ $t("m.Healthy") }}</el-tag
-            >
-            <el-tag effect="dark" color="#f90" v-else>{{
+            >{{ $t("m.Healthy") }}</el-tag>
+            <el-tag effect="dark" color="#f90" v-else>
+              {{
               $t("m.Unhealthy")
-            }}</el-tag>
+              }}
+            </el-tag>
           </template>
         </vxe-table-column>
       </vxe-table>

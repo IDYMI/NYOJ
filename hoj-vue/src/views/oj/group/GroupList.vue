@@ -20,9 +20,7 @@
             size="small"
             :disabled="!isAuthenticated"
             @click="handleOnlyMine(!query.onlyMine)"
-          >
-            {{ query.onlyMine ? $t('m.All_Group') : $t('m.My_Group') }}
-          </el-button>
+          >{{ query.onlyMine ? $t('m.All_Group') : $t('m.My_Group') }}</el-button>
           <el-button
             class="hidden-sm-and-up"
             type="warning"
@@ -37,9 +35,7 @@
             icon="el-icon-plus"
             size="small"
             @click="toCreateGroup"
-          >
-            {{ $t('m.Create_Group') }}
-          </el-button>
+          >{{ $t('m.Create_Group') }}</el-button>
           <el-button
             class="hidden-sm-and-up"
             type="primary"
@@ -56,9 +52,7 @@
               class="category-item"
               :effect="query.auth ? 'plain' : 'dark'"
               @click="filterByAuth(null)"
-            >
-              {{ $t('m.All') }}
-            </el-tag>
+            >{{ $t('m.All') }}</el-tag>
             <el-tag
               size="medium"
               class="category-item"
@@ -67,9 +61,7 @@
               :effect="query.auth == index ? 'dark' : 'plain'"
               :key="index"
               @click="filterByAuth(index)"
-            >
-              {{ $t('m.Group_' + key.name) }}
-            </el-tag>
+            >{{ $t('m.Group_' + key.name) }}</el-tag>
           </div>
         </section>
       </el-card>
@@ -86,10 +78,7 @@
           v-if="!groupList.length"
           style="margin-top: 10px; margin-bottom: 10px"
         >
-          <el-card
-            :body-style="{ padding: '0px' }"
-            style="border-radius: 10px;"
-          >
+          <el-card :body-style="{ padding: '0px' }" style="border-radius: 10px;">
             <el-empty :description="$t('m.No_Groups')"></el-empty>
           </el-card>
         </el-col>
@@ -106,10 +95,7 @@
         >
           <el-row :gutter="1">
             <el-col :span="7" style="text-align: center;">
-              <el-card
-                :body-style="{ padding: '0px' }"
-                style="border-radius: 10px; height: 170px"
-              >
+              <el-card :body-style="{ padding: '0px' }" style="border-radius: 10px; height: 170px">
                 <template v-if="group.avatar">
                   <el-image
                     :src="group.avatar"
@@ -131,15 +117,14 @@
                   type="primary"
                   :underline="false"
                   @click="toUserHome(group.owner)"
-                  ><i class="el-icon-user-solid"></i> {{ group.owner }}
+                >
+                  <i class="el-icon-user-solid"></i>
+                  {{ group.owner }}
                 </el-link>
               </el-card>
             </el-col>
             <el-col :span="17" :class="GROUP_TYPE_REVERSE[group.auth].name">
-              <el-card
-                :body-style="{ padding: '0px' }"
-                style="border-radius: 10px; height: 170px"
-              >
+              <el-card :body-style="{ padding: '0px' }" style="border-radius: 10px; height: 170px">
                 <div slot="header" style="height: 24px">
                   <a class="group-name" @click="toGroup(group.id)">
                     <Marquee :val="group.name" :id="group.id"></Marquee>
@@ -153,9 +138,7 @@
                   <span>
                     <i class="el-icon-user-solid"></i>
                     <i class="el-icon-close">{{ group.memberCount }}</i>
-                    <el-tooltip
-                      :content="$t('m.' + GROUP_TYPE_REVERSE[group.auth].tips)"
-                    >
+                    <el-tooltip :content="$t('m.' + GROUP_TYPE_REVERSE[group.auth].tips)">
                       <el-tag
                         class="group-auth"
                         size="medium"
@@ -164,7 +147,7 @@
                         @click="filterByAuth(group.auth)"
                       >
                         {{
-                          $t('m.Group_' + GROUP_TYPE_REVERSE[group.auth].name)
+                        $t('m.Group_' + GROUP_TYPE_REVERSE[group.auth].name)
                         }}
                       </el-tag>
                     </el-tooltip>
@@ -175,15 +158,13 @@
                         size="medium"
                         type="primary"
                         effect="plain"
-                      >
-                        {{ $t('m.Group_Hidden') }}
-                      </el-tag>
+                      >{{ $t('m.Group_Hidden') }}</el-tag>
                     </el-tooltip>
                   </span>
                   <span style="float: right">
-                    <i class="el-icon-time">
-                      {{ group.gmtCreate | localtime((format = 'YYYY-MM-DD')) }}
-                    </i>
+                    <i
+                      class="el-icon-time"
+                    >{{ group.gmtCreate | localtime((format = 'YYYY-MM-DD')) }}</i>
                   </span>
                 </div>
               </el-card>
@@ -219,16 +200,11 @@
                 minlength="5"
                 maxlength="25"
                 show-word-limit
-              >
-              </el-input>
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="12" :xs="24">
-            <el-form-item
-              :label="$t('m.Group_Short_Name')"
-              required
-              prop="shortName"
-            >
+            <el-form-item :label="$t('m.Group_Short_Name')" required prop="shortName">
               <el-input
                 v-model="group.shortName"
                 :placeholder="$t('m.Group_Short_Name')"
@@ -236,8 +212,7 @@
                 minlength="5"
                 maxlength="10"
                 show-word-limit
-              >
-              </el-input>
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -249,39 +224,20 @@
                 minlength="5"
                 maxlength="50"
                 show-word-limit
-              >
-              </el-input>
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="8" :xs="24">
             <el-form-item :label="$t('m.Group_Auth')" required prop="auth">
               <el-select v-model="group.auth">
-                <el-tooltip
-                  :content="$t('m.Group_Public_Tips')"
-                  placement="right"
-                >
-                  <el-option
-                    :label="$t('m.Group_Public')"
-                    :value="1"
-                  ></el-option>
+                <el-tooltip :content="$t('m.Group_Public_Tips')" placement="right">
+                  <el-option :label="$t('m.Group_Public')" :value="1"></el-option>
                 </el-tooltip>
-                <el-tooltip
-                  :content="$t('m.Group_Protected_Tips')"
-                  placement="right"
-                >
-                  <el-option
-                    :label="$t('m.Group_Protected')"
-                    :value="2"
-                  ></el-option>
+                <el-tooltip :content="$t('m.Group_Protected_Tips')" placement="right">
+                  <el-option :label="$t('m.Group_Protected')" :value="2"></el-option>
                 </el-tooltip>
-                <el-tooltip
-                  :content="$t('m.Group_Private_Tips')"
-                  placement="right"
-                >
-                  <el-option
-                    :label="$t('m.Group_Private')"
-                    :value="3"
-                  ></el-option>
+                <el-tooltip :content="$t('m.Group_Private_Tips')" placement="right">
+                  <el-option :label="$t('m.Group_Private')" :value="3"></el-option>
                 </el-tooltip>
               </el-select>
             </el-form-item>
@@ -295,8 +251,7 @@
                 minlength="6"
                 maxlength="6"
                 show-word-limit
-              >
-              </el-input>
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :md="8" :xs="24">
@@ -305,43 +260,42 @@
                 v-model="group.visible"
                 :active-text="$t('m.Group_Visible')"
                 :inactive-text="$t('m.Group_Not_Visible')"
-              >
-              </el-switch>
+              ></el-switch>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item
-              :label="$t('m.Group_Description')"
-              required
-              prop="description"
-            >
+            <el-form-item :label="$t('m.Group_Description')" required prop="description">
               <Editor :value.sync="group.description"></Editor>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="danger" @click.native="showEditGroupDialog = false">{{
+        <el-button type="danger" @click.native="showEditGroupDialog = false">
+          {{
           $t('m.Cancel')
-        }}</el-button>
-        <el-button type="primary" @click.native="submitGroup">{{
+          }}
+        </el-button>
+        <el-button type="primary" @click.native="submitGroup">
+          {{
           $t('m.OK')
-        }}</el-button>
+          }}
+        </el-button>
       </span>
     </el-dialog>
   </el-row>
 </template>
 
 <script>
-import { GROUP_TYPE_REVERSE } from '@/common/constants';
-import api from '@/common/api';
-import mMessage from '@/common/message';
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import Editor from '@/components/admin/Editor';
-import Marquee from '@/components/oj/common/Marquee';
+import { GROUP_TYPE_REVERSE } from "@/common/constants";
+import api from "@/common/api";
+import mMessage from "@/common/message";
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import Editor from "@/components/admin/Editor";
+import Marquee from "@/components/oj/common/Marquee";
 export default {
-  name: 'GroupList',
+  name: "GroupList",
   components: {
     Pagination,
     Editor,
@@ -351,20 +305,20 @@ export default {
     return {
       showEditGroupDialog: false,
       query: {
-        keyword: '',
+        keyword: "",
         auth: 0,
-        currentPage:1,
-        limit:15,
+        currentPage: 1,
+        limit: 15,
         onlyMine: false,
       },
       total: 0,
       group: {
-        avatar: '',
-        name: '',
-        shortName: '',
-        brief: '',
-        description: '',
-        owner: '',
+        avatar: "",
+        name: "",
+        shortName: "",
+        brief: "",
+        description: "",
+        owner: "",
         auth: 1,
         visible: true,
       },
@@ -372,80 +326,80 @@ export default {
         name: [
           {
             required: true,
-            message: this.$i18n.t('m.Group_Name_Check_Required'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Group_Name_Check_Required"),
+            trigger: "blur",
           },
           {
             min: 5,
             max: 25,
-            message: this.$i18n.t('m.Group_Name_Check_Min_Max'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Group_Name_Check_Min_Max"),
+            trigger: "blur",
           },
         ],
         shortName: [
           {
             required: true,
-            message: this.$i18n.t('m.Group_Short_Name_Check_Required'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Group_Short_Name_Check_Required"),
+            trigger: "blur",
           },
           {
             min: 5,
             max: 10,
-            message: this.$i18n.t('m.Group_Short_Name_Check_Min_Max'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Group_Short_Name_Check_Min_Max"),
+            trigger: "blur",
           },
         ],
         brief: [
           {
             required: true,
-            message: this.$i18n.t('m.Group_Brief_Check_Required'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Group_Brief_Check_Required"),
+            trigger: "blur",
           },
           {
             min: 5,
             max: 50,
-            message: this.$i18n.t('m.Group_Brief_Check_Min_Max'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Group_Brief_Check_Min_Max"),
+            trigger: "blur",
           },
         ],
         code: [
           {
             required: true,
-            message: this.$i18n.t('m.Group_Code_Check_Required'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Group_Code_Check_Required"),
+            trigger: "blur",
           },
           {
             min: 6,
             max: 6,
-            message: this.$i18n.t('m.Group_Code_Check_Min_Max'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Group_Code_Check_Min_Max"),
+            trigger: "blur",
           },
         ],
         auth: [
           {
             required: true,
-            message: this.$i18n.t('m.Group_Auth_Check_Required'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Group_Auth_Check_Required"),
+            trigger: "blur",
           },
         ],
         description: [
           {
             required: true,
-            message: this.$i18n.t('m.Group_Description_Check_Required'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Group_Description_Check_Required"),
+            trigger: "blur",
           },
           {
             min: 5,
             max: 1000,
-            message: this.$i18n.t('m.Group_Description_Check_Min_Max'),
-            trigger: 'blur',
+            message: this.$i18n.t("m.Group_Description_Check_Min_Max"),
+            trigger: "blur",
           },
         ],
       },
       backupGroup: null,
       groupList: [],
       loading: false,
-      defaultAvatar: require('@/assets/default.jpg'),
+      defaultAvatar: require("@/assets/default.jpg"),
     };
   },
   mounted() {
@@ -458,8 +412,8 @@ export default {
     init() {
       let route = this.$route.query;
       this.query.auth = route.auth;
-      this.query.keyword = route.keyword || '';
-      this.query.onlyMine = route.onlyMine + '' == 'true' ? true : false;
+      this.query.keyword = route.keyword || "";
+      this.query.onlyMine = route.onlyMine + "" == "true" ? true : false;
       this.query.currentPage = route.currentPage || 1;
       this.query.limit = route.limit || 15;
       this.getGroupList();
@@ -496,52 +450,54 @@ export default {
     },
     getGroupList() {
       this.loading = true;
-      api.getGroupList(this.query.currentPage, this.query.limit, this.query).then(
-        (res) => {
-          this.groupList = res.data.data.records;
-          this.total = res.data.data.total;
-          this.loading = false;
-        },
-        (err) => {
-          this.loading = false;
-        }
-      );
+      api
+        .getGroupList(this.query.currentPage, this.query.limit, this.query)
+        .then(
+          (res) => {
+            this.groupList = res.data.data.records;
+            this.total = res.data.data.total;
+            this.loading = false;
+          },
+          (err) => {
+            this.loading = false;
+          }
+        );
     },
     toGroup(groupID) {
       if (!this.isAuthenticated) {
-        mMessage.warning(this.$i18n.t('m.Please_login_first'));
-        this.$store.dispatch('changeModalStatus', { visible: true });
+        mMessage.warning(this.$i18n.t("m.Please_login_first"));
+        this.$store.dispatch("changeModalStatus", { visible: true });
       } else {
         this.$router.push({
-          name: 'GroupDetails',
+          name: "GroupDetails",
           params: { groupID: groupID },
         });
       }
     },
     toUserHome(username) {
       this.$router.push({
-        name: 'UserHome',
+        name: "UserHome",
         query: { username: username },
       });
     },
     toCreateGroup() {
       if (!this.isAuthenticated) {
-        mMessage.warning(this.$i18n.t('m.Please_login_first'));
-        this.$store.dispatch('changeModalStatus', { visible: true });
+        mMessage.warning(this.$i18n.t("m.Please_login_first"));
+        this.$store.dispatch("changeModalStatus", { visible: true });
       } else {
         if (this.backupGroup) {
           this.group = this.backupGroup;
         } else {
           this.group = {
             id: null,
-            avatar: '',
-            name: '',
-            shortName: '',
-            brief: '',
-            description: '',
-            owner: '',
+            avatar: "",
+            name: "",
+            shortName: "",
+            brief: "",
+            description: "",
+            owner: "",
             auth: 1,
-            code: '',
+            code: "",
             status: null,
             visible: true,
           };
@@ -552,20 +508,20 @@ export default {
     onOpenEditDialog() {
       setTimeout(() => {
         if (document.createEvent) {
-          let event = document.createEvent('HTMLEvents');
-          event.initEvent('resize', true, true);
+          let event = document.createEvent("HTMLEvents");
+          event.initEvent("resize", true, true);
           window.dispatchEvent(event);
         } else if (document.createEventObject) {
-          window.fireEvent('onresize');
+          window.fireEvent("onresize");
         }
       }, 0);
     },
     submitGroup() {
-      this.$refs['group'].validate((valid) => {
+      this.$refs["group"].validate((valid) => {
         if (valid) {
           let group = Object.assign({}, this.group);
           api.addGroup(group).then((res) => {
-            mMessage.success(this.$i18n.t('m.Create_Successfully'));
+            mMessage.success(this.$i18n.t("m.Create_Successfully"));
             this.showEditGroupDialog = false;
             this.init();
           });
@@ -574,7 +530,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isAuthenticated']),
+    ...mapGetters(["isAuthenticated"]),
   },
   watch: {
     $route(newVal, oldVal) {

@@ -10,8 +10,7 @@
               size="small"
               @click="goCreateTraining"
               icon="el-icon-plus"
-              >{{ $t("m.Create") }}
-            </el-button>
+            >{{ $t("m.Create") }}</el-button>
           </span>
           <span>
             <vxe-input
@@ -47,19 +46,10 @@
               size="small"
               style="width: 180px"
             >
-              <el-option
-                :label="$t('m.All_Traning')"
-                :value="'All'"
-              ></el-option>
+              <el-option :label="$t('m.All_Traning')" :value="'All'"></el-option>
 
-              <el-option
-                :label="$t('m.Training_Public')"
-                :value="'Public'"
-              ></el-option>
-              <el-option
-                :label="$t('m.Training_Private')"
-                :value="'Private'"
-              ></el-option>
+              <el-option :label="$t('m.Training_Public')" :value="'Public'"></el-option>
+              <el-option :label="$t('m.Training_Private')" :value="'Private'"></el-option>
             </el-select>
           </span>
         </div>
@@ -72,21 +62,12 @@
         stripe
         align="center"
       >
-        <vxe-table-column field="id" width="80" title="ID"> </vxe-table-column>
-        <vxe-table-column field="rank" width="80" :title="$t('m.Order_Number')">
-        </vxe-table-column>
-        <vxe-table-column
-          field="title"
-          min-width="150"
-          :title="$t('m.Title')"
-          show-overflow
-        >
-        </vxe-table-column>
+        <vxe-table-column field="id" width="80" title="ID"></vxe-table-column>
+        <vxe-table-column field="rank" width="80" :title="$t('m.Order_Number')"></vxe-table-column>
+        <vxe-table-column field="title" min-width="150" :title="$t('m.Title')" show-overflow></vxe-table-column>
         <vxe-table-column :title="$t('m.Auth')" width="100">
           <template v-slot="{ row }">
-            <el-tag :type="TRAINING_TYPE[row.auth]['color']" effect="dark">
-              {{ row.auth }}
-            </el-tag>
+            <el-tag :type="TRAINING_TYPE[row.auth]['color']" effect="dark">{{ row.auth }}</el-tag>
           </template>
         </vxe-table-column>
         <vxe-table-column :title="$t('m.Visible')" min-width="80">
@@ -95,8 +76,7 @@
               v-model="row.status"
               :disabled="!isMainAdminRole && userInfo.username != row.author"
               @change="changeTrainingStatus(row.id, row.status, row.author)"
-            >
-            </el-switch>
+            ></el-switch>
           </template>
         </vxe-table-column>
         <vxe-table-column min-width="210" :title="$t('m.Info')">
@@ -110,18 +90,13 @@
           <template v-slot="{ row }">
             <template v-if="isMainAdminRole || userInfo.username == row.author">
               <div style="margin-bottom: 10px">
-                <el-tooltip
-                  effect="dark"
-                  :content="$t('m.Edit')"
-                  placement="top"
-                >
+                <el-tooltip effect="dark" :content="$t('m.Edit')" placement="top">
                   <el-button
                     icon="el-icon-edit"
                     size="mini"
                     @click.native="goEdit(row.id)"
                     type="primary"
-                  >
-                  </el-button>
+                  ></el-button>
                 </el-tooltip>
                 <el-tooltip
                   effect="dark"
@@ -133,8 +108,7 @@
                     size="mini"
                     @click.native="goTrainingProblemList(row.id)"
                     type="success"
-                  >
-                  </el-button>
+                  ></el-button>
                 </el-tooltip>
               </div>
             </template>
@@ -149,8 +123,7 @@
                 size="mini"
                 @click.native="deleteTraining(row.id)"
                 type="danger"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
           </template>
         </vxe-table-column>
@@ -162,8 +135,7 @@
           @current-change="currentChange"
           :page-size="pageSize"
           :total="total"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </el-card>
   </div>

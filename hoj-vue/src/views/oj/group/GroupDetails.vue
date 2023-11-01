@@ -6,46 +6,35 @@
           <el-tabs @tab-click="tabClick" v-model="route_name">
             <el-tab-pane name="GroupDetails" lazy>
               <span slot="label">
-                <i class="el-icon-s-home"></i>&nbsp;{{ $t("m.Group_Home") }}
+                <i class="el-icon-s-home"></i>
+                &nbsp;{{ $t("m.Group_Home") }}
               </span>
             </el-tab-pane>
-            <el-tab-pane
-              lazy
-              name="GroupProblemList"
-              :disabled="groupMenuDisabled"
-            >
+            <el-tab-pane lazy name="GroupProblemList" :disabled="groupMenuDisabled">
               <span slot="label">
-                <i class="fa fa-list"></i>&nbsp;{{ $t("m.Group_Problem") }}
+                <i class="fa fa-list"></i>
+                &nbsp;{{ $t("m.Group_Problem") }}
               </span>
             </el-tab-pane>
-            <el-tab-pane
-              lazy
-              name="GroupTrainingList"
-              :disabled="groupMenuDisabled"
-            >
+            <el-tab-pane lazy name="GroupTrainingList" :disabled="groupMenuDisabled">
               <span slot="label">
-                <i class="el-icon-s-flag"></i>&nbsp;{{ $t("m.Group_Training") }}
+                <i class="el-icon-s-flag"></i>
+                &nbsp;{{ $t("m.Group_Training") }}
               </span>
             </el-tab-pane>
 
-            <el-tab-pane
-              lazy
-              name="GroupContestList"
-              :disabled="groupMenuDisabled"
-            >
+            <el-tab-pane lazy name="GroupContestList" :disabled="groupMenuDisabled">
               <span slot="label">
-                <i class="el-icon-s-data"></i>&nbsp;{{ $t("m.Group_Contest") }}
+                <i class="el-icon-s-data"></i>
+                &nbsp;{{ $t("m.Group_Contest") }}
               </span>
             </el-tab-pane>
 
-            <el-tab-pane
-              lazy
-              name="GroupSubmissionList"
-              :disabled="groupMenuDisabled"
-            >
+            <el-tab-pane lazy name="GroupSubmissionList" :disabled="groupMenuDisabled">
               <span slot="label">
-                <i class="el-icon-s-marketing"></i>&nbsp;{{
-                  $t("m.Group_Submission")
+                <i class="el-icon-s-marketing"></i>
+                &nbsp;{{
+                $t("m.Group_Submission")
                 }}
               </span>
             </el-tab-pane>
@@ -57,37 +46,38 @@
               v-if="websiteConfig.openGroupDiscussion"
             >
               <span slot="label">
-                <i class="el-icon-share"></i>&nbsp;{{
-                  $t("m.Group_Discussion")
+                <i class="el-icon-share"></i>
+                &nbsp;{{
+                $t("m.Group_Discussion")
                 }}
               </span>
             </el-tab-pane>
-            <el-tab-pane
-              lazy
-              name="GroupMemberList"
-              :disabled="groupMenuDisabled"
-            >
+            <el-tab-pane lazy name="GroupMemberList" :disabled="groupMenuDisabled">
               <span slot="label">
-                <i class="el-icon-user-solid"></i>&nbsp;{{
-                  $t("m.Group_Member")
+                <i class="el-icon-user-solid"></i>
+                &nbsp;{{
+                $t("m.Group_Member")
                 }}
               </span>
             </el-tab-pane>
             <el-tab-pane lazy name="GroupAnnouncementList" v-if="isGroupAdmin">
               <span slot="label">
-                <i class="fa fa-bullhorn"></i>&nbsp;{{
-                  $t("m.Group_Announcement")
+                <i class="fa fa-bullhorn"></i>
+                &nbsp;{{
+                $t("m.Group_Announcement")
                 }}
               </span>
             </el-tab-pane>
             <el-tab-pane lazy name="GroupSetting" v-if="isGroupRoot">
               <span slot="label">
-                <i class="el-icon-s-tools"></i>&nbsp;{{ $t("m.Group_Setting") }}
+                <i class="el-icon-s-tools"></i>
+                &nbsp;{{ $t("m.Group_Setting") }}
               </span>
             </el-tab-pane>
             <el-tab-pane lazy name="GroupRank" :disabled="groupMenuDisabled">
               <span slot="label">
-                <i class="el-icon-medal-1"></i>&nbsp;{{ $t("m.Group_Rank") }}
+                <i class="el-icon-medal-1"></i>
+                &nbsp;{{ $t("m.Group_Rank") }}
               </span>
             </el-tab-pane>
           </el-tabs>
@@ -117,18 +107,13 @@
           </transition>
           <el-card v-show="$route.name === 'GroupDetails'">
             <el-row>
-              <el-col
-                :md="isGroupMember || isGroupRoot ? 12 : 24"
-                :sm="24"
-                :xs="24"
-              >
+              <el-col :md="isGroupMember || isGroupRoot ? 12 : 24" :sm="24" :xs="24">
                 <div class="description-body">
                   <Markdown
                     v-if="group.description"
                     :isAvoidXss="true"
                     :content="group.description"
-                  >
-                  </Markdown>
+                  ></Markdown>
                   <div class="markdown-body" v-else>
                     <p>{{ $t("m.Not_set_yet") }}</p>
                   </div>
@@ -161,12 +146,7 @@
                   <span>{{ $t("m.Group_Name") }}</span>
                 </span>
                 <span>
-                  <el-tooltip
-                    class="item"
-                    effect="dark"
-                    :content="group.name"
-                    placement="top"
-                  >
+                  <el-tooltip class="item" effect="dark" :content="group.name" placement="top">
                     <span>{{ group.name | ellipsis }}</span>
                   </el-tooltip>
                 </span>
@@ -181,7 +161,9 @@
                     type="primary"
                     :underline="false"
                     @click="toUserHome(group.owner)"
-                    ><i class="el-icon-user-solid"></i> {{ group.owner }}
+                  >
+                    <i class="el-icon-user-solid"></i>
+                    {{ group.owner }}
                   </el-link>
                 </span>
               </div>
@@ -198,9 +180,7 @@
                       :type="GROUP_TYPE_REVERSE[group.auth].color"
                       size="medium"
                       effect="dark"
-                    >
-                      {{ $t("m.Group_" + GROUP_TYPE_REVERSE[group.auth].name) }}
-                    </el-tag>
+                    >{{ $t("m.Group_" + GROUP_TYPE_REVERSE[group.auth].name) }}</el-tag>
                   </el-tooltip>
                   <el-tooltip :content="$t('m.Group_Hidden_Tips')">
                     <el-tag
@@ -208,9 +188,7 @@
                       size="medium"
                       type="primary"
                       effect="dark"
-                    >
-                      {{ $t("m.Group_Hidden") }}
-                    </el-tag>
+                    >{{ $t("m.Group_Hidden") }}</el-tag>
                   </el-tooltip>
                 </span>
               </div>
@@ -219,9 +197,7 @@
                   <span>{{ $t("m.Created_Time") }}</span>
                 </span>
                 <span>
-                  <i class="el-icon-time">
-                    {{ group.gmtCreate | localtime((format = "YYYY-MM-DD")) }}
-                  </i>
+                  <i class="el-icon-time">{{ group.gmtCreate | localtime((format = "YYYY-MM-DD")) }}</i>
                 </span>
               </div>
               <div>
@@ -235,29 +211,27 @@
             </div>
             <div style="text-align: center">
               <span v-if="isSuperAdmin">
-                <el-button type="danger" size="small" @click="disbandGroup">
-                  {{ $t("m.Disband_Group") }}
-                </el-button>
+                <el-button
+                  type="danger"
+                  size="small"
+                  @click="disbandGroup"
+                >{{ $t("m.Disband_Group") }}</el-button>
               </span>
               <span v-else-if="isGroupMember">
-                <el-button type="danger" size="small" @click="exitGroup">
-                  {{ $t("m.Exit_Group") }}
-                </el-button>
+                <el-button type="danger" size="small" @click="exitGroup">{{ $t("m.Exit_Group") }}</el-button>
               </span>
               <span v-else-if="isAuthenticated && userAuth == 0">
-                <el-button type="primary" size="small" @click="handleApply">
-                  {{ $t("m.Apply_Group") }}
-                </el-button>
+                <el-button
+                  type="primary"
+                  size="small"
+                  @click="handleApply"
+                >{{ $t("m.Apply_Group") }}</el-button>
               </span>
               <span v-else-if="userAuth == 1">
-                <el-button type="warning" size="small">
-                  {{ $t("m.Applying") }}
-                </el-button>
+                <el-button type="warning" size="small">{{ $t("m.Applying") }}</el-button>
               </span>
               <span v-else-if="userAuth == 2">
-                <el-button type="info" size="small">
-                  {{ $t("m.Refused") }}
-                </el-button>
+                <el-button type="info" size="small">{{ $t("m.Refused") }}</el-button>
               </span>
             </div>
           </el-card>
@@ -287,8 +261,7 @@
                 minlength="6"
                 maxlength="6"
                 show-word-limit
-              >
-              </el-input>
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -302,19 +275,22 @@
                 minlength="5"
                 maxlength="100"
                 show-word-limit
-              >
-              </el-input>
+              ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="danger" @click.native="showApplyDialog = false">{{
+        <el-button type="danger" @click.native="showApplyDialog = false">
+          {{
           $t("m.Cancel")
-        }}</el-button>
-        <el-button type="primary" @click.native="submitApply">{{
+          }}
+        </el-button>
+        <el-button type="primary" @click.native="submitApply">
+          {{
           $t("m.OK")
-        }}</el-button>
+          }}
+        </el-button>
       </span>
     </el-dialog>
   </div>

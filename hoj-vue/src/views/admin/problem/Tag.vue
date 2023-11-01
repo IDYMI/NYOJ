@@ -10,8 +10,7 @@
               size="small"
               @click="openTagDialog('add', null)"
               icon="el-icon-plus"
-              >{{ $t('m.Add_Tag') }}
-            </el-button>
+            >{{ $t('m.Add_Tag') }}</el-button>
           </span>
           <span>
             <el-button
@@ -19,8 +18,7 @@
               size="small"
               @click="openTagClassificationDialog('add', null)"
               icon="el-icon-plus"
-              >{{ $t('m.Add_Tag_Classification') }}
-            </el-button>
+            >{{ $t('m.Add_Tag_Classification') }}</el-button>
           </span>
           <span>
             <el-select
@@ -43,60 +41,64 @@
       </div>
       <h3 style="margin: -5px;">{{ $t('m.Tag_Tips') }}</h3>
     </el-card>
-    <div v-loading = "getTagListLoading">
+    <div v-loading="getTagListLoading">
       <el-row :gutter="20">
-          <el-col v-for="(tagsAndClassification,index)  in tagsAndClassificationList"
-            :key="index" :md="8" :xs="24">
-            <el-card style="margin-top:15px">
-              <el-collapse v-model="activeTagClassificationIdList">
-                  <el-collapse-item :name="tagsAndClassification.classification == null?-1:tagsAndClassification.classification.id">
-                      <template slot="title">
-                        <span>{{ tagsAndClassification.classification!=null?
-                          tagsAndClassification.classification.name:$t('m.Unclassified')
-                        }}
-                        </span>
-                        <span style="margin-left:10px;"
-                          v-if="tagsAndClassification.classification!=null">
-                          <el-button type="primary"
-                            icon="el-icon-edit"
-                            circle
-                            size="mini"
-                            @click.stop="openTagClassificationDialog('update',tagsAndClassification.classification)"
-                          ></el-button>
-                        </span>
-                        <span style="margin-left:10px;"
-                          v-if="tagsAndClassification.classification!=null">
-                          <el-button type="danger"
-                            icon="el-icon-delete"
-                            circle
-                            size="mini"
-                            @click.stop="deleteTagClassification(tagsAndClassification.classification)"
-                          ></el-button>
-                        </span>
-                      </template>
-                      <el-button
-                        class="button-new-tag"
-                        size="small"
-                        @click="openTagDialog('add', null,tagsAndClassification.classification)"
-                        >+ {{ $t('m.Add_Tag') }}</el-button
-                      >
-                      <el-tag
-                        :key="index"
-                        v-for="(tag, index) in tagsAndClassification.tagList"
-                        closable
-                        :color="tag.color ? tag.color : '#409eff'"
-                        effect="dark"
-                        :disable-transitions="false"
-                        @close="deleteTag(tag)"
-                        @click="openTagDialog('update', tag)"
-                        class="tag"
-                      >
-                        {{ tag.name }}
-                      </el-tag>
-                  </el-collapse-item>
-              </el-collapse>
-            </el-card>
-          </el-col>
+        <el-col
+          v-for="(tagsAndClassification,index)  in tagsAndClassificationList"
+          :key="index"
+          :md="8"
+          :xs="24"
+        >
+          <el-card style="margin-top:15px">
+            <el-collapse v-model="activeTagClassificationIdList">
+              <el-collapse-item
+                :name="tagsAndClassification.classification == null?-1:tagsAndClassification.classification.id"
+              >
+                <template slot="title">
+                  <span>
+                    {{ tagsAndClassification.classification!=null?
+                    tagsAndClassification.classification.name:$t('m.Unclassified')
+                    }}
+                  </span>
+                  <span style="margin-left:10px;" v-if="tagsAndClassification.classification!=null">
+                    <el-button
+                      type="primary"
+                      icon="el-icon-edit"
+                      circle
+                      size="mini"
+                      @click.stop="openTagClassificationDialog('update',tagsAndClassification.classification)"
+                    ></el-button>
+                  </span>
+                  <span style="margin-left:10px;" v-if="tagsAndClassification.classification!=null">
+                    <el-button
+                      type="danger"
+                      icon="el-icon-delete"
+                      circle
+                      size="mini"
+                      @click.stop="deleteTagClassification(tagsAndClassification.classification)"
+                    ></el-button>
+                  </span>
+                </template>
+                <el-button
+                  class="button-new-tag"
+                  size="small"
+                  @click="openTagDialog('add', null,tagsAndClassification.classification)"
+                >+ {{ $t('m.Add_Tag') }}</el-button>
+                <el-tag
+                  :key="index"
+                  v-for="(tag, index) in tagsAndClassification.tagList"
+                  closable
+                  :color="tag.color ? tag.color : '#409eff'"
+                  effect="dark"
+                  :disable-transitions="false"
+                  @close="deleteTag(tag)"
+                  @click="openTagDialog('update', tag)"
+                  class="tag"
+                >{{ tag.name }}</el-tag>
+              </el-collapse-item>
+            </el-collapse>
+          </el-card>
+        </el-col>
       </el-row>
     </div>
 
@@ -114,7 +116,7 @@
           <el-color-picker v-model="tag.color"></el-color-picker>
         </el-form-item>
 
-        <el-form-item :label="$t('m.Tag_Attribution')" required="">
+        <el-form-item :label="$t('m.Tag_Attribution')" required>
           <el-select v-model="tag.oj" size="small" style="width: 150px;">
             <el-option :label="$t('m.My_OJ')" :value="'ME'"></el-option>
             <!-- <el-option :label="$t('m.My_OJ2')" :value="'ME2'"></el-option> -->
@@ -127,7 +129,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item :label="$t('m.Tag_Classification')" required="">
+        <el-form-item :label="$t('m.Tag_Classification')" required>
           <el-select v-model="tag.tcid" size="small" style="width: 150px;">
             <el-option
               :label="classification.name"
@@ -144,13 +146,12 @@
             type="primary"
             @click="upsertTag"
             :loading="upsertTagLoading"
-            >{{ $t('m.' + upsertTagBtn) }}
-          </el-button>
+          >{{ $t('m.' + upsertTagBtn) }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
 
-     <el-dialog
+    <el-dialog
       :title="$t('m.' + upsertTagClassificationTitle)"
       width="350px"
       :visible.sync="addTagClassificationDialogVisible"
@@ -160,8 +161,13 @@
         <el-form-item :label="$t('m.Tag_Classification_Name')" required>
           <el-input v-model="tagClassification.name" size="small"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('m.Tag_Classification_Attribution')" required="">
-          <el-select v-model="tagClassification.oj" size="small" style="width: 150px;" :disabled="true">
+        <el-form-item :label="$t('m.Tag_Classification_Attribution')" required>
+          <el-select
+            v-model="tagClassification.oj"
+            size="small"
+            style="width: 150px;"
+            :disabled="true"
+          >
             <el-option :label="$t('m.My_OJ')" :value="'ME'"></el-option>
             <!-- <el-option :label="$t('m.My_OJ2')" :value="'ME2'"></el-option> -->
             <el-option
@@ -174,11 +180,7 @@
         </el-form-item>
 
         <el-form-item :label="$t('m.Tag_Classification_Rank')">
-          <el-input-number
-              v-model="tagClassification.rank"
-              :min="0"
-              :max="2147483647"
-            ></el-input-number>
+          <el-input-number v-model="tagClassification.rank" :min="0" :max="2147483647"></el-input-number>
         </el-form-item>
 
         <el-form-item style="text-align:center">
@@ -186,47 +188,46 @@
             type="primary"
             @click="upsertTagClassification"
             :loading="upsertTagClassificationLoading"
-            >{{ $t('m.' + upsertTagBtn) }}
-          </el-button>
+          >{{ $t('m.' + upsertTagBtn) }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
   </div>
 </template>
 <script>
-import myMessage from '@/common/message';
-import api from '@/common/api';
-import { REMOTE_OJ } from '@/common/constants';
+import myMessage from "@/common/message";
+import api from "@/common/api";
+import { REMOTE_OJ } from "@/common/constants";
 export default {
   data() {
     return {
-      tagOj: 'ME',
+      tagOj: "ME",
       REMOTE_OJ: {},
       getTagListLoading: false,
       tagsAndClassificationList: [],
-      tagClassificationList :[],
-      chooseTagClassificationList:[],
+      tagClassificationList: [],
+      chooseTagClassificationList: [],
       addTagDialogVisible: false,
-      upsertTagTitle: 'Add_Tag',
-      upsertTagBtn: 'To_Add',
+      upsertTagTitle: "Add_Tag",
+      upsertTagBtn: "To_Add",
       upsertTagLoading: false,
       tag: {
         id: null,
         name: null,
         color: null,
-        oj: 'ME',
+        oj: "ME",
         tcid: null,
       },
-      tagClassification:{
-        id:null,
-        name:null,
-        rank:0,
-        oj:'ME'
+      tagClassification: {
+        id: null,
+        name: null,
+        rank: 0,
+        oj: "ME",
       },
       addTagClassificationDialogVisible: false,
-      upsertTagClassificationTitle: 'Add_Tag_Classification',
-      upsertTagClassificationLoading:false,
-      activeTagClassificationIdList:[-1]
+      upsertTagClassificationTitle: "Add_Tag_Classification",
+      upsertTagClassificationLoading: false,
+      activeTagClassificationIdList: [-1],
     };
   },
   mounted() {
@@ -234,7 +235,7 @@ export default {
     this.init();
   },
   methods: {
-    init(){
+    init() {
       this.getTagClassification();
       this.getProblemTagsAndClassification();
     },
@@ -252,14 +253,14 @@ export default {
     },
 
     deleteTag(tag) {
-      this.$confirm(this.$i18n.t('m.Delete_Tag_Tips'), 'Tips', {
-        type: 'warning',
+      this.$confirm(this.$i18n.t("m.Delete_Tag_Tips"), "Tips", {
+        type: "warning",
       }).then(
         () => {
           api
             .admin_deleteTag(tag.id)
             .then((res) => {
-              myMessage.success(this.$i18n.t('m.Delete_successfully'));
+              myMessage.success(this.$i18n.t("m.Delete_successfully"));
               this.getProblemTagsAndClassification();
             })
             .catch(() => {});
@@ -268,31 +269,31 @@ export default {
       );
     },
     openTagDialog(action, tag, classification = null) {
-      if (action == 'add') {
-        this.upsertTagTitle = 'Add_Tag';
-        this.upsertTagBtn = 'To_Add';
+      if (action == "add") {
+        this.upsertTagTitle = "Add_Tag";
+        this.upsertTagBtn = "To_Add";
         this.tag = {
           id: null,
           name: null,
           color: null,
           oj: this.tagOj,
-          tcid: classification == null? null: classification.id
+          tcid: classification == null ? null : classification.id,
         };
       } else {
-        this.upsertTagTitle = 'Update_Tag';
-        this.upsertTagBtn = 'To_Update';
+        this.upsertTagTitle = "Update_Tag";
+        this.upsertTagBtn = "To_Update";
         this.tag = Object.assign({}, tag);
       }
       this.addTagDialogVisible = true;
     },
 
-     upsertTag() {
+    upsertTag() {
       if (this.tag.id) {
         this.upsertTagLoading = true;
         api.admin_updateTag(this.tag).then(
           (res) => {
             this.upsertTagLoading = false;
-            myMessage.success(this.$i18n.t('m.Update_Successfully'));
+            myMessage.success(this.$i18n.t("m.Update_Successfully"));
             this.addTagDialogVisible = false;
             this.getProblemTagsAndClassification();
           },
@@ -305,7 +306,7 @@ export default {
         api.admin_addTag(this.tag).then(
           (res) => {
             this.upsertTagLoading = false;
-            myMessage.success(this.$i18n.t('m.Add_Successfully'));
+            myMessage.success(this.$i18n.t("m.Add_Successfully"));
             this.addTagDialogVisible = false;
             this.getProblemTagsAndClassification();
           },
@@ -316,11 +317,13 @@ export default {
       }
     },
 
-    getTagClassification(){
-      api.admin_getTagClassification(this.tagOj).then((res)=>{
+    getTagClassification() {
+      api.admin_getTagClassification(this.tagOj).then((res) => {
         this.tagClassificationList = res.data.data;
-        this.chooseTagClassificationList = this.tagClassificationList.filter(c=>c.oj == this.tag.oj);
-      })
+        this.chooseTagClassificationList = this.tagClassificationList.filter(
+          (c) => c.oj == this.tag.oj
+        );
+      });
     },
 
     upsertTagClassification() {
@@ -329,7 +332,7 @@ export default {
         api.admin_updateTagClassification(this.tagClassification).then(
           (res) => {
             this.upsertTagClassificationLoading = false;
-            myMessage.success(this.$i18n.t('m.Update_Successfully'));
+            myMessage.success(this.$i18n.t("m.Update_Successfully"));
             this.addTagClassificationDialogVisible = false;
             this.getProblemTagsAndClassification();
           },
@@ -342,12 +345,11 @@ export default {
         api.admin_addTagClassification(this.tagClassification).then(
           (res) => {
             this.upsertTagClassificationLoading = false;
-            myMessage.success(this.$i18n.t('m.Add_Successfully'));
-            this.tagsAndClassificationList.unshift(
-              {
-                classification :res.data.data,
-                tagList:[]
-              });
+            myMessage.success(this.$i18n.t("m.Add_Successfully"));
+            this.tagsAndClassificationList.unshift({
+              classification: res.data.data,
+              tagList: [],
+            });
             this.chooseTagClassificationList.push(res.data.data);
             this.addTagClassificationDialogVisible = false;
           },
@@ -359,14 +361,14 @@ export default {
     },
 
     deleteTagClassification(tagClassification) {
-      this.$confirm(this.$i18n.t('m.Delete_Tag_Classification_Tips'), 'Tips', {
-        type: 'warning',
+      this.$confirm(this.$i18n.t("m.Delete_Tag_Classification_Tips"), "Tips", {
+        type: "warning",
       }).then(
         () => {
           api
             .admin_deleteTagClassification(tagClassification.id)
             .then((res) => {
-              myMessage.success(this.$i18n.t('m.Delete_successfully'));
+              myMessage.success(this.$i18n.t("m.Delete_successfully"));
               this.getProblemTagsAndClassification();
             })
             .catch(() => {});
@@ -376,30 +378,31 @@ export default {
     },
 
     openTagClassificationDialog(action, tagClassification) {
-      if (action == 'add') {
-        this.upsertTagClassificationTitle = 'Add_Tag_Classification';
-        this.upsertTagBtn = 'To_Add';
+      if (action == "add") {
+        this.upsertTagClassificationTitle = "Add_Tag_Classification";
+        this.upsertTagBtn = "To_Add";
         this.tagClassification = {
           id: null,
           name: null,
-          rank:0,
+          rank: 0,
           oj: this.tagOj,
         };
       } else {
-        this.upsertTagClassificationTitle = 'Update_Tag_Classification';
-        this.upsertTagBtn= 'To_Update';
+        this.upsertTagClassificationTitle = "Update_Tag_Classification";
+        this.upsertTagBtn = "To_Update";
         this.tagClassification = Object.assign({}, tagClassification);
       }
       this.addTagClassificationDialogVisible = true;
     },
-
   },
-  watch:{
-    'tag.oj'(newVal){
-      this.chooseTagClassificationList = this.tagClassificationList.filter(c=>c.oj == newVal);
+  watch: {
+    "tag.oj"(newVal) {
+      this.chooseTagClassificationList = this.tagClassificationList.filter(
+        (c) => c.oj == newVal
+      );
       this.tag.tcid = null;
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -425,9 +428,9 @@ export default {
   margin-top: 10px;
 }
 
-/deep/.el-collapse-item__header{
+/deep/.el-collapse-item__header {
   font-weight: bolder !important;
-  height:40px !important;
+  height: 40px !important;
   line-height: 40px !important;
   font-size: 15px !important;
 }

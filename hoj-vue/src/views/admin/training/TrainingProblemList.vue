@@ -2,9 +2,11 @@
   <div>
     <el-card>
       <div slot="header">
-        <span class="panel-title home-title">{{
+        <span class="panel-title home-title">
+          {{
           $t("m.Training_Problem_List")
-        }}</span>
+          }}
+        </span>
         <div class="filter-row">
           <span>
             <el-button
@@ -12,8 +14,7 @@
               size="small"
               icon="el-icon-plus"
               @click="addProblemDialogVisible = true"
-              >{{ $t("m.Add_From_Public_Problem") }}
-            </el-button>
+            >{{ $t("m.Add_From_Public_Problem") }}</el-button>
           </span>
           <span>
             <el-button
@@ -21,8 +22,7 @@
               size="small"
               @click="AddRemoteOJProblemDialogVisible = true"
               icon="el-icon-plus"
-              >{{ $t("m.Add_Rmote_OJ_Problem") }}
-            </el-button>
+            >{{ $t("m.Add_Rmote_OJ_Problem") }}</el-button>
           </span>
           <span>
             <vxe-input
@@ -44,33 +44,12 @@
         :loading="loading"
         align="center"
       >
-        <vxe-table-column min-width="64" field="id" title="ID">
-        </vxe-table-column>
-        <vxe-table-column
-          min-width="100"
-          field="problemId"
-          :title="$t('m.Display_ID')"
-        >
-        </vxe-table-column>
-        <vxe-table-column
-          field="title"
-          min-width="150"
-          :title="$t('m.Title')"
-          show-overflow
-        >
-        </vxe-table-column>
+        <vxe-table-column min-width="64" field="id" title="ID"></vxe-table-column>
+        <vxe-table-column min-width="100" field="problemId" :title="$t('m.Display_ID')"></vxe-table-column>
+        <vxe-table-column field="title" min-width="150" :title="$t('m.Title')" show-overflow></vxe-table-column>
 
-        <vxe-table-column
-          field="author"
-          min-width="100"
-          :title="$t('m.Author')"
-          show-overflow
-        >
-        </vxe-table-column>
-        <vxe-table-column
-          min-width="200"
-          :title="$t('m.Training_Problem_Rank')"
-        >
+        <vxe-table-column field="author" min-width="100" :title="$t('m.Author')" show-overflow></vxe-table-column>
+        <vxe-table-column min-width="200" :title="$t('m.Training_Problem_Rank')">
           <template v-slot="{ row }">
             <el-input-number
               v-model="trainingProblemMap[row.id].rank"
@@ -88,20 +67,9 @@
               :disabled="!isAdminRole"
               size="small"
             >
-              <el-option
-                :label="$t('m.Public_Problem')"
-                :value="1"
-                :disabled="!isAdminRole"
-              ></el-option>
-              <el-option
-                :label="$t('m.Private_Problem')"
-                :value="2"
-              ></el-option>
-              <el-option
-                :label="$t('m.Contest_Problem')"
-                :value="3"
-                :disabled="true"
-              ></el-option>
+              <el-option :label="$t('m.Public_Problem')" :value="1" :disabled="!isAdminRole"></el-option>
+              <el-option :label="$t('m.Private_Problem')" :value="2"></el-option>
+              <el-option :label="$t('m.Contest_Problem')" :value="3" :disabled="true"></el-option>
             </el-select>
           </template>
         </vxe-table-column>
@@ -118,8 +86,7 @@
                 size="mini"
                 @click.native="goEdit(row.id)"
                 type="primary"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
 
             <el-tooltip
@@ -133,8 +100,7 @@
                 size="mini"
                 @click.native="downloadTestCase(row.id)"
                 type="success"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
 
             <el-tooltip effect="dark" :content="$t('m.Remove')" placement="top">
@@ -143,8 +109,7 @@
                 size="mini"
                 @click.native="removeProblem(row.id)"
                 type="warning"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
 
             <!-- <el-tooltip
@@ -160,7 +125,7 @@
                 type="danger"
               >
               </el-button>
-            </el-tooltip> -->
+            </el-tooltip>-->
           </template>
         </vxe-table-column>
       </vxe-table>
@@ -174,8 +139,7 @@
           :total="total"
           @size-change="onPageSizeChange"
           :page-sizes="[10, 30, 50, 100]"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </el-card>
 
@@ -185,10 +149,7 @@
       :visible.sync="addProblemDialogVisible"
       :close-on-click-modal="false"
     >
-      <AddPublicProblem
-        :trainingID="trainingId"
-        @on-change="getProblemList"
-      ></AddPublicProblem>
+      <AddPublicProblem :trainingID="trainingId" @on-change="getProblemList"></AddPublicProblem>
     </el-dialog>
 
     <el-dialog
@@ -218,8 +179,7 @@
             icon="el-icon-plus"
             @click="addRemoteOJProblem"
             :loading="addRemoteOJproblemLoading"
-            >{{ $t("m.Add") }}
-          </el-button>
+          >{{ $t("m.Add") }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>

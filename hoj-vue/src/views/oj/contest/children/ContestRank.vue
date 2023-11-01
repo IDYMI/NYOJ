@@ -5,17 +5,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { RULE_TYPE } from '@/common/constants';
-const ACMContestRank = () => import('./ACMContestRank.vue');
-const OIContestRank = () => import('./OIContestRank.vue');
+import { mapGetters } from "vuex";
+import { RULE_TYPE } from "@/common/constants";
+const ACMContestRank = () => import("./ACMContestRank.vue");
+const OIContestRank = () => import("./OIContestRank.vue");
 const NullComponent = {
-  name: 'null-component',
-  template: '<div></div>',
+  name: "null-component",
+  template: "<div></div>",
 };
 
 export default {
-  name: 'contest-rank',
+  name: "contest-rank",
   components: {
     ACMContestRank,
     OIContestRank,
@@ -23,22 +23,22 @@ export default {
   },
   beforeCreate() {
     if (this.$store.state.contest.contestProblems.length === 0) {
-      this.$store.dispatch('getContestProblems');
+      this.$store.dispatch("getContestProblems");
     }
   },
   computed: {
-    ...mapGetters(['contestRuleType']),
+    ...mapGetters(["contestRuleType"]),
     currentView() {
       if (this.contestRuleType === null) {
-        return 'NullComponent';
+        return "NullComponent";
       }
       return this.contestRuleType === RULE_TYPE.ACM
-        ? 'ACMContestRank'
-        : 'OIContestRank';
+        ? "ACMContestRank"
+        : "OIContestRank";
     },
   },
   beforeRouteLeave(to, from, next) {
-    this.$store.commit('changeContestItemVisible', { menu: true });
+    this.$store.commit("changeContestItemVisible", { menu: true });
     next();
   },
 };

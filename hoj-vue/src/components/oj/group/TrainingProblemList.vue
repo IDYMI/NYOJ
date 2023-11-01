@@ -8,29 +8,11 @@
       align="center"
       v-if="!editPage"
     >
-      <vxe-table-column min-width="64" field="id" title="ID">
-      </vxe-table-column>
-      <vxe-table-column
-        min-width="100"
-        field="problemId"
-        :title="$t('m.Display_ID')"
-      >
-      </vxe-table-column>
-      <vxe-table-column
-        field="title"
-        min-width="150"
-        :title="$t('m.Title')"
-        show-overflow
-      >
-      </vxe-table-column>
+      <vxe-table-column min-width="64" field="id" title="ID"></vxe-table-column>
+      <vxe-table-column min-width="100" field="problemId" :title="$t('m.Display_ID')"></vxe-table-column>
+      <vxe-table-column field="title" min-width="150" :title="$t('m.Title')" show-overflow></vxe-table-column>
 
-      <vxe-table-column
-        field="author"
-        min-width="100"
-        :title="$t('m.Author')"
-        show-overflow
-      >
-      </vxe-table-column>
+      <vxe-table-column field="author" min-width="100" :title="$t('m.Author')" show-overflow></vxe-table-column>
       <vxe-table-column min-width="200" :title="$t('m.Training_Problem_Rank')">
         <template v-slot="{ row }">
           <el-input-number
@@ -51,29 +33,19 @@
           >
             <el-option :label="$t('m.Public_Problem')" :value="1"></el-option>
             <el-option :label="$t('m.Private_Problem')" :value="2"></el-option>
-            <el-option
-              :label="$t('m.Contest_Problem')"
-              :value="3"
-              :disabled="true"
-            ></el-option>
+            <el-option :label="$t('m.Contest_Problem')" :value="3" :disabled="true"></el-option>
           </el-select>
         </template>
       </vxe-table-column>
       <vxe-table-column title="Option" min-width="250">
         <template v-slot="{ row }">
-          <el-tooltip
-            effect="dark"
-            :content="$t('m.Edit')"
-            placement="top"
-            v-if="row.gid == gid"
-          >
+          <el-tooltip effect="dark" :content="$t('m.Edit')" placement="top" v-if="row.gid == gid">
             <el-button
               icon="el-icon-edit-outline"
               size="mini"
               @click.native="goEditProblem(row.id)"
               type="primary"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
 
           <el-tooltip
@@ -87,8 +59,7 @@
               size="mini"
               @click.native="downloadTestCase(row.id)"
               type="success"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
 
           <el-tooltip effect="dark" :content="$t('m.Remove')" placement="top">
@@ -97,8 +68,7 @@
               size="mini"
               @click.native="removeProblem(row.id)"
               type="warning"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
 
           <!-- <el-tooltip
@@ -114,7 +84,7 @@
               type="danger"
             >
             </el-button>
-          </el-tooltip> -->
+          </el-tooltip>-->
         </template>
       </vxe-table-column>
     </vxe-table>

@@ -1,10 +1,7 @@
 <template>
   <div style="margin-top:5px">
     <el-card shadow>
-      <div
-        slot="header"
-        class="rank-title"
-      >
+      <div slot="header" class="rank-title">
         <span class="panel-title">{{ $t('m.Record_List') }}</span>
       </div>
       <div class="training-rank-search">
@@ -34,12 +31,7 @@
         @cell-click="getUserProblemSubmission"
         :loading="loading"
       >
-        <vxe-table-column
-          field="rank"
-          type="seq"
-          width="50"
-          fixed="left"
-        ></vxe-table-column>
+        <vxe-table-column field="rank" type="seq" width="50" fixed="left"></vxe-table-column>
         <vxe-table-column
           field="username"
           fixed="left"
@@ -63,26 +55,16 @@
               </span>
               <span class="contest-rank-user-info">
                 <a @click="getUserHomeByUsername(row.uid, row.username)">
-                  <span
-                    class="contest-username"
-                    :title="row.username"
-                  >
-                    <span
-                      class="contest-rank-flag"
-                      v-if="row.uid == userInfo.uid"
-                    >Own</span>
-                    <span
-                      class="contest-rank-flag"
-                      v-if="row.gender == 'female'"
-                    >Girl</span>
-                    {{ row.username }}</span>
-                  <span
-                    class="contest-school"
-                    v-if="row.school"
-                    :title="row.school"
-                  >{{
+                  <span class="contest-username" :title="row.username">
+                    <span class="contest-rank-flag" v-if="row.uid == userInfo.uid">Own</span>
+                    <span class="contest-rank-flag" v-if="row.gender == 'female'">Girl</span>
+                    {{ row.username }}
+                  </span>
+                  <span class="contest-school" v-if="row.school" :title="row.school">
+                    {{
                     row.school
-                  }}</span>
+                    }}
+                  </span>
                 </a>
               </span>
             </div>
@@ -110,26 +92,16 @@
               </span>
               <span class="contest-rank-user-info">
                 <a @click="getUserHomeByUsername(row.uid, row.username)">
-                  <span
-                    class="contest-username"
-                    :title="row.username"
-                  >
-                    <span
-                      class="contest-rank-flag"
-                      v-if="row.uid == userInfo.uid"
-                    >Own</span>
-                    <span
-                      class="contest-rank-flag"
-                      v-if="row.gender == 'female'"
-                    >Girl</span>
-                    {{ row.username }}</span>
-                  <span
-                    class="contest-school"
-                    v-if="row.school"
-                    :title="row.school"
-                  >{{
+                  <span class="contest-username" :title="row.username">
+                    <span class="contest-rank-flag" v-if="row.uid == userInfo.uid">Own</span>
+                    <span class="contest-rank-flag" v-if="row.gender == 'female'">Girl</span>
+                    {{ row.username }}
+                  </span>
+                  <span class="contest-school" v-if="row.school" :title="row.school">
+                    {{
                     row.school
-                  }}</span>
+                    }}
+                  </span>
                 </a>
               </span>
             </div>
@@ -141,15 +113,11 @@
           :title="$t('m.RealName')"
           show-overflow
           v-if="isTrainingAdmin"
-        >
-        </vxe-table-column>
-        <vxe-table-column
-          field="rating"
-          :title="$t('m.Total_AC')"
-          min-width="90"
-        >
+        ></vxe-table-column>
+        <vxe-table-column field="rating" :title="$t('m.Total_AC')" min-width="90">
           <template v-slot="{ row }">
-            <span><a
+            <span>
+              <a
                 @click="getUserACSubmit(row.username)"
                 style="color:rgb(87, 163, 243);font-size:16px"
               >{{ row.ac }}</a>
@@ -165,22 +133,21 @@
           :field="problem.problemId"
         >
           <template v-slot:header>
-            <span><a
+            <span>
+              <a
                 @click="getTrainingProblemById(problem.problemId)"
                 class="emphasis"
                 style="color:#495060;"
-              >{{ problem.problemId }}</a></span>
+              >{{ problem.problemId }}</a>
+            </span>
           </template>
           <template v-slot="{ row }">
             <template v-if="row.submissionInfo[problem.problemId]">
-              <el-tooltip
-                effect="dark"
-                placement="top"
-              >
+              <el-tooltip effect="dark" placement="top">
                 <div slot="content">
                   {{
-                    JUDGE_STATUS[row.submissionInfo[problem.problemId].status]
-                      .name
+                  JUDGE_STATUS[row.submissionInfo[problem.problemId].status]
+                  .name
                   }}
                 </div>
                 <span
@@ -192,17 +159,17 @@
                   "
                 >
                   {{
-                    JUDGE_STATUS[row.submissionInfo[problem.problemId].status]
-                      .short
+                  JUDGE_STATUS[row.submissionInfo[problem.problemId].status]
+                  .short
                   }}
                 </span>
               </el-tooltip>
               <br />
               <span class="judge-time">
                 ({{
-                  row.submissionInfo[problem.problemId].runTime
-                    ? row.submissionInfo[problem.problemId].runTime
-                    : 0
+                row.submissionInfo[problem.problemId].runTime
+                ? row.submissionInfo[problem.problemId].runTime
+                : 0
                 }}ms)
               </span>
             </template>
@@ -240,7 +207,7 @@ export default {
       total: 0,
       page: 1,
       limit: 30,
-      keyword: '',
+      keyword: "",
       trainingID: "",
       dataRank: [],
       JUDGE_STATUS: {},
@@ -267,7 +234,7 @@ export default {
         tid: this.trainingID,
         limit: this.limit,
         currentPage: this.page,
-        keyword: this.keyword
+        keyword: this.keyword,
       };
       this.loading = true;
       api.getTrainingRank(data).then(
@@ -390,18 +357,18 @@ export default {
 /deep/.el-card__body {
   padding: 20px !important;
 }
-.training-rank-search{
+.training-rank-search {
   text-align: center;
   margin: 10px auto;
   width: 90%;
 }
-@media screen and (min-width: 768px){
-  .training-rank-search{
+@media screen and (min-width: 768px) {
+  .training-rank-search {
     width: 50%;
   }
 }
-@media screen and (min-width: 1050px){
-  .training-rank-search{
+@media screen and (min-width: 1050px) {
+  .training-rank-search {
     width: 30%;
   }
 }

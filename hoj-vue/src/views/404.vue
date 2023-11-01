@@ -26,7 +26,8 @@
           </div>
           <h2 class="h1">{{ $t('m.Page_Not_Found') }}</h2>
           <el-button @click="goHome" size="large" style="width: 150px;">
-            <i class="el-icon-s-home"></i> {{ $t('m.Go_Home') }}
+            <i class="el-icon-s-home"></i>
+            {{ $t('m.Go_Home') }}
           </el-button>
           <el-button
             @click="backPage"
@@ -34,7 +35,8 @@
             style="width: 150px;margin-left: 40px;"
             type="primary"
           >
-            <i class="el-icon-back"></i> {{ $t('m.Back') }}
+            <i class="el-icon-back"></i>
+            {{ $t('m.Back') }}
           </el-button>
         </div>
       </div>
@@ -43,7 +45,7 @@
 </template>
 <script>
 export default {
-  name: 'NotFound404',
+  name: "NotFound404",
   data() {
     return {
       firstDigit: null,
@@ -60,7 +62,7 @@ export default {
     },
     goHome() {
       this.$router.push({
-        name: 'Home',
+        name: "Home",
       });
     },
     init() {
@@ -158,7 +160,7 @@ export default {
 }
 .error .clip:nth-of-type(3) .shadow:after,
 .error .clip:nth-of-type(1) .shadow:after {
-  content: '';
+  content: "";
   position: absolute;
   right: -8px;
   bottom: 0px;
@@ -217,7 +219,7 @@ export default {
   position: absolute;
   z-index: 999;
   transform: rotate(45deg);
-  content: '';
+  content: "";
   width: 0;
   height: 0;
 }

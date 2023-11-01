@@ -16,8 +16,7 @@
       hoverMode="grab"
       :clickEffect="true"
       clickMode="push"
-    >
-    </vue-particles>
+    ></vue-particles>
     <div class="form">
       <el-form
         :model="ruleForm2"
@@ -52,8 +51,7 @@
             style="width: 100%"
             @click.native.prevent="handleLogin"
             :loading="logining"
-            >{{ $t('m.Login') }}
-          </el-button>
+          >{{ $t('m.Login') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -61,29 +59,29 @@
 </template>
 
 <script>
-import api from '@/common/api';
-import mMessage from '@/common/message';
+import api from "@/common/api";
+import mMessage from "@/common/message";
 export default {
   data() {
     return {
       logining: false,
       ruleForm2: {
-        username: '',
-        password: '',
+        username: "",
+        password: "",
       },
       rules2: {
         username: [
           {
             required: true,
-            trigger: 'blur',
-            message: this.$i18n.t('m.Username_Check_Required'),
+            trigger: "blur",
+            message: this.$i18n.t("m.Username_Check_Required"),
           },
         ],
         password: [
           {
             required: true,
-            trigger: 'blur',
-            message: this.$i18n.t('m.Password_Check_Required'),
+            trigger: "blur",
+            message: this.$i18n.t("m.Password_Check_Required"),
           },
         ],
       },
@@ -100,11 +98,11 @@ export default {
             .then(
               (res) => {
                 this.logining = false;
-                const jwt = res.headers['authorization'];
-                this.$store.commit('changeUserToken', jwt);
-                this.$store.dispatch('setUserInfo', res.data.data);
-                mMessage.success(this.$i18n.t('m.Admin_Login_Success'));
-                this.$router.push({ name: 'admin-dashboard' });
+                const jwt = res.headers["authorization"];
+                this.$store.commit("changeUserToken", jwt);
+                this.$store.dispatch("setUserInfo", res.data.data);
+                mMessage.success(this.$i18n.t("m.Admin_Login_Success"));
+                this.$router.push({ name: "admin-dashboard" });
               },
               () => {
                 this.logining = false;
@@ -112,7 +110,7 @@ export default {
             );
         } else {
           mMessage.error(
-            this.$i18n.t('m.Please_check_your_username_or_password')
+            this.$i18n.t("m.Please_check_your_username_or_password")
           );
         }
       });

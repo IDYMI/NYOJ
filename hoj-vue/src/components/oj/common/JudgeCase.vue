@@ -5,33 +5,25 @@
   >
     <template v-if="!isSubtask">
       <div slot="header">
-        <span class="panel-title home-title">
-          {{$t('m.Test_point_details')}}
-        </span>
+        <span class="panel-title home-title">{{$t('m.Test_point_details')}}</span>
       </div>
     </template>
     <el-row :gutter="10">
-      <el-col
-        :xs="24"
-        :sm="8"
-        :md="6"
-        :lg="3"
-        v-for="(item, index) in judgeCaseList"
-        :key="index"
-      >
+      <el-col :xs="24" :sm="8" :md="6" :lg="3" v-for="(item, index) in judgeCaseList" :key="index">
         <el-tooltip placement="top">
           <div slot="content">
             <template v-if="item.inputData">
-              {{ $t('m.Input_File') }}：{{ item.inputData }}<br />
+              {{ $t('m.Input_File') }}：{{ item.inputData }}
+              <br />
             </template>
 
             <template v-if="item.outputData">
-              {{ $t('m.Output_File') }}：{{ item.outputData }}<br />
-            </template >
-
+              {{ $t('m.Output_File') }}：{{ item.outputData }}
+              <br />
+            </template>
             {{ $t('m.Case_tips') }}：{{
-                  item.userOutput ? item.userOutput : $t('m.Nothing')
-                }}
+            item.userOutput ? item.userOutput : $t('m.Nothing')
+            }}
           </div>
           <div
             class="test-detail-item"
@@ -41,12 +33,13 @@
             <span>Test #{{ index + 1 }}:</span>
             <h2 v-if="item.status != -4">{{ JUDGE_STATUS[item.status]['short'] }}</h2>
             <h2 v-else>Skipped</h2>
-            <div style="text-align:center;">
-              {{ submissionTimeFormat(item.time) }}/{{ submissionMemoryFormat(item.memory) }}
-            </div>
+            <div
+              style="text-align:center;"
+            >{{ submissionTimeFormat(item.time) }}/{{ submissionMemoryFormat(item.memory) }}</div>
             <div class="test-run-static">
               <span v-if="item.score != null">
-                {{ item.score }} pts <i class="el-icon-success"></i>
+                {{ item.score }} pts
+                <i class="el-icon-success"></i>
               </span>
               <span v-else>
                 <i class="el-icon-success"></i>
@@ -54,20 +47,17 @@
             </div>
           </div>
 
-          <div
-            class="test-detail-item"
-            :style="getTestCaseResultColor(item.status)"
-            v-else
-          >
-            <span>Test #{{ index + 1 }}: </span>
+          <div class="test-detail-item" :style="getTestCaseResultColor(item.status)" v-else>
+            <span>Test #{{ index + 1 }}:</span>
             <h2 v-if="item.status != -4">{{ JUDGE_STATUS[item.status]['short'] }}</h2>
             <h2 v-else>Skipped</h2>
-            <div style="text-align:center;">
-              {{ submissionTimeFormat(item.time) }}/{{ submissionMemoryFormat(item.memory) }}
-            </div>
+            <div
+              style="text-align:center;"
+            >{{ submissionTimeFormat(item.time) }}/{{ submissionMemoryFormat(item.memory) }}</div>
             <div class="test-run-static">
               <span v-if="item.score != null">
-                {{ item.score }} pts <i class="el-icon-error"></i>
+                {{ item.score }} pts
+                <i class="el-icon-error"></i>
               </span>
               <span v-else>
                 <i class="el-icon-error"></i>

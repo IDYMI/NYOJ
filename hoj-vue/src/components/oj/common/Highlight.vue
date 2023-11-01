@@ -1,19 +1,16 @@
 <template>
   <div class="markdown-body submission-detail">
-    <pre
-      v-highlight="code"
-      :style="styleObject"
-    ><code :class="language"></code></pre>
+    <pre v-highlight="code" :style="styleObject"><code :class="language"></code></pre>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'highlight',
+  name: "highlight",
   data() {
     return {
       styleObject: {
-        'border-left': '3px solid ' + this.borderColor,
+        "border-left": "3px solid " + this.borderColor,
       },
     };
   },
@@ -27,13 +24,13 @@ export default {
     },
     borderColor: {
       type: String,
-      default: '#19be6b',
+      default: "#19be6b",
     },
   },
   watch: {
     borderColor(newval, oldval) {
       if (newval != oldval) {
-        this.styleObject['border-left'] = '3px solid ' + newval;
+        this.styleObject["border-left"] = "3px solid " + newval;
       }
     },
   },

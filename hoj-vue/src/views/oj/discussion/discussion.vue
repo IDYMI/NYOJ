@@ -9,8 +9,7 @@
           style="margin-left: 5px; vertical-align: middle"
           v-if="discussion.pid"
           @click="toProblem(discussion.pid)"
-          >{{ $t("m.Go_to_problem") }}</el-button
-        >
+        >{{ $t("m.Go_to_problem") }}</el-button>
       </h1>
       <div class="title-msg">
         <span>
@@ -30,46 +29,39 @@
             <span class="user-name">{{ discussion.author }}</span>
           </a>
           <span v-if="discussion.titleName">
-            <el-tag effect="dark" size="small" :color="discussion.titleColor">
-              {{ discussion.titleName }}
-            </el-tag>
+            <el-tag
+              effect="dark"
+              size="small"
+              :color="discussion.titleColor"
+            >{{ discussion.titleName }}</el-tag>
           </span>
         </span>
         <span
           class="role-root role"
           title="Super Administrator"
           v-if="discussion.role == 'root'"
-          >SPA</span
-        >
-        <span
-          class="role-admin role"
-          title="Administrator"
-          v-if="discussion.role == 'admin'"
-          >ADM</span
-        >
-        <span class="c999" style="padding: 0 6px"
-          ><i class="el-icon-folder-opened"> {{ $t("m.Category") }}：</i
-          ><a
+        >SPA</span>
+        <span class="role-admin role" title="Administrator" v-if="discussion.role == 'admin'">ADM</span>
+        <span class="c999" style="padding: 0 6px">
+          <i class="el-icon-folder-opened">{{ $t("m.Category") }}：</i>
+          <a
             class="c999"
             @click="toAllDiscussionByCid(discussion.categoryId)"
-            >{{ discussion.categoryName }}</a
-          ></span
-        >
-        <span class="c999"
-          ><i class="fa fa-thumbs-o-up"></i
-          ><span> {{ $t("m.Likes") }}：{{ discussion.likeNum }}</span></span
-        >
-        <span class="c999"
-          ><i class="fa fa-eye"></i
-          ><span> {{ $t("m.Views") }}：{{ discussion.viewNum }}</span></span
-        >
+          >{{ discussion.categoryName }}</a>
+        </span>
+        <span class="c999">
+          <i class="fa fa-thumbs-o-up"></i>
+          <span>{{ $t("m.Likes") }}：{{ discussion.likeNum }}</span>
+        </span>
+        <span class="c999">
+          <i class="fa fa-eye"></i>
+          <span>{{ $t("m.Views") }}：{{ discussion.viewNum }}</span>
+        </span>
 
-        <a
-          @click="showReportDialog = true"
-          class="report"
-          :title="$t('m.Report')"
-          ><i class="fa fa-envira"></i><span>{{ $t("m.Report") }}</span></a
-        >
+        <a @click="showReportDialog = true" class="report" :title="$t('m.Report')">
+          <i class="fa fa-envira"></i>
+          <span>{{ $t("m.Report") }}</span>
+        </a>
         <a
           @click="toLikeDiscussion(discussion.id, true)"
           class="like"
@@ -77,8 +69,8 @@
           v-if="!discussion.hasLike"
         >
           <i class="fa fa-thumbs-o-up"></i>
-          <span>{{ $t("m.Like") }}</span></a
-        >
+          <span>{{ $t("m.Like") }}</span>
+        </a>
         <a
           @click="toLikeDiscussion(discussion.id, false)"
           class="like"
@@ -86,41 +78,33 @@
           v-else
         >
           <i class="fa fa-thumbs-up"></i>
-          <span>{{ $t("m.Liked") }}</span></a
-        >
+          <span>{{ $t("m.Liked") }}</span>
+        </a>
 
         <span>
-          <i class="fa fa-clock-o"> {{ $t("m.Release_Time") }}：</i>
+          <i class="fa fa-clock-o">{{ $t("m.Release_Time") }}：</i>
           <span>
-            <el-tooltip
-              :content="discussion.gmtCreate | localtime"
-              placement="top"
-            >
+            <el-tooltip :content="discussion.gmtCreate | localtime" placement="top">
               <span>{{ discussion.gmtCreate | fromNow }}</span>
             </el-tooltip>
           </span>
         </span>
 
-        <span style="padding: 0 6px" v-show="userInfo.uid == discussion.uid"
-          ><a style="color: #8fb0c9" @click="showEditDiscussionDialog = true"
-            ><i class="el-icon-edit-outline"> {{ $t("m.Edit") }}</i></a
-          ></span
-        >
+        <span style="padding: 0 6px" v-show="userInfo.uid == discussion.uid">
+          <a style="color: #8fb0c9" @click="showEditDiscussionDialog = true">
+            <i class="el-icon-edit-outline">{{ $t("m.Edit") }}</i>
+          </a>
+        </span>
       </div>
       <div class="body-article">
         <Markdown
           :isAvoidXss="discussion.role != 'root' && discussion.role != 'admin'"
           :content="discussion.content"
-        >
-        </Markdown>
+        ></Markdown>
       </div>
     </div>
 
-    <el-dialog
-      :title="$t('m.Report')"
-      :visible.sync="showReportDialog"
-      width="350px"
-    >
+    <el-dialog :title="$t('m.Report')" :visible.sync="showReportDialog" width="350px">
       <el-form label-position="top" :model="report">
         <el-form-item :label="$t('m.Tags')" required>
           <el-checkbox-group v-model="report.tagList">
@@ -140,17 +124,20 @@
             maxlength="200"
             show-word-limit
             :rows="4"
-          >
-          </el-input>
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="danger" @click.native="showReportDialog = false">{{
+        <el-button type="danger" @click.native="showReportDialog = false">
+          {{
           $t("m.Cancel")
-        }}</el-button>
-        <el-button type="primary" @click.native="submitReport">{{
+          }}
+        </el-button>
+        <el-button type="primary" @click.native="submitReport">
+          {{
           $t("m.OK")
-        }}</el-button>
+          }}
+        </el-button>
       </span>
     </el-dialog>
 
@@ -167,32 +154,22 @@
             v-model="discussion.title"
             :placeholder="$t('m.Discussion_title')"
             class="title-input"
-          >
-          </el-input>
+          ></el-input>
         </el-form-item>
         <el-form-item :label="$t('m.Discussion_Desc')" required>
           <el-input
             v-model="discussion.description"
             :placeholder="$t('m.Discussion_Desc')"
             class="title-input"
-          >
-          </el-input>
+          ></el-input>
         </el-form-item>
         <el-form-item :label="$t('m.Discussion_Category')" required>
           <el-select v-model="discussion.categoryId" placeholder="---" disabled>
-            <el-option
-              :label="discussion.categoryName"
-              :value="discussion.categoryId"
-            >
-            </el-option>
+            <el-option :label="discussion.categoryName" :value="discussion.categoryId"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item
-          :label="$t('m.Discussion_top')"
-          required
-          v-if="isAdminRole"
-        >
-          <el-switch v-model="discussion.topPriority"> </el-switch>
+        <el-form-item :label="$t('m.Discussion_top')" required v-if="isAdminRole">
+          <el-switch v-model="discussion.topPriority"></el-switch>
         </el-form-item>
         <el-form-item :label="$t('m.Discussion_content')" required>
           <Editor :value.sync="discussion.content"></Editor>
@@ -202,11 +179,12 @@
         <el-button
           type="danger"
           @click.native="showEditDiscussionDialog = false"
-          >{{ $t("m.Cancel") }}</el-button
-        >
-        <el-button type="primary" @click.native="submitDiscussion">{{
+        >{{ $t("m.Cancel") }}</el-button>
+        <el-button type="primary" @click.native="submitDiscussion">
+          {{
           $t("m.OK")
-        }}</el-button>
+          }}
+        </el-button>
       </span>
     </el-dialog>
     <comment :did="$route.params.discussionID"></comment>

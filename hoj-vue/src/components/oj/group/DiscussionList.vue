@@ -1,75 +1,32 @@
 <template>
   <div>
-    <vxe-table
-      stripe
-      auto-resize
-      :data="adminDiscussionList"
-      :loading="loading"
-      align="center"
-    >
+    <vxe-table stripe auto-resize :data="adminDiscussionList" :loading="loading" align="center">
       <vxe-table-column field="id" title="ID" width="60"></vxe-table-column>
-      <vxe-table-column
-        field="title"
-        :title="$t('m.Title')"
-        show-overflow
-        min-width="130"
-      ></vxe-table-column>
-      <vxe-table-column
-        field="author"
-        :title="$t('m.Author')"
-        min-width="130"
-        show-overflow
-      ></vxe-table-column>
-      <vxe-table-column
-        field="likeNum"
-        :title="$t('m.Likes')"
-        min-width="96"
-      ></vxe-table-column>
-      <vxe-table-column
-        field="viewNum"
-        :title="$t('m.Views')"
-        min-width="96"
-      ></vxe-table-column>
-      <vxe-table-column
-        field="gmtCreate"
-        :title="$t('m.Created_Time')"
-        min-width="150"
-      >
-        <template v-slot="{ row }">
-          {{ row.gmtCreate | localtime }}
-        </template>
+      <vxe-table-column field="title" :title="$t('m.Title')" show-overflow min-width="130"></vxe-table-column>
+      <vxe-table-column field="author" :title="$t('m.Author')" min-width="130" show-overflow></vxe-table-column>
+      <vxe-table-column field="likeNum" :title="$t('m.Likes')" min-width="96"></vxe-table-column>
+      <vxe-table-column field="viewNum" :title="$t('m.Views')" min-width="96"></vxe-table-column>
+      <vxe-table-column field="gmtCreate" :title="$t('m.Created_Time')" min-width="150">
+        <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
       </vxe-table-column>
       <vxe-table-column field="status" :title="$t('m.Status')" min-width="100">
         <template v-slot="{ row }">
-          <el-select
-            v-model="row.status"
-            @change="updateGroupDiscussion(row)"
-            size="small"
-          >
-            <el-option :label="$t('m.Normal')" :value="0" :key="0"></el-option
-            ><el-option
-              :label="$t('m.Disable')"
-              :value="1"
-              :key="1"
-            ></el-option>
+          <el-select v-model="row.status" @change="updateGroupDiscussion(row)" size="small">
+            <el-option :label="$t('m.Normal')" :value="0" :key="0"></el-option>
+            <el-option :label="$t('m.Disable')" :value="1" :key="1"></el-option>
           </el-select>
         </template>
       </vxe-table-column>
-      <vxe-table-column
-        min-width="100"
-        field="topPriority"
-        :title="$t('m.Top')"
-      >
+      <vxe-table-column min-width="100" field="topPriority" :title="$t('m.Top')">
         <template v-slot="{ row }">
           <el-switch
             v-model="row.topPriority"
-            active-text=""
-            inactive-text=""
+            active-text
+            inactive-text
             :active-value="true"
             :inactive-value="false"
             @change="updateGroupDiscussion(row)"
-          >
-          </el-switch>
+          ></el-switch>
         </template>
       </vxe-table-column>
       <vxe-table-column :title="$t('m.Option')" min-width="130">
@@ -80,21 +37,15 @@
               size="mini"
               @click.native="deleteGroupDiscussion(row.id)"
               type="danger"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
-          <el-tooltip
-            effect="dark"
-            :content="$t('m.View_Discussion')"
-            placement="top"
-          >
+          <el-tooltip effect="dark" :content="$t('m.View_Discussion')" placement="top">
             <el-button
               icon="el-icon-search"
               size="mini"
               @click.native="goGroupDiscussion(row.id)"
               type="primary"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
         </template>
       </vxe-table-column>

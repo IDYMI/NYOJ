@@ -12,7 +12,7 @@ export default {
   components: {
     Announcements,
   },
-  methods: {},  
+  methods: {},
   computed: {},
 };
 </script>

@@ -7,9 +7,22 @@ import vxeZhCN from 'vxe-table/lib/locale/lang/zh-CN'
 import storage from '@/common/storage'
 Vue.use(VueI18n)
 
-const languages = [
-  {value: 'en-US', label: 'English', el: elenUS, vxe: {...vxeEnUS}},
-  {value: 'zh-CN', label: '简体中文',  el: elzhCN, vxe: {...vxeZhCN}},
+const languages = [{
+    value: 'en-US',
+    label: 'English',
+    el: elenUS,
+    vxe: {
+      ...vxeEnUS
+    }
+  },
+  {
+    value: 'zh-CN',
+    label: '简体中文',
+    el: elzhCN,
+    vxe: {
+      ...vxeZhCN
+    }
+  },
 ]
 const messages = {}
 
@@ -19,7 +32,9 @@ for (let lang of languages) {
   let m = require(`./oj/${locale}`).m
   Object.assign(m, require(`./admin/${locale}`).m)
   let ui = Object.assign(lang.vxe, lang.el)
-  messages[locale] = Object.assign({m: m}, ui);
+  messages[locale] = Object.assign({
+    m: m
+  }, ui);
 }
 
 
@@ -29,4 +44,6 @@ export default new VueI18n({
   messages: messages
 })
 
-export {languages}
+export {
+  languages
+}

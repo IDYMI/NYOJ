@@ -2,9 +2,11 @@
   <div>
     <el-card>
       <div slot="header">
-        <span class="panel-title home-title">{{
+        <span class="panel-title home-title">
+          {{
           query.contestId ? $t("m.Contest_Problem_List") : $t("m.Problem_List")
-        }}</span>
+          }}
+        </span>
         <div class="filter-row">
           <span>
             <el-button
@@ -12,8 +14,7 @@
               size="small"
               @click="goCreateProblem"
               icon="el-icon-plus"
-              >{{ $t("m.Create") }}
-            </el-button>
+            >{{ $t("m.Create") }}</el-button>
           </span>
           <span v-if="query.contestId">
             <el-button
@@ -21,8 +22,7 @@
               size="small"
               icon="el-icon-plus"
               @click="addProblemDialogVisible = true"
-              >{{ $t("m.Add_From_Public_Problem") }}
-            </el-button>
+            >{{ $t("m.Add_From_Public_Problem") }}</el-button>
           </span>
           <span>
             <el-button
@@ -30,8 +30,7 @@
               size="small"
               @click="AddRemoteOJProblemDialogVisible = true"
               icon="el-icon-plus"
-              >{{ $t("m.Add_Rmote_OJ_Problem") }}
-            </el-button>
+            >{{ $t("m.Add_Rmote_OJ_Problem") }}</el-button>
           </span>
           <span>
             <vxe-input
@@ -51,10 +50,7 @@
               size="small"
               style="width: 180px"
             >
-              <el-option
-                :label="$t('m.All_Problem')"
-                :value="'All'"
-              ></el-option>
+              <el-option :label="$t('m.All_Problem')" :value="'All'"></el-option>
 
               <el-option :label="$t('m.My_OJ')" :value="'Mine'"></el-option>
               <el-option
@@ -75,14 +71,8 @@
             >
               <el-option :label="$t('m.All_Problem')" :value="0"></el-option>
               <el-option :label="$t('m.Public_Problem')" :value="1"></el-option>
-              <el-option
-                :label="$t('m.Private_Problem')"
-                :value="2"
-              ></el-option>
-              <el-option
-                :label="$t('m.Contest_Problem')"
-                :value="3"
-              ></el-option>
+              <el-option :label="$t('m.Private_Problem')" :value="2"></el-option>
+              <el-option :label="$t('m.Contest_Problem')" :value="3"></el-option>
             </el-select>
           </span>
         </div>
@@ -95,26 +85,17 @@
         :loading="loading"
         align="center"
       >
-        <vxe-table-column min-width="64" field="id" title="ID">
-        </vxe-table-column>
+        <vxe-table-column min-width="64" field="id" title="ID"></vxe-table-column>
         <vxe-table-column
           min-width="100"
           field="problemId"
           :title="$t('m.Display_ID')"
           v-if="!isContest"
-        >
-        </vxe-table-column>
+        ></vxe-table-column>
 
-        <vxe-table-column
-          min-width="150"
-          :title="$t('m.Original_Display')"
-          v-else
-          align="left"
-        >
+        <vxe-table-column min-width="150" :title="$t('m.Original_Display')" v-else align="left">
           <template v-slot="{ row }">
-            <p v-if="query.contestId">
-              {{ $t("m.Display_ID") }}：{{ row.problemId }}
-            </p>
+            <p v-if="query.contestId">{{ $t("m.Display_ID") }}：{{ row.problemId }}</p>
             <p v-if="query.contestId">{{ $t("m.Title") }}：{{ row.title }}</p>
             <span v-else>{{ row.problemId }}</span>
           </template>
@@ -126,28 +107,23 @@
           :title="$t('m.Title')"
           show-overflow
           v-if="!isContest"
-        >
-        </vxe-table-column>
+        ></vxe-table-column>
 
-        <vxe-table-column
-          min-width="150"
-          :title="$t('m.Contest_Display')"
-          v-else
-          align="left"
-        >
+        <vxe-table-column min-width="150" :title="$t('m.Contest_Display')" v-else align="left">
           <template v-slot="{ row }">
             <p v-if="contestProblemMap[row.id]">
               {{ $t("m.Display_ID") }}：{{
-                contestProblemMap[row.id]["displayId"]
+              contestProblemMap[row.id]["displayId"]
               }}
             </p>
             <p v-if="contestProblemMap[row.id]">
               {{ $t("m.Title") }}：{{
-                contestProblemMap[row.id]["displayTitle"]
+              contestProblemMap[row.id]["displayTitle"]
               }}
             </p>
             <span v-if="contestProblemMap[row.id]">
-              {{ $t("m.Balloon_Color") }}：<el-color-picker
+              {{ $t("m.Balloon_Color") }}：
+              <el-color-picker
                 v-model="contestProblemMap[row.id].color"
                 show-alpha
                 :predefine="predefineColors"
@@ -159,32 +135,22 @@
                     contestProblemMap[row.id].color
                   )
                 "
-              >
-              </el-color-picker>
+              ></el-color-picker>
             </span>
             <span v-else>{{ row.title }}</span>
           </template>
         </vxe-table-column>
 
-        <vxe-table-column
-          field="author"
-          min-width="130"
-          :title="$t('m.Author')"
-          show-overflow
-        >
-        </vxe-table-column>
+        <vxe-table-column field="author" min-width="130" :title="$t('m.Author')" show-overflow></vxe-table-column>
         <vxe-table-column min-width="120" :title="$t('m.Created_Time')">
-          <template v-slot="{ row }">
-            {{ row.gmtCreate | localtime }}
-          </template>
+          <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
         </vxe-table-column>
         <vxe-table-column
           min-width="96"
           field="modifiedUser"
           :title="$t('m.Modified_User')"
           show-overflow
-        >
-        </vxe-table-column>
+        ></vxe-table-column>
         <vxe-table-column min-width="120" :title="$t('m.Auth')">
           <template v-slot="{ row }">
             <el-select
@@ -193,19 +159,9 @@
               size="small"
               :disabled="!isAdminRole && !query.contestId"
             >
-              <el-option
-                :label="$t('m.Public_Problem')"
-                :value="1"
-                :disabled="!isAdminRole"
-              ></el-option>
-              <el-option
-                :label="$t('m.Private_Problem')"
-                :value="2"
-              ></el-option>
-              <el-option
-                :label="$t('m.Contest_Problem')"
-                :value="3"
-              ></el-option>
+              <el-option :label="$t('m.Public_Problem')" :value="1" :disabled="!isAdminRole"></el-option>
+              <el-option :label="$t('m.Private_Problem')" :value="2"></el-option>
+              <el-option :label="$t('m.Contest_Problem')" :value="3"></el-option>
             </el-select>
           </template>
         </vxe-table-column>
@@ -222,8 +178,7 @@
                 size="mini"
                 @click.native="goEdit(row.id)"
                 type="primary"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
 
             <el-tooltip
@@ -237,8 +192,7 @@
                 size="mini"
                 @click.native="downloadTestCase(row.id)"
                 type="success"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
 
             <el-tooltip
@@ -252,8 +206,7 @@
                 size="mini"
                 @click.native="removeProblem(row.id)"
                 type="warning"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
             <el-tooltip
               effect="dark"
@@ -268,8 +221,7 @@
                 size="mini"
                 @click.native="deleteProblem(row.id)"
                 type="danger"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
           </template>
         </vxe-table-column>
@@ -285,8 +237,7 @@
           :current-page.sync="query.currentPage"
           @size-change="onPageSizeChange"
           :page-sizes="[10, 30, 50, 100]"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </el-card>
 
@@ -297,10 +248,7 @@
       :visible.sync="addProblemDialogVisible"
       :close-on-click-modal="false"
     >
-      <AddPublicProblem
-        :contestID="query.contestId"
-        @on-change="getProblemList"
-      ></AddPublicProblem>
+      <AddPublicProblem :contestID="query.contestId" @on-change="getProblemList"></AddPublicProblem>
     </el-dialog>
 
     <el-dialog
@@ -338,8 +286,7 @@
             icon="el-icon-plus"
             @click="addRemoteOJProblem"
             :loading="addRemoteOJproblemLoading"
-            >{{ $t("m.Add") }}
-          </el-button>
+          >{{ $t("m.Add") }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>

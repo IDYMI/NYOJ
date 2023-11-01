@@ -5,10 +5,7 @@
       <div class="filter-row">
         <span>
           {{ $t('m.Auto_Refresh') }}(10s)
-          <el-switch
-            @change="handleAutoRefresh"
-            v-model="autoRefresh"
-          ></el-switch>
+          <el-switch @change="handleAutoRefresh" v-model="autoRefresh"></el-switch>
         </span>
         <span>
           <el-button
@@ -17,56 +14,40 @@
             size="small"
             icon="el-icon-refresh"
             :loading="btnLoading"
-            >{{ $t('m.Refresh') }}</el-button
-          >
+          >{{ $t('m.Refresh') }}</el-button>
         </span>
       </div>
     </div>
 
-    <vxe-table
-      border="inner"
-      stripe
-      auto-resize
-      align="center"
-      :data="printList"
-    >
-      <vxe-table-column
-        field="username"
-        :title="$t('m.Username')"
-        min-width="150"
-      >
+    <vxe-table border="inner" stripe auto-resize align="center" :data="printList">
+      <vxe-table-column field="username" :title="$t('m.Username')" min-width="150">
         <template v-slot="{ row }">
-          <span
-            ><a
+          <span>
+            <a
               @click="getUserTotalSubmit(row.username)"
               style="color:rgb(87, 163, 243);"
-              >{{ row.username }}</a
-            >
+            >{{ row.username }}</a>
           </span>
         </template>
       </vxe-table-column>
-      <vxe-table-column
-        field="realname"
-        :title="$t('m.RealName')"
-        min-width="150"
-      ></vxe-table-column>
-      <vxe-table-column
-        field="gmtCreate"
-        min-width="150"
-        :title="$t('m.Submit_Time')"
-      >
+      <vxe-table-column field="realname" :title="$t('m.RealName')" min-width="150"></vxe-table-column>
+      <vxe-table-column field="gmtCreate" min-width="150" :title="$t('m.Submit_Time')">
         <template v-slot="{ row }">
           <span>{{ row.gmtCreate | localtime }}</span>
         </template>
       </vxe-table-column>
       <vxe-table-column field="status" :title="$t('m.Status')" min-width="150">
         <template v-slot="{ row }">
-          <el-tag effect="dark" color="#19be6b" v-if="row.status == 1">{{
+          <el-tag effect="dark" color="#19be6b" v-if="row.status == 1">
+            {{
             $t('m.Printed')
-          }}</el-tag>
-          <el-tag effect="dark" color="#f90" v-if="row.status == 0">{{
+            }}
+          </el-tag>
+          <el-tag effect="dark" color="#f90" v-if="row.status == 0">
+            {{
             $t('m.Not_Printed')
-          }}</el-tag>
+            }}
+          </el-tag>
         </template>
       </vxe-table-column>
       <vxe-table-column field="option" :title="$t('m.Option')" min-width="150">
@@ -77,16 +58,14 @@
             icon="el-icon-download"
             @click="downloadSubmissions(row.id)"
             round
-            >{{ $t('m.Download') }}</el-button
-          >
+          >{{ $t('m.Download') }}</el-button>
           <el-button
             type="success"
             size="small"
             icon="el-icon-circle-check"
             @click="updateStatus(row.id)"
             round
-            >{{ $t('m.OK') }}</el-button
-          >
+          >{{ $t('m.OK') }}</el-button>
         </template>
       </vxe-table-column>
     </vxe-table>
@@ -100,13 +79,13 @@
 </template>
 
 <script>
-import api from '@/common/api';
-import myMessage from '@/common/message';
-import utils from '@/common/utils';
-const Pagination = () => import('@/components/oj/common/Pagination');
+import api from "@/common/api";
+import myMessage from "@/common/message";
+import utils from "@/common/utils";
+const Pagination = () => import("@/components/oj/common/Pagination");
 
 export default {
-  name: 'Contest-Print-Admin',
+  name: "Contest-Print-Admin",
   components: {
     Pagination,
   },
@@ -132,7 +111,7 @@ export default {
         cid: this.contestID,
       };
       api.updateContestPrintStatus(params).then((res) => {
-        myMessage.success(this.$i18n.t('m.Update_Successfully'));
+        myMessage.success(this.$i18n.t("m.Update_Successfully"));
         this.getContestPrint(1);
       });
     },

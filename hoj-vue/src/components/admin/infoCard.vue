@@ -1,15 +1,8 @@
 <template>
   <el-card :body-style="{ padding: 0, height: '100%' }" class="info-card">
     <el-row type="flex" class="info-card-container">
-      <el-col
-        :span="8"
-        :style="{ 'background-color': color }"
-        class="height-100"
-      >
-        <i
-          :class="['info-card-icon', icon]"
-          :style="{ 'font-size': iconSize }"
-        ></i>
+      <el-col :span="8" :style="{ 'background-color': color }" class="height-100">
+        <i :class="['info-card-icon', icon]" :style="{ 'font-size': iconSize }"></i>
       </el-col>
       <el-col :span="16" class="info-card-text">
         <p :style="textStyle">{{ value }}</p>

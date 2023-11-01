@@ -9,10 +9,7 @@
   >
     <div class="background-bar" :style="{ width: `${barWidth}px` }"></div>
     <el-tooltip :content="Tooltip" placement="top">
-      <button
-        class="draggable-button"
-        :style="{ left: buttonPosition + 'px' }"
-      ></button>
+      <button class="draggable-button" :style="{ left: buttonPosition + 'px' }"></button>
     </el-tooltip>
   </div>
 </template>
@@ -71,7 +68,8 @@ export default {
       const timelineLeft = this.getLeftPoint();
       const offsetX = event.clientX - timelineLeft - 10;
       let percentage_real = offsetX / this.$refs.timeline.offsetWidth;
-      if (percentage_real > 0.99) { // 解决右边终点
+      if (percentage_real > 0.99) {
+        // 解决右边终点
         percentage_real = 1;
       }
       console.log(percentage_real);

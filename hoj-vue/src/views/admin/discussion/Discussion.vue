@@ -2,9 +2,11 @@
   <div>
     <el-card>
       <div slot="header">
-        <span class="panel-title home-title">{{
+        <span class="panel-title home-title">
+          {{
           $t('m.Discussion_Admin')
-        }}</span>
+          }}
+        </span>
         <div class="filter-row">
           <span>
             <el-button
@@ -12,8 +14,7 @@
               icon="el-icon-delete-solid"
               @click="deleteDiscussion(null)"
               size="small"
-              >{{ $t('m.Delete') }}
-            </el-button>
+            >{{ $t('m.Delete') }}</el-button>
           </span>
           <span>
             <vxe-input
@@ -40,72 +41,31 @@
       >
         <vxe-table-column type="checkbox" width="60"></vxe-table-column>
         <vxe-table-column field="id" title="ID" width="60"></vxe-table-column>
-        <vxe-table-column
-          field="title"
-          :title="$t('m.Title')"
-          show-overflow
-          min-width="150"
-        ></vxe-table-column>
-        <vxe-table-column
-          field="author"
-          :title="$t('m.Author')"
-          min-width="150"
-          show-overflow
-        ></vxe-table-column>
-        <vxe-table-column
-          field="likeNum"
-          :title="$t('m.Likes')"
-          min-width="96"
-        ></vxe-table-column>
-        <vxe-table-column
-          field="viewNum"
-          :title="$t('m.Views')"
-          min-width="96"
-        ></vxe-table-column>
-        <vxe-table-column
-          field="gmtCreate"
-          :title="$t('m.Created_Time')"
-          min-width="150"
-        >
-          <template v-slot="{ row }">
-            {{ row.gmtCreate | localtime }}
-          </template>
+        <vxe-table-column field="title" :title="$t('m.Title')" show-overflow min-width="150"></vxe-table-column>
+        <vxe-table-column field="author" :title="$t('m.Author')" min-width="150" show-overflow></vxe-table-column>
+        <vxe-table-column field="likeNum" :title="$t('m.Likes')" min-width="96"></vxe-table-column>
+        <vxe-table-column field="viewNum" :title="$t('m.Views')" min-width="96"></vxe-table-column>
+        <vxe-table-column field="gmtCreate" :title="$t('m.Created_Time')" min-width="150">
+          <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
         </vxe-table-column>
-        <vxe-table-column
-          field="status"
-          :title="$t('m.Status')"
-          min-width="100"
-        >
+        <vxe-table-column field="status" :title="$t('m.Status')" min-width="100">
           <template v-slot="{ row }">
-            <el-select
-              v-model="row.status"
-              @change="changeDiscussionStatus(row)"
-              size="small"
-            >
-              <el-option :label="$t('m.Normal')" :value="0" :key="0"></el-option
-              ><el-option
-                :label="$t('m.Disable')"
-                :value="1"
-                :key="1"
-              ></el-option>
+            <el-select v-model="row.status" @change="changeDiscussionStatus(row)" size="small">
+              <el-option :label="$t('m.Normal')" :value="0" :key="0"></el-option>
+              <el-option :label="$t('m.Disable')" :value="1" :key="1"></el-option>
             </el-select>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          min-width="100"
-          field="topPriority"
-          :title="$t('m.Top')"
-        >
+        <vxe-table-column min-width="100" field="topPriority" :title="$t('m.Top')">
           <template v-slot="{ row }">
             <el-switch
               v-model="row.topPriority"
-              active-text=""
-              inactive-text=""
+              active-text
+              inactive-text
               :active-value="true"
               :inactive-value="false"
               @change="handleTopSwitch(row)"
-            >
-            </el-switch>
+            ></el-switch>
           </template>
         </vxe-table-column>
         <vxe-table-column :title="$t('m.Option')" min-width="130">
@@ -116,21 +76,15 @@
                 size="mini"
                 @click.native="deleteDiscussion([row.id])"
                 type="danger"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
-            <el-tooltip
-              effect="dark"
-              :content="$t('m.View_Discussion')"
-              placement="top"
-            >
+            <el-tooltip effect="dark" :content="$t('m.View_Discussion')" placement="top">
               <el-button
                 icon="el-icon-search"
                 size="mini"
                 @click.native="toDiscussion(row.id, row.gid)"
                 type="primary"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
           </template>
         </vxe-table-column>
@@ -142,15 +96,16 @@
           @current-change="discussionCurrentChange"
           :page-size="pageSize"
           :total="discussionTotal"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </el-card>
     <el-card style="margin-top:20px">
       <div slot="header">
-        <span class="panel-title home-title">{{
+        <span class="panel-title home-title">
+          {{
           $t('m.Discussion_Report')
-        }}</span>
+          }}
+        </span>
       </div>
       <vxe-table
         :loading="discussionReportLoadingTable"
@@ -160,15 +115,9 @@
         auto-resize
         stripe
       >
-        <vxe-table-column min-width="60" field="id" title="ID">
-        </vxe-table-column>
+        <vxe-table-column min-width="60" field="id" title="ID"></vxe-table-column>
+        <vxe-table-column min-width="100" field="did" :title="$t('m.Discussion_ID')"></vxe-table-column>
         <vxe-table-column
-          min-width="100"
-          field="did"
-          :title="$t('m.Discussion_ID')"
-        >
-        </vxe-table-column>
-         <vxe-table-column
           field="discussionTitle"
           :title="$t('m.Title')"
           show-overflow
@@ -180,37 +129,20 @@
           min-width="150"
           show-overflow
         ></vxe-table-column>
-        <vxe-table-column
-          min-width="150"
-          field="reporter"
-          show-overflow
-          :title="$t('m.Reporter')"
-        >
+        <vxe-table-column min-width="150" field="reporter" show-overflow :title="$t('m.Reporter')"></vxe-table-column>
+        <vxe-table-column min-width="150" field="gmtCreate" :title="$t('m.Report_Time')">
+          <template v-slot="{ row }">{{ row.gmtCreate | localtime }}</template>
         </vxe-table-column>
-        <vxe-table-column
-          min-width="150"
-          field="gmtCreate"
-          :title="$t('m.Report_Time')"
-        >
-          <template v-slot="{ row }">
-            {{ row.gmtCreate | localtime }}
-          </template>
-        </vxe-table-column>
-        <vxe-table-column
-          min-width="100"
-          field="status"
-          :title="$t('m.Checked')"
-        >
+        <vxe-table-column min-width="100" field="status" :title="$t('m.Checked')">
           <template v-slot="{ row }">
             <el-switch
               v-model="row.status"
-              active-text=""
-              inactive-text=""
+              active-text
+              inactive-text
               :active-value="true"
               :inactive-value="false"
               @change="handleCheckedSwitch(row)"
-            >
-            </el-switch>
+            ></el-switch>
           </template>
         </vxe-table-column>
         <vxe-table-column :title="$t('m.Option')" min-width="150">
@@ -228,18 +160,13 @@
                 type="success"
               ></el-button>
             </el-tooltip>
-            <el-tooltip
-              effect="dark"
-              :content="$t('m.View_Discussion')"
-              placement="top"
-            >
+            <el-tooltip effect="dark" :content="$t('m.View_Discussion')" placement="top">
               <el-button
                 icon="el-icon-search"
                 size="mini"
                 @click.native="toDiscussion(row.did, row.gid)"
                 type="primary"
-              >
-              </el-button>
+              ></el-button>
             </el-tooltip>
           </template>
         </vxe-table-column>
@@ -252,24 +179,23 @@
           @current-change="discussionReportCurrentChange"
           :page-size="pageSize"
           :total="discussionReportTotal"
-        >
-        </el-pagination>
+        ></el-pagination>
       </div>
     </el-card>
   </div>
 </template>
 <script>
-import api from '@/common/api';
-import myMessage from '@/common/message';
+import api from "@/common/api";
+import myMessage from "@/common/message";
 export default {
-  name: 'discussion',
+  name: "discussion",
   data() {
     return {
       pageSize: 10,
       discussionTotal: 0,
       discussionList: [],
       selectedDiscussions: [],
-      keyword: '',
+      keyword: "",
       discussionLoadingTable: false,
       discussionCurrentPage: 1,
 
@@ -330,7 +256,7 @@ export default {
     },
     filterByKeyword() {
       this.discussionCurrentChange(1);
-      this.keyword = '';
+      this.keyword = "";
     },
     // 用户表部分勾选 改变选中的内容
     handleSelectionChange({ records }) {
@@ -353,7 +279,7 @@ export default {
         status: row.status,
       };
       api.admin_updateDiscussion(discussion).then((res) => {
-        myMessage.success(this.$i18n.t('m.Update_Successfully'));
+        myMessage.success(this.$i18n.t("m.Update_Successfully"));
       });
     },
     handleTopSwitch(row) {
@@ -362,7 +288,7 @@ export default {
         topPriority: row.topPriority,
       };
       api.admin_updateDiscussion(discussion).then((res) => {
-        myMessage.success(this.$i18n.t('m.Update_Successfully'));
+        myMessage.success(this.$i18n.t("m.Update_Successfully"));
       });
     },
 
@@ -372,15 +298,15 @@ export default {
         status: row.status,
       };
       api.admin_updateDiscussionReport(discussionReport).then((res) => {
-        myMessage.success(this.$i18n.t('m.Update_Successfully'));
+        myMessage.success(this.$i18n.t("m.Update_Successfully"));
       });
     },
 
     toDiscussion(did, gid) {
-      if(gid != null){
-        window.open('/group/'+ gid +'/discussion-detail/' + did);
-      }else{
-        window.open('/discussion-detail/' + did);
+      if (gid != null) {
+        window.open("/group/" + gid + "/discussion-detail/" + did);
+      } else {
+        window.open("/discussion-detail/" + did);
       }
     },
 
@@ -389,14 +315,14 @@ export default {
         didList = this.selectedDiscussions;
       }
       if (didList.length > 0) {
-        this.$confirm(this.$i18n.t('m.Delete_Discussion_Tips'), 'Tips', {
-          type: 'warning',
+        this.$confirm(this.$i18n.t("m.Delete_Discussion_Tips"), "Tips", {
+          type: "warning",
         }).then(
           () => {
             api
               .admin_deleteDiscussion(didList)
               .then((res) => {
-                myMessage.success(this.$i18n.t('m.Delete_successfully'));
+                myMessage.success(this.$i18n.t("m.Delete_successfully"));
                 this.selectedDiscussions = [];
                 this.getDiscussionList(this.currentPage);
               })
@@ -409,25 +335,25 @@ export default {
         );
       } else {
         myMessage.warning(
-          this.$i18n.t('m.The_number_of_discussions_selected_cannot_be_empty')
+          this.$i18n.t("m.The_number_of_discussions_selected_cannot_be_empty")
         );
       }
     },
     openReportDialog(content) {
-      let reg = '#(.*?)# ';
-      let re = RegExp(reg, 'g');
+      let reg = "#(.*?)# ";
+      let re = RegExp(reg, "g");
       let tmp;
-      let showContent = '<strong>' + this.$i18n.t('m.Tags') + '</strong>：';
+      let showContent = "<strong>" + this.$i18n.t("m.Tags") + "</strong>：";
       while ((tmp = re.exec(content))) {
-        showContent += tmp[1] + ' ';
+        showContent += tmp[1] + " ";
       }
       showContent +=
-        '<br><br><strong>' +
-        this.$i18n.t('m.Content') +
-        '</strong>：' +
-        content.replace(/#(.*?)# /g, '');
-      this.$alert(showContent, this.$i18n.t('m.Report_Content'), {
-        confirmButtonText: this.$i18n.t('m.OK'),
+        "<br><br><strong>" +
+        this.$i18n.t("m.Content") +
+        "</strong>：" +
+        content.replace(/#(.*?)# /g, "");
+      this.$alert(showContent, this.$i18n.t("m.Report_Content"), {
+        confirmButtonText: this.$i18n.t("m.OK"),
         dangerouslyUseHTMLString: true,
       });
     },

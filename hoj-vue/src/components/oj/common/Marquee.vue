@@ -10,15 +10,15 @@
 
 <script>
 export default {
-  name: 'Marquee',
-  props: ['val', 'id'],
+  name: "Marquee",
+  props: ["val", "id"],
   data() {
     return {
       timer: null,
-      text: '',
+      text: "",
     };
   },
-  created() {}, 
+  created() {},
   mounted() {
     let timer = setTimeout(() => {
       this.move();
@@ -30,12 +30,13 @@ export default {
   },
   methods: {
     move() {
-      let maxWidth = document.querySelector('.marquee-wrap_' + this.id)
-        .clientWidth;
-      let width = document.querySelector('.getWidth_' + this.id).scrollWidth;
+      let maxWidth = document.querySelector(
+        ".marquee-wrap_" + this.id
+      ).clientWidth;
+      let width = document.querySelector(".getWidth_" + this.id).scrollWidth;
       if (width <= maxWidth) return;
-      let scroll = document.querySelector('.scroll_' + this.id);
-      let copy = document.querySelector('.copy_' + this.id);
+      let scroll = document.querySelector(".scroll_" + this.id);
+      let copy = document.querySelector(".copy_" + this.id);
       copy.innerText = this.text;
       let distance = 0;
       this.timer = setInterval(() => {
@@ -43,7 +44,7 @@ export default {
         if (-distance >= width) {
           distance = 16;
         }
-        scroll.style.transform = 'translateX(' + distance + 'px)';
+        scroll.style.transform = "translateX(" + distance + "px)";
       }, 20);
     },
   },

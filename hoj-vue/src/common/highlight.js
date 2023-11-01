@@ -2,7 +2,7 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/atom-one-light.css'
 
 export default {
-  install (Vue, options) {
+  install(Vue, options) {
     Vue.directive('highlight', {
       deep: true,
       bind: function (el, binding) {

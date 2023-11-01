@@ -4,9 +4,9 @@
       <el-col :md="15" :sm="24">
         <el-card>
           <div slot="header" class="content-center">
-            <span class="panel-title home-title welcome-title"
-              >{{ $t("m.Welcome_to") }}{{ websiteConfig.shortName }}</span
-            >
+            <span
+              class="panel-title home-title welcome-title"
+            >{{ $t("m.Welcome_to") }}{{ websiteConfig.shortName }}</span>
           </div>
 
           <el-carousel
@@ -22,14 +22,10 @@
                 :title="newsize"
                 :src="item.url"
                 class="image"
-              ></el-image> -->
+              ></el-image>-->
 
               <div v-if="item.hint">
-                <el-tooltip
-                  content="Bottom Center 提示文字"
-                  placement="bottom"
-                  effect="light"
-                >
+                <el-tooltip content="Bottom Center 提示文字" placement="bottom" effect="light">
                   <div
                     slot="content"
                     style="
@@ -37,9 +33,7 @@
                       min-width: 180px;
                       font-size: 15px;
                     "
-                  >
-                    {{ item.hint }}
-                  </div>
+                  >{{ item.hint }}</div>
                   <el-image
                     fit="contain"
                     :src="item.url"
@@ -100,7 +94,7 @@
                 }"
                 @click="linkTo"
                 class="normal-image"
-              ></el-image> -->
+              ></el-image>-->
             </el-carousel-item>
           </el-carousel>
           <!-- <el-carousel
@@ -118,15 +112,15 @@
                 </div>
               </el-image>
             </el-carousel-item>
-          </el-carousel> -->
+          </el-carousel>-->
         </el-card>
         <SubmissionStatistic class="card-top"></SubmissionStatistic>
         <el-card class="card-top">
           <div slot="header" class="clearfix">
             <span class="panel-title home-title">
               <i class="el-icon-magic-stick"></i>
-              {{ $t("m.Latest_Problem") }}</span
-            >
+              {{ $t("m.Latest_Problem") }}
+            </span>
           </div>
           <vxe-table
             border="inner"
@@ -143,16 +137,14 @@
               min-width="100"
               show-overflow
               align="center"
-            >
-            </vxe-table-column>
+            ></vxe-table-column>
             <vxe-table-column
               field="title"
               :title="$t('m.Title')"
               show-overflow
               min-width="130"
               align="center"
-            >
-            </vxe-table-column>
+            ></vxe-table-column>
             <vxe-table-column
               field="gmtModified"
               :title="$t('m.Recent_Update')"
@@ -161,10 +153,7 @@
               align="center"
             >
               <template v-slot="{ row }">
-                <el-tooltip
-                  :content="row.gmtModified | localtime"
-                  placement="top"
-                >
+                <el-tooltip :content="row.gmtModified | localtime" placement="top">
                   <span>{{ row.gmtModified | fromNow }}</span>
                 </el-tooltip>
               </template>
@@ -177,7 +166,8 @@
           <el-card>
             <div slot="header" class="clearfix title content-center">
               <div class="home-title home-contest">
-                <i class="el-icon-trophy"></i> {{ $t("m.Recent_Contest") }}
+                <i class="el-icon-trophy"></i>
+                {{ $t("m.Recent_Contest") }}
               </div>
             </div>
             <el-card
@@ -192,9 +182,11 @@
               "
             >
               <div slot="header" class="clearfix contest-header">
-                <a class="contest-title" @click="goContest(contest.id)">{{
+                <a class="contest-title" @click="goContest(contest.id)">
+                  {{
                   contest.title
-                }}</a>
+                  }}
+                </a>
                 <div class="contest-status">
                   <el-tag
                     effect="dark"
@@ -203,7 +195,7 @@
                   >
                     <i class="fa fa-circle" aria-hidden="true"></i>
                     {{
-                      $t("m." + CONTEST_STATUS_REVERSE[contest.status]["name"])
+                    $t("m." + CONTEST_STATUS_REVERSE[contest.status]["name"])
                     }}
                   </el-tag>
                 </div>
@@ -216,7 +208,8 @@
                     @click="goContestList(contest.type)"
                     size="mini"
                     style="margin-right: 10px"
-                    ><i class="fa fa-trophy"></i>
+                  >
+                    <i class="fa fa-trophy"></i>
                     {{ contest.type | parseContestType }}
                   </el-button>
                 </template>
@@ -241,7 +234,8 @@
                       @click="goContestList(contest.type)"
                       size="mini"
                       style="margin-right: 10px"
-                      ><i class="fa fa-trophy"></i>
+                    >
+                      <i class="fa fa-trophy"></i>
                       {{ contest.type | parseContestType }}
                     </el-button>
                   </el-tooltip>
@@ -255,46 +249,28 @@
                     :type="CONTEST_TYPE_REVERSE[contest.auth]['color']"
                     size="medium"
                     effect="plain"
-                  >
-                    {{ $t("m." + CONTEST_TYPE_REVERSE[contest.auth]["name"]) }}
-                  </el-tag>
+                  >{{ $t("m." + CONTEST_TYPE_REVERSE[contest.auth]["name"]) }}</el-tag>
                 </el-tooltip>
               </div>
               <ul class="contest-info">
                 <li>
-                  <el-button
-                    type="primary"
-                    round
-                    size="mini"
-                    style="margin-top: 4px"
-                    ><i class="fa fa-calendar"></i>
+                  <el-button type="primary" round size="mini" style="margin-top: 4px">
+                    <i class="fa fa-calendar"></i>
                     {{
-                      contest.startTime | localtime((format = "MM-DD HH:mm"))
+                    contest.startTime | localtime((format = "MM-DD HH:mm"))
                     }}
                   </el-button>
                 </li>
                 <li>
-                  <el-button
-                    type="success"
-                    round
-                    size="mini"
-                    style="margin-top: 4px"
-                    ><i class="fa fa-clock-o"></i>
+                  <el-button type="success" round size="mini" style="margin-top: 4px">
+                    <i class="fa fa-clock-o"></i>
                     {{ getDuration(contest.startTime, contest.endTime) }}
                   </el-button>
                 </li>
                 <li>
-                  <el-button
-                    size="mini"
-                    round
-                    plain
-                    v-if="contest.count != null"
-                  >
-                    <i
-                      class="el-icon-user-solid"
-                      style="color: rgb(48, 145, 242)"
-                    ></i
-                    >x{{ contest.count }}
+                  <el-button size="mini" round plain v-if="contest.count != null">
+                    <i class="el-icon-user-solid" style="color: rgb(48, 145, 242)"></i>
+                    x{{ contest.count }}
                   </el-button>
                 </li>
               </ul>
@@ -304,7 +280,8 @@
         <el-card :class="contests.length ? 'card-top' : ''">
           <div slot="header" class="clearfix">
             <span class="panel-title home-title">
-              <i class="el-icon-s-data"></i> {{ $t("m.Recent_7_Days_AC_Rank") }}
+              <i class="el-icon-s-data"></i>
+              {{ $t("m.Recent_7_Days_AC_Rank") }}
             </span>
           </div>
           <vxe-table
@@ -318,9 +295,7 @@
           >
             <vxe-table-column type="seq" min-width="50">
               <template v-slot="{ rowIndex }">
-                <span :class="getRankTagClass(rowIndex)"
-                  >{{ rowIndex + 1 }}
-                </span>
+                <span :class="getRankTagClass(rowIndex)">{{ rowIndex + 1 }}</span>
                 <span :class="'cite no' + rowIndex"></span>
               </template>
             </vxe-table-column>
@@ -342,22 +317,13 @@
                 <a
                   @click="goUserHome(row.username, row.uid)"
                   style="color: #2d8cf0"
-                  >{{ row.username }}</a
-                >
+                >{{ row.username }}</a>
                 <span style="margin-left: 2px" v-if="row.titleName">
-                  <el-tag effect="dark" size="small" :color="row.titleColor">
-                    {{ row.titleName }}
-                  </el-tag>
+                  <el-tag effect="dark" size="small" :color="row.titleColor">{{ row.titleName }}</el-tag>
                 </span>
               </template>
             </vxe-table-column>
-            <vxe-table-column
-              field="ac"
-              :title="$t('m.AC')"
-              min-width="50"
-              align="left"
-            >
-            </vxe-table-column>
+            <vxe-table-column field="ac" :title="$t('m.AC')" min-width="50" align="left"></vxe-table-column>
           </vxe-table>
         </el-card>
         <el-card class="card-top">
@@ -368,12 +334,7 @@
             </span>
           </div>
           <el-row :gutter="20">
-            <el-col
-              :md="8"
-              :sm="24"
-              v-for="(oj, index) in remoteJudgeList"
-              :key="index"
-            >
+            <el-col :md="8" :sm="24" v-for="(oj, index) in remoteJudgeList" :key="index">
               <a :href="oj.url" target="_blank">
                 <el-tooltip :content="oj.name" placement="top">
                   <el-image

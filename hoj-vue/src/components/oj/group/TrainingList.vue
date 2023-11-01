@@ -8,21 +8,15 @@
       align="center"
       v-if="!editPage"
     >
-      <vxe-table-column field="id" width="80" title="ID"> </vxe-table-column>
-      <vxe-table-column field="rank" width="80" :title="$t('m.Order_Number')">
-      </vxe-table-column>
-      <vxe-table-column
-        field="title"
-        min-width="150"
-        :title="$t('m.Title')"
-        show-overflow
-      >
-      </vxe-table-column>
+      <vxe-table-column field="id" width="80" title="ID"></vxe-table-column>
+      <vxe-table-column field="rank" width="80" :title="$t('m.Order_Number')"></vxe-table-column>
+      <vxe-table-column field="title" min-width="150" :title="$t('m.Title')" show-overflow></vxe-table-column>
       <vxe-table-column :title="$t('m.Auth')" width="100">
         <template v-slot="{ row }">
-          <el-tag :type="TRAINING_TYPE[row.auth]['color']" effect="dark">
-            {{ $t('m.Training_' + row.auth) }}
-          </el-tag>
+          <el-tag
+            :type="TRAINING_TYPE[row.auth]['color']"
+            effect="dark"
+          >{{ $t('m.Training_' + row.auth) }}</el-tag>
         </template>
       </vxe-table-column>
       <vxe-table-column :title="$t('m.Visible')" min-width="80">
@@ -31,8 +25,7 @@
             v-model="row.status"
             :disabled="!isGroupRoot && userInfo.username != row.author"
             @change="changeTrainingStatus(row.id, row.status)"
-          >
-          </el-switch>
+          ></el-switch>
         </template>
       </vxe-table-column>
       <vxe-table-column min-width="210" :title="$t('m.Info')">
@@ -55,8 +48,7 @@
               size="mini"
               @click.native="goEditTraining(row.id)"
               type="primary"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
           <el-tooltip
             effect="dark"
@@ -69,8 +61,7 @@
               size="mini"
               @click.native="goTrainingProblemList(row.id)"
               type="success"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
           <p></p>
           <el-tooltip
@@ -84,8 +75,7 @@
               size="mini"
               @click.native="deleteTraining(row.id)"
               type="danger"
-            >
-            </el-button>
+            ></el-button>
           </el-tooltip>
         </template>
       </vxe-table-column>
@@ -112,17 +102,17 @@
 </template>
 
 <script>
-import { TRAINING_TYPE } from '@/common/constants';
-import { mapGetters } from 'vuex';
-import Pagination from '@/components/oj/common/Pagination';
-import api from '@/common/api';
-import mMessage from '@/common/message';
-import Training from '@/components/oj/group/Training'
+import { TRAINING_TYPE } from "@/common/constants";
+import { mapGetters } from "vuex";
+import Pagination from "@/components/oj/common/Pagination";
+import api from "@/common/api";
+import mMessage from "@/common/message";
+import Training from "@/components/oj/group/Training";
 export default {
-  name: 'GroupTrainingList',
+  name: "GroupTrainingList",
   components: {
     Pagination,
-    Training
+    Training,
   },
   data() {
     return {
@@ -131,7 +121,7 @@ export default {
       limit: 10,
       trainingList: [],
       loading: false,
-      routeName: '',
+      routeName: "",
       tid: null,
       editPage: false,
     };
@@ -159,16 +149,22 @@ export default {
     },
     getAdminTrainingList() {
       this.loading = true;
-      api.getGroupAdminTrainingList(this.currentPage, this.limit, this.$route.params.groupID).then(
-        (res) => {
-          this.trainingList = res.data.data.records;
-          this.total = res.data.data.total;
-          this.loading = false;
-        },
-        (err) => {
-          this.loading = false;
-        }
-      );
+      api
+        .getGroupAdminTrainingList(
+          this.currentPage,
+          this.limit,
+          this.$route.params.groupID
+        )
+        .then(
+          (res) => {
+            this.trainingList = res.data.data.records;
+            this.total = res.data.data.total;
+            this.loading = false;
+          },
+          (err) => {
+            this.loading = false;
+          }
+        );
     },
     goEditTraining(trainingId) {
       this.$emit("handleEditPage");
@@ -180,18 +176,24 @@ export default {
     },
     changeTrainingStatus(tid, status) {
       api.changeGroupTrainingStatus(tid, status).then((res) => {
-        mMessage.success(this.$i18n.t('m.Update_Successfully'));
+        mMessage.success(this.$i18n.t("m.Update_Successfully"));
         this.$emit("currentChange", 1);
         this.currentChange(1);
       });
     },
     deleteTraining(id) {
-      this.$confirm(this.$i18n.t('m.Delete_Training_Tips'), this.$i18n.t('m.Warning'), {
-        type: 'warning',
-      }).then(() => {
-          api.deleteGroupTraining(id, this.$route.params.groupID)
+      this.$confirm(
+        this.$i18n.t("m.Delete_Training_Tips"),
+        this.$i18n.t("m.Warning"),
+        {
+          type: "warning",
+        }
+      ).then(
+        () => {
+          api
+            .deleteGroupTraining(id, this.$route.params.groupID)
             .then((res) => {
-              mMessage.success(this.$i18n.t('m.Delete_successfully'));
+              mMessage.success(this.$i18n.t("m.Delete_successfully"));
               this.$emit("currentChange", 1);
               this.currentChange(1);
             })
@@ -202,7 +204,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['userInfo', 'isGroupRoot']),
+    ...mapGetters(["userInfo", "isGroupRoot"]),
   },
 };
 </script>

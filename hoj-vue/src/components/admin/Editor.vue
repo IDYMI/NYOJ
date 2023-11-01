@@ -25,23 +25,18 @@
       </template>
     </mavon-editor>
     <!-- 在这里放一个隐藏的input，用来选择文件 -->
-    <input
-      ref="uploadInput"
-      style="display: none"
-      type="file"
-      @change="uploadFileChange"
-    />
+    <input ref="uploadInput" style="display: none" type="file" @change="uploadFileChange" />
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
-import { addCodeBtn } from '@/common/codeblock';
+import { mapGetters } from "vuex";
+import { addCodeBtn } from "@/common/codeblock";
 export default {
-  name: 'Editor',
+  name: "Editor",
   props: {
     value: {
       type: String,
-      default: '',
+      default: "",
     },
     openHtml: {
       type: Boolean,
@@ -101,17 +96,17 @@ export default {
         return;
       }
       var formdata = new FormData();
-      formdata.append('image', $file);
+      formdata.append("image", $file);
       let gid = this.$route.params.groupID;
       if (gid != null && gid != undefined) {
-        formdata.append('gid', gid);
+        formdata.append("gid", gid);
       }
       //将下面上传接口替换为你自己的服务器接口
       this.$http({
-        url: '/api/file/upload-md-img',
-        method: 'post',
+        url: "/api/file/upload-md-img",
+        method: "post",
         data: formdata,
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { "Content-Type": "multipart/form-data" },
       }).then((res) => {
         this.$refs.md.$img2Url(pos, res.data.data.link);
         this.img_file[res.data.data.link] = res.data.data.fileId;
@@ -120,8 +115,8 @@ export default {
     $imgDel(pos) {
       // 删除文件
       this.$http({
-        url: '/api/file/delete-md-img',
-        method: 'get',
+        url: "/api/file/delete-md-img",
+        method: "get",
         params: {
           fileId: this.img_file[pos[0]],
         },
@@ -137,30 +132,30 @@ export default {
       const file = e.target.files[0];
       // 创建form格式的数据，将文件放入form中
       const formdata = new FormData();
-      formdata.append('file', file);
+      formdata.append("file", file);
       let gid = this.$route.params.groupID;
       if (gid != null && gid != undefined) {
-        formdata.append('gid', gid);
+        formdata.append("gid", gid);
       }
       this.$http({
-        url: '/api/file/upload-md-file',
-        method: 'post',
+        url: "/api/file/upload-md-file",
+        method: "post",
         data: formdata,
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { "Content-Type": "multipart/form-data" },
       }).then((res) => {
         // 这里获取到的是mavon编辑器实例，上面挂载着很多方法
         const $vm = this.$refs.md;
         // 将文件名与文件路径插入当前光标位置，这是mavon-editor 内置的方法
         $vm.insertText($vm.getTextareaDom(), {
           prefix: `[${file.name}](${res.data.data.link})`,
-          subfix: '',
-          str: '',
+          subfix: "",
+          str: "",
         });
       });
     },
   },
   computed: {
-    ...mapGetters(['isAdminRole', 'isGroupAdmin']),
+    ...mapGetters(["isAdminRole", "isGroupAdmin"]),
   },
   watch: {
     value(val) {
@@ -170,7 +165,7 @@ export default {
     },
     currentValue(newVal, oldVal) {
       if (newVal !== oldVal) {
-        this.$emit('update:value', newVal);
+        this.$emit("update:value", newVal);
         this.$nextTick((_) => {
           addCodeBtn();
         });

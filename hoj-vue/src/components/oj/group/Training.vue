@@ -19,10 +19,7 @@
             </el-col>
             <el-col :span="24">
               <el-form-item :label="$t('m.Training_Title')" required>
-                <el-input
-                  v-model="training.title"
-                  :placeholder="$t('m.Training_Title')"
-                ></el-input>
+                <el-input v-model="training.title" :placeholder="$t('m.Training_Title')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -45,14 +42,8 @@
             <el-col :md="8" :xs="24">
               <el-form-item :label="$t('m.Training_Auth')" required>
                 <el-select v-model="training.auth">
-                  <el-option
-                    :label="$t('m.Public_Training')"
-                    value="Public"
-                  ></el-option>
-                  <el-option
-                    :label="$t('m.Private_Training')"
-                    value="Private"
-                  ></el-option>
+                  <el-option :label="$t('m.Public_Training')" value="Public"></el-option>
+                  <el-option :label="$t('m.Private_Training')" value="Private"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -62,32 +53,31 @@
                 v-show="training.auth != 'Public'"
                 :required="training.auth != 'Public'"
               >
-                <el-input
-                  v-model="training.privatePwd"
-                  :placeholder="$t('m.Training_Password')"
-                ></el-input>
+                <el-input v-model="training.privatePwd" :placeholder="$t('m.Training_Password')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
-        <el-button type="primary" @click.native="submit">{{
+        <el-button type="primary" @click.native="submit">
+          {{
           $t('m.Save')
-        }}</el-button>
+          }}
+        </el-button>
       </el-card>
     </el-col>
   </el-row>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import api from '@/common/api';
-import mMessage from '@/common/message';
-import Editor from '@/components/admin/Editor.vue';
-import Accordion from '@/components/admin/Accordion.vue';
-import AddExtraFile from '@/components/admin/AddExtraFile.vue';
-import CodeMirror from '@/components/admin/CodeMirror.vue';
+import { mapGetters } from "vuex";
+import api from "@/common/api";
+import mMessage from "@/common/message";
+import Editor from "@/components/admin/Editor.vue";
+import Accordion from "@/components/admin/Accordion.vue";
+import AddExtraFile from "@/components/admin/AddExtraFile.vue";
+import CodeMirror from "@/components/admin/CodeMirror.vue";
 export default {
-  name: 'GroupTraining',
+  name: "GroupTraining",
   components: {
     Accordion,
     AddExtraFile,
@@ -97,29 +87,29 @@ export default {
   props: {
     mode: {
       type: String,
-      default: 'edit'
+      default: "edit",
     },
     title: {
       type: String,
-      default: 'Edit Training'
+      default: "Edit Training",
     },
     apiMethod: {
       type: String,
-      default: 'addGroupTraining'
+      default: "addGroupTraining",
     },
     tid: {
       type: Number,
-      default: null
+      default: null,
     },
   },
   data() {
     return {
       training: {
         rank: 1000,
-        title: '',
-        description: '',
-        privatePwd: '',
-        auth: 'Public',
+        title: "",
+        description: "",
+        privatePwd: "",
+        auth: "Public",
       },
       trainingCategoryId: null,
       trainingCategoryList: [],
@@ -132,10 +122,10 @@ export default {
     $route() {
       this.training = {
         rank: 1000,
-        title: '',
-        description: '',
-        privatePwd: '',
-        auth: 'Public',
+        title: "",
+        description: "",
+        privatePwd: "",
+        auth: "Public",
       };
       this.init();
     },
@@ -146,77 +136,80 @@ export default {
         let data = res.data.data;
         if (!data || !data.length) {
           this.$alert(
-            this.$i18n.t('m.Redirect_To_Category'),
-            this.$i18n.t('m.Redirect'),
+            this.$i18n.t("m.Redirect_To_Category"),
+            this.$i18n.t("m.Redirect"),
             {
-              confirmButtonText: this.$i18n.t('m.OK'),
+              confirmButtonText: this.$i18n.t("m.OK"),
               showClose: false,
               callback: (action) => {
                 this.$router.push({
-                  path: '/admin/training/category',
+                  path: "/admin/training/category",
                 });
               },
             }
           );
         } else {
           this.trainingCategoryList = data;
-          if (this.mode === 'edit') {
+          if (this.mode === "edit") {
             this.getTraining();
           }
         }
       });
     },
     getTraining() {
-      api.getGroupTraining(this.tid).then((res) => {
+      api
+        .getGroupTraining(this.tid)
+        .then((res) => {
           let data = res.data.data;
           this.training = data.training || {};
           this.trainingCategoryId = data.trainingCategory.id || null;
-        }).catch(() => {});
+        })
+        .catch(() => {});
     },
     submit() {
       if (!this.training.rank && this.training.rank != 0) {
         mMessage.error(
-          this.$i18n.t('m.Training_rank') + ' ' + this.$i18n.t('m.is_required')
+          this.$i18n.t("m.Training_rank") + " " + this.$i18n.t("m.is_required")
         );
         return;
       }
 
       if (!this.training.title) {
         mMessage.error(
-          this.$i18n.t('m.Training_Title') + ' ' + this.$i18n.t('m.is_required')
+          this.$i18n.t("m.Training_Title") + " " + this.$i18n.t("m.is_required")
         );
         return;
       }
       if (!this.training.description) {
         mMessage.error(
-          this.$i18n.t('m.Training_Description') +
-            ' ' +
-            this.$i18n.t('m.is_required')
+          this.$i18n.t("m.Training_Description") +
+            " " +
+            this.$i18n.t("m.is_required")
         );
         return;
       }
 
       if (!this.trainingCategoryId) {
         mMessage.error(
-          this.$i18n.t('m.Training_Category') +
-            ' ' +
-            this.$i18n.t('m.is_required')
+          this.$i18n.t("m.Training_Category") +
+            " " +
+            this.$i18n.t("m.is_required")
         );
         return;
       }
 
-      if (this.training.auth != 'Public' && !this.training.privatePwd) {
+      if (this.training.auth != "Public" && !this.training.privatePwd) {
         mMessage.error(
-          this.$i18n.t('m.Training_Password') +
-            ' ' +
-            this.$i18n.t('m.is_required')
+          this.$i18n.t("m.Training_Password") +
+            " " +
+            this.$i18n.t("m.is_required")
         );
         return;
       }
       this.training.gid = this.$route.params.groupID;
       let data = Object.assign({}, this.training);
-      if (this.mode === 'add') {
-        data['author'] = this.userInfo.username;
+      if (this.mode === "add") {
+        data["author"] = this.userInfo.username;
       }
       let trainingDto = {
         training: data,
@@ -227,8 +220,8 @@ export default {
 
       api[this.apiMethod](trainingDto)
         .then((res) => {
-          mMessage.success(this.$t('m.Update_Successfully'));
-          if (this.mode === 'edit') {
+          mMessage.success(this.$t("m.Update_Successfully"));
+          if (this.mode === "edit") {
             this.$emit("handleEditPage");
           } else {
             this.$emit("handleCreatePage");
@@ -239,7 +232,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['userInfo', 'group']),
+    ...mapGetters(["userInfo", "group"]),
   },
 };
 </script>

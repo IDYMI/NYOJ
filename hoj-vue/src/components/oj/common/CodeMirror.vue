@@ -11,40 +11,22 @@
               class="left-adjust"
               size="small"
             >
-              <el-option v-for="item in languages" :key="item" :value="item"
-                >{{ item }}
-              </el-option>
+              <el-option v-for="item in languages" :key="item" :value="item">{{ item }}</el-option>
             </el-select>
           </span>
           <span>
             <el-tooltip :content="$t('m.Reset_Code')" placement="top">
-              <el-button
-                icon="el-icon-refresh"
-                @click="onResetClick"
-                size="small"
-              ></el-button>
+              <el-button icon="el-icon-refresh" @click="onResetClick" size="small"></el-button>
             </el-tooltip>
           </span>
           <span v-if="isAuthenticated && !submitDisabled">
-            <el-tooltip
-              :content="$t('m.Get_Recently_Passed_Code')"
-              placement="top"
-            >
-              <el-button
-                icon="el-icon-download"
-                size="small"
-                @click="getUserLastAccepetedCode"
-              >
-              </el-button>
+            <el-tooltip :content="$t('m.Get_Recently_Passed_Code')" placement="top">
+              <el-button icon="el-icon-download" size="small" @click="getUserLastAccepetedCode"></el-button>
             </el-tooltip>
           </span>
           <span>
             <el-tooltip :content="$t('m.Beauty_Code')" placement="top">
-              <el-button
-                icon="el-icon-thumb"
-                @click="CodeBeauty"
-                size="small"
-              ></el-button>
+              <el-button icon="el-icon-thumb" @click="CodeBeauty" size="small"></el-button>
             </el-tooltip>
           </span>
         </div>
@@ -53,26 +35,16 @@
         <div class="select-row fl-right">
           <span>
             <el-tooltip :content="$t('m.Upload_file')" placement="bottom">
-              <el-button
-                icon="el-icon-upload"
-                @click="onUploadFile"
-                size="small"
-              ></el-button>
+              <el-button icon="el-icon-upload" @click="onUploadFile" size="small"></el-button>
             </el-tooltip>
           </span>
           <span>
-            <input
-              type="file"
-              id="file-uploader"
-              style="display: none"
-              @change="onUploadFileDone"
-            />
+            <input type="file" id="file-uploader" style="display: none" @change="onUploadFileDone" />
           </span>
           <span>
             <el-tooltip :content="$t('m.Code_Editor_Setting')" placement="top">
               <el-popover placement="bottom" width="300" trigger="click">
-                <el-button slot="reference" icon="el-icon-s-tools" size="small">
-                </el-button>
+                <el-button slot="reference" icon="el-icon-s-tools" size="small"></el-button>
                 <div class="setting-title">{{ $t("m.Setting") }}</div>
                 <div class="setting-item">
                   <span class="setting-item-name">
@@ -90,8 +62,7 @@
                       :key="item.label"
                       :label="$t('m.' + item.label)"
                       :value="item.value"
-                      >{{ $t("m." + item.label) }}
-                    </el-option>
+                    >{{ $t("m." + item.label) }}</el-option>
                   </el-select>
                 </div>
                 <div class="setting-item">
@@ -110,8 +81,7 @@
                       :key="item"
                       :label="item"
                       :value="item"
-                      >{{ item }}
-                    </el-option>
+                    >{{ item }}</el-option>
                   </el-select>
                 </div>
                 <div class="setting-item">
@@ -126,34 +96,10 @@
                       aria-hidden="true"
                     >
                       <g transform="translate(101.57 355.48)">
-                        <rect
-                          width="812.53"
-                          height="152.35"
-                          x="0"
-                          y="0"
-                          rx="50.78"
-                        ></rect>
-                        <rect
-                          width="812.53"
-                          height="50.78"
-                          x="0"
-                          y="253.92"
-                          rx="25.39"
-                        ></rect>
-                        <rect
-                          width="50.78"
-                          height="203.13"
-                          x="0"
-                          y="177.74"
-                          rx="25.39"
-                        ></rect>
-                        <rect
-                          width="50.78"
-                          height="203.13"
-                          x="761.75"
-                          y="177.74"
-                          rx="25.39"
-                        ></rect>
+                        <rect width="812.53" height="152.35" x="0" y="0" rx="50.78" />
+                        <rect width="812.53" height="50.78" x="0" y="253.92" rx="25.39" />
+                        <rect width="50.78" height="203.13" x="0" y="177.74" rx="25.39" />
+                        <rect width="50.78" height="203.13" x="761.75" y="177.74" rx="25.39" />
                       </g>
                     </svg>
                     {{ $t("m.TabSize") }}
@@ -164,15 +110,9 @@
                     class="setting-item-value"
                     size="small"
                   >
-                    <el-option :label="$t('m.Two_Spaces')" :value="2">
-                      {{ $t("m.Two_Spaces") }}
-                    </el-option>
-                    <el-option :label="$t('m.Four_Spaces')" :value="4">
-                      {{ $t("m.Four_Spaces") }}
-                    </el-option>
-                    <el-option :label="$t('m.Eight_Spaces')" :value="8">
-                      {{ $t("m.Eight_Spaces") }}
-                    </el-option>
+                    <el-option :label="$t('m.Two_Spaces')" :value="2">{{ $t("m.Two_Spaces") }}</el-option>
+                    <el-option :label="$t('m.Four_Spaces')" :value="4">{{ $t("m.Four_Spaces") }}</el-option>
+                    <el-option :label="$t('m.Eight_Spaces')" :value="8">{{ $t("m.Eight_Spaces") }}</el-option>
                   </el-select>
                 </div>
               </el-popover>
@@ -180,15 +120,8 @@
           </span>
           <template v-if="supportFocusMode">
             <span v-if="!openFocusMode" class="hidden-sm-and-down">
-              <el-tooltip
-                :content="$t('m.Enter_Focus_Mode')"
-                placement="bottom"
-              >
-                <el-button
-                  icon="el-icon-full-screen"
-                  @click="switchFocusMode(true)"
-                  size="small"
-                ></el-button>
+              <el-tooltip :content="$t('m.Enter_Focus_Mode')" placement="bottom">
+                <el-button icon="el-icon-full-screen" @click="switchFocusMode(true)" size="small"></el-button>
               </el-tooltip>
             </span>
             <span v-else class="hidden-sm-and-down">
@@ -204,7 +137,7 @@
                   >
                     <path
                       d="M463.04 863.32h-88.51V641.14H152.35v-88.87H463.4l-.36 311.05zM863.32 463.4H552.27l.31-311.05h88.56v222.18h222.18v88.87z"
-                    ></path>
+                    />
                   </svg>
                 </el-button>
               </el-tooltip>
@@ -224,8 +157,7 @@
         :options="options"
         @change="onEditorCodeChange"
         ref="myEditor"
-      >
-      </codemirror>
+      ></codemirror>
     </div>
     <el-drawer
       :visible.sync="openTestCaseDrawer"
@@ -258,9 +190,7 @@
                 addTestCaseToTestJudge(example.input, example.output, index)
               "
               :effect="example.active ? 'dark' : 'plain'"
-            >
-              {{ $t("m.Fill_Case") }} {{ index + 1 }}
-            </el-tag>
+            >{{ $t("m.Fill_Case") }} {{ index + 1 }}</el-tag>
           </div>
           <el-input
             type="textarea"
@@ -270,8 +200,7 @@
             resize="none"
             maxlength="1000"
             v-model="userInput"
-          >
-          </el-input>
+          ></el-input>
         </el-tab-pane>
         <el-tab-pane :label="$t('m.Test_Result')" name="result">
           <div v-loading="testJudgeLoding">
@@ -283,8 +212,7 @@
                   center
                   :closable="false"
                   show-icon
-                >
-                </el-alert>
+                ></el-alert>
               </div>
             </template>
             <template v-else-if="testJudgeRes.status != -2">
@@ -301,21 +229,23 @@
                   show-icon
                 >
                   <template slot="title">
-                    <span class="status-title"
-                      >{{
-                        getResultStatusName(
-                          testJudgeRes.problemJudgeMode,
-                          testJudgeRes.status,
-                          testJudgeRes.expectedOutput != null
-                        )
+                    <span class="status-title">
+                      {{
+                      getResultStatusName(
+                      testJudgeRes.problemJudgeMode,
+                      testJudgeRes.status,
+                      testJudgeRes.expectedOutput != null
+                      )
                       }}
-                      <template v-if="equalsExpectedOuput != null">
+                      <template
+                        v-if="equalsExpectedOuput != null"
+                      >
                         {{
-                          "(" +
-                          $t("m.Pass_Test_Case") +
-                          " " +
-                          equalsExpectedOuput +
-                          ")"
+                        "(" +
+                        $t("m.Pass_Test_Case") +
+                        " " +
+                        equalsExpectedOuput +
+                        ")"
                         }}
                       </template>
                     </span>
@@ -323,22 +253,17 @@
                   <template slot>
                     <div style="display: flex">
                       <div style="margin-right: 15px">
-                        <span class="color-gray mr-5"
-                          ><i class="el-icon-time"></i
-                        ></span>
+                        <span class="color-gray mr-5">
+                          <i class="el-icon-time"></i>
+                        </span>
                         <span class="color-gray mr-5">{{ $t("m.Time") }}</span>
-                        <span v-if="testJudgeRes.time != null"
-                          >{{ testJudgeRes.time }}ms</span
-                        >
+                        <span v-if="testJudgeRes.time != null">{{ testJudgeRes.time }}ms</span>
                         <span v-else>--ms</span>
                       </div>
                       <div>
-                        <span
-                          style="vertical-align: sub"
-                          class="color-gray mr-5"
-                        >
+                        <span style="vertical-align: sub" class="color-gray mr-5">
                           <svg
-                            data-v-79a9c93e=""
+                            data-v-79a9c93e
                             focusable="false"
                             viewBox="0 0 1025 1024"
                             fill="currentColor"
@@ -349,30 +274,26 @@
                             <path
                               d="M448.98 92.52V92.67l.37 40.46v62.75h125.5V92.52h81.22v103.36h33.12c76.08 0 137.9 61.05 139.12 136.84l.02 2.3v33.12h103.36v80.84l-40.6.37h-62.76v91.05h103.36v81.21H828.33v67.58c0 76.08-61.06 137.9-136.84 139.12l-2.3.02h-33.12v103.36h-80.84l-.37-40.6v-62.76H449.25l-.27 103.36h-80.84V828.33h-33.12c-76.08 0-137.9-61.06-139.12-136.84l-.02-2.3v-67.58H92.52v-80.83l40.6-.38h62.76v-91.15l-103.36-.27v-80.47l40.6-.37h62.76v-33.12c0-76.08 61.05-137.9 136.84-139.12l2.3-.02h33.12V92.52h80.84zM689.2 277.1H335.02c-32 0-57.93 25.93-57.93 57.93v354.17c0 32 25.93 57.93 57.93 57.93h354.17c32 0 57.93-25.94 57.93-57.93V335.02c0-32-25.94-57.93-57.93-57.93zm-73.73 91.05a40.6 40.6 0 0 1 40.6 40.6v206.72a40.6 40.6 0 0 1-40.6 40.6H408.75a40.6 40.6 0 0 1-40.6-40.6V408.75a40.6 40.6 0 0 1 40.6-40.6zm-40.6 81.16H449.3v125.55h125.55V449.3z"
                               transform="translate(1)"
-                            ></path>
+                            />
                           </svg>
                         </span>
-                        <span class="color-gray mr-5">{{
+                        <span class="color-gray mr-5">
+                          {{
                           $t("m.Memory")
-                        }}</span>
-                        <span v-if="testJudgeRes.memory != null"
-                          >{{ testJudgeRes.memory }}KB</span
-                        >
+                          }}
+                        </span>
+                        <span v-if="testJudgeRes.memory != null">{{ testJudgeRes.memory }}KB</span>
                         <span v-else>--KB</span>
                       </div>
                     </div>
-                    <div v-if="testJudgeRes.stderr">
-                      {{ testJudgeRes.stderr }}
-                    </div>
+                    <div v-if="testJudgeRes.stderr">{{ testJudgeRes.stderr }}</div>
                     <div
                       v-if="
                         testJudgeRes.problemJudgeMode == 'spj' &&
                         (testJudgeRes.status == 0 || testJudgeRes.status == -1)
                       "
                       style="font-weight: 700"
-                    >
-                      {{ $t("m.Problem_Uncertain_Answer") }}
-                    </div>
+                    >{{ $t("m.Problem_Uncertain_Answer") }}</div>
                   </template>
                 </el-alert>
               </div>
@@ -387,14 +308,10 @@
                       resize="none"
                       :autosize="{ minRows: 1, maxRows: 4 }"
                       v-model="testJudgeRes.userInput"
-                    >
-                    </el-input>
+                    ></el-input>
                   </span>
                 </div>
-                <div
-                  class="tj-res-item"
-                  v-if="testJudgeRes.expectedOutput != null"
-                >
+                <div class="tj-res-item" v-if="testJudgeRes.expectedOutput != null">
                   <span class="name">{{ $t("m.Expected_Output") }}</span>
                   <span class="value">
                     <el-input
@@ -404,8 +321,7 @@
                       :autosize="{ minRows: 1, maxRows: 4 }"
                       class="textarea"
                       v-model="testJudgeRes.expectedOutput"
-                    >
-                    </el-input>
+                    ></el-input>
                   </span>
                 </div>
                 <div class="tj-res-item">
@@ -418,8 +334,7 @@
                       resize="none"
                       :autosize="{ minRows: 1, maxRows: 4 }"
                       v-model="testJudgeRes.userOutput"
-                    >
-                    </el-input>
+                    ></el-input>
                   </span>
                 </div>
               </div>
@@ -428,9 +343,11 @@
               <div class="tj-res-tab mt-10">
                 <el-card>
                   <div slot="header">
-                    <span class="ce-title">{{
+                    <span class="ce-title">
+                      {{
                       $t("m.Compilation_Failed")
-                    }}</span>
+                      }}
+                    </span>
                   </div>
                   <div style="color: #f90; font-weight: 600">
                     <pre>{{ testJudgeRes.stderr }}</pre>
@@ -442,13 +359,8 @@
         </el-tab-pane>
         <el-tab-pane>
           <span slot="label">
-            <el-tag
-              type="success"
-              class="tj-btn"
-              @click="submitTestJudge"
-              effect="plain"
-            >
-              <i class="el-icon-video-play"> {{ $t("m.Running_Test") }}</i>
+            <el-tag type="success" class="tj-btn" @click="submitTestJudge" effect="plain">
+              <i class="el-icon-video-play">{{ $t("m.Running_Test") }}</i>
             </el-tag>
           </span>
           <template v-if="!isAuthenticated">
@@ -459,8 +371,7 @@
                 center
                 :closable="false"
                 show-icon
-              >
-              </el-alert>
+              ></el-alert>
             </div>
           </template>
         </el-tab-pane>

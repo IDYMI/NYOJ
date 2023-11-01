@@ -11,9 +11,11 @@
             </li>
             <li>
               <router-link to="/new-oi-rank" exact-active-class="selected">
-                <span class="panel-title-oi">{{
+                <span class="panel-title-oi">
+                  {{
                   $t("m.NEW_OI_Ranklist")
-                }}</span>
+                  }}
+                </span>
               </router-link>
             </li>
           </ul>
@@ -28,12 +30,7 @@
           v-model="searchUser"
           @keyup.enter.native="getRankData(1)"
         >
-          <el-button
-            slot="append"
-            icon="el-icon-search"
-            class="search-btn"
-            @click="getRankData(1)"
-          ></el-button>
+          <el-button slot="append" icon="el-icon-search" class="search-btn" @click="getRankData(1)"></el-button>
         </el-input>
       </el-card>
       <vxe-table
@@ -65,29 +62,20 @@
             <a
               @click="getInfoByUsername(row.uid, row.username)"
               style="color:#2d8cf0;"
-              >{{ row.username }}</a
-            >
+            >{{ row.username }}</a>
             <span style="margin-left:2px" v-if="row.titleName">
-              <el-tag effect="dark" size="small" :color="row.titleColor">
-                {{ row.titleName }}
-              </el-tag>
+              <el-tag effect="dark" size="small" :color="row.titleColor">{{ row.titleName }}</el-tag>
             </span>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          field="nickname"
-          :title="$t('m.Nickname')"
-          width="160"
-        >
+        <vxe-table-column field="nickname" :title="$t('m.Nickname')" width="160">
           <template v-slot="{ row }">
             <el-tag
               effect="plain"
               size="small"
               v-if="row.nickname"
               :type="nicknameColor(row.nickname)"
-            >
-              {{ row.nickname }}
-            </el-tag>
+            >{{ row.nickname }}</el-tag>
           </template>
         </vxe-table-column>
         <vxe-table-column :title="$t('m.Score')" min-width="80">
@@ -95,17 +83,10 @@
             <span>{{ row.score }}</span>
           </template>
         </vxe-table-column>
-        <vxe-table-column
-          :title="$t('m.AC') + '/' + $t('m.Total')"
-          min-width="100"
-        >
+        <vxe-table-column :title="$t('m.AC') + '/' + $t('m.Total')" min-width="100">
           <template v-slot="{ row }">
             <span>
-              <a
-                @click="goUserACStatus(row.username)"
-                style="color:rgb(87, 163, 243);"
-                >{{ row.ac }}</a
-              >
+              <a @click="goUserACStatus(row.username)" style="color:rgb(87, 163, 243);">{{ row.ac }}</a>
               <span>/{{ row.total }}</span>
             </span>
           </template>
@@ -122,9 +103,11 @@
           align="left"
         >
           <template v-slot="{ row }">
-            <span v-katex class="rank-signature-body" v-if="row.signature">{{
+            <span v-katex class="rank-signature-body" v-if="row.signature">
+              {{
               row.signature
-            }}</span>
+              }}
+            </span>
           </template>
         </vxe-table-column>
       </vxe-table>
@@ -142,14 +125,14 @@
 </template>
 
 <script>
-import api from '@/common/api';
-import utils from '@/common/utils';
-import { RULE_TYPE } from '@/common/constants';
-import { mapGetters } from 'vuex';
-import Avatar from 'vue-avatar';
-const Pagination = () => import('@/components/oj/common/Pagination');
+import api from "@/common/api";
+import utils from "@/common/utils";
+import { RULE_TYPE } from "@/common/constants";
+import { mapGetters } from "vuex";
+import Avatar from "vue-avatar";
+const Pagination = () => import("@/components/oj/common/Pagination");
 export default {
-  name: 'acm-rank',
+  name: "acm-rank",
   components: {
     Pagination,
     Avatar,
@@ -165,44 +148,44 @@ export default {
       screenWidth: 768,
       options: {
         tooltip: {
-          trigger: 'axis',
+          trigger: "axis",
         },
         legend: {
-          data: ['Score'],
+          data: ["Score"],
         },
         grid: {
-          x: '3%',
-          x2: '3%',
-          left: '8%',
-          right: '8%',
+          x: "3%",
+          x2: "3%",
+          left: "8%",
+          right: "8%",
         },
         toolbox: {
           show: true,
           feature: {
             dataView: { show: true, readOnly: true },
-            magicType: { show: true, type: ['line', 'bar'] },
+            magicType: { show: true, type: ["line", "bar"] },
             saveAsImage: { show: true },
           },
-          right: '8%',
-          top: '5%',
+          right: "8%",
+          top: "5%",
         },
         calculable: true,
         xAxis: [
           {
-            type: 'category',
-            data: ['root'],
+            type: "category",
+            data: ["root"],
             boundaryGap: true,
             axisLabel: {
               interval: 0,
               showMinLabel: true,
               showMaxLabel: true,
-              align: 'center',
+              align: "center",
               formatter: (value, index) => {
                 if (this.screenWidth < 768) {
                   if (this.isAuthenticated && this.userInfo.username == value) {
                     return utils.breakLongWords(value, 14);
                   } else {
-                    return '';
+                    return "";
                   }
                 } else {
                   return utils.breakLongWords(value, 14);
@@ -216,23 +199,23 @@ export default {
         ],
         yAxis: [
           {
-            type: 'value',
+            type: "value",
             axisLabel: {
               rotate: 50,
               textStyle: {
-                fontSize: '12em',
+                fontSize: "12em",
               },
             },
           },
         ],
         series: [
           {
-            name: this.$i18n.t('m.Score'),
-            type: 'bar',
+            name: this.$i18n.t("m.Score"),
+            type: "bar",
             data: [0],
-            barMaxWidth: '80',
+            barMaxWidth: "80",
             markPoint: {
-              data: [{ type: 'max', name: 'max' }],
+              data: [{ type: "max", name: "max" }],
             },
           },
         ],
@@ -254,7 +237,7 @@ export default {
   methods: {
     getRankData(page) {
       let bar = this.$refs.chart;
-      bar.showLoading({ maskColor: 'rgba(250, 250, 250, 0.8)' });
+      bar.showLoading({ maskColor: "rgba(250, 250, 250, 0.8)" });
       this.loadingTable = true;
       api.getUserRank(page, this.limit, RULE_TYPE.OI, this.searchUser).then(
         (res) => {
@@ -286,13 +269,13 @@ export default {
     },
     getInfoByUsername(uid, username) {
       this.$router.push({
-        path: '/user-home',
+        path: "/user-home",
         query: { uid, username },
       });
     },
     goUserACStatus(username) {
       this.$router.push({
-        path: '/status',
+        path: "/status",
         query: { username, status: 0 },
       });
     },
@@ -300,13 +283,13 @@ export default {
       return utils.getACRate(ac, total);
     },
     nicknameColor(nickname) {
-      let typeArr = ['', 'success', 'info', 'danger', 'warning'];
+      let typeArr = ["", "success", "info", "danger", "warning"];
       let index = nickname.length % 5;
       return typeArr[index];
     },
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'userInfo']),
+    ...mapGetters(["isAuthenticated", "userInfo"]),
   },
 };
 </script>

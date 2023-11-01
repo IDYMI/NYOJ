@@ -5,12 +5,12 @@
       <el-col :span="24">
         <el-card shadow>
           <div slot="header">
-            <span class="panel-title"
-              >{{
-                query.type === "" ? $t("m.All") : parseContestType(query.type)
+            <span class="panel-title">
+              {{
+              query.type === "" ? $t("m.All") : parseContestType(query.type)
               }}
-              {{ $t("m.Contests") }}</span
-            >
+              {{ $t("m.Contests") }}
+            </span>
             <div class="filter-row">
               <span>
                 <el-dropdown
@@ -21,16 +21,20 @@
                 >
                   <span class="el-dropdown-link">
                     {{
-                      query.type === ""
-                        ? $t("m.Contest_Rule")
-                        : parseContestType(query.type)
+                    query.type === ""
+                    ? $t("m.Contest_Rule")
+                    : parseContestType(query.type)
                     }}
-                    <i class="el-icon-caret-bottom"></i>
+                    <i
+                      class="el-icon-caret-bottom"
+                    ></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="">{{
+                    <el-dropdown-item command>
+                      {{
                       $t("m.All")
-                    }}</el-dropdown-item>
+                      }}
+                    </el-dropdown-item>
                     <el-dropdown-item command="0">ACM</el-dropdown-item>
                     <el-dropdown-item command="1">OI</el-dropdown-item>
                   </el-dropdown-menu>
@@ -46,27 +50,37 @@
                 >
                   <span class="el-dropdown-link">
                     {{
-                      query.status === ""
-                        ? $t("m.Status")
-                        : $t(
-                            "m." + CONTEST_STATUS_REVERSE[query.status]["name"]
-                          )
+                    query.status === ""
+                    ? $t("m.Status")
+                    : $t(
+                    "m." + CONTEST_STATUS_REVERSE[query.status]["name"]
+                    )
                     }}
-                    <i class="el-icon-caret-bottom"></i>
+                    <i
+                      class="el-icon-caret-bottom"
+                    ></i>
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="">{{
+                    <el-dropdown-item command>
+                      {{
                       $t("m.All")
-                    }}</el-dropdown-item>
-                    <el-dropdown-item command="-1">{{
+                      }}
+                    </el-dropdown-item>
+                    <el-dropdown-item command="-1">
+                      {{
                       $t("m.Scheduled")
-                    }}</el-dropdown-item>
-                    <el-dropdown-item command="0">{{
+                      }}
+                    </el-dropdown-item>
+                    <el-dropdown-item command="0">
+                      {{
                       $t("m.Running")
-                    }}</el-dropdown-item>
-                    <el-dropdown-item command="1">{{
+                      }}
+                    </el-dropdown-item>
+                    <el-dropdown-item command="1">
+                      {{
                       $t("m.Ended")
-                    }}</el-dropdown-item>
+                      }}
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </span>
@@ -88,11 +102,7 @@
               <el-empty :description="$t('m.No_contest')"></el-empty>
             </p>
             <ol id="contest-list">
-              <li
-                v-for="contest in contests"
-                :key="contest.title"
-                :style="getborderColor(contest)"
-              >
+              <li v-for="contest in contests" :key="contest.title" :style="getborderColor(contest)">
                 <el-row type="flex" justify="space-between" align="middle">
                   <el-col :xs="10" :sm="4" :md="3" :lg="2">
                     <template v-if="contest.type == 0">
@@ -101,8 +111,7 @@
                         class="trophy"
                         style="width: 100px"
                         :preview-src-list="[acmSrc]"
-                      >
-                      </el-image>
+                      ></el-image>
                     </template>
                     <template v-else>
                       <el-image
@@ -110,51 +119,26 @@
                         class="trophy"
                         style="width: 100px"
                         :preview-src-list="[oiSrc]"
-                      >
-                      </el-image>
+                      ></el-image>
                     </template>
                   </el-col>
-                  <el-col
-                    :xs="10"
-                    :sm="16"
-                    :md="19"
-                    :lg="20"
-                    class="contest-main"
-                  >
+                  <el-col :xs="10" :sm="16" :md="19" :lg="20" class="contest-main">
                     <p class="title">
-                      <a class="entry" @click.stop="toContest(contest)">
-                        {{ contest.title }}
-                      </a>
+                      <a class="entry" @click.stop="toContest(contest)">{{ contest.title }}</a>
                       <template v-if="contest.auth == 1">
-                        <i
-                          class="el-icon-lock"
-                          size="20"
-                          style="color: #d9534f"
-                        ></i>
+                        <i class="el-icon-lock" size="20" style="color: #d9534f"></i>
                       </template>
                       <template v-if="contest.auth == 2">
-                        <i
-                          class="el-icon-lock"
-                          size="20"
-                          style="color: #f0ad4e"
-                        ></i>
+                        <i class="el-icon-lock" size="20" style="color: #f0ad4e"></i>
                       </template>
                     </p>
                     <ul class="detail">
                       <li>
-                        <i
-                          class="fa fa-calendar"
-                          aria-hidden="true"
-                          style="color: #3091f2"
-                        ></i>
+                        <i class="fa fa-calendar" aria-hidden="true" style="color: #3091f2"></i>
                         {{ contest.startTime | localtime }}
                       </li>
                       <li>
-                        <i
-                          class="fa fa-clock-o"
-                          aria-hidden="true"
-                          style="color: #3091f2"
-                        ></i>
+                        <i class="fa fa-clock-o" aria-hidden="true" style="color: #3091f2"></i>
                         {{ getDuration(contest.startTime, contest.endTime) }}
                       </li>
                       <li>
@@ -164,7 +148,8 @@
                             round
                             :type="'primary'"
                             @click="onRuleChange(contest.type)"
-                            ><i class="fa fa-trophy"></i>
+                          >
+                            <i class="fa fa-trophy"></i>
                             {{ contest.type | parseContestType }}
                           </el-button>
                         </template>
@@ -188,7 +173,8 @@
                               round
                               :type="'warning'"
                               @click="onRuleChange(contest.type)"
-                              ><i class="fa fa-trophy"></i>
+                            >
+                              <i class="fa fa-trophy"></i>
                               {{ contest.type | parseContestType }}
                             </el-button>
                           </el-tooltip>
@@ -207,20 +193,17 @@
                             effect="plain"
                           >
                             {{
-                              $t(
-                                "m." +
-                                  CONTEST_TYPE_REVERSE[contest.auth]["name"]
-                              )
+                            $t(
+                            "m." +
+                            CONTEST_TYPE_REVERSE[contest.auth]["name"]
+                            )
                             }}
                           </el-tag>
                         </el-tooltip>
                       </li>
                       <li v-if="contest.count != null">
-                        <i
-                          class="el-icon-user-solid"
-                          style="color: rgb(48, 145, 242)"
-                        ></i
-                        >x{{ contest.count }}
+                        <i class="el-icon-user-solid" style="color: rgb(48, 145, 242)"></i>
+                        x{{ contest.count }}
                       </li>
                       <li v-if="contest.openRank">
                         <el-tooltip
@@ -247,13 +230,7 @@
                       </li>
                     </ul>
                   </el-col>
-                  <el-col
-                    :xs="4"
-                    :sm="4"
-                    :md="2"
-                    :lg="2"
-                    style="text-align: center"
-                  >
+                  <el-col :xs="4" :sm="4" :md="2" :lg="2" style="text-align: center">
                     <el-tag
                       effect="dark"
                       :color="CONTEST_STATUS_REVERSE[contest.status]['color']"
@@ -261,9 +238,9 @@
                     >
                       <i class="fa fa-circle" aria-hidden="true"></i>
                       {{
-                        $t(
-                          "m." + CONTEST_STATUS_REVERSE[contest.status]["name"]
-                        )
+                      $t(
+                      "m." + CONTEST_STATUS_REVERSE[contest.status]["name"]
+                      )
                       }}
                     </el-tag>
                   </el-col>

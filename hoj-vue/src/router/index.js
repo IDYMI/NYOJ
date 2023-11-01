@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { sync } from 'vuex-router-sync'
+import {
+  sync
+} from 'vuex-router-sync'
 import adminRoutes from '@/router/adminRoutes'
 import ojRoutes from '@/router/ojRoutes'
 import mMessage from '@/common/message'
@@ -10,7 +12,11 @@ import 'nprogress/nprogress.css' // nprogress样式
 import i18n from '@/i18n'
 
 // 配置NProgress进度条选项  —— 动画效果
-NProgress.configure({ ease: 'ease', speed: 1000,showSpinner: false })
+NProgress.configure({
+  ease: 'ease',
+  speed: 1000,
+  showSpinner: false
+})
 
 Vue.use(VueRouter)
 
@@ -18,7 +24,7 @@ Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
 //修改原型对象中的push方法
 VueRouter.prototype.push = function push(location) {
-   return originalPush.call(this, location).catch(err => err)
+  return originalPush.call(this, location).catch(err => err)
 }
 
 let routes = new Set([...ojRoutes, ...adminRoutes]);
@@ -30,7 +36,10 @@ const router = new VueRouter({
     if (savedPosition) {
       return savedPosition
     } else {
-      return { x: 0, y: 0 }
+      return {
+        x: 0,
+        y: 0
+      }
     }
   },
 })
@@ -44,68 +53,77 @@ router.beforeEach((to, from, next) => {
     const isSuperAdmin = store.getters.isSuperAdmin
     const isAmdin = store.getters.isAdminRole
     if (token) { // 判断当前的token是否存在 ； 登录存入的token
-      if(to.matched.some(record => record.meta.requireSuperAdmin)){ // 判断是否需要超级管理权限
+      if (to.matched.some(record => record.meta.requireSuperAdmin)) { // 判断是否需要超级管理权限
 
-        if(isSuperAdmin){ // 拥有权限就进入
+        if (isSuperAdmin) { // 拥有权限就进入
           next()
-        }else{ // 没有超级管理员权限 全部返回登录页，并且清除缓存
-          if(to.path.split('/')[1]==='admin'){ //管理端
+        } else { // 没有超级管理员权限 全部返回登录页，并且清除缓存
+          if (to.path.split('/')[1] === 'admin') { //管理端
             next({
               path: '/admin/login'
             })
             mMessage.error(i18n.t('m.Please_login_first_by_admin_account'))
-          }else{ // oj端
+          } else { // oj端
             next({
               path: '/home'
             })
-            store.commit('changeModalStatus',{mode: 'Login', visible: true})
+            store.commit('changeModalStatus', {
+              mode: 'Login',
+              visible: true
+            })
             mMessage.error(i18n.t('m.Please_login_first'))
             store.commit("clearUserInfoAndToken");
           }
         }
-      }else if(to.matched.some(record => record.meta.requireAdmin)){ //判断是否需要管理员权限
-        if(isAmdin){
+      } else if (to.matched.some(record => record.meta.requireAdmin)) { //判断是否需要管理员权限
+        if (isAmdin) {
           next()
-        }else{ // 没有管理员权限 全部返回登录页，并且清除缓存
-          if(to.path.split('/')[1]==='admin'){ // 管理端
+        } else { // 没有管理员权限 全部返回登录页，并且清除缓存
+          if (to.path.split('/')[1] === 'admin') { // 管理端
             next({
               path: '/admin/login'
             })
             mMessage.error(i18n.t('m.Please_login_first_by_admin_account'))
-          }else{
+          } else {
             next({
               path: '/home'
             })
-            store.commit('changeModalStatus',{mode: 'Login', visible: true})
+            store.commit('changeModalStatus', {
+              mode: 'Login',
+              visible: true
+            })
             mMessage.error(i18n.t('m.Please_login_first'))
             store.commit("clearUserInfoAndToken");
           }
         }
-      }else{
+      } else {
         next()
       }
 
     } else { // 如果没有token
 
-      if(to.path.split('/')[1]==='admin'){
+      if (to.path.split('/')[1] === 'admin') {
         next({
-          path: '/admin/login'  // 管理端无token认证返回登录页
+          path: '/admin/login' // 管理端无token认证返回登录页
         })
-      }else{
+      } else {
         next({
-          path: '/home'  // 无token认证的一致返回到主页
+          path: '/home' // 无token认证的一致返回到主页
         })
-        store.commit('changeModalStatus',{mode: 'Login', visible: true})
+        store.commit('changeModalStatus', {
+          mode: 'Login',
+          visible: true
+        })
       }
       store.commit("clearUserInfoAndToken");
       mMessage.error(i18n.t('m.Please_login_first'))
     }
   } else { // 不需要登录认证的页面
-    if(to.meta.access){ // 单级路由有access控制
+    if (to.meta.access) { // 单级路由有access控制
       const webConfig = store.getters.websiteConfig;
-      switch(to.meta.access){
+      switch (to.meta.access) {
         case 'discussion':
-          if(!webConfig.openPublicDiscussion){
+          if (!webConfig.openPublicDiscussion) {
             next({
               path: '/home'
             })
@@ -113,7 +131,7 @@ router.beforeEach((to, from, next) => {
           }
           break;
         case 'groupDiscussion':
-          if(!webConfig.openGroupDiscussion){
+          if (!webConfig.openGroupDiscussion) {
             next({
               path: '/home'
             })
@@ -121,7 +139,7 @@ router.beforeEach((to, from, next) => {
           }
           break;
         case 'contestComment':
-          if(!webConfig.openContestComment){
+          if (!webConfig.openContestComment) {
             next({
               path: '/home'
             })

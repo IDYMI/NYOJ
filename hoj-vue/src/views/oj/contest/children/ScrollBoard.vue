@@ -1,9 +1,6 @@
 <template>
   <el-card class="box-card">
-    <div
-      slot="header"
-      class="clearfix"
-    >
+    <div slot="header" class="clearfix">
       <span class="panel-title">{{$t('m.ScrollBoard_Parameter_Config')}}</span>
     </div>
     <el-alert
@@ -12,42 +9,23 @@
       show-icon
     >
       <template slot>
-        <p>
-          {{ $i18n.t('m.Number_of_gold_medals') }} : {{this.total}} × 10% = {{this.goldMedal}}
-        </p>
-        <p>
-          {{ $i18n.t('m.Number_of_silver_medals') }} : {{this.total}} × 20% = {{this.silverMedal}}
-        </p>
-        <p>
-          {{ $i18n.t('m.Number_of_bronze_medals') }} : {{this.total}} × 30% = {{this.bronzeMedal}}
-        </p>
+        <p>{{ $i18n.t('m.Number_of_gold_medals') }} : {{this.total}} × 10% = {{this.goldMedal}}</p>
+        <p>{{ $i18n.t('m.Number_of_silver_medals') }} : {{this.total}} × 20% = {{this.silverMedal}}</p>
+        <p>{{ $i18n.t('m.Number_of_bronze_medals') }} : {{this.total}} × 30% = {{this.bronzeMedal}}</p>
       </template>
     </el-alert>
     <el-form>
       <el-form-item :label="$t('m.Contest_ID')">
-        <el-input
-          v-model="cid"
-          size="small"
-          disabled
-        ></el-input>
+        <el-input v-model="cid" size="small" disabled></el-input>
       </el-form-item>
       <el-form-item :label="$t('m.Number_of_gold_medals')">
-        <el-input
-          v-model="goldMedal"
-          size="small"
-        ></el-input>
+        <el-input v-model="goldMedal" size="small"></el-input>
       </el-form-item>
       <el-form-item :label="$t('m.Number_of_silver_medals')">
-        <el-input
-          v-model="silverMedal"
-          size="small"
-        ></el-input>
+        <el-input v-model="silverMedal" size="small"></el-input>
       </el-form-item>
       <el-form-item :label="$t('m.Number_of_bronze_medals')">
-        <el-input
-          v-model="bronzeMedal"
-          size="small"
-        ></el-input>
+        <el-input v-model="bronzeMedal" size="small"></el-input>
       </el-form-item>
       <el-form-item :label="$t('m.Whether_to_remove_the_star_user')">
         <el-switch v-model="removeStar"></el-switch>

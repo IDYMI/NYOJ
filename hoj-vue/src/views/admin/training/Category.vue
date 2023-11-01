@@ -10,8 +10,7 @@
               size="small"
               @click="openCategoryDialog('add', null)"
               icon="el-icon-plus"
-              >{{ $t('m.Add_Category') }}
-            </el-button>
+            >{{ $t('m.Add_Category') }}</el-button>
           </span>
         </div>
       </div>
@@ -26,16 +25,13 @@
         @close="deleteCategory(category)"
         @click="openCategoryDialog('update', category)"
         class="category"
-      >
-        {{ category.name }}
-      </el-tag>
+      >{{ category.name }}</el-tag>
 
       <el-button
         class="button-new-category"
         size="small"
         @click="openCategoryDialog('add', null)"
-        >+ New Category</el-button
-      >
+      >+ New Category</el-button>
     </el-card>
 
     <el-dialog
@@ -56,24 +52,23 @@
             type="primary"
             @click="upsertCategory"
             :loading="upsertCategoryLoading"
-            >{{ $t('m.' + upsertCategoryBtn) }}
-          </el-button>
+          >{{ $t('m.' + upsertCategoryBtn) }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
   </div>
 </template>
 <script>
-import myMessage from '@/common/message';
-import api from '@/common/api';
+import myMessage from "@/common/message";
+import api from "@/common/api";
 export default {
   data() {
     return {
       getCategoryListLoading: false,
       categoryList: [],
       addCategoryDialogVisible: false,
-      upsertTitle: 'Add_Category',
-      upsertCategoryBtn: 'To_Add',
+      upsertTitle: "Add_Category",
+      upsertCategoryBtn: "To_Add",
       upsertCategoryLoading: false,
       category: {
         id: null,
@@ -100,14 +95,14 @@ export default {
     },
 
     deleteCategory(category) {
-      this.$confirm(this.$i18n.t('m.Delete_Category_Tips'), 'Tips', {
-        type: 'warning',
+      this.$confirm(this.$i18n.t("m.Delete_Category_Tips"), "Tips", {
+        type: "warning",
       }).then(
         () => {
           api
             .admin_deleteCategory(category.id)
             .then((res) => {
-              myMessage.success(this.$i18n.t('m.Delete_successfully'));
+              myMessage.success(this.$i18n.t("m.Delete_successfully"));
               this.categoryList.splice(this.categoryList.indexOf(category), 1);
             })
             .catch(() => {});
@@ -116,17 +111,17 @@ export default {
       );
     },
     openCategoryDialog(action, category) {
-      if (action == 'add') {
-        this.upsertTitle = 'Add_Category';
-        this.upsertCategoryBtn = 'To_Add';
+      if (action == "add") {
+        this.upsertTitle = "Add_Category";
+        this.upsertCategoryBtn = "To_Add";
         this.category = {
           id: null,
           name: null,
-          color: '#409eff',
+          color: "#409eff",
         };
       } else {
-        this.upsertTitle = 'Update_Category';
-        this.upsertCategoryBtn = 'To_Update';
+        this.upsertTitle = "Update_Category";
+        this.upsertCategoryBtn = "To_Update";
         this.category = Object.assign({}, category);
       }
       this.addCategoryDialogVisible = true;
@@ -138,7 +133,7 @@ export default {
         api.admin_updateCategory(this.category).then(
           (res) => {
             this.upsertCategoryLoading = false;
-            myMessage.success(this.$i18n.t('m.Update_Successfully'));
+            myMessage.success(this.$i18n.t("m.Update_Successfully"));
             this.categoryList.push(res.data.data);
             this.addCategoryDialogVisible = false;
             this.getTrainingCategoryList();
@@ -152,7 +147,7 @@ export default {
         api.admin_addCategory(this.category).then(
           (res) => {
             this.upsertCategoryLoading = false;
-            myMessage.success(this.$i18n.t('m.Add_Successfully'));
+            myMessage.success(this.$i18n.t("m.Add_Successfully"));
             this.categoryList.push(res.data.data);
             this.addCategoryDialogVisible = false;
           },

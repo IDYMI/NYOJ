@@ -1,7 +1,7 @@
 <template>
   <el-card shadow="never" style="border: 0">
     <div slot="header" style="text-align: left">
-      <span class="home-title panel-title" >{{ title }}</span>
+      <span class="home-title panel-title">{{ title }}</span>
       <span style="float: right">
         <el-button
           v-show="listVisible"
@@ -10,24 +10,18 @@
           size="small"
           icon="el-icon-refresh"
           :loading="loading"
-          >{{ $t('m.Refresh') }}</el-button
-        >
+        >{{ $t('m.Refresh') }}</el-button>
         <el-button
           v-show="!listVisible"
           type="primary"
           icon="el-icon-back"
           @click="goBack"
           size="small"
-          >{{ $t('m.Back') }}</el-button
-        >
+        >{{ $t('m.Back') }}</el-button>
       </span>
     </div>
     <transition-group name="el-fade-in-linear">
-      <div
-        class="no-announcement"
-        v-if="!announcementList.length"
-        key="no-announcement"
-      >
+      <div class="no-announcement" v-if="!announcementList.length" key="no-announcement">
         <el-empty :description="$t('m.No_Announcements')"></el-empty>
       </div>
       <template v-if="listVisible">
@@ -35,9 +29,7 @@
           <li v-for="announcement in announcementList" :key="announcement.title">
             <div class="flex-container">
               <div class="title">
-                <a class="entry" @click="goAnnouncement(announcement)">
-                  {{ announcement.title }}</a
-                >
+                <a class="entry" @click="goAnnouncement(announcement)">{{ announcement.title }}</a>
               </div>
 
               <div class="info">
@@ -58,8 +50,7 @@
           :total="total"
           :page-size="limit"
           @on-change="getGroupAnnouncementList"
-        >
-        </Pagination>
+        ></Pagination>
       </template>
       <template v-else>
         <div
@@ -75,11 +66,11 @@
 </template>
 
 <script>
-import api from '@/common/api';
-import { addCodeBtn } from '@/common/codeblock';
-import Pagination from '@/components/oj/common/Pagination';
+import api from "@/common/api";
+import { addCodeBtn } from "@/common/codeblock";
+import Pagination from "@/components/oj/common/Pagination";
 export default {
-  name: 'Announcement',
+  name: "Announcement",
   components: {
     Pagination,
   },
@@ -94,7 +85,7 @@ export default {
       total: 0,
       loading: false,
       announcementList: [],
-      announcement: '',
+      announcement: "",
       listVisible: true,
     };
   },
@@ -107,16 +98,18 @@ export default {
     },
     getGroupAnnouncementList(page = 1) {
       this.loading = true;
-      api.getGroupAnnouncementList(page, this.limit, this.$route.params.groupID).then(
-        (res) => {
-          this.loading = false;
-          this.announcementList = res.data.data.records;
-          this.total = res.data.data.total;
-        },
-        () => {
-          this.loading = false;
-        }
-      );
+      api
+        .getGroupAnnouncementList(page, this.limit, this.$route.params.groupID)
+        .then(
+          (res) => {
+            this.loading = false;
+            this.announcementList = res.data.data.records;
+            this.total = res.data.data.total;
+          },
+          () => {
+            this.loading = false;
+          }
+        );
     },
     goAnnouncement(announcement) {
       this.announcement = announcement;
@@ -128,13 +121,13 @@ export default {
     },
     goBack() {
       this.listVisible = true;
-      this.announcement = '';
+      this.announcement = "";
     },
   },
   computed: {
     title() {
       if (this.listVisible) {
-        return this.$i18n.t('m.Group_Announcement');
+        return this.$i18n.t("m.Group_Announcement");
       } else {
         return this.announcement.title;
       }
