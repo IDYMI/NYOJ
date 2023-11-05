@@ -259,7 +259,6 @@ export const m = {
   Problem_Bank: 'Problem Bank',
   All: 'All',
   My_OJ: 'Main',
-  My_OJ2: 'NSWOJ',
   Level: 'Level',
   Tags: 'Tags',
   Search_Filter_Tag: 'Enter the tag name...',
@@ -368,6 +367,7 @@ export const m = {
 
   // /views/oj/rank/ACMRank.vue
   NEW_ACM_Ranklist: 'NEW ACM Ranklist',
+  ACM_RankStatistic:'ACM Rank Statistic Ranlist',
   ACM_Ranklist: 'ACM Ranklist',
   User: 'User',
   Nickname: 'Nickname',
@@ -475,6 +475,7 @@ export const m = {
   Star_User: 'Star User',
   Unfollow: 'Unfollow',
   Top_And_Follow: 'Top And Follow',
+  Contest_Rank_Search_Cids:'Please enter the Cids: (\'+\'splited)',
   Contest_Rank_Search_Placeholder: 'Please enter the user rank name or school name',
   Contest_Rank_Setting: 'Rank Setting',
   Contest_Setting: 'Contest Setting',

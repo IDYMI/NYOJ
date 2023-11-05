@@ -257,7 +257,6 @@ export const m = {
   Problem_Bank: '题库',
   All: '全部',
   My_OJ: '主题库',
-  My_OJ2: 'NSWOJ',
   Level: '难度',
   Tags: '标签',
   Search_Filter_Tag: '输入标签名称...',
@@ -369,6 +368,7 @@ export const m = {
   // /views/oj/rank/ACMRank.vue
   NEW_ACM_Ranklist: '新生 ACM 排行榜',
   ACM_Ranklist: 'ACM 排行榜',
+  ACM_RankStatistic:'ACM 系列比赛排行榜',
   User: '用户',
   Nickname: '昵称',
   Signature: '个性简介',
@@ -475,6 +475,7 @@ export const m = {
   Star_User: '打星用户',
   Unfollow: '取消关注',
   Top_And_Follow: '置顶关注',
+  Contest_Rank_Search_Cids:'请输入比赛的 Cids：（\'+\'隔开）',
   Contest_Rank_Search_Placeholder: '请输入用户名称 / 学校名称',
   Contest_Rank_Setting: '榜单设置',
   Contest_Setting: '比赛设置',

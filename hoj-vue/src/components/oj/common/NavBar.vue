@@ -63,36 +63,7 @@
                 $t("m.NavBar_OI_Rank")
                 }}
               </el-menu-item>
-              <!-- <el-menu-item index="/new-acm-rank">{{
-                $t("m.NavBar_ACM_Rank")
-              }}</el-menu-item>
-              <el-menu-item index="/new-oi-rank">{{
-                $t("m.NavBar_OI_Rank")
-              }}</el-menu-item>-->
             </el-submenu>
-            <!-- <el-submenu index="newrank">
-              <template slot="title"
-                ><i class="el-icon-s-data"></i
-                >{{ $t("m.NEWNavBar_Rank") }}</template
-              >
-              <el-menu-item index="/new-acm-rank">{{
-                $t("m.NavBar_ACM_Rank")
-              }}</el-menu-item>
-              <el-menu-item index="/new-oi-rank">{{
-                $t("m.NavBar_OI_Rank")
-              }}</el-menu-item>
-            </el-submenu>-->
-            <!-- <el-submenu index="about">
-              <template slot="title"
-                ><i class="el-icon-info"></i>{{ $t('m.NavBar_About') }}</template
-              >
-              <el-menu-item index="/introduction">{{
-                $t('m.NavBar_Introduction')
-              }}</el-menu-item>
-              <el-menu-item index="/developer">{{
-                $t('m.NavBar_Developer')
-              }}</el-menu-item>
-            </el-submenu>-->
           </template>
           <template v-else-if="mode == 'training'">
             <el-menu-item index="/home">
@@ -582,53 +553,6 @@
                 </mu-list-item-title>
               </mu-list-item>
             </mu-list-item>
-
-            <!-- <mu-list-item
-              button
-              :ripple="false"
-              nested
-              :open="openSideMenu === 'newrank'"
-              @toggle-nested="openSideMenu = arguments[0] ? 'newrank' : ''"
-            >
-              <mu-list-item-action>
-                <mu-icon value=":el-icon-s-data" size="24"></mu-icon>
-              </mu-list-item-action>
-              <mu-list-item-title>{{
-                $t("m.NEWNavBar_Rank")
-              }}</mu-list-item-title>
-              <mu-list-item-action>
-                <mu-icon
-                  class="toggle-icon"
-                  size="24"
-                  value=":el-icon-arrow-down"
-                ></mu-icon>
-              </mu-list-item-action>
-              <mu-list-item
-                button
-                :ripple="false"
-                slot="nested"
-                to="/new-acm-rank"
-                @click="opendrawer = !opendrawer"
-                active-class="mobile-menu-active"
-              >
-                <mu-list-item-title>{{
-                  $t("m.NavBar_ACM_Rank")
-                }}</mu-list-item-title>
-              </mu-list-item>
-              <mu-list-item
-                button
-                :ripple="false"
-                slot="nested"
-                to="/new-oi-rank"
-                @click="opendrawer = !opendrawer"
-                active-class="mobile-menu-active"
-              >
-                <mu-list-item-title>{{
-                  $t("m.NavBar_OI_Rank")
-                }}</mu-list-item-title>
-              </mu-list-item>
-            </mu-list-item>-->
-
             <mu-list-item
               v-if="websiteConfig.openPublicDiscussion"
               button

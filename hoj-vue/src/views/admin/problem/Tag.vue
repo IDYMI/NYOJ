@@ -28,7 +28,6 @@
               style="width: 150px;margin-top: 10px;"
             >
               <el-option :label="$t('m.My_OJ')" :value="'ME'"></el-option>
-              <!-- <el-option :label="$t('m.My_OJ2')" :value="'ME2'"></el-option> -->
               <el-option
                 :label="remoteOj.name"
                 :key="index"
@@ -119,7 +118,6 @@
         <el-form-item :label="$t('m.Tag_Attribution')" required>
           <el-select v-model="tag.oj" size="small" style="width: 150px;">
             <el-option :label="$t('m.My_OJ')" :value="'ME'"></el-option>
-            <!-- <el-option :label="$t('m.My_OJ2')" :value="'ME2'"></el-option> -->
             <el-option
               :label="remoteOj.name"
               :key="index"
@@ -169,7 +167,6 @@
             :disabled="true"
           >
             <el-option :label="$t('m.My_OJ')" :value="'ME'"></el-option>
-            <!-- <el-option :label="$t('m.My_OJ2')" :value="'ME2'"></el-option> -->
             <el-option
               :label="remoteOj.name"
               :key="index"

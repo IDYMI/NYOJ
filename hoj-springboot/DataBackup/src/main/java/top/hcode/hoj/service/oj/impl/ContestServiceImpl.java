@@ -10,6 +10,7 @@ import top.hcode.hoj.common.result.ResultStatus;
 import top.hcode.hoj.manager.oj.ContestManager;
 import top.hcode.hoj.pojo.dto.ContestPrintDTO;
 import top.hcode.hoj.pojo.dto.ContestRankDTO;
+import top.hcode.hoj.pojo.dto.ContestStatisticDTO;
 import top.hcode.hoj.pojo.dto.RegisterContestDTO;
 import top.hcode.hoj.pojo.dto.UserReadContestAnnouncementDTO;
 import top.hcode.hoj.pojo.entity.common.Announcement;
@@ -116,6 +117,17 @@ public class ContestServiceImpl implements ContestService {
                     beforeContestSubmit,
                     completeProblemID,
                     isContainsContestEndJudge));
+        } catch (StatusFailException e) {
+            return CommonResult.errorResponse(e.getMessage());
+        } catch (StatusForbiddenException e) {
+            return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
+        }
+    }
+
+    @Override
+    public CommonResult<IPage> getContestStatistic(ContestStatisticDTO ContestStatisticDto) {
+        try {
+            return CommonResult.successResponse(contestManager.getContestStatistic(ContestStatisticDto));
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         } catch (StatusForbiddenException e) {

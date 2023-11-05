@@ -213,7 +213,10 @@ public class SynchronousManager {
                         for (int i = 0; i < records.size(); i++) {
                             JSONObject record = records.getJSONObject(i);
                             ACMContestRankVO rankVO = parseSynchronousRank(record);
-                            synchronousRankList.add(rankVO);
+                            if (!rankVO.getSynchronous()) { // 获取同步赛oj中的本地提交
+                                rankVO.setSynchronous(true);
+                                synchronousRankList.add(rankVO);
+                            }
                         }
                     }
                 }
@@ -277,7 +280,10 @@ public class SynchronousManager {
                         for (int i = 0; i < records.size(); i++) {
                             JSONObject record = records.getJSONObject(i);
                             JudgeVO judgeVO = parseSynchronousSubmission(record);
-                            synchronousSubmissionList.add(judgeVO);
+                            if (!judgeVO.getSynchronous()) { // 获取同步赛oj中的本地提交
+                                judgeVO.setSynchronous(true);
+                                synchronousSubmissionList.add(judgeVO);
+                            }
                         }
                     }
                 }
@@ -325,7 +331,10 @@ public class SynchronousManager {
                         for (int i = 0; i < records.size(); i++) {
                             JSONObject record = records.getJSONObject(i);
                             ContestProblemVO contestProblemVO = parseSynchronousContestProblem(record);
-                            synchronousContestProblemList.add(contestProblemVO);
+                            if (!contestProblemVO.getSynchronous()) { // 获取同步赛oj中的本地提交
+                                contestProblemVO.setSynchronous(true);
+                                synchronousContestProblemList.add(contestProblemVO);
+                            }
                         }
                     }
                 }
@@ -380,55 +389,6 @@ public class SynchronousManager {
         return judge;
     }
 
-    public Problem getSynchronousProblem(String displayId, Long cid) {
-        Problem problem = new Problem();
-
-        // 获取本场比赛的状态
-        Contest contest = contestEntityService.getById(cid);
-
-        if (contest != null && contest.getSynchronous()) {
-            // 获取比赛对应的同步赛信息
-            JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
-            List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
-
-            for (JSONObject object : synchronousConfigList) {
-                try {
-                    ContestSynchronousConfigVO synchronousConfig = JSONUtil.toBean(object,
-                            ContestSynchronousConfigVO.class);
-
-                    String api = "/api/get-contest-problem-details";
-                    HttpRequest request = getHttpRequest(synchronousConfig, api, "get");
-
-                    String contestUrl = synchronousConfig.getLink();
-                    String synchronousCid = getCid(contestUrl);
-
-                    displayId = displayId.split("_")[1];
-                    // param 信息
-                    request.form("displayId", displayId)
-                            .form("cid", synchronousCid).form("containsEnd", "true");
-
-                    HttpResponse response = request.execute();
-                    String synchronousRankJson = response.body();
-
-                    if (response.isOk()) {
-                        JSONObject JsonObject = new JSONObject(synchronousRankJson);
-
-                        int status = JsonObject.getInt("status");
-                        if (status == 200) {
-                            JSONObject data = JsonObject.getJSONObject("data");
-                            JSONObject record = data.getJSONObject("problem");
-                            problem = parseSynchronousProblem(record);
-                        }
-                    }
-                } catch (Exception e) {
-                    // 处理异常情况，可以记录日志等
-                    e.printStackTrace();
-                }
-            }
-        }
-        return problem;
-    }
-
     public List<JudgeCase> getSynchronousCaseResultList(Long submitId, Long cid) {
         List<JudgeCase> synchronousCaseResult = new ArrayList();
 
@@ -478,6 +438,55 @@ public class SynchronousManager {
         return synchronousCaseResult;
     }
 
+    public Problem getSynchronousProblem(String displayId, Long cid) {
+        Problem problem = new Problem();
+
+        // 获取本场比赛的状态
+        Contest contest = contestEntityService.getById(cid);
+
+        if (contest != null && contest.getSynchronous()) {
+            // 获取比赛对应的同步赛信息
+            JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
+            List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
+
+            for (JSONObject object : synchronousConfigList) {
+                try {
+                    ContestSynchronousConfigVO synchronousConfig = JSONUtil.toBean(object,
+                            ContestSynchronousConfigVO.class);
+
+                    String api = "/api/get-contest-problem-details";
+                    HttpRequest request = getHttpRequest(synchronousConfig, api, "get");
+
+                    String contestUrl = synchronousConfig.getLink();
+                    String synchronousCid = getCid(contestUrl);
+
+                    displayId = displayId.split("_")[1];
+                    // param 信息
+                    request.form("displayId", displayId)
+                            .form("cid", synchronousCid).form("containsEnd", "true");
+
+                    HttpResponse response = request.execute();
+                    String synchronousRankJson = response.body();
+
+                    if (response.isOk()) {
+                        JSONObject JsonObject = new JSONObject(synchronousRankJson);
+
+                        int status = JsonObject.getInt("status");
+                        if (status == 200) {
+                            JSONObject data = JsonObject.getJSONObject("data");
+                            JSONObject record = data.getJSONObject("problem");
+                            problem = parseSynchronousProblem(record);
+                        }
+                    }
+                } catch (Exception e) {
+                    // 处理异常情况，可以记录日志等
+                    e.printStackTrace();
+                }
+            }
+        }
+        return problem;
+    }
+
     public static JudgeVO parseSynchronousSubmission(JSONObject record) {
         JudgeVO judgeVO = new JudgeVO();
         judgeVO.setUid(record.getStr("uid"))
@@ -502,7 +511,7 @@ public class SynchronousManager {
                 .setJudger(record.getStr("judger"))
                 .setIp(record.getStr("ip"))
                 .setIsManual(record.getBool("isManual"))
-                .setRemote(true);
+                .setSynchronous(record.getBool("synchronous"));
         return judgeVO;
     }
 
@@ -518,7 +527,7 @@ public class SynchronousManager {
                 .setTotalTime(record.getLong("totalTime"))
                 .setTotal(record.getInt("total"))
                 .setAc(record.getInt("ac"))
-                .setRemote(true);
+                .setSynchronous(record.getBool("synchronous"));
 
         JSONObject submissionInfo = record.getJSONObject("submissionInfo");
         HashMap<String, HashMap<String, Object>> submissionInfoMap = new HashMap<>();
@@ -545,8 +554,8 @@ public class SynchronousManager {
                 .setDisplayTitle(record.getStr("displayTitle"))
                 .setColor(record.getStr("color"))
                 .setAc(record.getInt("ac"))
-                .setTotal(record.getInt("total"));
-
+                .setTotal(record.getInt("total"))
+                .setSynchronous(record.getBool("synchronous"));
         return contestProblemVO;
     }
 

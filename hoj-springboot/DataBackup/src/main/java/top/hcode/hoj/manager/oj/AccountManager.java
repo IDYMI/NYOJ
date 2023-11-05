@@ -85,6 +85,9 @@ public class AccountManager {
     @Resource
     private ContestCalculateRankManager contestCalculateRankManager;
 
+    @Autowired
+    private ContestRankManager contestRankManager;
+
     /**
      * @MethodName checkUsernameOrEmail
      * @Params * @param null
@@ -290,7 +293,8 @@ public class AccountManager {
         List<Long> pidList = userContestList.stream().map(ContestRecord::getCid).collect(Collectors.toList());
         if (pidList.size() > 0) {
             QueryWrapper<Contest> contestQueryWrapper = new QueryWrapper<>();
-            contestQueryWrapper.select("id", "title");
+            contestQueryWrapper.select("id", "title")
+                    .orderByAsc("end_time"); // 参加的比赛按照结束时间升序排序
             contestQueryWrapper.in("id", pidList);
             List<Contest> contests = contestEntityService.list(contestQueryWrapper);
             contestsPidList = contests.stream().map(Contest::getId).collect(Collectors.toList());
@@ -306,98 +310,10 @@ public class AccountManager {
      * @Description 获取用户最近一年的比赛名次变化图
      */
     public UserContestsRankingVO getUserContestsRanking(String uid, String username) throws StatusFailException {
-        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        if (StringUtils.isEmpty(uid) && StringUtils.isEmpty(username)) {
-            if (userRolesVo != null) {
-                uid = userRolesVo.getUid();
-            } else {
-                throw new StatusFailException("请求参数错误：uid和username不能都为空！");
-            }
-        }
 
         List<Long> contestsPidList = getUserContests(uid);
 
-        UserContestsRankingVO userContestsRankingVO = new UserContestsRankingVO();
-        userContestsRankingVO.setEndDate(DateUtil.format(new Date(), "yyyy-MM-dd"));
-
-        if (CollectionUtils.isEmpty(contestsPidList)) {
-            userContestsRankingVO.setDataList(new ArrayList<>());
-            userContestsRankingVO.setSolvedList(new ArrayList<>());
-            return userContestsRankingVO;
-        }
-
-        List<HashMap<String, Object>> dataList = new ArrayList<>();
-        List<Long> contestPids = new ArrayList<>();
-        for (Long contestPid : contestsPidList) {
-            Contest contest = contestEntityService.getById(contestPid);
-
-            // 进行排序计算得到用户的排名
-            List<ACMContestRankVO> orderResultList = contestCalculateRankManager.calcACMRank(
-                    false,
-                    true,
-                    contest,
-                    userRolesVo.getUid(),
-                    null,
-                    null,
-                    false, // 去除赛后提交
-                    null,
-                    false,
-                    null);
-
-            if (StrUtil.isNotBlank(username)) {
-                String finalKeyword = username.trim().toLowerCase();
-                orderResultList = orderResultList.stream()
-                        .filter(rankVo -> filterBySchoolORRankShowName(finalKeyword,
-                                rankVo.getSchool(),
-                                getUserRankShowName(contest.getRankShowName(),
-                                        rankVo.getUsername(),
-                                        rankVo.getRealname(),
-                                        rankVo.getNickname())))
-                        .collect(Collectors.toList());
-            }
-            if (orderResultList.size() > 0) {
-                String user_uid = orderResultList.get(0).getUid();
-                if (user_uid.equals(uid)) {
-                    contestPids.add(contest.getId());
-                    Integer rank = orderResultList.get(0).getRank();
-                    Date startTime = contest.getStartTime();
-                    String dateStr = DateUtil.format(startTime, "yyyy-MM-dd");
-                    HashMap<String, Object> tmp = new HashMap<>(4);
-                    tmp.put("date", dateStr);
-                    tmp.put("rank", rank);
-                    tmp.put("cid", contest.getId());
-                    tmp.put("title", contest.getTitle());
-                    dataList.add(tmp);
-                }
-            }
-        }
-        if (CollectionUtils.isEmpty(dataList)) {
-            userContestsRankingVO.setSolvedList(new ArrayList<>());
-            userContestsRankingVO.setDataList(new ArrayList<>());
-            return userContestsRankingVO;
-        }
-        userContestsRankingVO.setSolvedList(contestPids);
-        userContestsRankingVO.setDataList(dataList);
-        return userContestsRankingVO;
-    }
-
-    private String getUserRankShowName(String contestRankShowName, String username, String realName, String nickname) {
-        switch (contestRankShowName) {
-            case "username":
-                return username;
-            case "realname":
-                return realName;
-            case "nickname":
-                return nickname;
-        }
-        return null;
-    }
-
-    private boolean filterBySchoolORRankShowName(String keyword, String school, String rankShowName) {
-        if (StrUtil.isNotEmpty(school) && school.toLowerCase().contains(keyword)) {
-            return true;
-        }
-        return StrUtil.isNotEmpty(rankShowName) && rankShowName.toLowerCase().contains(keyword);
+        return contestRankManager.getRecentYearContestsRanking(contestsPidList, uid, username);
     }
 
     /**

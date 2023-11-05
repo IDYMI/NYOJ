@@ -627,6 +627,13 @@ const ojApi = {
     })
   },
 
+  // 系列比赛排行榜
+  getContestStatistic(data) {
+    return ajax('/api/get-contest-statistic', 'post', {
+      data
+    })
+  },
+
   // 获取比赛公告列表
   getContestAnnouncementList(currentPage, limit, cid) {
     let params = {

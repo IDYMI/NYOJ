@@ -12,6 +12,7 @@ import Problem from "@/views/oj/problem/Problem.vue"
 import ACMRank from "@/views/oj/rank/ACMRank.vue"
 import OIRank from "@/views/oj/rank/OIRank.vue"
 import NEWACMRank from "@/views/oj/rank/NEWACMRank.vue"
+import ACMStaticRank from "@/views/oj/rank/ACMContestStatistic.vue"
 import NEWOIRank from "@/views/oj/rank/NEWOIRank.vue"
 import ContestDetails from "@/views/oj/contest/ContestDetails.vue"
 import ACMScoreBoard from "@/views/oj/contest/outside/ACMScoreBoard.vue"
@@ -334,6 +335,14 @@ const ojRoutes = [{
     component: NEWACMRank,
     meta: {
       title: 'New ACM Rank'
+    }
+  },
+  {
+    path: '/acm-rank-static/:cids',
+    name: 'ACM Static',
+    component: ACMStaticRank,
+    meta: {
+      title: 'ACM Static'
     }
   },
   {
