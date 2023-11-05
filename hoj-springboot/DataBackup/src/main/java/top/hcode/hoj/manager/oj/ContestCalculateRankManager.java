@@ -179,74 +179,33 @@ public class ContestCalculateRankManager {
             concernedList.remove(currentUserId);
         }
 
+        // 将本oj的synchronous状态设为false
+        orderResultList.forEach(ACMContestRankvo -> ACMContestRankvo.setSynchronous(false));
+
         // 是否开启同步赛
         if (contest.getSynchronous() != null && contest.getSynchronous()) {
             List<ACMContestRankVO> synchronousResultList = synchronousManager.getSynchronousRankList(contest,
                     isContainsAfterContestJudge, removeStar, nowtime);
-            // 将两个列表合并
-            orderResultList.addAll(synchronousResultList);
+            if (!CollectionUtils.isEmpty(synchronousResultList)) {
+                // 将两个列表合并
+                orderResultList.addAll(synchronousResultList);
 
-            // TODO 同步赛首A修复
-            // 将所有的ACMContestRankVO中的Submisson拆分
-            List<HashMap<String, Object>> submissions = orderResultList.stream()
-                    .map(ACMContestRankVO::getSubmissionInfo)
-                    .flatMap(submissionInfo -> getSubmissions(submissionInfo).stream())
-                    .collect(Collectors.toList());
+                // TODO 同步赛首A修复
+                // 将所有的ACMContestRankVO中的Submisson拆分
+                List<HashMap<String, Object>> submissions = orderResultList.stream()
+                        .map(ACMContestRankVO::getSubmissionInfo)
+                        .flatMap(submissionInfo -> getSubmissions(submissionInfo).stream())
+                        .collect(Collectors.toList());
 
-            // 按照时间从小到大进行排序
-            Collections.sort(submissions, new SubmissonComparator());
+                // 按照时间从小到大进行排序
+                Collections.sort(submissions, new SubmissonComparator());
 
-            HashMap<String, Long> firstACMap = new HashMap<>();
+                HashMap<String, Long> firstACMap = new HashMap<>();
 
-            for (HashMap<String, Object> submission : submissions) {
-                Boolean isAC = false;
-                String displayId = "";
-                Iterator<Map.Entry<String, Object>> internalIterator = submission.entrySet().iterator();
-                while (internalIterator.hasNext()) {
-                    Map.Entry<String, Object> internalEntry = internalIterator.next();
-                    String key = internalEntry.getKey();
-                    Object value = internalEntry.getValue();
-
-                    if ("isAC".equals(key) && value != null) {
-                        isAC = true;
-                    }
-
-                    if ("displayId".equals(key)) {
-                        displayId = value.toString();
-                    }
-
-                    // 已经通过题目
-                    if ("ACTime".equals(key) && isAC && displayId != "") { // 检查键是否为"ACTime"
-                        // 记录当前记录的提交时间
-                        Long ACTime = ((Number) value).longValue();
-
-                        Long time = firstACMap.getOrDefault(displayId, null);
-                        if (time == null) {
-                            firstACMap.put(displayId, ACTime);
-                        } else {
-                            // 相同提交时间也是first AC
-                            if (time.longValue() == ACTime.longValue()) {
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-            for (ACMContestRankVO contestRankVO : orderResultList) {
-                HashMap<String, HashMap<String, Object>> submission = contestRankVO.getSubmissionInfo();
-                // 遍历 submissionInfos
-                Iterator<Map.Entry<String, HashMap<String, Object>>> iterator = submission.entrySet().iterator();
-
-                while (iterator.hasNext()) {
-                    Map.Entry<String, HashMap<String, Object>> entry = iterator.next();
-                    String problemKey = entry.getKey();
-                    HashMap<String, Object> submissionData = entry.getValue();
-
+                for (HashMap<String, Object> submission : submissions) {
                     Boolean isAC = false;
-                    int errorNumber = -1;
-                    Long ACTime = -1L;
-                    // 遍历内部HashMap
-                    Iterator<Map.Entry<String, Object>> internalIterator = submissionData.entrySet().iterator();
+                    String displayId = "";
+                    Iterator<Map.Entry<String, Object>> internalIterator = submission.entrySet().iterator();
                     while (internalIterator.hasNext()) {
                         Map.Entry<String, Object> internalEntry = internalIterator.next();
                         String key = internalEntry.getKey();
@@ -256,28 +215,74 @@ public class ContestCalculateRankManager {
                             isAC = true;
                         }
 
-                        if ("errorNum".equals(key) && value != null) {
-                            errorNumber = (int) value;
+                        if ("displayId".equals(key)) {
+                            displayId = value.toString();
                         }
 
                         // 已经通过题目
-                        if ("ACTime".equals(key) && isAC) { // 检查键是否为"ACTime"
-                            // 判断是不是first AC
-                            boolean isFirstAC = false;
-
+                        if ("ACTime".equals(key) && isAC && displayId != "") { // 检查键是否为"ACTime"
                             // 记录当前记录的提交时间
-                            ACTime = ((Number) value).longValue();
+                            Long ACTime = ((Number) value).longValue();
 
-                            Long firstACValue = firstACMap.get(problemKey);
-
-                            if (firstACMap != null) {
+                            Long time = firstACMap.getOrDefault(displayId, null);
+                            if (time == null) {
+                                firstACMap.put(displayId, ACTime);
+                            } else {
                                 // 相同提交时间也是first AC
-                                if (firstACValue.longValue() == ACTime.longValue()) {
-                                    isFirstAC = true;
+                                if (time.longValue() == ACTime.longValue()) {
                                 }
-                                submissionData.put("isFirstAC", isFirstAC);
                             }
                             break;
+                        }
+                    }
+                }
+                for (ACMContestRankVO contestRankVO : orderResultList) {
+                    HashMap<String, HashMap<String, Object>> submission = contestRankVO.getSubmissionInfo();
+                    // 遍历 submissionInfos
+                    Iterator<Map.Entry<String, HashMap<String, Object>>> iterator = submission.entrySet().iterator();
+
+                    while (iterator.hasNext()) {
+                        Map.Entry<String, HashMap<String, Object>> entry = iterator.next();
+                        String problemKey = entry.getKey();
+                        HashMap<String, Object> submissionData = entry.getValue();
+
+                        Boolean isAC = false;
+                        int errorNumber = -1;
+                        Long ACTime = -1L;
+                        // 遍历内部HashMap
+                        Iterator<Map.Entry<String, Object>> internalIterator = submissionData.entrySet().iterator();
+                        while (internalIterator.hasNext()) {
+                            Map.Entry<String, Object> internalEntry = internalIterator.next();
+                            String key = internalEntry.getKey();
+                            Object value = internalEntry.getValue();
+
+                            if ("isAC".equals(key) && value != null) {
+                                isAC = true;
+                            }
+
+                            if ("errorNum".equals(key) && value != null) {
+                                errorNumber = (int) value;
+                            }
+
+                            // 已经通过题目
+                            if ("ACTime".equals(key) && isAC) { // 检查键是否为"ACTime"
+                                // 判断是不是first AC
+                                boolean isFirstAC = false;
+
+                                // 记录当前记录的提交时间
+                                ACTime = ((Number) value).longValue();
+
+                                Long firstACValue = firstACMap.get(problemKey);
+
+                                if (firstACMap != null) {
+                                    // 相同提交时间也是first AC
+                                    if (firstACValue.longValue() == ACTime.longValue()) {
+                                        isFirstAC = true;
+                                    }
+                                    submissionData.put("isFirstAC", isFirstAC);
+                                }
+                                break;
+                            }
                         }
                     }
                 }
@@ -475,8 +480,7 @@ public class ContestCalculateRankManager {
                         .setNickname(contestRecord.getNickname())
                         .setAc(0)
                         .setTotalTime(0L)
-                        .setTotal(0)
-                        .setRemote(false);
+                        .setTotal(0);
 
                 HashMap<String, HashMap<String, Object>> submissionInfo = new HashMap<>();
                 ACMContestRankVo.setSubmissionInfo(submissionInfo);

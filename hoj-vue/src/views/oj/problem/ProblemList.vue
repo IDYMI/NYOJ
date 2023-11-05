@@ -673,9 +673,6 @@ export default {
             case "ME":
               name = "[" + this.$i18n.t("m.My_OJ") + "] ";
               break;
-            // case "ME2":
-            //   name = "[" + this.$i18n.t("m.My_OJ2") + "] ";
-            //   break;
             case "AC":
               name = "[AtCoder] ";
               break;
@@ -695,9 +692,6 @@ export default {
       if (this.query.oj == "Mine" || !this.$route.query.oj) {
         return this.$i18n.t("m.My_OJ");
       }
-      // else if (this.query.oj == "NSWOJ") {
-      //   return this.$i18n.t("m.My_OJ2");
-      // }
       else if (this.query.oj == "All") {
         return this.$i18n.t("m.All");
       } else {
@@ -711,9 +705,6 @@ export default {
       if (this.query.oj == "Mine" || !this.$route.query.oj) {
         return this.$i18n.t("m.My_OJ");
       }
-      // else if (this.query.oj == "NSWOJ") {
-      //   return this.$i18n.t("m.My_OJ2");
-      // }
       else if (this.query.oj == "All") {
         return this.$i18n.t("m.All");
       } else {

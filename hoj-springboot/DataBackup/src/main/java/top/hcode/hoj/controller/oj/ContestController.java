@@ -8,6 +8,7 @@ import top.hcode.hoj.annotation.AnonApi;
 import top.hcode.hoj.common.result.CommonResult;
 import top.hcode.hoj.pojo.dto.ContestPrintDTO;
 import top.hcode.hoj.pojo.dto.ContestRankDTO;
+import top.hcode.hoj.pojo.dto.ContestStatisticDTO;
 import top.hcode.hoj.pojo.dto.RegisterContestDTO;
 import top.hcode.hoj.pojo.dto.UserReadContestAnnouncementDTO;
 import top.hcode.hoj.pojo.entity.common.Announcement;
@@ -144,6 +145,19 @@ public class ContestController {
     public CommonResult<IPage> getContestRank(@RequestBody ContestRankDTO contestRankDto) {
 
         return contestService.getContestRank(contestRankDto);
+    }
+
+    /**
+     * @MethodName getContestStatistic
+     * @Description 获得系列比赛做题记录以用来排名
+     * @Return
+     * @Since
+     */
+    @PostMapping("/get-contest-statistic")
+    @RequiresAuthentication
+    public CommonResult<IPage> getContestStatistic(@RequestBody ContestStatisticDTO ContestStatisticDto) {
+
+        return contestService.getContestStatistic(ContestStatisticDto);
     }
 
     /**

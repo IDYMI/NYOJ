@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Himit_ZH
@@ -116,5 +116,6 @@ public class Judge implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
 
-
+    @ApiModelProperty(value = "是否为同步赛数据")
+    private Boolean synchronous;
 }

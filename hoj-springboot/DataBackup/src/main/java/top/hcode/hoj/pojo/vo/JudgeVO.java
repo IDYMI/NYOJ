@@ -86,6 +86,6 @@ public class JudgeVO {
     @ApiModelProperty(value = "是否人工评测")
     private Boolean isManual;
 
-    @ApiModelProperty(value = "是否为远程OJ")
-    private Boolean remote;
+    @ApiModelProperty(value = "是否为同步赛数据")
+    private Boolean synchronous;
 }
