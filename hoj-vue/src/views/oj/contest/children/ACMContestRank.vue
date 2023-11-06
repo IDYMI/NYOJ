@@ -405,9 +405,6 @@ const RankBox = () => import("@/components/oj/common/RankBox");
 import time from "@/common/time";
 import utils from "@/common/utils";
 import ContestRankMixin from "./contestRankMixin";
-import api from "@/common/api";
-import { messageDark } from "naive-ui";
-import myMessage from "@/common/message";
 import ClickRank from "@/views/oj/contest/ClickRank";
 
 export default {
