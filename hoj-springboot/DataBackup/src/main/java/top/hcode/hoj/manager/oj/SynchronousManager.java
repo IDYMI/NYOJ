@@ -8,6 +8,8 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.json.JSONArray;
 
+import org.jsoup.Connection;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,7 @@ import top.hcode.hoj.pojo.vo.ContestSynchronousConfigVO;
 import top.hcode.hoj.pojo.vo.JudgeVO;
 import top.hcode.hoj.pojo.vo.ContestProblemVO;
 import top.hcode.hoj.pojo.entity.problem.Problem;
+import top.hcode.hoj.utils.JsoupUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +31,7 @@ import java.util.Map;
 import java.net.HttpCookie;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import top.hcode.hoj.utils.Constants;
 
 /**
@@ -82,92 +86,68 @@ public class SynchronousManager {
         }
     }
 
-    public String getProtocol(String contestUrl) {
-        // 获取比赛的协议
-        URL url = getUrl(contestUrl);
-        String http_ = url.getProtocol();
-        System.out.println(http_);
-        return http_;
-    }
+    public List<String> getUrlBody(String contestUrl) {
+        List<String> urlBody = new ArrayList<>();
 
-    public String getRootDomain(String contestUrl) {
-        // 获取比赛的根域名
         URL url = getUrl(contestUrl);
-        String rootDomain = url.getHost();
-        return rootDomain;
-    }
-
-    public String getCid(String contestUrl) {
-        // 获取比赛对应的 cid
-        URL url = getUrl(contestUrl);
+        String http_ = url.getProtocol();// 获取比赛的协议
+        String rootDomain = url.getHost();// 获取比赛的根域名
+        String port = String.valueOf(url.getPort());// 获取比赛的端口
         String path = url.getPath();
         String[] pathSegments = path.split("/");
-        String synchronousCid = pathSegments[pathSegments.length - 1];
-        return synchronousCid;
+        String synchronousCid = pathSegments[pathSegments.length - 1];// 获取比赛对应的 cid
+
+        // 批量插入到urlBody
+        urlBody.addAll(Arrays.asList(http_, rootDomain, port, synchronousCid));
+        return urlBody;
     }
 
     public List<JSONObject> getSynchronousConfigList(Contest contest) {
         // 获取比赛对应的同步赛信息
         JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
         List<JSONObject> result = SynchronousJsonObject.get("config", List.class);
-
         return result;
     }
 
     /**
-     * @param ContestLink 同步赛的网址
-     * @param api         对应的API接口
-     * @param type        请求类型
+     * @param contestUrl 同步赛的网址
+     * @param api        对应的API接口
+     * @param params     对应的params请求
+     * @param type       请求类型
      */
-    public HttpRequest getHttpRequest(ContestSynchronousConfigVO synchronousConfig, String api, String type)
-            throws MalformedURLException {
-        // 清除当前的cookies缓存
-        HttpRequest.getCookieManager().getCookieStore().removeAll();
-        // login();
-        String contestLink = synchronousConfig.getLink();
-        // 请求头中的 authorization 信息
-        String authorization = synchronousConfig.getAuthorization();
+    public JSONObject getHttpRequestJson(
+            ContestSynchronousConfigVO synchronousConfig,
+            String api,
+            String type,
+            Map<String, String> params,
+            Map<String, String> payload) {
+        JSONObject JsonObject = new JSONObject();
 
-        // 协议
-        String protocol = getProtocol(contestLink);
-        // 根域名
-        String rootDomain = getRootDomain(contestLink);
+        // 获取请求urlbody
+        List<String> urlBody = getUrlBody(synchronousConfig.getLink());
+        String protocol = urlBody.get(0), rootDomain = urlBody.get(1), port = urlBody.get(2);
+
+        Map<String, String> headers = MapUtil
+                .builder(new HashMap<String, String>())
+                .put("Authorization", synchronousConfig.getAuthorization())
+                .put("Url-Type", "general")
+                .put("Content-Type", "application/json")
+                .put("User-Agent",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
+                .map();
 
         // 新建网络请求
-        String link = protocol + "://" + rootDomain + api;
+        String link = protocol + "://" + rootDomain + (!port.isEmpty() ? ":" + port : "") + api;
 
-        // 处理可能的 MalformedURLException
         try {
-            if (type == "get") {
-                HttpRequest request = HttpUtil.createGet(link);
-                Map<String, String> headers = MapUtil
-                        .builder(new HashMap<String, String>())
-                        .put("Authorization", authorization)
-                        .put("Url-Type", "general")
-                        .put("Content-Type", "application/json")
-                        .put("User-Agent",
-                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
-                        .map();
-                request.addHeaders(headers);
-                return request;
-            } else {
-                HttpRequest request = HttpUtil.createPost(link);
-                Map<String, String> headers = MapUtil
-                        .builder(new HashMap<String, String>())
-                        .put("Authorization", authorization)
-                        .put("Url-Type", "general")
-                        .put("Content-Type", "application/json")
-                        .put("User-Agent",
-                                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
-                        .map();
-                request.addHeaders(headers);
-                return request;
-            }
+            Connection connection = JsoupUtils.getShorterConnectionFromUrl(link, params, headers, payload);
+            connection.method("post".equals(type) ? Connection.Method.POST : Connection.Method.GET);
+            JsonObject = JsoupUtils.getJsonFromConnection(connection);
         } catch (Exception e) {
-            // 处理异常，可以打印日志或者抛出自定义异常
+            // 处理异常情况，可以记录日志等
             e.printStackTrace();
-            throw new RuntimeException("Failed to create HTTP request", e);
         }
+        return JsonObject;
     }
 
     public List<ACMContestRankVO> getSynchronousRankList(Contest contest, boolean isContainsAfterContestJudge,
@@ -180,31 +160,29 @@ public class SynchronousManager {
             try {
                 ContestSynchronousConfigVO synchronousConfig = JSONUtil.toBean(object,
                         ContestSynchronousConfigVO.class);
-                String contestUrl = synchronousConfig.getLink();
-                String synchronousCid = getCid(contestUrl);
 
                 // 新建网络请求
                 String api = "/api/get-contest-rank";
-                HttpRequest request = getHttpRequest(synchronousConfig, api, "post");
 
-                // data 信息
-                request.body(new JSONObject(MapUtil.builder(new HashMap<String, Object>())
-                        .put("currentPage", 1)
-                        .put("limit", 1000000)
+                String synchronousCid = getUrlBody(synchronousConfig.getLink()).get(3);
+
+                // payload 信息
+                Map<String, String> payload = MapUtil
+                        .builder(new HashMap<String, String>())
+                        .put("currentPage", "1")
+                        .put("limit", "1000000")
                         .put("cid", synchronousCid)
-                        .put("forceRefresh", false)
-                        .put("removeStar", true)
-                        .put("concernedList", new ArrayList<>())
-                        .put("containsEnd", false)
-                        .put("time", nowtime)
-                        .map()).toString());
+                        .put("forceRefresh", "false")
+                        .put("removeStar", "true")
+                        .put("containsEnd", "false")
+                        .map();
 
-                HttpResponse response = request.execute();
-                String synchronousRankJson = response.body();
+                if (nowtime != null) {
+                    payload.put("time", nowtime.toString());
+                }
 
-                if (response.isOk()) {
-                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
-
+                JSONObject JsonObject = getHttpRequestJson(synchronousConfig, api, "post", null, payload);
+                if (!JsonObject.isEmpty()) {
                     int status = JsonObject.getInt("status");
                     if (status == 200) {
                         JSONObject data = JsonObject.getJSONObject("data");
@@ -213,10 +191,8 @@ public class SynchronousManager {
                         for (int i = 0; i < records.size(); i++) {
                             JSONObject record = records.getJSONObject(i);
                             ACMContestRankVO rankVO = parseSynchronousRank(record);
-                            if (!rankVO.getSynchronous()) { // 获取同步赛oj中的本地提交
-                                rankVO.setSynchronous(true);
-                                synchronousRankList.add(rankVO);
-                            }
+                            rankVO.setSynchronous(true);
+                            synchronousRankList.add(rankVO);
                         }
                     }
                 }
@@ -240,38 +216,34 @@ public class SynchronousManager {
                 ContestSynchronousConfigVO synchronousConfig = JSONUtil.toBean(object,
                         ContestSynchronousConfigVO.class);
 
-                String contestUrl = synchronousConfig.getLink();
-                String synchronousCid = getCid(contestUrl);
-
                 // 新建网络请求
                 String api = "/api/contest-submissions";
-                HttpRequest request = getHttpRequest(synchronousConfig, api, "get");
 
-                // param 信息
-                request.form("onlyMine", "false")
-                        .form("currentPage", "1")
-                        .form("limit", "100000000")
-                        .form("completeProblemID", "false")
-                        .form("contestID", synchronousCid)
-                        .form("beforeContestSubmit", "false")
-                        .form("containsEnd", isContainsAfterContestJudge);
+                String synchronousCid = getUrlBody(synchronousConfig.getLink()).get(3);
+
+                Map<String, String> params = MapUtil
+                        .builder(new HashMap<String, String>())
+                        .put("onlyMine", "false")
+                        .put("currentPage", "1")
+                        .put("limit", "100000000")
+                        .put("completeProblemID", "false")
+                        .put("contestID", synchronousCid)
+                        .put("beforeContestSubmit", "false")
+                        .put("containsEnd", String.valueOf(isContainsAfterContestJudge))
+                        .map();
 
                 if (searchUsername != null) {
-                    request.form("username", searchUsername.toString());
+                    params.put("username", searchUsername.toString());
                 }
                 if (searchDisplayId != null) {
-                    request.form("problemID", searchDisplayId.toString());
+                    params.put("problemID", searchDisplayId.toString());
                 }
                 if (searchStatus != null) {
-                    request.form("status", searchStatus.toString());
+                    params.put("status", searchStatus.toString());
                 }
 
-                HttpResponse response = request.execute();
-                String synchronousRankJson = response.body();
-
-                if (response.isOk()) {
-                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
-
+                JSONObject JsonObject = getHttpRequestJson(synchronousConfig, api, "get", params, null);
+                if (!JsonObject.isEmpty()) {
                     int status = JsonObject.getInt("status");
                     if (status == 200) {
                         JSONObject data = JsonObject.getJSONObject("data");
@@ -280,10 +252,8 @@ public class SynchronousManager {
                         for (int i = 0; i < records.size(); i++) {
                             JSONObject record = records.getJSONObject(i);
                             JudgeVO judgeVO = parseSynchronousSubmission(record);
-                            if (!judgeVO.getSynchronous()) { // 获取同步赛oj中的本地提交
-                                judgeVO.setSynchronous(true);
-                                synchronousSubmissionList.add(judgeVO);
-                            }
+                            judgeVO.setSynchronous(true);
+                            synchronousSubmissionList.add(judgeVO);
                         }
                     }
                 }
@@ -308,22 +278,18 @@ public class SynchronousManager {
                 ContestSynchronousConfigVO synchronousConfig = JSONUtil.toBean(object,
                         ContestSynchronousConfigVO.class);
 
-                String contestUrl = synchronousConfig.getLink();
-                String synchronousCid = getCid(contestUrl);
+                String synchronousCid = getUrlBody(synchronousConfig.getLink()).get(3);
 
                 String api = "/api/get-contest-problem";
-                HttpRequest request = getHttpRequest(synchronousConfig, api, "get");
 
-                // param 信息
-                request.form("cid", synchronousCid)
-                        .form("containsEnd", isContainsAfterContestJudge);
+                Map<String, String> params = MapUtil
+                        .builder(new HashMap<String, String>())
+                        .put("cid", synchronousCid)
+                        .put("containsEnd", String.valueOf(isContainsAfterContestJudge))
+                        .map();
 
-                HttpResponse response = request.execute();
-                String synchronousRankJson = response.body();
-
-                if (response.isOk()) {
-                    JSONObject JsonObject = new JSONObject(synchronousRankJson);
-
+                JSONObject JsonObject = getHttpRequestJson(synchronousConfig, api, "get", params, null);
+                if (!JsonObject.isEmpty()) {
                     int status = JsonObject.getInt("status");
                     if (status == 200) {
                         JSONArray records = JsonObject.getJSONArray("data");
@@ -331,8 +297,8 @@ public class SynchronousManager {
                         for (int i = 0; i < records.size(); i++) {
                             JSONObject record = records.getJSONObject(i);
                             ContestProblemVO contestProblemVO = parseSynchronousContestProblem(record);
-                            if (!contestProblemVO.getSynchronous()) { // 获取同步赛oj中的本地提交
-                                contestProblemVO.setSynchronous(true);
+                            if (contestProblemVO.getTotal() != null
+                                    && contestProblemVO.getTotal() > 0) { // 获取同步赛oj中的本地提交
                                 synchronousContestProblemList.add(contestProblemVO);
                             }
                         }
@@ -362,17 +328,15 @@ public class SynchronousManager {
                             ContestSynchronousConfigVO.class);
 
                     String api = "/api/get-submission-detail";
-                    HttpRequest request = getHttpRequest(synchronousConfig, api, "get");
 
-                    // param 信息
-                    request.form("submitId", submitId.toString());
+                    Map<String, String> params = MapUtil
+                            .builder(new HashMap<String, String>())
+                            .put("submitId", submitId.toString())
+                            .map();
 
-                    HttpResponse response = request.execute();
-                    String synchronousRankJson = response.body();
+                    JSONObject JsonObject = getHttpRequestJson(synchronousConfig, api, "get", params, null);
 
-                    if (response.isOk()) {
-                        JSONObject JsonObject = new JSONObject(synchronousRankJson);
-
+                    if (!JsonObject.isEmpty()) {
                         int status = JsonObject.getInt("status");
                         if (status == 200) {
                             JSONObject data = JsonObject.getJSONObject("data");
@@ -406,17 +370,15 @@ public class SynchronousManager {
                             ContestSynchronousConfigVO.class);
 
                     String api = "/api/get-all-case-result";
-                    HttpRequest request = getHttpRequest(synchronousConfig, api, "get");
 
-                    // param 信息
-                    request.form("submitId", submitId.toString());
+                    Map<String, String> params = MapUtil
+                            .builder(new HashMap<String, String>())
+                            .put("submitId", submitId.toString())
+                            .map();
 
-                    HttpResponse response = request.execute();
-                    String synchronousRankJson = response.body();
+                    JSONObject JsonObject = getHttpRequestJson(synchronousConfig, api, "get", params, null);
 
-                    if (response.isOk()) {
-                        JSONObject JsonObject = new JSONObject(synchronousRankJson);
-
+                    if (!JsonObject.isEmpty()) {
                         int status = JsonObject.getInt("status");
                         if (status == 200) {
                             JSONObject data = JsonObject.getJSONObject("data");
@@ -455,22 +417,21 @@ public class SynchronousManager {
                             ContestSynchronousConfigVO.class);
 
                     String api = "/api/get-contest-problem-details";
-                    HttpRequest request = getHttpRequest(synchronousConfig, api, "get");
 
-                    String contestUrl = synchronousConfig.getLink();
-                    String synchronousCid = getCid(contestUrl);
+                    String synchronousCid = getUrlBody(synchronousConfig.getLink()).get(3);
 
                     displayId = displayId.split("_")[1];
-                    // param 信息
-                    request.form("displayId", displayId)
-                            .form("cid", synchronousCid).form("containsEnd", "true");
 
-                    HttpResponse response = request.execute();
-                    String synchronousRankJson = response.body();
+                    Map<String, String> params = MapUtil
+                            .builder(new HashMap<String, String>())
+                            .put("displayId", displayId)
+                            .put("cid", synchronousCid)
+                            .put("containsEnd", "true")
+                            .map();
 
-                    if (response.isOk()) {
-                        JSONObject JsonObject = new JSONObject(synchronousRankJson);
+                    JSONObject JsonObject = getHttpRequestJson(synchronousConfig, api, "get", params, null);
 
+                    if (!JsonObject.isEmpty()) {
                         int status = JsonObject.getInt("status");
                         if (status == 200) {
                             JSONObject data = JsonObject.getJSONObject("data");
@@ -510,8 +471,7 @@ public class SynchronousManager {
                 .setSource(record.getStr("source"))
                 .setJudger(record.getStr("judger"))
                 .setIp(record.getStr("ip"))
-                .setIsManual(record.getBool("isManual"))
-                .setSynchronous(record.getBool("synchronous"));
+                .setIsManual(record.getBool("isManual"));
         return judgeVO;
     }
 
@@ -526,9 +486,7 @@ public class SynchronousManager {
                 .setAvatar(record.getStr("avatar"))
                 .setTotalTime(record.getLong("totalTime"))
                 .setTotal(record.getInt("total"))
-                .setAc(record.getInt("ac"))
-                .setSynchronous(record.getBool("synchronous"));
-
+                .setAc(record.getInt("ac"));
         JSONObject submissionInfo = record.getJSONObject("submissionInfo");
         HashMap<String, HashMap<String, Object>> submissionInfoMap = new HashMap<>();
         for (String key : submissionInfo.keySet()) {
@@ -554,8 +512,7 @@ public class SynchronousManager {
                 .setDisplayTitle(record.getStr("displayTitle"))
                 .setColor(record.getStr("color"))
                 .setAc(record.getInt("ac"))
-                .setTotal(record.getInt("total"))
-                .setSynchronous(record.getBool("synchronous"));
+                .setTotal(record.getInt("total"));
         return contestProblemVO;
     }
 

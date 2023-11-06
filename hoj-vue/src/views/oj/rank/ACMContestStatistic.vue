@@ -91,7 +91,7 @@
                     ></avatar>
                   </span>
                   <span class="contest-rank-user-info">
-                    <a @click=" getUserHomeByUsername(row.uid, row.username, row.remote)  ">
+                    <a @click=" getUserHomeByUsername(row.uid, row.username, row.synchronous)  ">
                       <span class="contest-username" :title="row.rankShowName">
                         <span class="contest-rank-flag" v-if="row.uid == userInfo.uid">Own</span>
                         <span class="contest-rank-flag" v-if="row.rank == -1">Star</span>
@@ -129,7 +129,7 @@
                     ></avatar>
                   </span>
                   <span class="contest-rank-user-info">
-                    <a @click=" getUserHomeByUsername(row.uid, row.username, row.remote) ">
+                    <a @click=" getUserHomeByUsername(row.uid, row.username, row.synchronous) ">
                       <span class="contest-username" :title="row.rankShowName">
                         <span class="contest-rank-flag" v-if="row.uid == userInfo.uid">Own</span>
                         <span class="contest-rank-flag" v-if="row.rank == -1">Star</span>
@@ -280,8 +280,8 @@ export default {
         query: { username: username, status: 0 },
       });
     },
-    getUserHomeByUsername(uid, username, remote) {
-      if (!remote) {
+    getUserHomeByUsername(uid, username, synchronous) {
+      if (!synchronous) {
         this.$router.push({
           name: "UserHome",
           query: { username: username, uid: uid },

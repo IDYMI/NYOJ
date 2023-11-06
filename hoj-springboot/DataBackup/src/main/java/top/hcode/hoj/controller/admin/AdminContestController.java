@@ -157,6 +157,7 @@ public class AdminContestController {
 
         return adminContestProblemService.getContestProblem(cid, pid);
     }
+    
 
     @PutMapping("/contest-problem")
     @RequiresAuthentication

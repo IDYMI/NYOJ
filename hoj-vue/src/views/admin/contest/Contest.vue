@@ -170,7 +170,7 @@
         </el-row>
 
         <!-- 同步赛配置 -->
-        <el-row :gutter="20">
+        <el-row :gutter="20" v-if="contest.type == 0">
           <el-col :md="8" :xs="24">
             <el-form-item :label="$t('m.Synchronous')">
               <el-switch v-model="contest.synchronous"></el-switch>

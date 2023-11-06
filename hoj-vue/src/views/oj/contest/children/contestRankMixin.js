@@ -31,16 +31,30 @@ export default {
         containsEnd: this.isContainsAfterContestJudge,
         time: nowTime
       }
-      api.getContestRank(data).then(res => {
-        if (this.showChart && !refresh) {
-          this.$refs.chart.hideLoading()
-        }
-        this.total = res.data.data.total
-        if (page === 1) {
-          this.applyToChart(res.data.data.records)
-        }
-        this.applyToTable(res.data.data.records)
-      })
+      api
+        .getContest(this.$route.params.contestID)
+        .then((res) => {
+          const contest = res.data.data;
+          const func =
+            contest.synchronous ?
+            "getSynchronousRank" :
+            "getContestRank";
+          this.loadingTable = true;
+
+          api[func](data).then(res => {
+            if (this.showChart && !refresh) {
+              this.$refs.chart.hideLoading()
+            }
+            this.total = res.data.data.total
+            if (page === 1) {
+              this.applyToChart(res.data.data.records)
+            }
+            this.applyToTable(res.data.data.records)
+          })
+        })
+        .catch((err) => {
+          reject(err);
+        });
     },
     handleAutoRefresh(status) {
       if (status == true) {

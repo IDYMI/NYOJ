@@ -42,7 +42,4 @@ public class ContestProblemVO implements Serializable {
 
     @ApiModelProperty(value = "该题目的总提交数")
     private Integer total;
-
-    @ApiModelProperty(value = "是否为同步赛数据")
-    private Boolean synchronous;
 }

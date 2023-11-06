@@ -125,7 +125,7 @@
                 :content="$t('m.Click_to_Manually_Judge')"
                 :disabled="
                   hideManuallyJugdeTooltip ||
-                  disabledManualJudge(row.status, row.remote)
+                  disabledManualJudge(row.status, row.synchronous)
                 "
                 placement="top"
               >
@@ -135,7 +135,7 @@
                   trigger="click"
                   @show="hideManuallyJugdeTooltip = true"
                   @hide="hideManuallyJugdeTooltip = false"
-                  :disabled="disabledManualJudge(row.status, row.remote)"
+                  :disabled="disabledManualJudge(row.status, row.synchronous)"
                 >
                   <div class="manual-judge-title">
                     <span>{{ $t("m.Manually_Jugde") }}</span>
@@ -313,7 +313,7 @@
           <vxe-table-column field="username" :title="$t('m.Author')" min-width="96" show-overflow>
             <template v-slot="{ row }">
               <a
-                @click="goUserHome(row.username, row.uid, row.remote)"
+                @click="goUserHome(row.username, row.uid, row.synchronous)"
                 style="color: rgb(87, 163, 243)"
               >{{ row.username }}</a>
             </template>
@@ -331,7 +331,7 @@
           <vxe-table-column v-if="rejudgeColumnVisible" :title="$t('m.Option')" min-width="90">
             <template v-slot="{ row }">
               <vxe-button
-                v-if="!row.remote"
+                v-if="!row.synchronous"
                 status="primary"
                 @click="handleRejudge(row)"
                 size="mini"
@@ -573,35 +573,56 @@ export default {
       this.loadingTable = true;
       this.submissions = [];
       this.needCheckSubmitIds = {};
-      let func = this.contestID
-        ? "getContestSubmissionList"
-        : "getSubmissionList";
-      api[func](this.limit, utils.filterEmptyValue(params))
-        .then((res) => {
-          let data = res.data.data;
-          let index = 0;
-          for (let v of data.records) {
-            if (
-              v.status == JUDGE_STATUS_RESERVE["Pending"] ||
-              v.status == JUDGE_STATUS_RESERVE["Compiling"] ||
-              v.status == JUDGE_STATUS_RESERVE["Judging"]
-            ) {
-              this.needCheckSubmitIds[v.submitId] = index;
-            }
-            v.loading = false;
-            v.index = index;
-            index += 1;
+      const handleApiResponse = (res) => {
+        let data = res.data.data;
+        let index = 0;
+
+        for (let v of data.records) {
+          if (
+            v.status == JUDGE_STATUS_RESERVE["Pending"] ||
+            v.status == JUDGE_STATUS_RESERVE["Compiling"] ||
+            v.status == JUDGE_STATUS_RESERVE["Judging"]
+          ) {
+            this.needCheckSubmitIds[v.submitId] = index;
           }
-          this.loadingTable = false;
-          this.submissions = data.records;
-          this.total = data.total;
-          if (Object.keys(this.needCheckSubmitIds).length > 0) {
-            this.checkSubmissionsStatus();
-          }
-        })
-        .catch(() => {
-          this.loadingTable = false;
-        });
+          v.loading = false;
+          v.index = index;
+          index += 1;
+        }
+
+        this.loadingTable = false;
+        this.submissions = data.records;
+        this.total = data.total;
+
+        if (Object.keys(this.needCheckSubmitIds).length > 0) {
+          this.checkSubmissionsStatus();
+        }
+      };
+
+      const handleApiError = () => {
+        this.loadingTable = false;
+      };
+
+      if (this.contestID) {
+        api
+          .getContest(this.contestID)
+          .then((res) => {
+            const contest = res.data.data;
+            let func =
+              this.contestID && contest.synchronous
+                ? "getSynchronousSubmissionList"
+                : "getContestSubmissionList";
+
+            return api[func](this.limit, utils.filterEmptyValue(params));
+          })
+          .then(handleApiResponse)
+          .catch(handleApiError);
+      } else {
+        api
+          .getSubmissionList(this.limit, utils.filterEmptyValue(params))
+          .then(handleApiResponse)
+          .catch(handleApiError);
+      }
     },
     // 对当前提交列表 状态为Pending（6）和Judging（7）的提交记录每2秒查询一下最新结果
     checkSubmissionsStatus() {
@@ -715,8 +736,8 @@ export default {
     goRoute(route) {
       this.$router.push(route);
     },
-    goUserHome(username, uid, remote) {
-      if (!remote) {
+    goUserHome(username, uid, synchronous) {
+      if (!synchronous) {
         this.$router.push({
           path: "/user-home",
           query: { uid, username },
@@ -846,10 +867,10 @@ export default {
         return "own-submit-row";
       }
     },
-    disabledManualJudge(status, remote) {
+    disabledManualJudge(status, synchronous) {
       return (
         !this.isMainAdminRole ||
-        remote ||
+        synchronous ||
         status == JUDGE_STATUS_RESERVE["Judging"] ||
         status == JUDGE_STATUS_RESERVE["Compiling"] ||
         status == JUDGE_STATUS_RESERVE["ce"]

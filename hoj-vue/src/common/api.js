@@ -603,6 +603,15 @@ const ojApi = {
       }
     })
   },
+  // 获取同步赛题目列表
+  getSynchronousProblemList(cid, containsEnd = false) {
+    return ajax('/api/get-synchronous-problem', 'get', {
+      params: {
+        cid,
+        containsEnd
+      }
+    })
+  },
   // 获取比赛题目详情
   getContestProblem(displayId, cid, gid, containsEnd = false) {
     return ajax('/api/get-contest-problem-details', 'get', {
@@ -620,9 +629,23 @@ const ojApi = {
       params
     })
   },
+  // 获取同步赛提交列表
+  getSynchronousSubmissionList(limit, params) {
+    params.limit = limit
+    return ajax('/api/synchronous-submissions', 'get', {
+      params
+    })
+  },
 
   getContestRank(data) {
     return ajax('/api/get-contest-rank', 'post', {
+      data
+    })
+  },
+
+  // 获取同步赛榜单
+  getSynchronousRank(data) {
+    return ajax('/api/get-synchronous-rank', 'post', {
       data
     })
   },
