@@ -188,7 +188,7 @@
               <span class="contest-rank-user-info">
                 <a
                   @click="
-                    getUserHomeByUsername(row.uid, row.username, row.remote)
+                    getUserHomeByUsername(row.uid, row.username, row.synchronous)
                   "
                 >
                   <span class="contest-username" :title="row.rankShowName">
@@ -244,7 +244,7 @@
               <span class="contest-rank-user-info">
                 <a
                   @click="
-                    getUserHomeByUsername(row.uid, row.username, row.remote)
+                    getUserHomeByUsername(row.uid, row.username, row.synchronous)
                   "
                 >
                   <span class="contest-username" :title="row.rankShowName">
@@ -542,8 +542,8 @@ export default {
         query: { username: username, status: 0 },
       });
     },
-    getUserHomeByUsername(uid, username, remote) {
-      if (!remote) {
+    getUserHomeByUsername(uid, username, synchronous) {
+      if (!synchronous) {
         this.$router.push({
           name: "UserHome",
           query: { username: username, uid: uid },

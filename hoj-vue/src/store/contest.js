@@ -18,6 +18,7 @@ const state = {
     openPrint: false,
     rankShowName: 'username',
     allowEndSubmit: false,
+    synchronous: false, // 同步赛默认关闭
   },
   contestProblems: [],
   itemVisible: {
@@ -55,9 +56,7 @@ const getters = {
       // 私有赛需要通过验证密码方可查看比赛
       return !state.intoAccess
     }
-
   },
-
   // 榜单是否实时刷新
   ContestRealTimePermission: (state, getters, _, rootGetters) => {
     // 比赛若是已结束，便是最后榜单
@@ -284,15 +283,38 @@ const actions = {
     rootState
   }) {
     return new Promise((resolve, reject) => {
-      api.getContestProblemList(rootState.route.params.contestID, rootState.contest.isContainsAfterContestJudge).then(res => {
+      api.getContest(rootState.route.params.contestID).then((res) => {
         resolve(res)
-        commit('changeContestProblems', {
-          contestProblems: res.data.data
+        let contest = res.data.data
+        commit('changeContest', {
+          contest: contest
         })
-      }, (err) => {
-        commit('changeContestProblems', {
-          contestProblems: []
-        })
+        if (state.contest.synchronous) {
+          api.getSynchronousProblemList(rootState.route.params.contestID, rootState.contest.isContainsAfterContestJudge).then(res => {
+            resolve(res)
+            commit('changeContestProblems', {
+              contestProblems: res.data.data
+            })
+          }, (err) => {
+            commit('changeContestProblems', {
+              contestProblems: []
+            })
+            reject(err)
+          })
+        } else {
+          api.getContestProblemList(rootState.route.params.contestID, rootState.contest.isContainsAfterContestJudge).then(res => {
+            resolve(res)
+            commit('changeContestProblems', {
+              contestProblems: res.data.data
+            })
+          }, (err) => {
+            commit('changeContestProblems', {
+              contestProblems: []
+            })
+            reject(err)
+          })
+        }
+      }, err => {
         reject(err)
       })
     })

@@ -99,6 +99,20 @@ public class ContestController {
         return contestService.getContestProblem(cid, containsEnd);
     }
 
+    /**
+     * @MethodName getSynchronousProblem
+     * @Description 获得指定同步赛比赛的题目列表
+     * @Return
+     */
+    @GetMapping("/get-synchronous-problem")
+    @RequiresAuthentication
+    public CommonResult<List<ContestProblemVO>> getSynchronousProblem(
+            @RequestParam(value = "cid", required = true) Long cid,
+            @RequestParam(value = "containsEnd", defaultValue = "false") Boolean containsEnd) {
+
+        return contestService.getSynchronousProblem(cid, containsEnd);
+    }
+
     @GetMapping("/get-contest-problem-details")
     @RequiresAuthentication
     public CommonResult<ProblemInfoVO> getContestProblemDetails(@RequestParam(value = "cid", required = true) Long cid,
@@ -134,6 +148,32 @@ public class ContestController {
                 containsEnd);
     }
 
+    @GetMapping("/synchronous-submissions")
+    @RequiresAuthentication
+    public CommonResult<IPage<JudgeVO>> getSynchronousSubmissionList(
+            @RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "onlyMine", required = false) Boolean onlyMine,
+            @RequestParam(value = "problemID", required = false) String displayId,
+            @RequestParam(value = "status", required = false) Integer searchStatus,
+            @RequestParam(value = "username", required = false) String searchUsername,
+            @RequestParam(value = "contestID", required = true) Long searchCid,
+            @RequestParam(value = "beforeContestSubmit", required = true) Boolean beforeContestSubmit,
+            @RequestParam(value = "completeProblemID", defaultValue = "false") Boolean completeProblemID,
+            @RequestParam(value = "containsEnd", defaultValue = "false") Boolean containsEnd) {
+
+        return contestService.getSynchronousSubmissionList(limit,
+                currentPage,
+                onlyMine,
+                displayId,
+                searchStatus,
+                searchUsername,
+                searchCid,
+                beforeContestSubmit,
+                completeProblemID,
+                containsEnd);
+    }
+
     /**
      * @MethodName getContestRank
      * @Description 获得比赛做题记录以用来排名
@@ -145,6 +185,18 @@ public class ContestController {
     public CommonResult<IPage> getContestRank(@RequestBody ContestRankDTO contestRankDto) {
 
         return contestService.getContestRank(contestRankDto);
+    }
+
+    /**
+     * @MethodName getSynchronousRank
+     * @Description 获得同步赛做题记录以用来排名
+     * @Return
+     */
+    @PostMapping("/get-synchronous-rank")
+    @RequiresAuthentication
+    public CommonResult<IPage> getSynchronousRank(@RequestBody ContestRankDTO contestRankDto) {
+
+        return contestService.getSynchronousRank(contestRankDto);
     }
 
     /**

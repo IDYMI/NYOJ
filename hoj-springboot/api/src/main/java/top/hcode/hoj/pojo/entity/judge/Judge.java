@@ -21,7 +21,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Judge对象", description="")
+@ApiModel(value = "Judge对象", description = "")
 public class Judge implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -110,12 +110,12 @@ public class Judge implements Serializable {
     @ApiModelProperty(value = "是否人工评测")
     private Boolean isManual;
 
+    @ApiModelProperty(value = "是否为同步赛数据")
+    private Boolean synchronous;
+    
     @TableField(fill = FieldFill.INSERT)
     private Date gmtCreate;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
-
-    @ApiModelProperty(value = "是否为同步赛数据")
-    private Boolean synchronous;
 }

@@ -952,26 +952,44 @@ export default {
         }
         params.containsEnd = true;
       }
-      let func = this.contestID
-        ? "getContestSubmissionList"
-        : "getSubmissionList";
       this.loadingTable = true;
-      api[func](this.mySubmission_limit, utils.filterEmptyValue(params))
-        .then(
-          (res) => {
-            let data = res.data.data;
-            this.mySubmissions = data.records;
-            this.mySubmission_total = data.total;
-            this.loadingTable = false;
-          },
-          (err) => {
-            this.loadingTable = false;
-          }
-        )
-        .catch(() => {
-          this.loadingTable = false;
-        });
+
+      const handleApiResponse = (res) => {
+        let data = res.data.data;
+        this.mySubmissions = data.records;
+        this.mySubmission_total = data.total;
+        this.loadingTable = false;
+      };
+
+      const handleApiError = () => {
+        this.loadingTable = false;
+      };
+
+      if (this.contestID) {
+        api
+          .getContest(this.contestID)
+          .then((res) => {
+            const contest = res.data.data;
+            let func =
+              this.contestID && contest.synchronous
+                ? "getSynchronousSubmissionList"
+                : "getContestSubmissionList";
+
+            return api[func](
+              this.mySubmission_limit,
+              utils.filterEmptyValue(params)
+            );
+          })
+          .then(handleApiResponse)
+          .catch(handleApiError);
+      } else {
+        api
+          .getSubmissionList(this.limit, utils.filterEmptyValue(params))
+          .then(handleApiResponse)
+          .catch(handleApiError);
+      }
     },
+
     getStatusColor(status) {
       return "el-tag el-tag--medium status-" + JUDGE_STATUS[status].color;
     },

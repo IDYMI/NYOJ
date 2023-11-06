@@ -72,7 +72,6 @@ export default {
         // 解决右边终点
         percentage_real = 1;
       }
-      console.log(percentage_real);
       const percentage = Math.max(0, Math.min(percentage_real, 1));
       this.$emit("transfer", percentage); //触发transfer方法，传递 百分比 为向父组件传递的数据
       this.barWidth =
