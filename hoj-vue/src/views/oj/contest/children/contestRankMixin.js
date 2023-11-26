@@ -5,7 +5,8 @@ import {
 } from 'vuex'
 import {
   CONTEST_STATUS,
-  buildContestRankConcernedKey
+  buildContestRankConcernedKey,
+  CONTEST_TYPE
 } from '@/common/constants'
 import storage from '@/common/storage';
 export default {
@@ -31,30 +32,22 @@ export default {
         containsEnd: this.isContainsAfterContestJudge,
         time: nowTime
       }
-      api
-        .getContest(this.$route.params.contestID)
-        .then((res) => {
-          const contest = res.data.data;
-          const func =
-            contest.synchronous ?
-            "getSynchronousRank" :
-            "getContestRank";
-          this.loadingTable = true;
+      let func = this.contestAuth ?
+        "getSynchronousRank" :
+        "getContestRank";
+      this.loadingTable = true;
 
-          api[func](data).then(res => {
-            if (this.showChart && !refresh) {
-              this.$refs.chart.hideLoading()
-            }
-            this.total = res.data.data.total
-            if (page === 1) {
-              this.applyToChart(res.data.data.records)
-            }
-            this.applyToTable(res.data.data.records)
-          })
-        })
-        .catch((err) => {
-          reject(err);
-        });
+      api[func](data).then(res => {
+        if (this.showChart && !refresh) {
+          this.$refs.chart.hideLoading()
+        }
+        this.total = res.data.data.total
+        if (page === 1) {
+          this.applyToChart(res.data.data.records)
+        }
+        this.applyToTable(res.data.data.records)
+      })
+
     },
     handleAutoRefresh(status) {
       if (status == true) {
@@ -145,6 +138,9 @@ export default {
     },
     refreshDisabled() {
       return this.contest.status == CONTEST_STATUS.ENDED
+    },
+    contestAuth() {
+      return this.contest.auth === CONTEST_TYPE.PUBLIC_SYNCHRONOUS || this.contest.auth === CONTEST_TYPE.PRIVATE_SYNCHRONOUS;
     }
   },
   beforeDestroy() {

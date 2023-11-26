@@ -103,27 +103,20 @@
     <el-form ref="formProfile" :model="formProfile">
       <el-row :gutter="30" justify="space-around">
         <el-col :md="10" :xs="24">
-          <el-form-item :label="$t('m.RealName')">
-            <el-input v-model="formProfile.realname" :maxlength="50" />
-          </el-form-item>
+
           <el-form-item :label="$t('m.Nickname')">
             <el-input v-model="formProfile.nickname" :maxlength="20" />
           </el-form-item>
-          <el-form-item :label="$t('m.School')">
-            <el-input v-model="formProfile.school" :maxlength="50" />
-          </el-form-item>
-          <el-form-item :label="$t('m.Student_Number')">
-            <el-input v-model="formProfile.number" :maxlength="20" />
-          </el-form-item>
+
         </el-col>
         <el-col :md="4" :lg="4">
           <div class="separator hidden-md-and-down"></div>
           <p></p>
         </el-col>
         <el-col :md="10" :xs="24">
-          <el-form-item :label="$t('m.CF_Username')">
+          <!-- <el-form-item :label="$t('m.CF_Username')">
             <el-input v-model="formProfile.cfUsername" :maxlength="50" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item :label="$t('m.Blog')">
             <el-input v-model="formProfile.blog" :maxlength="255" />
           </el-form-item>
@@ -196,15 +189,11 @@ export default {
       },
 
       formProfile: {
-        realname: "",
         username: "",
-        cfUsername: "",
         gender: "",
         nickname: "",
         signature: "",
-        number: "",
         blog: "",
-        school: "",
         github: "",
       },
     };

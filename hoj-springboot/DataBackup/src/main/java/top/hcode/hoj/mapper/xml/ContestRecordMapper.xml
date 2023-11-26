@@ -3,15 +3,15 @@
 <mapper namespace="top.hcode.hoj.mapper.ContestRecordMapper">
 
     <select id="getACInfo" resultType="top.hcode.hoj.pojo.entity.contest.ContestRecord">
-        SELECT c.id,c.uid,u.username,c.display_id,c.cid,u.realname,c.pid,c.time,c.status,c.checked,c.submit_id,
-        c.submit_time FROM contest_record c,user_info u,
+        SELECT c.id,c.uid,u.username,c.display_id,c.cid,us.realname,c.pid,c.time,c.status,c.checked,c.submit_id,
+        c.submit_time FROM contest_record c,user_info u,user_sign us,
         (SELECT status,uid,pid,cpid,
         MIN(submit_id) AS min_submit_id,
         MIN(submit_time) AS min_submit_time
         FROM contest_record GROUP BY status,uid,pid,cpid
         ) AS t
         <where>
-            t.status = c.status AND t.uid=c.uid AND t.pid=c.pid AND c.uid = u.uuid
+            t.status = c.status AND t.uid=c.uid AND t.pid=c.pid AND c.uid = u.uuid AND us.uid = u.uuid
             AND t.cpid=c.cpid
             AND t.min_submit_id=c.submit_id
             AND t.min_submit_time=c.submit_time
@@ -28,7 +28,7 @@
     <select id="getOIContestRecordByRecentSubmission" resultType="top.hcode.hoj.pojo.vo.ContestRecordVO">
         SELECT cr.id,cr.cid,cr.uid,cr.pid,cr.cpid,cr.display_id,cr.submit_id,u.username,cr.status,cr.submit_time,
         cr.time,cr.score,cr.use_time,cr.checked,cr.gmt_create,cr.gmt_modified,
-        u.gender,u.realname as realname,u.avatar,u.school,u.nickname
+        u.gender,us.realname as realname,u.avatar,us.school,u.nickname
         FROM
         (SELECT uid,pid,cpid,MAX(time) AS time FROM contest_record
         <where>
@@ -61,14 +61,14 @@
             </choose>
         </where>
         GROUP BY uid,pid,cpid) t,
-        contest_record cr,user_info u WHERE t.uid = cr.uid AND t.pid =cr.pid
-        AND t.cpid = cr.cpid AND u.uuid = cr.uid AND t.time = cr.time
+        contest_record cr,user_info u,user_sign us WHERE t.uid = cr.uid AND t.pid =cr.pid
+        AND t.cpid = cr.cpid AND u.uuid = cr.uid AND u.uuid = us.uid AND t.time = cr.time
     </select>
 
     <select id="getOIContestRecordByHighestSubmission" resultType="top.hcode.hoj.pojo.vo.ContestRecordVO">
         SELECT cr.id,cr.cid,cr.uid,cr.pid,cr.cpid,cr.display_id,cr.submit_id,u.username,cr.status,cr.submit_time,
         cr.time,cr.score,cr.use_time,cr.checked,cr.gmt_create,cr.gmt_modified,
-        u.gender,u.realname as realname,u.avatar,u.school,u.nickname
+        u.gender,us.realname as realname,u.avatar,us.school,u.nickname
         FROM
         (SELECT uid,pid,cpid,MAX(score) AS score FROM contest_record
         <where>
@@ -101,18 +101,18 @@
             </choose>
         </where>
         GROUP BY uid,pid,cpid) t,
-        contest_record cr,user_info u WHERE t.uid = cr.uid AND t.pid =cr.pid
-        AND t.cpid = cr.cpid AND u.uuid = cr.uid AND t.score = cr.score
+        contest_record cr,user_info u,user_sign us WHERE t.uid = cr.uid AND t.pid =cr.pid
+        AND t.cpid = cr.cpid AND u.uuid = cr.uid AND u.uuid = us.uid AND t.score = cr.score
     </select>
 
 
     <select id="getACMContestRecord" resultType="top.hcode.hoj.pojo.vo.ContestRecordVO">
         SELECT cr.id,cr.cid,cr.uid,cr.pid,cr.cpid,cr.display_id,cr.submit_id,u.username,cr.status,cr.submit_time,
         cr.time,cr.score,cr.use_time,cr.checked,cr.gmt_create,cr.gmt_modified,
-        u.gender,u.realname as realname,u.avatar,u.school,u.nickname
-        FROM contest_record cr,user_info u
+        u.gender,us.realname as realname,u.avatar,us.school,u.nickname
+        FROM contest_record cr,user_info u,user_sign us
         <where>
-            cr.uid = u.uuid
+            cr.uid = u.uuid AND us.uid = u.uuid
             <if test="externalCidList == null">
                 AND cr.cid = #{cid}
             </if>

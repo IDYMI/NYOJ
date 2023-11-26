@@ -137,12 +137,12 @@
     </resultMap>
 
     <select id="getUserHomeInfo" resultMap="map_UserHomeVo">
-        SELECT u.uuid as uid,u.username,u.nickname,u.gender,u.signature,u.school,u.github,u.blog,
+        SELECT u.uuid as uid,u.username,u.nickname,u.gender,u.signature,us.school,u.github,u.blog,
         u.avatar,u.title_name,u.title_color,ur.rating,
         (SELECT COUNT( pid ) FROM judge WHERE uid = u.uuid) AS total
-        FROM user_info u,user_record ur
+        FROM user_info u,user_record ur,user_sign us
         <where>
-         u.uuid = ur.uid AND u.status = 0
+         u.uuid = ur.uid AND u.uuid = us.uid AND u.status = 0
          <if test="uid!=null">
              AND u.uuid = #{uid}
          </if>

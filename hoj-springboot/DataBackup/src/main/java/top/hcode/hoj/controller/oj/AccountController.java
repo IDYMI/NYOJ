@@ -108,8 +108,14 @@ public class AccountController {
 
     @PostMapping("/change-userPreferences")
     @RequiresAuthentication
-    public CommonResult<UserInfoVO> changeUserPreferences(@RequestBody UserInfoVO userInfoVo) {
-        return accountService.changeUserPreferences(userInfoVo);
+    public CommonResult<UserInfoVO> changeUserPreferences(@RequestBody UserPreferencesVO UserPreferencesVo) {
+        return accountService.changeUserPreferences(UserPreferencesVo);
+    }
+
+    @PostMapping("/change-userRace")
+    @RequiresAuthentication
+    public CommonResult<UserInfoVO> changeUserRace(@RequestBody UserSignVO UserSignVo) {
+        return accountService.changeUserRace(UserSignVo);
     }
 
     @GetMapping("/get-user-auth-info")

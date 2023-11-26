@@ -32,7 +32,6 @@ import java.net.HttpCookie;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import top.hcode.hoj.utils.Constants;
 
 /**
  * @param contest                     比赛的信息
@@ -56,14 +55,14 @@ public class SynchronousManager {
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36")
             .map();
 
-    public void login() {
+    public void login(String username, String password) {
         // 登录管理账号获取密码
         HttpRequest request = HttpUtil.createPost(HOST + LOGIN_URL);
         request.addHeaders(headers);
 
         request.body(new JSONObject(MapUtil.builder(new HashMap<String, Object>())
-                .put("username", Constants.HOJSuperAdmin.Username.getMode())
-                .put("password", Constants.HOJSuperAdmin.Password.getMode())
+                .put("username", username)
+                .put("password", password)
                 .map()).toString());
 
         HttpResponse response = request.execute();
@@ -127,9 +126,12 @@ public class SynchronousManager {
         List<String> urlBody = getUrlBody(synchronousConfig.getLink());
         String protocol = urlBody.get(0), rootDomain = urlBody.get(1), port = urlBody.get(2);
 
+        // 登录
+        login(synchronousConfig.getUsername(), synchronousConfig.getPassword());
+
         Map<String, String> headers = MapUtil
                 .builder(new HashMap<String, String>())
-                .put("Authorization", synchronousConfig.getAuthorization())
+                .put("Authorization", csrfToken)
                 .put("Url-Type", "general")
                 .put("Content-Type", "application/json")
                 .put("User-Agent",
@@ -317,7 +319,7 @@ public class SynchronousManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        if (contest != null && contest.getSynchronous()) {
+        if (contest.getAuth() == 4 || contest.getAuth() == 5) {
             // 获取比赛对应的同步赛信息
             JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
             List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
@@ -359,7 +361,7 @@ public class SynchronousManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        if (contest != null && contest.getSynchronous()) {
+        if (contest.getAuth() == 4 || contest.getAuth() == 5) {
             // 获取比赛对应的同步赛信息
             JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
             List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
@@ -406,7 +408,7 @@ public class SynchronousManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        if (contest != null && contest.getSynchronous()) {
+        if (contest.getAuth() == 4 || contest.getAuth() == 5) {
             // 获取比赛对应的同步赛信息
             JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
             List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);

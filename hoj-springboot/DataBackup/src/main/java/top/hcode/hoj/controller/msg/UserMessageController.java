@@ -96,4 +96,17 @@ public class UserMessageController {
         return userMessageService.getLikeMsg(limit, currentPage);
     }
 
+    /**
+     * @param limit
+     * @param currentPage
+     * @MethodName getInventMsg
+     * @Description 获取邀请我的信息
+     * @Return
+     */
+    @RequestMapping(value = "/invent", method = RequestMethod.GET)
+    @RequiresAuthentication
+    public CommonResult<IPage<UserMsgVO>> getInventMsg(@RequestParam(value = "limit", required = false) Integer limit,
+            @RequestParam(value = "currentPage", required = false) Integer currentPage) {
+        return userMessageService.getInventMsg(limit, currentPage);
+    }
 }

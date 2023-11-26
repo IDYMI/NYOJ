@@ -169,62 +169,6 @@
           </el-col>
         </el-row>
 
-        <!-- 同步赛配置 -->
-        <el-row :gutter="20" v-if="contest.type == 0">
-          <el-col :md="8" :xs="24">
-            <el-form-item :label="$t('m.Synchronous')">
-              <el-switch v-model="contest.synchronous"></el-switch>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24" v-if="contest.synchronous">
-            <div style="margin-bottom: 10px">
-              <el-button
-                type="primary"
-                icon="el-icon-plus"
-                circle
-                @click="insertEvent2(-1)"
-                size="small"
-              ></el-button>
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                circle
-                @click="removeEvent2()"
-                size="small"
-              ></el-button>
-            </div>
-            <vxe-table
-              border
-              ref="xAwardTable2"
-              :data="contest.synchronousConfigList"
-              :edit-config="{ trigger: 'click', mode: 'cell' }"
-              align="center"
-              @edit-closed="editClosedEvent2"
-              style="margin-bottom: 15px"
-            >
-              <vxe-table-column type="checkbox" width="60"></vxe-table-column>
-              <vxe-table-column
-                field="school"
-                min-width="150"
-                :title="$t('m.Synchronous_School')"
-                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
-              ></vxe-table-column>
-              <vxe-table-column
-                field="link"
-                min-width="150"
-                :title="$t('m.Synchronous_Link')"
-                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
-              ></vxe-table-column>
-              <vxe-table-column
-                field="authorization"
-                min-width="150"
-                :title="$t('m.Synchronous_Authorization')"
-                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
-              ></vxe-table-column>
-            </vxe-table>
-          </el-col>
-        </el-row>
-
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item :label="$t('m.Rank_Show_Name')" required>
@@ -286,26 +230,128 @@
                 <el-option :label="$t('m.Public')" :value="0"></el-option>
                 <el-option :label="$t('m.Private')" :value="1"></el-option>
                 <el-option :label="$t('m.Protected')" :value="2"></el-option>
+                <el-option :label="$t('m.Official')" :value="3"></el-option>
+                <el-option :label="$t('m.Public_Synchronous')" :value="4"></el-option>
+                <el-option :label="$t('m.Private_Synchronous')" :value="5"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :md="8" :xs="24">
+          <el-col
+            :md="8"
+            :xs="24"
+            v-if="contest.auth != 0 && contest.auth != 3 && contest.auth != 4"
+          >
             <el-form-item
               :label="$t('m.Contest_Password')"
-              v-show="contest.auth != 0"
-              :required="contest.auth != 0"
+              v-show="contest.auth != 0 && contest.auth != 3 && contest.auth != 4"
+              :required="contest.auth != 0 && contest.auth != 3 && contest.auth != 4"
             >
               <el-input v-model="contest.pwd" :placeholder="$t('m.Contest_Password')"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :md="8" :xs="24">
+          <el-col :md="8" :xs="24" v-if="contest.auth != 0 && contest.auth != 4">
             <el-form-item
               :label="$t('m.Account_Limit')"
-              v-show="contest.auth != 0"
-              :required="contest.auth != 0"
+              v-show="contest.auth != 0 && contest.auth != 4"
+              :required="contest.auth != 0 && contest.auth != 4"
             >
               <el-switch v-model="contest.openAccountLimit"></el-switch>
             </el-form-item>
+          </el-col>
+
+          <!-- 正式赛配置 -->
+          <template v-if="contest.auth == 3">
+            <el-col :md="8" :xs="24">
+              <el-form-item :label="$t('m.Max_Participants')" required>
+                <el-input-number
+                  style="width: 50%;"
+                  v-model="contest.maxParticipants"
+                  :min="1"
+                  :max="3"
+                ></el-input-number>
+              </el-form-item>
+            </el-col>
+            <el-col :md="8" :xs="24">
+              <el-form-item :label="$t('m.Sign_Start_Time')" required>
+                <el-date-picker
+                  v-model="contest.signStartTime"
+                  @change="changeSignDuration"
+                  type="datetime"
+                  :placeholder="$t('m.Sign_Start_Time')"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <!-- 报名的结束时间不晚于比赛的结束时间 -->
+            <el-col :md="8" :xs="24">
+              <el-form-item :label="$t('m.Sign_End_Time')" required>
+                <el-date-picker
+                  v-model="contest.signEndTime"
+                  @change="changeSignDuration"
+                  type="datetime"
+                  :placeholder="$t('m.Sign_End_Time')"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :md="8" :xs="24">
+              <el-form-item :label="$t('m.Sign_Duration')" required>
+                <el-input v-model="signdurationText" disabled></el-input>
+              </el-form-item>
+            </el-col>
+          </template>
+
+          <!-- 同步赛配置 -->
+          <el-col :span="24" v-if="contest.auth == 4 || contest.auth == 5">
+            <div style="margin-bottom: 10px">
+              <el-button
+                type="primary"
+                icon="el-icon-plus"
+                circle
+                @click="insertEvent2(-1)"
+                size="small"
+              ></el-button>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                @click="removeEvent2()"
+                size="small"
+              ></el-button>
+            </div>
+            <vxe-table
+              border
+              ref="xAwardTable2"
+              :data="contest.synchronousConfigList"
+              :edit-config="{ trigger: 'click', mode: 'cell' }"
+              align="center"
+              @edit-closed="editClosedEvent2"
+              style="margin-bottom: 15px"
+            >
+              <vxe-table-column type="checkbox" width="60"></vxe-table-column>
+              <vxe-table-column
+                field="school"
+                min-width="150"
+                :title="$t('m.Synchronous_School')"
+                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
+              ></vxe-table-column>
+              <vxe-table-column
+                field="link"
+                min-width="150"
+                :title="$t('m.Synchronous_Link')"
+                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
+              ></vxe-table-column>
+              <vxe-table-column
+                field="username"
+                min-width="150"
+                :title="$t('m.Synchronous_Username')"
+                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
+              ></vxe-table-column>
+              <vxe-table-column
+                field="password"
+                min-width="150"
+                :title="$t('m.Synchronous_Password')"
+                :edit-render="{ name: 'input', attrs: { type: 'text' } }"
+              ></vxe-table-column>
+            </vxe-table>
           </el-col>
 
           <template v-if="contest.openAccountLimit">
@@ -361,7 +407,6 @@
               </el-col>
             </el-form>
           </template>
-
           <el-col :md="24" :xs="24">
             <el-form-item :label="$t('m.Contest_Award')" required>
               <el-select v-model="contest.awardType" @change="contestAwardTypeChange">
@@ -501,6 +546,7 @@ export default {
       title: "Create Contest",
       disableRuleType: false,
       durationText: "", // 比赛时长文本表示
+      signdurationText: "", // 报名时长文本显示
       seal_rank_time: 1, // 当开启封榜模式，即实时榜单关闭时，可选择前半小时，前一小时，全程封榜,默认全程封榜
       contest: {
         title: "",
@@ -546,14 +592,18 @@ export default {
             num: 7,
           },
         ],
-        synchronous: false,
         synchronousConfigList: [
           {
             school: "",
             link: "",
-            authorization: "",
+            username: "",
+            password: "",
           },
         ],
+        signStartTime: "",
+        signEndTime: "",
+        maxParticipants: 0,
+        signDuration: 0,
       },
       formRule: {
         prefix: "",
@@ -600,6 +650,7 @@ export default {
           let data = res.data.data;
           this.contest = data;
           this.changeDuration();
+          this.changeSignDuration();
           // 封榜时间转换
           let halfHour = moment(this.contest.endTime)
             .subtract(1800, "seconds")
@@ -664,7 +715,27 @@ export default {
         myMessage.error(this.$i18n.t("m.Contest_Duration_Check"));
         return;
       }
-      if (this.contest.auth != 0 && !this.contest.pwd) {
+      if (this.contest.auth == 3) {
+        if (!this.contest.signDuration || this.contest.signDuration <= 0) {
+          myMessage.error(this.$i18n.t("m.Sign_Duration_Check"));
+          return;
+        }
+        if (this.contest.signEndTime > this.contest.endTime) {
+          myMessage.error(this.$i18n.t("m.Sign_EndTime_Check"));
+          return;
+        }
+        if (this.contest.signEndTime > this.contest.endTime) {
+          myMessage.error(this.$i18n.t("m.Sign_EndTime_Check"));
+          return;
+        }
+      }
+
+      if (
+        this.contest.auth != 0 &&
+        this.contest.auth != 3 &&
+        this.contest.auth != 4 &&
+        !this.contest.pwd
+      ) {
         myMessage.error(
           this.$i18n.t("m.Contest_Password") +
             " " +
@@ -728,6 +799,20 @@ export default {
       if (start != "" && end != "") {
         this.durationText = time.formatSpecificDuration(start, end);
         this.contest.duration = durationMS;
+      }
+    },
+    changeSignDuration() {
+      let start = this.contest.signStartTime;
+      let end = this.contest.signEndTime;
+      let durationMS = time.durationMs(start, end);
+      if (durationMS < 0) {
+        this.signdurationText = this.$i18n.t("m.Contets_Time_Check");
+        this.contest.signDuration = 0;
+        return;
+      }
+      if (start != "" && end != "") {
+        this.signdurationText = time.formatSpecificDuration(start, end);
+        this.contest.signDuration = durationMS;
       }
     },
     changeAccountRuleToStr(formRule) {

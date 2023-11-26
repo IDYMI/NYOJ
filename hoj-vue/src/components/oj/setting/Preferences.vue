@@ -207,6 +207,7 @@ export default {
     return {
       loadingSaveBtn: false,
       formProfile: {
+        username: "",
         uiLanguage: "",
         codeLanguage: "",
         codeSize: "",
@@ -273,7 +274,7 @@ export default {
       api.changeUserPreferences(updateData).then(
         (res) => {
           myMessage.success(this.$i18n.t("m.Update_Successfully"));
-          this.$store.dispatch("setUserPreferences", res.data.data);
+          this.$store.dispatch("setUserInfo", res.data.data);
           this.loadingSaveBtn = false;
         },
         (_) => {

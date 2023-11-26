@@ -6,7 +6,6 @@ import top.hcode.hoj.pojo.dto.ChangePasswordDTO;
 import top.hcode.hoj.pojo.dto.CheckUsernameOrEmailDTO;
 import top.hcode.hoj.pojo.vo.*;
 
-
 public interface AccountService {
 
     public CommonResult<CheckUsernameOrEmailVO> checkUsernameOrEmail(CheckUsernameOrEmailDTO checkUsernameOrEmailDto);
@@ -23,7 +22,9 @@ public interface AccountService {
 
     public CommonResult<UserInfoVO> changeUserInfo(UserInfoVO userInfoVo);
 
-    public CommonResult<UserInfoVO> changeUserPreferences(UserInfoVO userInfoVo);
+    public CommonResult<UserInfoVO> changeUserPreferences(UserPreferencesVO UserPreferencesVo);
+
+    public CommonResult<UserInfoVO> changeUserRace(UserSignVO UserSignVo);
 
     public CommonResult<UserAuthInfoVO> getUserAuthInfo();
 }

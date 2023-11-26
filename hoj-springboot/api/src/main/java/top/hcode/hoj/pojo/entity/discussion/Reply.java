@@ -53,8 +53,7 @@ public class Reply {
     @ApiModelProperty(value = "回复的内容")
     private String content;
 
-    @ApiModelProperty(value = "是否封禁或删除 0正常，1封禁")
-    @TableLogic
+    @ApiModelProperty(value = "是否封禁或删除 0正常，1封禁，2邀请信息")
     private Integer status;
 
     @TableField(fill = FieldFill.INSERT)

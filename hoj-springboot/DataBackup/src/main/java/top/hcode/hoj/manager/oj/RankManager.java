@@ -6,12 +6,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.util.CollectionUtils;
 import top.hcode.hoj.common.exception.StatusFailException;
 import top.hcode.hoj.pojo.entity.user.UserInfo;
+import top.hcode.hoj.pojo.entity.user.UserSign;
 import top.hcode.hoj.pojo.vo.ACMRankVO;
 import top.hcode.hoj.pojo.vo.OIRankVO;
 import top.hcode.hoj.dao.user.UserInfoEntityService;
 import top.hcode.hoj.dao.user.UserRecordEntityService;
+import top.hcode.hoj.dao.user.UserSignEntityService;
 import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.utils.RedisUtils;
 
@@ -31,6 +34,9 @@ public class RankManager {
 
     @Autowired
     private UserInfoEntityService userInfoEntityService;
+
+    @Autowired
+    private UserSignEntityService userSignEntityService;
 
     @Autowired
     private RedisUtils redisUtils;
@@ -63,9 +69,7 @@ public class RankManager {
             userInfoQueryWrapper.and(wrapper -> wrapper
                     .like("username", searchUser)
                     .or()
-                    .like("nickname", searchUser)
-                    .or()
-                    .like("realname", searchUser));
+                    .like("nickname", searchUser));
 
             userInfoQueryWrapper.eq("status", 0);
 
@@ -73,6 +77,21 @@ public class RankManager {
                     .stream()
                     .map(UserInfo::getUuid)
                     .collect(Collectors.toList());
+
+            QueryWrapper<UserSign> userSignQueryWrapper = new QueryWrapper<>();
+
+            userSignQueryWrapper.select("uid");
+            userSignQueryWrapper.and(wrapper -> wrapper.like("realname", searchUser));
+
+            List<String> userSignList = userSignEntityService.list(userSignQueryWrapper)
+                    .stream()
+                    .map(UserSign::getUid)
+                    .collect(Collectors.toList());
+
+            if (!CollectionUtils.isEmpty(userSignList)) {
+                uidList.addAll(userSignList);
+                uidList = uidList.stream().distinct().collect(Collectors.toList());
+            }
         }
 
         IPage rankList = null;

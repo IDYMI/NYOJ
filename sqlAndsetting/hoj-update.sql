@@ -1096,41 +1096,6 @@ DROP PROCEDURE add_Contest_allow_end_submit;
 
 
 /*
-* 增加用户的个人偏好设置
-
-*/
-DROP PROCEDURE
-IF EXISTS add_User_Info_Preferences_Setting;
-DELIMITER $$
-
-CREATE PROCEDURE add_User_Info_Preferences_Setting ()
-BEGIN
-
-IF NOT EXISTS (
-	SELECT
-		1
-	FROM
-		information_schema.`COLUMNS`
-	WHERE
-		table_name = 'user_info'
-	AND column_name = 'ui_language'
-) THEN
-
-	ALTER TABLE `hoj`.`user_info`  ADD COLUMN `ui_language` varchar(255) null comment '界面语言';
-	ALTER TABLE `hoj`.`user_info`  ADD COLUMN `font_family` varchar(255) null comment '界面字体';
-	ALTER TABLE `hoj`.`user_info`  ADD COLUMN `code_language` varchar(255) null comment '代码语言';
-	ALTER TABLE `hoj`.`user_info`  ADD COLUMN `code_size` varchar(255) null comment '字体大小';
-	ALTER TABLE `hoj`.`user_info`  ADD COLUMN `ide_theme` varchar(255) null comment '编译器主题';
-	ALTER TABLE `hoj`.`user_info`  ADD COLUMN `code_template` longtext null comment '个人代码模板';
-END
-IF ; END$$
-
-DELIMITER ;
-CALL add_User_Info_Preferences_Setting ;
-
-DROP PROCEDURE add_User_Info_Preferences_Setting;
-
-/*
 * 增加首页轮播图跳转
 
 */
@@ -1151,8 +1116,8 @@ IF NOT EXISTS (
 	AND column_name = 'link'
 ) THEN
 
-	ALTER TABLE `hoj`.`file`  ADD COLUMN `link` varchar(255) null comment '图片对应的跳转链接';
-	ALTER TABLE `hoj`.`file`  ADD COLUMN `hint` varchar(255) null comment '图片对应的文字描述';
+	ALTER TABLE `hoj`.`file`  ADD COLUMN `link` varchar(255) DEFAULT NULL comment '图片对应的跳转链接';
+	ALTER TABLE `hoj`.`file`  ADD COLUMN `hint` varchar(255) DEFAULT NULL comment '图片对应的文字描述';
 END
 IF ; END$$
 
@@ -1179,11 +1144,11 @@ IF NOT EXISTS (
 		information_schema.`COLUMNS`
 	WHERE
 		table_name = 'contest'
-	AND column_name = 'synchronous'
+	AND column_name = 'synchronous_config'
 ) THEN
 
-	ALTER TABLE `hoj`.`contest`  ADD COLUMN `synchronous` tinyint(1) default 0 null comment '是否开启同步赛';
-	ALTER TABLE `hoj`.`contest`  ADD COLUMN `synchronous_config` text null comment '同步赛配置 json';
+	ALTER TABLE `hoj`.`contest`  ADD COLUMN `synchronous_config` text DEFAULT NULL comment '同步赛配置 json';
+
 END
 IF ; END$$
 
@@ -1191,3 +1156,199 @@ DELIMITER ;
 CALL add_Synchronous ;
 
 DROP PROCEDURE add_Synchronous;
+
+DROP PROCEDURE
+IF EXISTS add_Judge_Synchronous;
+DELIMITER $$
+
+CREATE PROCEDURE add_Judge_Synchronous ()
+BEGIN
+
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		information_schema.`COLUMNS`
+	WHERE
+		table_name = 'judge'
+	AND column_name = 'synchronous'
+) THEN
+
+	ALTER TABLE `hoj`.`judge`  ADD COLUMN `synchronous` tinyint(1) DEFAULT '0' comment '是否为同步赛数据';
+
+END
+IF ; END$$
+
+DELIMITER ;
+CALL add_Judge_Synchronous ;
+
+DROP PROCEDURE add_Judge_Synchronous;
+
+/*
+* 增加正式赛
+
+*/
+DROP PROCEDURE
+IF EXISTS add_Official;
+DELIMITER $$
+
+CREATE PROCEDURE add_Official ()
+BEGIN
+
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		information_schema.`COLUMNS`
+	WHERE
+		table_name = 'contest'
+	AND column_name = 'sign_start_time'
+) THEN
+
+	ALTER TABLE `hoj`.`contest`  ADD COLUMN `sign_start_time` datetime NULL DEFAULT NULL comment '报名开始时间';
+	ALTER TABLE `hoj`.`contest`  ADD COLUMN `sign_end_time` datetime NULL DEFAULT NULL comment '报名结束时间';
+	ALTER TABLE `hoj`.`contest`  ADD COLUMN `sign_duration`  bigint(20) DEFAULT NULL comment '报名时长(s)';
+	ALTER TABLE `hoj`.`contest`  ADD COLUMN `max_participants` int(11) DEFAULT NULL comment '队员上限(最大为3)';
+
+END
+IF ; END$$
+
+DELIMITER ;
+CALL add_Official ;
+
+DROP PROCEDURE add_Official;
+
+/*
+* 增加正式赛报名表
+
+*/
+DROP PROCEDURE
+IF EXISTS contest_Add_sign;
+DELIMITER $$
+
+CREATE PROCEDURE contest_Add_sign ()
+BEGIN
+
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		information_schema.`COLUMNS`
+	WHERE
+		table_name = 'user_sign'
+) THEN
+
+	CREATE TABLE `user_sign` (
+	  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+	  `uid` varchar(32) NOT NULL COMMENT '用户id',
+	  `username` varchar(100) DEFAULT NULL,
+  	  `realname` varchar(50) DEFAULT NULL COMMENT '真实姓名',
+	  `school` varchar(50) DEFAULT NULL COMMENT '学校',
+	  `course` varchar(50) DEFAULT NULL COMMENT '专业/班级',
+	  `number` varchar(50) DEFAULT NULL COMMENT '学号',
+	  `clothes_size` varchar(10) DEFAULT NULL COMMENT '衣服尺寸',
+	  `phone_number` varchar(20) DEFAULT NULL COMMENT '联系方式',
+	  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+	  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	  PRIMARY KEY (`id`,`uid`),
+	  KEY `uid` (`uid`),
+	  CONSTRAINT `user_sign_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user_info` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+	) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+END
+IF ; END$$
+
+DELIMITER ;
+CALL contest_Add_sign ;
+
+DROP PROCEDURE contest_Add_sign;
+
+/*
+* 增加用户的个人偏好设置表
+
+*/
+DROP PROCEDURE
+IF EXISTS add_User_Info_Preferences_Setting;
+DELIMITER $$
+
+CREATE PROCEDURE add_User_Info_Preferences_Setting ()
+BEGIN
+
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		information_schema.`COLUMNS`
+	WHERE
+		table_name = 'user_preferences'
+)THEN
+
+	CREATE TABLE `user_preferences` (
+	  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+	  `uid` varchar(32) NOT NULL COMMENT '用户id',
+	  `ui_language` varchar(255) DEFAULT NULL COMMENT '界面语言',
+	  `font_family` varchar(255) DEFAULT NULL COMMENT '界面字体',
+	  `code_language` varchar(255) DEFAULT NULL COMMENT '代码语言',
+	  `code_size` varchar(255) DEFAULT NULL COMMENT '字体大小',
+	  `ide_theme` varchar(255) DEFAULT NULL COMMENT '编译器主题',
+	  `code_template` longtext DEFAULT NULL COMMENT '个人代码模板',
+	  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+	  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	  PRIMARY KEY (`id`,`uid`),
+	  KEY `uid` (`uid`),
+	  CONSTRAINT `user_preferences_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `user_info` (`uuid`) ON DELETE CASCADE ON UPDATE CASCADE
+	) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+END
+IF ; END$$
+
+DELIMITER ;
+CALL add_User_Info_Preferences_Setting;
+
+DROP PROCEDURE add_User_Info_Preferences_Setting;
+
+/*
+* 增加比赛的报名表
+
+*/
+DROP PROCEDURE
+IF EXISTS Add_contest_sign;
+DELIMITER $$
+
+CREATE PROCEDURE Add_contest_sign ()
+BEGIN
+
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		information_schema.`COLUMNS`
+	WHERE
+		table_name = 'contest_sign'
+) THEN
+	CREATE TABLE `contest_sign` (
+	  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+	  `cid` bigint(20) unsigned DEFAULT NULL COMMENT '比赛id',
+	  `cname` varchar(100) DEFAULT NULL COMMENT '队伍中文名称',
+	  `ename` varchar(100) DEFAULT NULL COMMENT '队伍英文名称',
+      `school` varchar(100) DEFAULT NULL COMMENT '学校',
+	  `team_names` varchar(200) DEFAULT NULL COMMENT '队员用户id',
+	  `team_config` text DEFAULT NULL COMMENT '队伍信息',
+	  `participants` int(11) DEFAULT NULL COMMENT '队伍人数',
+	  `type` int(11) DEFAULT '0' COMMENT '报名类型（0为正式名额，1为打星名额）',
+	  `status` int(11) DEFAULT '0' COMMENT '报名审核状态（0表示审核中，1为审核通过，2为审核不通过。）',
+	  `gender` int(11) DEFAULT '0' COMMENT '报名类型（0为正式队伍，1为女生队伍）',
+	  `msg` varchar(255) DEFAULT NULL COMMENT '审核不通过原因',
+	  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+	  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP,
+	  PRIMARY KEY (`id`),
+	  KEY `cid` (`cid`),
+	  CONSTRAINT `contest_sign_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `contest` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+END
+IF ; END$$
+
+DELIMITER ;
+CALL Add_contest_sign ;
+
+DROP PROCEDURE Add_contest_sign;
+

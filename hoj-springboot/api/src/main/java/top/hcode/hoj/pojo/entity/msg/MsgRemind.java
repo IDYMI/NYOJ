@@ -29,13 +29,13 @@ public class MsgRemind {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "动作类型，如点赞讨论帖Like_Post、点赞评论Like_Discuss、评论Discuss、回复Reply等")
+    @ApiModelProperty(value = "动作类型，如点赞讨论帖Like_Post、点赞评论Like_Discuss、评论Discuss、回复Reply、邀请Invent等")
     private String action;
 
     @ApiModelProperty(value = "消息来源id，讨论id或比赛id")
     private Integer sourceId;
 
-    @ApiModelProperty(value = "事件源类型：'Discussion'、'Contest'等")
+    @ApiModelProperty(value = "事件源类型：'Discussion'、'Contest'、'Invent'等")
     private String sourceType;
 
     @ApiModelProperty(value = "事件源的内容，比如回复的内容，回复的评论等等,不超过250字符，超过使用...")
@@ -44,7 +44,7 @@ public class MsgRemind {
     @ApiModelProperty(value = "事件引用上一级评论或回复id")
     private Integer quoteId;
 
-    @ApiModelProperty(value = "事件引用上一级的类型：Comment、Reply")
+    @ApiModelProperty(value = "事件引用上一级的类型：Comment、Reply、Invent")
     private String quoteType;
 
     @ApiModelProperty(value = "事件所发生的地点链接 url")

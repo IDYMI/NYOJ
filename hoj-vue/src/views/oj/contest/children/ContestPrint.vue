@@ -26,7 +26,7 @@
       <el-form-item style="text-align: center;">
         <el-button type="primary" @click="onSubmit">
           {{
-          $t('m.Submit')
+          $t('m.Submit_Print')
           }}
         </el-button>
       </el-form-item>

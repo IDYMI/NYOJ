@@ -402,6 +402,7 @@ import {
   CONTEST_STATUS,
   JUDGE_STATUS_RESERVE,
   RULE_TYPE,
+  CONTEST_TYPE,
 } from "@/common/constants";
 import utils from "@/common/utils";
 import Pagination from "@/components/oj/common/Pagination";
@@ -603,26 +604,16 @@ export default {
         this.loadingTable = false;
       };
 
-      if (this.contestID) {
-        api
-          .getContest(this.contestID)
-          .then((res) => {
-            const contest = res.data.data;
-            let func =
-              this.contestID && contest.synchronous
-                ? "getSynchronousSubmissionList"
-                : "getContestSubmissionList";
-
-            return api[func](this.limit, utils.filterEmptyValue(params));
-          })
-          .then(handleApiResponse)
-          .catch(handleApiError);
-      } else {
-        api
-          .getSubmissionList(this.limit, utils.filterEmptyValue(params))
-          .then(handleApiResponse)
-          .catch(handleApiError);
-      }
+      let func =
+        this.contestAuth === CONTEST_TYPE.PUBLIC_SYNCHRONOUS ||
+        this.contestAuth === CONTEST_TYPE.PRIVATE_SYNCHRONOUS
+          ? "getSynchronousSubmissionList"
+          : this.contestID
+          ? "getContestSubmissionList"
+          : "getSubmissionList";
+      api[func](this.limit, utils.filterEmptyValue(params))
+        .then(handleApiResponse)
+        .catch(handleApiError);
     },
     // 对当前提交列表 状态为Pending（6）和Judging（7）的提交记录每2秒查询一下最新结果
     checkSubmissionsStatus() {
@@ -886,7 +877,7 @@ export default {
       this.changeJudgeStatusDialogVisible = true;
     },
     cancelJudge(row) {
-      this.$confirm(
+      this.$confirm(   
         this.$i18n.t("m.Cancel_Judge_Tips"),
         "Run ID：" + row.submitId,
         {
@@ -960,6 +951,7 @@ export default {
       "isMainAdminRole",
       "contestRuleType",
       "contestStatus",
+      "contestAuth",
       "ContestRealTimePermission",
     ]),
     title() {

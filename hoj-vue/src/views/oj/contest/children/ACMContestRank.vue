@@ -55,42 +55,6 @@
                 </p>
               </template>
 
-              <!-- <template>
-                <p>
-                  <span>{{ $t("m.Synchronous_Rank") }}</span>
-                  <el-switch v-model="synchronousRank"></el-switch>
-                </p>
-              </template>
-              <template v-if="synchronousRank">
-              <div>-->
-              <!-- 选择全部或取消选择全部的复选框 -->
-              <!-- <input
-                    type="checkbox"
-                    v-model="selectAll"
-                    @change="toggleAll"
-                  />
-              <label for="selectAll">Select All</label>-->
-
-              <!-- 多选框列表 -->
-              <!-- <div v-for="(item, index) in synchronousInfo" :key="index">
-                    <input
-                      type="checkbox"
-                      v-model="selectedItems"
-                      :value="index"
-                      @change="getSynchronousRank(page, false, null)"
-                    />
-                    <label>{{ item.school }}</label>
-              </div>-->
-
-              <!-- 显示选择的项目 -->
-              <!-- <div>
-                    <strong>Selected items:</strong>
-                    <span v-for="index in selectedItems" :key="index"
-                      >{{ synchronousInfo[index].school }}
-                    </span>
-              </div>-->
-              <!-- </div>
-              </template>-->
               <template v-if="isContestAdmin">
                 <el-row>
                   <el-col :span="24">
@@ -101,16 +65,6 @@
                     >{{ $t("m.Download_as_CSV") }}</el-button>
                   </el-col>
                 </el-row>
-                <!-- <p></p>
-                <el-row>
-                  <el-col :span="24">
-                    <el-button
-                      type="primary"
-                      size="small"
-                      >{{ $t("m.Synchronous_Rank") }}</el-button
-                    >
-                  </el-col>
-                </el-row>-->
               </template>
             </div>
           </el-popover>
@@ -509,7 +463,6 @@ export default {
         },
       ],
       selectAll: true,
-      selectedItems: [],
     };
   },
   created() {
@@ -525,7 +478,6 @@ export default {
       this.autoRefresh = true;
       this.handleAutoRefresh(true);
     }
-    this.toggleAll();
   },
   methods: {
     ...mapActions(["getContestProblems"]),
@@ -724,16 +676,6 @@ export default {
         }`
       );
     },
-    // 切换“选择全部/取消选择全部”
-    toggleAll() {
-      if (this.selectAll) {
-        // 如果选择全部，则将所有项添加到已选择的项中
-        this.selectedItems = this.synchronousInfo.map((item, index) => index);
-      } else {
-        // 如果取消选择全部，则清空已选择的项
-        this.selectedItems = [];
-      }
-    },
   },
   watch: {
     contestProblems(newVal, OldVal) {
@@ -743,12 +685,6 @@ export default {
     },
     isContainsAfterContestJudge(newVal, OldVal) {
       this.getContestRankData(this.page);
-    },
-    // 监听 selectedItems 的变化，更新每个选项的状态
-    selectedItems(newValues) {
-      this.checkboxItems.forEach((item) => {
-        item.value = newValues.includes(item.school);
-      });
     },
   },
   computed: {

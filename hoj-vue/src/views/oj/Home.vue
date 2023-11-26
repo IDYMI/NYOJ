@@ -475,16 +475,6 @@ export default {
     this.getRecentUpdatedProblemList();
   },
   methods: {
-    // handleImageLoad(event) {
-    //   const image = event.target; // 获取图片对象
-    //   this.newsize = image;
-    //   const { width, height } = getResizedSize(image, 400, srcHight); // 计算图片缩放后的大小
-    //   this.newsize = width + height;
-    //   // console.log(`缩放后的宽度为${width}px，高度为${height}px`);
-    //   // 在这里可以设置图片的宽度和高度，例如：
-    //   // image.width = width;
-    //   // image.height = height;
-    // },
     linkTo() {
       const activeIndex = this.$refs.carousel.activeIndex;
       if (activeIndex !== undefined && this.carouselImgList[activeIndex].link) {

@@ -192,6 +192,9 @@ export default {
         case "LikeMsg":
           countName = "like";
           break;
+        case "InventMsg":
+          countName = "invent";
+          break;
       }
       let needSubstractMsg = {
         name: countName,

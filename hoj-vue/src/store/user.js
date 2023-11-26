@@ -129,13 +129,6 @@ const actions = {
       userInfo: userInfo
     })
   },
-  setUserPreferences({
-    commit
-  }, userInfo) {
-    commit('changeUserPreferences', {
-      userInfo: userInfo
-    })
-  },
   incrLoginFailNum({
     commit
   }, success) {

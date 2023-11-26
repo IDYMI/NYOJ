@@ -51,4 +51,9 @@ public class UserMessageServiceImpl implements UserMessageService {
     public CommonResult<IPage<UserMsgVO>> getLikeMsg(Integer limit, Integer currentPage) {
         return CommonResult.successResponse(userMessageManager.getLikeMsg(limit, currentPage));
     }
+
+    @Override
+    public CommonResult<IPage<UserMsgVO>> getInventMsg(Integer limit, Integer currentPage) {
+        return CommonResult.successResponse(userMessageManager.getInventMsg(limit, currentPage));
+    }
 }
