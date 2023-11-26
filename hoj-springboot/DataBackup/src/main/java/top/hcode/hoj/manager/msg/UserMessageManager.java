@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import top.hcode.hoj.dao.discussion.DiscussionEntityService;
 import top.hcode.hoj.dao.discussion.ReplyEntityService;
 import top.hcode.hoj.dao.msg.MsgRemindEntityService;
 import top.hcode.hoj.dao.msg.UserSysNoticeEntityService;
+import top.hcode.hoj.manager.oj.InventManager;
 import top.hcode.hoj.pojo.entity.contest.Contest;
 import top.hcode.hoj.pojo.entity.discussion.Comment;
 import top.hcode.hoj.pojo.entity.discussion.Discussion;
@@ -37,6 +39,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class UserMessageManager {
+
+    @Autowired
+    private InventManager inventManager;
 
     @Resource
     private MsgRemindEntityService msgRemindEntityService;
@@ -64,7 +69,7 @@ public class UserMessageManager {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         UserUnreadMsgCountVO userUnreadMsgCount = msgRemindEntityService.getUserUnreadMsgCount(userRolesVo.getUid());
         if (userUnreadMsgCount == null) {
-            userUnreadMsgCount = new UserUnreadMsgCountVO(0, 0, 0, 0, 0);
+            userUnreadMsgCount = new UserUnreadMsgCountVO(0, 0, 0, 0, 0, 0);
         }
         return userUnreadMsgCount;
     }
@@ -120,12 +125,26 @@ public class UserMessageManager {
         return getUserMsgList(userRolesVo.getUid(), "Like", limit, currentPage);
     }
 
-    private boolean cleanMsgByType(String type, Long id, String uid) {
+    public IPage<UserMsgVO> getInventMsg(Integer limit, Integer currentPage) {
 
+        // 页数，每页题数若为空，设置默认值
+        if (currentPage == null || currentPage < 1)
+            currentPage = 1;
+        if (limit == null || limit < 1)
+            limit = 5;
+
+        // 获取当前登录的用户
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+
+        return getUserMsgList(userRolesVo.getUid(), "Invent", limit, currentPage);
+    }
+
+    private boolean cleanMsgByType(String type, Long id, String uid) {
         switch (type) {
             case "Like":
             case "Discuss":
             case "Reply":
+            case "Invent":
                 UpdateWrapper<MsgRemind> updateWrapper1 = new UpdateWrapper<>();
                 updateWrapper1
                         .eq(id != null, "id", id)
@@ -138,6 +157,7 @@ public class UserMessageManager {
                         .eq(id != null, "id", id)
                         .eq("recipient_id", uid);
                 return userSysNoticeEntityService.remove(updateWrapper2);
+
         }
         return false;
     }
@@ -153,6 +173,8 @@ public class UserMessageManager {
                     return getUserReplyMsgList(userMsgList);
                 case "Like":
                     return getUserLikeMsgList(userMsgList);
+                case "Invent":
+                    return getUserInventMsgList(userMsgList, uid);
                 default:
                     throw new RuntimeException("invalid action:" + action);
             }
@@ -256,6 +278,25 @@ public class UserMessageManager {
                 } else {
                     userMsgVo.setSourceTitle("原比赛已被删除!【The original contest has been deleted!】");
                 }
+            }
+        }
+        applicationContext.getBean(UserMessageManager.class).updateUserMsgRead(userMsgList);
+        return userMsgList;
+    }
+
+    private IPage<UserMsgVO> getUserInventMsgList(IPage<UserMsgVO> userMsgList, String uid) {
+        for (UserMsgVO userMsgVo : userMsgList.getRecords()) {
+            if ("Invent".equals(userMsgVo.getSourceType())) {
+                Contest contest = contestEntityService.getById(userMsgVo.getSourceId());
+                if (contest != null) {
+                    userMsgVo.setSourceTitle(contest.getTitle());
+                } else {
+                    userMsgVo.setSourceTitle("原比赛已被删除!【The original contest has been deleted!】");
+                }
+
+                Integer status = inventManager.getInventedStatusBl(userMsgVo.getSourceId().longValue(),
+                        userMsgVo.getSenderId(), uid);
+                userMsgVo.setStatus(status);
             }
         }
         applicationContext.getBean(UserMessageManager.class).updateUserMsgRead(userMsgList);

@@ -206,7 +206,7 @@ public class ContestCalculateRankManager {
 
         // 将本oj的synchronous状态设为false
         orderResultList.forEach(ACMContestRankvo -> ACMContestRankvo.setSynchronous(false));
-        
+
         return getTopRank(removeStar, isNeedSetAward, currentUserId, concernedList, result, starAccountMap,
                 awardConfigVoList,
                 needAddConcernedUser);
@@ -305,7 +305,7 @@ public class ContestCalculateRankManager {
         orderResultList.forEach(ACMContestRankvo -> ACMContestRankvo.setSynchronous(false));
 
         // 是否开启同步赛
-        if (contest.getSynchronous() != null && contest.getSynchronous()) {
+        if (contest.getAuth() == 4 || contest.getAuth() == 5) {
             List<ACMContestRankVO> synchronousResultList = synchronousManager.getSynchronousRankList(contest,
                     isContainsAfterContestJudge, removeStar, nowtime);
             if (!CollectionUtils.isEmpty(synchronousResultList)) {

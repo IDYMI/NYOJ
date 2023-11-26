@@ -79,7 +79,7 @@ public class AccountRealm extends AuthorizingRealm {
 
         QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("uuid", userId)
-                .select("uuid", "username", "nickname", "realname", "title_name", "title_color", "avatar", "status");
+                .select("uuid", "username", "nickname", "title_name", "title_color", "avatar", "status");
 
         UserInfo userInfo = userInfoEntityService.getOne(queryWrapper, false);
         if (userInfo == null) {

@@ -867,7 +867,7 @@ export default {
           tips = "\n```\ncode block\n```\n";
           break;
         case 2:
-          tips = "[HOJ](https://hcode.top)";
+          tips = "[NYOJ](https://nyoj.online)";
           break;
         case 3:
           tips = "\n- ...";

@@ -125,20 +125,18 @@ public class AdminContestManager {
             adminContestVo.setAwardConfigList(new ArrayList<>());
         }
 
-        if (contest.getSynchronous() != null) {
+        // 同步赛
+        if (contest.getAuth() == 4 || contest.getAuth() == 5) {
             try {
                 JSONObject jsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
                 List<ContestSynchronousConfigVO> synchronousConfigList = jsonObject.get("config", List.class);
 
-                adminContestVo.setSynchronous(contest.getSynchronous());
                 adminContestVo.setSynchronousConfigList(synchronousConfigList);
 
             } catch (Exception e) {
-                adminContestVo.setSynchronous(false);
                 adminContestVo.setSynchronousConfigList(new ArrayList<>());
             }
         } else {
-            adminContestVo.setSynchronous(false);
             adminContestVo.setSynchronousConfigList(new ArrayList<>());
         }
 
@@ -178,13 +176,20 @@ public class AdminContestManager {
             contest.setAwardConfig(awardConfigJson.toString());
         }
 
-        if (adminContestVo.getSynchronous() != null) {
-            Boolean synchronous = adminContestVo.getSynchronous();
+        // 同步赛
+        if (adminContestVo.getAuth() == 4 || adminContestVo.getAuth() == 5) {
             List<ContestSynchronousConfigVO> synchronousConfigList = adminContestVo.getSynchronousConfigList();
             JSONObject awardConfigJson = new JSONObject();
             awardConfigJson.set("config", synchronousConfigList);
-            contest.setSynchronous(synchronous);
             contest.setSynchronousConfig(awardConfigJson.toString());
+        }
+
+        // 正式赛
+        if (adminContestVo.getAuth() == 3) {
+            contest.setSignStartTime(adminContestVo.getSignStartTime());
+            contest.setSignEndTime(adminContestVo.getSignEndTime());
+            contest.setSignDuration(adminContestVo.getSignDuration());
+            contest.setMaxParticipants(adminContestVo.getMaxParticipants());
         }
 
         boolean isOk = contestEntityService.save(contest);
@@ -239,13 +244,20 @@ public class AdminContestManager {
             contest.setAwardConfig(awardConfigJson.toString());
         }
 
-        if (adminContestVo.getSynchronous() != null) {
-            Boolean synchronous = adminContestVo.getSynchronous();
+        // 同步赛
+        if (adminContestVo.getAuth() == 4 || adminContestVo.getAuth() == 5) {
             List<ContestSynchronousConfigVO> synchronousConfigList = adminContestVo.getSynchronousConfigList();
             JSONObject awardConfigJson = new JSONObject();
             awardConfigJson.set("config", synchronousConfigList);
-            contest.setSynchronous(synchronous);
             contest.setSynchronousConfig(awardConfigJson.toString());
+        }
+
+        // 正式赛
+        if (adminContestVo.getAuth() == 3) {
+            contest.setSignStartTime(adminContestVo.getSignStartTime());
+            contest.setSignEndTime(adminContestVo.getSignEndTime());
+            contest.setSignDuration(adminContestVo.getSignDuration());
+            contest.setMaxParticipants(adminContestVo.getMaxParticipants());
         }
 
         Contest oldContest = contestEntityService.getById(contest.getId());

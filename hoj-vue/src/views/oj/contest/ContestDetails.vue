@@ -122,14 +122,13 @@
       </el-col>
     </el-row>
     <div class="sub-menu">
-      <!-- 判断是否需要密码验证 -->
-
       <el-tabs @tab-click="tabClick" v-model="route_name">
         <el-tab-pane name="ContestDetails" lazy>
           <span slot="label">
             <i class="el-icon-s-home"></i>
             &nbsp;{{ $t("m.Overview") }}
           </span>
+          <!-- 判断是否需要密码验证 -->
           <el-card
             v-if="passwordFormVisible"
             class="password-form-card"
@@ -156,6 +155,292 @@
               >{{ $t("m.Enter") }}</el-button>
             </el-form>
           </el-card>
+
+          <!-- 正式赛报名窗口 -->
+
+          <el-card
+            v-if="signFormVisible"
+            class="box-card"
+            style="text-align: center; margin-bottom: 15px"
+          >
+            <div slot="header">
+              <span :class="getPanelClass()" :style="getPanelStyle()">
+                <i :class="getIconClass()">{{ $t('m.' + SIGN_TYPE_REVERSE[signStatus].name) }}</i>
+              </span>
+              <div class="filter-row">
+                <span>
+                  <el-button
+                    type="primary"
+                    @click="checkSign()"
+                    size="small"
+                    icon="el-icon-refresh"
+                    :loading="getBtnLoading"
+                  >{{ $t('m.Refresh') }}</el-button>
+                </span>
+              </div>
+            </div>
+            <el-col :span="24">
+              <el-row :gutter="20">
+                <el-col
+                  :xxl="4"
+                  :xl="6"
+                  :lg="8"
+                  :md="8"
+                  :sm="12"
+                  :xs="24"
+                  v-if="!signList.length"
+                  style="margin-top: 10px; margin-bottom: 10px;"
+                >
+                  <el-card :body-style="{ padding: '0px' }" style="border-radius: 10px;">
+                    <el-empty :description="$t('m.No_Sign_Time')"></el-empty>
+                  </el-card>
+                </el-col>
+                <el-col
+                  :xxl="4"
+                  :xl="6"
+                  :lg="8"
+                  :md="8"
+                  :sm="12"
+                  :xs="24"
+                  v-for="(sign, index) in signList"
+                  :key="index"
+                  style="margin-top: 10px; margin-bottom: 10px"
+                >
+                  <el-row :gutter="1">
+                    <el-col :span="7" style="text-align: center;">
+                      <el-card
+                        :body-style="{ padding: '0px' }"
+                        style="border-radius: 10px; height: 170px"
+                      >
+                        <template v-if="sign.avatar">
+                          <el-image
+                            :src="sign.avatar"
+                            fit="cover"
+                            style="height: 135px; width: 100%"
+                          ></el-image>
+                        </template>
+                        <template v-else>
+                          <el-image
+                            :src="defaultAvatar"
+                            fit="cover"
+                            style="height: 135px; width: 100%"
+                          ></el-image>
+                        </template>
+                        <el-link
+                          style="font-size: 16px"
+                          type="primary"
+                          :underline="false"
+                          @click="toUserHome(sign.username)"
+                        >
+                          <i class="el-icon-user-solid"></i>
+                          {{ sign.username }}
+                        </el-link>
+
+                        <!-- 编辑组队状态 -->
+                        <template v-if="index > 0 && editRule">
+                          <el-tooltip
+                            effect="dark"
+                            :content="$t('m.Send_Invent_Again')"
+                            placement="top"
+                            style="margin-left: 5px;"
+                          >
+                            <span
+                              class="reply-opt reply-text"
+                              @click="openInventDialog('radd', sign.username)"
+                            >
+                              <i class="iconfont el-icon-s-promotion"></i>
+                              <!-- <span>{{ $t('m.Invent') }}</span> -->
+                            </span>
+                          </el-tooltip>
+                          <el-tooltip
+                            effect="dark"
+                            :content="$t('m.Delete_Invent')"
+                            placement="top"
+                            style="margin-left: 5px;"
+                          >
+                            <span
+                              class="reply-opt reply-delete"
+                              @click="deleteInvent(sign.username)"
+                            >
+                              <i class="iconfont el-icon-delete"></i>
+                              <!-- <span>{{ $t('m.Delete') }}</span> -->
+                            </span>
+                          </el-tooltip>
+                        </template>
+                      </el-card>
+                    </el-col>
+                    <el-col :span="17" :class="SIGN_TYPE_REVERSE[sign.status].name">
+                      <el-card
+                        :body-style="{ padding: '0px' }"
+                        style="border-radius: 10px; height: 170px; text-align: left;"
+                      >
+                        <div slot="header" style="height: 24px">
+                          <el-col :span="8">
+                            <a class="sign-name">
+                              <span>{{ $t('m.Participant_Realname') + " : " }}</span>
+                              <br />
+                              <span>{{ $t('m.Participant_School') + " : " }}</span>
+                              <br />
+                              <span>{{ $t('m.Participant_Course') + ": " }}</span>
+                              <br />
+                              <span>{{ $t('m.Participant_Number') + " : " }}</span>
+                              <br />
+                              <span>{{ $t('m.Participant_PhoneNumber') + " : " }}</span>
+                            </a>
+                          </el-col>
+                          <el-col :span="1">
+                            <p></p>
+                          </el-col>
+                          <el-col :span="8">
+                            <a class="sign-name">
+                              <span>{{ sign.realname }}</span>
+                              <br />
+                              <span>{{ sign.school }}</span>
+                              <br />
+                              <span>{{ sign.course }}</span>
+                              <br />
+                              <span>{{ sign.number }}</span>
+                              <br />
+                              <span>{{ sign.phoneNumber }}</span>
+                            </a>
+                          </el-col>
+                        </div>
+                      </el-card>
+                    </el-col>
+                  </el-row>
+                </el-col>
+                <el-col
+                  :xxl="4"
+                  :xl="6"
+                  :lg="8"
+                  :md="8"
+                  :sm="12"
+                  :xs="24"
+                  style="margin-top: 10px; margin-bottom: 10px"
+                >
+                  <el-row :gutter="1">
+                    <el-col
+                      :span="24"
+                      v-if="signList.length && signList.length < contest.maxParticipants && editRule"
+                    >
+                      <el-row :gutter="20">
+                        <el-col :span="7" style="text-align: center;">
+                          <el-card
+                            :body-style="{ padding: '0px' }"
+                            style="border-radius: 10px; height: 170px; display: flex; justify-content: center; align-items: center;"
+                          >
+                            <template>
+                              <el-image
+                                :src="defaultAvatar"
+                                fit="cover"
+                                style="height: 135px; width: 100%"
+                              ></el-image>
+                            </template>
+                            <el-button
+                              icon="el-icon-plus"
+                              type="primary"
+                              style="width: 100%; height: 100%;"
+                              @click="openInventDialog('add', null)"
+                            ></el-button>
+                          </el-card>
+                        </el-col>
+                        <el-col :span="17" :class="SIGN_TYPE_REVERSE[signStatus].name">
+                          <el-card
+                            :body-style="{ padding: '0px' }"
+                            style="border-radius: 10px; height: 170px"
+                          ></el-card>
+                        </el-col>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                </el-col>
+              </el-row>
+            </el-col>
+
+            <!-- <Pagination
+              :total="total"
+              :page-size="query.limit"
+              @on-change="currentChange"
+              :current.sync="query.currentPage"
+              @on-page-size-change="onPageSizeChange"
+              style="margin-top: 10px; margin-bottom: 30px;"
+              :layout="'prev, pager, next, sizes'"
+              :pageSizes="[9, 15, 30, 60, 120]"
+            ></Pagination>-->
+            <p></p>
+            <el-button
+              v-if="signList.length && editRule"
+              type="primary"
+              @click="openSignDialog"
+            >{{ $t('m.' + SIGN_TYPE_REVERSE[signStatus].action) }}</el-button>
+          </el-card>
+          <el-dialog
+            :title="$t('m.Add_Participant')"
+            width="400px"
+            :visible.sync="addInventDialogVisible"
+            :close-on-click-modal="false"
+          >
+            <el-form>
+              <el-form-item :label="$t('m.Participant_Username')" required>
+                <el-input v-model="userSign.toUsername" size="small"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('m.Invent_msg')">
+                <el-input v-model="userSign.content" size="small"></el-input>
+              </el-form-item>
+              <el-form-item style="text-align:center">
+                <el-button
+                  type="primary"
+                  @click="sendInvent"
+                  :loading="addInventLoading"
+                >{{ $t('m.Send_Invent') }}</el-button>
+              </el-form-item>
+            </el-form>
+          </el-dialog>
+          <el-dialog
+            :title="$t('m.' + signTitle)"
+            width="500px"
+            :visible.sync="addSignDialogVisible"
+            :close-on-click-modal="false"
+          >
+            <el-form :model="contestSign" ref="contestSign" :rules="contestSignRules">
+              <el-form-item prop="cname" :label="$t('m.Cname')" required>
+                <el-input v-model="contestSign.cname" size="small" :maxlength="20"></el-input>
+              </el-form-item>
+              <el-form-item prop="ename" :label="$t('m.Ename')" required>
+                <el-input v-model="contestSign.ename" size="small" :maxlength="20"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('m.Team_School')">
+                <el-input v-model="contestSign.school" size="small" :maxlength="20"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-col :span="24" style="margin-top: 10px; margin-bottom: 10px">
+                  <el-col :span="12">
+                    <el-switch
+                      v-model="contestSign.type"
+                      :active-text="$t('m.Star')"
+                      :inactive-text="$t('m.Formal')"
+                    ></el-switch>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-switch
+                      v-model="contestSign.gender"
+                      :active-text="$t('m.Girls')"
+                      :inactive-text="$t('m.Formal')"
+                    ></el-switch>
+                  </el-col>
+                </el-col>
+              </el-form-item>
+              <p></p>
+              <p></p>
+              <el-form-item style="text-align:center">
+                <el-button
+                  type="primary"
+                  @click="sendSign"
+                  :loading="addSignLoading"
+                >{{ $t('m.' + signBtn) }}</el-button>
+              </el-form-item>
+            </el-form>
+          </el-dialog>
           <el-card class="box-card">
             <Markdown :isAvoidXss="contest.gid != null" :content="contest.description"></Markdown>
           </el-card>
@@ -274,6 +559,23 @@
         </el-tab-pane>
 
         <el-tab-pane
+          name="ContestAdminSign"
+          lazy
+          :disabled="contestMenuDisabled"
+          v-if="isContestAdmin && contest.auth === 3"
+        >
+          <span slot="label">
+            <i class="el-icon-edit-outline"></i>
+            &nbsp;{{
+            $t("m.Admin_Sign")
+            }}
+          </span>
+          <transition name="el-zoom-in-bottom">
+            <router-view v-if="route_name === 'ContestAdminSign'"></router-view>
+          </transition>
+        </el-tab-pane>
+
+        <el-tab-pane
           name="ContestRejudgeAdmin"
           lazy
           :disabled="contestMenuDisabled"
@@ -322,6 +624,7 @@ import myMessage from "@/common/message";
 import storage from "@/common/storage";
 import Markdown from "@/components/oj/common/Markdown";
 import ClickRank from "@/views/oj/contest/ClickRank";
+import { SIGN_TYPE_REVERSE } from "@/common/constants";
 
 export default {
   name: "ContestDetails",
@@ -340,10 +643,79 @@ export default {
       CONTEST_TYPE_REVERSE: {},
       RULE_TYPE: {},
       btnLoading: false,
+      getBtnLoading: false,
       contestPassword: "",
+      defaultAvatar: require("@/assets/default.jpg"),
+
+      addInventDialogVisible: false,
+      addInventLoading: false,
+
+      addSignDialogVisible: false,
+      addSignLoading: false,
+      signTitle: "Send_Sign",
+      signBtn: "Send",
+
+      editRule: false,
+      usernames: "",
+      signList: [],
+      signStatus: -1,
+      userSign: {
+        cid: this.$route.params.contestID,
+        username: this.$store.getters.userInfo.username,
+        toUsername: "",
+        content: "听说你很强，但是我比你更强。所以一块上大分！",
+      },
+      contestSign: {
+        cid: this.$route.params.contestID,
+        cname: "",
+        ename: "",
+        school: "南阳理工学院",
+        teamNames: "",
+        type: 0,
+        gender: 0,
+      },
+      contestSignRules: {
+        cname: [
+          {
+            required: true,
+            message: this.$i18n.t("m.Cname_Check_Required"),
+            trigger: "blur",
+          },
+          {
+            min: 1,
+            max: 20,
+            message: this.$i18n.t("m.TeamName_Check_Length"),
+            trigger: "blur",
+          },
+          {
+            pattern: /^[\u4e00-\u9fa5]+$/,
+            message: this.$i18n.t("m.Check_Chinese"),
+            trigger: "blur",
+          },
+        ],
+        ename: [
+          {
+            required: true,
+            message: this.$i18n.t("m.Ename_Check_Required"),
+            trigger: "blur",
+          },
+          {
+            min: 1,
+            max: 20,
+            message: this.$i18n.t("m.TeamName_Check_Length"),
+            trigger: "blur",
+          },
+          {
+            pattern: /[a-zA-z]$/,
+            message: this.$i18n.t("m.Check_English"),
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   created() {
+    this.SIGN_TYPE_REVERSE = Object.assign({}, SIGN_TYPE_REVERSE);
     this.contestID = this.$route.params.contestID;
     this.route_name = this.$route.name;
     if (this.route_name == "ContestProblemDetails") {
@@ -398,10 +770,9 @@ export default {
             }
             storage.set(key, readAnnouncementList);
           });
-          n;
         }, 60 * 1000);
       }
-
+      this.getSign();
       this.$nextTick((_) => {
         addCodeBtn();
       });
@@ -411,6 +782,52 @@ export default {
     ...mapActions(["changeDomTitle"]),
     getStopFlag(percentage) {
       this.percentage = percentage;
+    },
+    init() {},
+    getSign() {
+      if (this.contest.auth === 3) {
+        // 如果是同步赛
+        let cid = this.$route.params.contestID;
+        let username = this.$store.getters.userInfo.username;
+        api.getSign(cid, username).then(
+          (res) => {
+            let data = res.data.data;
+            this.signList = data.teamConfig;
+            this.usernames = data.teamNames;
+            this.signStatus = data.status;
+            if (data.cname) {
+              // 将报名信息补全
+              this.contestSign = Object.assign({}, data);
+            }
+
+            // 队长是否等于当前用户
+            if (username == this.signList[0].username) {
+              this.editRule = true;
+            }
+            if (this.sendSign === 0) {
+              this.signTitle = "Edit_Sign";
+              this.signBtn = "Edit";
+            }
+
+            // 更新进入比赛的权限
+            this.$store.commit("contestIntoAccess", {
+              intoAccess: this.signStatus === 1,
+            });
+
+            if (this.signStatus === 2) {
+              myMessage.warning(data.msg);
+            }
+          },
+          (_) => {
+            this.signList = [];
+            this.usernames = "";
+            this.signStatus = -1;
+            this.editRule = false;
+            this.signTitle = "Send_Sign";
+            this.signBtn = "Send";
+          }
+        );
+      }
     },
     formatTooltip(val) {
       if (this.percentage !== -1) {
@@ -447,6 +864,11 @@ export default {
         }
       );
     },
+    checkSign() {
+      this.getBtnLoading = true;
+      this.getSign();
+      this.getBtnLoading = false;
+    },
     tabClick(tab) {
       let name = tab.name;
       if (name !== this.$route.name) {
@@ -460,6 +882,105 @@ export default {
           groupID: gid,
         },
       });
+    },
+    toUserHome(username) {
+      this.$router.push({
+        name: "UserHome",
+        query: { username: username },
+      });
+    },
+    openInventDialog(action, toUsername) {
+      if (action == "add") {
+        this.userSign = {
+          cid: this.$route.params.contestID,
+          username: this.$store.getters.userInfo.username,
+          toUsername: null,
+          content: "听说你很强，但是我比你更强。所以一块上大分！",
+        };
+      } else {
+        this.userSign = {
+          cid: this.$route.params.contestID,
+          username: this.$store.getters.userInfo.username,
+          toUsername: toUsername,
+          content: "所以爱会消失嘛？燕子，回来把！",
+        };
+      }
+      this.addInventDialogVisible = true;
+    },
+    openSignDialog() {
+      this.addSignDialogVisible = true;
+    },
+    sendInvent() {
+      api.addInvent(this.userSign).then(
+        (res) => {
+          this.addInventLoading = false;
+          myMessage.success(this.$i18n.t("m.Invent_Successfully"));
+          this.getSign();
+          this.addInventDialogVisible = false;
+        },
+        (_) => {
+          this.addInventLoading = false;
+        }
+      );
+    },
+    sendSign() {
+      this.$refs.contestSign.validate((valid) => {
+        if (valid) {
+          this.contestSign.teamNames = this.usernames;
+          api.addSign(this.contestSign).then(
+            (res) => {
+              this.addSignLoading = false;
+              myMessage.success(this.$i18n.t("m.Sign_Successfully"));
+              this.getSign();
+              this.addSignDialogVisible = false;
+            },
+            (_) => {
+              this.addSignLoading = false;
+            }
+          );
+        } else {
+          myMessage.error(this.$i18n.t("m.Please_check_your_Cname_or_Ename"));
+        }
+      });
+    },
+    deleteInvent(toUsername) {
+      let username = this.$store.getters.userInfo.username;
+      let cid = this.$route.params.contestID;
+      api
+        .deleteInvent(cid, username, toUsername)
+        .then((res) => {
+          myMessage.success(this.$i18n.t("m.Delete_successfully"));
+          this.getSign();
+        })
+        .catch(() => {});
+    },
+    getPanelClass() {
+      let status = this.signStatus;
+      return {
+        "panel-title": true,
+        "color-warning": status === -1 || status === 0,
+        "color-success": status === 1,
+        "color-error": status === 2,
+      };
+    },
+    getPanelStyle() {
+      let status = this.signStatus;
+      return {
+        color:
+          status === -1 || status === 0
+            ? "#e6a23c"
+            : status === 1
+            ? "#67c23a"
+            : "#ed3f14",
+      };
+    },
+    getIconClass() {
+      let status = this.signStatus;
+      return {
+        "el-icon-warning": status === -1 || status === 0,
+        "el-icon-success": status === 1,
+        "el-icon-error": status === 2,
+      };
     },
   },
   computed: {
@@ -477,6 +998,7 @@ export default {
       "isContestAdmin",
       "ContestRealTimePermission",
       "passwordFormVisible",
+      "signFormVisible",
       "userInfo",
       "websiteConfig",
     ]),
@@ -555,18 +1077,7 @@ export default {
     text-align: center;
   }
 }
-/* /deep/.el-slider__button {
-  width: 20px !important;
-  height: 20px !important;
-  background-color: #409eff !important;
-}
-/deep/.el-slider__button-wrapper {
-  z-index: 500;
-}
-/deep/.el-slider__bar {
-  height: 10px !important;
-  background-color: #09be24 !important;
-} */
+
 /deep/ .el-card__header {
   border-bottom: 0px;
   padding-bottom: 0px;
@@ -600,5 +1111,36 @@ export default {
 .password-form-tips {
   text-align: center;
   font-size: 14px;
+}
+.sign-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.Sign_Required .sign-name {
+  color: rgb(230, 162, 60);
+}
+.Sign_Waiting .sign-name {
+  color: rgb(230, 162, 60);
+}
+.Sign_Refused .sign-name {
+  color: rgb(245, 108, 108);
+}
+.Sign_Successfully .sign-name {
+  color: rgb(103, 194, 58);
+}
+
+.reply-opt {
+  align-items: center;
+  cursor: pointer;
+}
+.reply-text:hover {
+  color: #66b1ff;
+}
+.reply-delete:hover {
+  color: #ff503f;
+}
+.filter-row {
+  float: right;
 }
 </style>

@@ -31,4 +31,7 @@ public class UserUnreadMsgCountVO {
 
     @ApiModelProperty(value = "未读我的消息")
     private Integer mine;
+
+    @ApiModelProperty(value = "未读邀请消息")
+    private Integer invent;
 }

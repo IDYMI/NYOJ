@@ -210,7 +210,7 @@ export default {
   data() {
     return {
       discussion: {
-        author: "HOJ",
+        author: "NYOJ",
         avatar: "",
       },
       query: {

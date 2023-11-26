@@ -17,4 +17,6 @@ public interface UserMessageService {
 
     public CommonResult<IPage<UserMsgVO>> getLikeMsg(Integer limit, Integer currentPage);
 
+    public CommonResult<IPage<UserMsgVO>> getInventMsg(Integer limit, Integer currentPage);
+
 }

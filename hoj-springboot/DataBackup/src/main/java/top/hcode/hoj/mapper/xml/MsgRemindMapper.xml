@@ -7,6 +7,7 @@
           (SELECT COUNT(1) FROM msg_remind WHERE recipient_id=#{uid} AND state=0 AND `action`='Discuss') AS 'comment',
           (SELECT COUNT(1) FROM msg_remind WHERE recipient_id=#{uid} AND state=0 AND `action`='Reply') AS 'reply',
           (SELECT COUNT(1) FROM msg_remind WHERE recipient_id=#{uid} AND state=0 AND `action` LIKE 'Like%') AS 'like',
+          (SELECT COUNT(1) FROM msg_remind WHERE recipient_id=#{uid} AND state=0 AND `action`='Invent') AS 'invent',
           (SELECT COUNT(1) FROM user_sys_notice WHERE recipient_id=#{uid} AND state=0 AND `type`='Sys') AS 'sys',
           (SELECT COUNT(1) FROM user_sys_notice WHERE recipient_id=#{uid} AND state=0 AND `type`='Mine') AS 'mine'
     </select>
@@ -58,5 +59,59 @@
         </where>
         order by m.state asc, m.gmt_create desc
     </select>
+
+    <resultMap id="map_UserInventStatusList" type="top.hcode.hoj.pojo.vo.UserInventStatusVO">
+        <id column="comment_id" property="commentId"></id>
+        <result column="username" property="senderUsername"></result>
+        <result column="toUsername" property="recipientUsername"></result>
+        <result column="content" property="content"></result>
+    </resultMap>
+
+    <!-- 获取用户的被邀请记录 -->
+    <select id="getUserInventedStatus" resultMap="map_UserInventStatusList">
+        SELECT
+        c.id AS comment_id,
+        u1.username AS username,
+        u2.username AS toUsername,
+        r.content AS content
+        FROM msg_remind m
+        JOIN user_info u1 ON m.sender_id = u1.uuid
+        JOIN user_info u2 ON m.recipient_id = u2.uuid
+        LEFT JOIN comment c ON c.id = m.quote_id
+        LEFT JOIN reply r ON r.from_uid = m.recipient_id AND r.comment_id = m.quote_id
+        <where>
+        m.action = 'Invent'
+        AND c.cid = m.source_id
+        AND m.recipient_id = #{toUid}
+        AND m.source_id = #{cid}
+            <if test="uid!=null">
+                AND m.sender_id = #{uid}
+            </if>
+        </where>
+        order by content desc
+    </select>
+
+    <!-- 获取用户的邀请记录 -->
+    <select id="getUserInventStatus" resultMap="map_UserInventStatusList">
+        SELECT
+        c.id AS comment_id,
+        c.from_name AS username,
+        u_r.username AS toUsername,
+        r.content AS content
+        FROM comment c
+        JOIN user_info u ON c.from_uid = u.uuid
+        LEFT JOIN msg_remind m ON m.quote_id = c.id AND m.action = 'Invent'
+        LEFT JOIN user_info u_r ON m.recipient_id = u_r.uuid
+        LEFT JOIN reply r ON r.from_uid = m.recipient_id AND r.to_uid = c.from_uid AND r.comment_id = c.id
+        <where>
+        AND c.from_uid = #{uid}
+        AND c.cid = #{cid}
+            <if test="toUid!=null">
+                AND m.recipient_id = #{toUid}
+            </if>
+        </where>
+        order by content desc
+    </select>
+
 
 </mapper>

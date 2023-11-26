@@ -88,6 +88,14 @@ export default {
         (_) => callback()
       );
     };
+    const checkUsernameFormat = (rule, value, callback) => {
+      // 使用正则表达式检查是否包含 '$' 字符
+      if (value && value.indexOf("$") !== -1) {
+        callback(new Error(this.$i18n.t("m.The_username_role")));
+      } else {
+        callback();
+      }
+    };
     const CheckEmailNotExist = (rule, value, callback) => {
       api.checkUsernameOrEmail(undefined, value).then(
         (res) => {
@@ -132,6 +140,11 @@ export default {
             required: true,
             message: this.$i18n.t("m.Username_Check_Required"),
             trigger: "blur",
+          },
+          {
+            validator: checkUsernameFormat, // 使用自定义验证规则
+            trigger: "blur",
+            message: this.$i18n.t("m.The_username_role"),
           },
           {
             validator: CheckUsernameNotExist,

@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Himit_ZH
@@ -53,8 +53,7 @@ public class Comment implements Serializable {
     @ApiModelProperty(value = "点赞数量")
     private Integer likeNum;
 
-    @ApiModelProperty(value = "是否封禁或删除 0正常，1封禁")
-    @TableLogic
+    @ApiModelProperty(value = "是否封禁或删除 0正常，1封禁，2邀请信息")
     private Integer status;
 
     @TableField(fill = FieldFill.INSERT)

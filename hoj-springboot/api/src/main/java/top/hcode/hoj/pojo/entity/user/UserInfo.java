@@ -40,24 +40,8 @@ public class UserInfo implements Serializable {
     private String nickname;
 
     @TableField(updateStrategy = FieldStrategy.IGNORED)
-    @ApiModelProperty(value = "学校")
-    private String school;
-
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    @ApiModelProperty(value = "专业")
-    private String course;
-
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    @ApiModelProperty(value = "学号")
-    private String number;
-
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
     @ApiModelProperty(value = "性别")
     private String gender;
-
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    @ApiModelProperty(value = "真实姓名")
-    private String realname;
 
     @TableField(updateStrategy = FieldStrategy.IGNORED)
     @ApiModelProperty(value = "cf的username")
@@ -87,26 +71,6 @@ public class UserInfo implements Serializable {
 
     @ApiModelProperty(value = "头衔、称号的颜色")
     private String titleColor;
-
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    @ApiModelProperty(value = "界面语言")
-    private String uiLanguage;
-
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    @ApiModelProperty(value = "代码语言")
-    private String codeLanguage;
-
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    @ApiModelProperty(value = "字体大小")
-    private String codeSize;
-
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    @ApiModelProperty(value = "编译器主题")
-    private String ideTheme;
-
-    @TableField(updateStrategy = FieldStrategy.IGNORED)
-    @ApiModelProperty(value = "个人代码模板")
-    private String codeTemplate;
 
     @ApiModelProperty(value = "0可用，-1不可用")
     private int status;

@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.util.CollectionUtils;
 import top.hcode.hoj.mapper.CommentMapper;
 import top.hcode.hoj.pojo.entity.contest.Contest;
 import top.hcode.hoj.pojo.entity.discussion.Comment;
@@ -138,6 +137,25 @@ public class CommentEntityServiceImpl extends ServiceImpl<CommentMapper, Comment
         } else if (sourceType.equals("Contest")) {
             msgRemind.setUrl("/contest/" + sourceId + "/comment");
         }
+
+        msgRemindEntityService.saveOrUpdate(msgRemind);
+    }
+
+    @Async
+    @Override
+    public void updateInventMsg(String recipientId, String senderId, Integer sourceId, String content,
+            Integer quoteId) {
+
+        MsgRemind msgRemind = new MsgRemind();
+        msgRemind.setAction("Invent")
+                .setRecipientId(recipientId)
+                .setSenderId(senderId)
+                .setSourceId(sourceId)
+                .setSourceContent(content)
+                .setQuoteId(quoteId)
+                .setUrl("/contest/" + Integer.toString(sourceId))
+                .setQuoteType("Invent")
+                .setSourceType("Invent");
 
         msgRemindEntityService.saveOrUpdate(msgRemind);
     }

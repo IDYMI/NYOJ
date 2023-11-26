@@ -710,7 +710,32 @@ const ojApi = {
     })
   },
 
+  // 获取比赛报名列表
+  getContestSignList(params) {
+    return ajax('/api/get-contest-sign', 'get', {
+      params
+    })
+  },
 
+  // 获取列表
+  getContestUserSign(params) {
+    return ajax('/api/get-contest-user-sign', 'get', {
+      params
+    })
+  },
+
+  // 更新比赛报名的状态
+  updateContestSignStatus(data) {
+    return ajax('/api/check-contest-sign-status', 'post', {
+      data
+    })
+  },
+
+  updateContestSign(data) {
+    return ajax('/api/contest-sign', 'post', {
+      data
+    })
+  },
   // 比赛题目对应的提交重判
   ContestRejudgeProblem(params) {
     return ajax('/api/admin/judge/rejudge-contest-problem', 'get', {
@@ -782,6 +807,11 @@ const ojApi = {
   },
   changeUserPreferences(data) {
     return ajax("/api/change-userPreferences", 'post', {
+      data
+    })
+  },
+  changeUserRace(data) {
+    return ajax("/api/change-userRace", 'post', {
       data
     })
   },
@@ -899,6 +929,48 @@ const ojApi = {
       params: {
         commentId,
         cid
+      }
+    })
+  },
+
+  addInvent(data) {
+    return ajax("/api/invent", 'post', {
+      data
+    })
+  },
+  handleInvent(data) {
+    return ajax("/api/handle-invent", 'post', {
+      data
+    })
+  },
+  deleteInvent(cid, username, toUsername) {
+    return ajax("/api/invent", 'delete', {
+      params: {
+        cid,
+        username,
+        toUsername
+      }
+    })
+  },
+  getInventStatus(cid, username, toUsername) {
+    return ajax("/api/invent", 'get', {
+      params: {
+        cid,
+        username,
+        toUsername
+      }
+    })
+  },
+  addSign(data) {
+    return ajax("/api/sign", 'post', {
+      data
+    })
+  },
+  getSign(cid, username) {
+    return ajax("/api/sign", 'get', {
+      params: {
+        cid,
+        username
       }
     })
   },
@@ -1501,6 +1573,10 @@ const ojApi = {
         return ajax("/api/msg/like", 'get', {
           params
         });
+      case "InventMsg":
+        return ajax("/api/msg/invent", 'get', {
+          params
+        });
       case "SysMsg":
         return ajax("/api/msg/sys", 'get', {
           params
@@ -1526,6 +1602,9 @@ const ojApi = {
         break;
       case "LikeMsg":
         params.type = 'Like';
+        break;
+      case "InventMsg":
+        params.type = 'Invent';
         break;
       case "SysMsg":
         params.type = 'Sys';

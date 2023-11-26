@@ -199,7 +199,8 @@
                     unreadMessage.reply > 0 ||
                     unreadMessage.like > 0 ||
                     unreadMessage.sys > 0 ||
-                    unreadMessage.mine > 0
+                    unreadMessage.mine > 0 ||
+                    unreadMessage.invent > 0
                   "
                   width="10"
                   height="10"
@@ -230,6 +231,12 @@
                   <span>{{ $t("m.LikeMsg") }}</span>
                   <span class="drop-msg-count" v-if="unreadMessage.like > 0">
                     <MsgSvg :total="unreadMessage.like"></MsgSvg>
+                  </span>
+                </el-dropdown-item>
+                <el-dropdown-item command="/message/invent">
+                  <span>{{ $t("m.InventMsg") }}</span>
+                  <span class="drop-msg-count" v-if="unreadMessage.invent > 0">
+                    <MsgSvg :total="unreadMessage.invent"></MsgSvg>
                   </span>
                 </el-dropdown-item>
                 <el-dropdown-item command="/message/sys">
@@ -282,7 +289,8 @@
                   unreadMessage.reply > 0 ||
                   unreadMessage.like > 0 ||
                   unreadMessage.sys > 0 ||
-                  unreadMessage.mine > 0
+                  unreadMessage.mine > 0 ||
+                  unreadMessage.invent > 0
                 "
                 width="10"
                 height="10"
@@ -326,6 +334,20 @@
                     {{ $t("m.LikeMsg") }}
                     <span class="drop-msg-count" v-if="unreadMessage.like > 0">
                       <MsgSvg :total="unreadMessage.like"></MsgSvg>
+                    </span>
+                  </mu-list-item-title>
+                </mu-list-item-content>
+              </mu-list-item>
+              <mu-divider></mu-divider>
+              <mu-list-item button value="/message/invent">
+                <mu-list-item-content>
+                  <mu-list-item-title>
+                    {{ $t("m.InventMsg") }}
+                    <span
+                      class="drop-msg-count"
+                      v-if="unreadMessage.invent > 0"
+                    >
+                      <MsgSvg :total="unreadMessage.invent"></MsgSvg>
                     </span>
                   </mu-list-item-title>
                 </mu-list-item-content>

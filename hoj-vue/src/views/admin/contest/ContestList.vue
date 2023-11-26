@@ -47,6 +47,9 @@
               <el-option :label="$t('m.Public')" :value="0"></el-option>
               <el-option :label="$t('m.Private')" :value="1"></el-option>
               <el-option :label="$t('m.Protected')" :value="2"></el-option>
+              <el-option :label="$t('m.Official')" :value="3"></el-option>
+              <el-option :label="$t('m.Public_Synchronous')" :value="4"></el-option>
+              <el-option :label="$t('m.Private_Synchronous')" :value="5"></el-option>
             </el-select>
           </span>
           <span>
@@ -80,7 +83,7 @@
             <el-tag type="gray">{{ row.type | parseContestType }}</el-tag>
           </template>
         </vxe-table-column>
-        <vxe-table-column :title="$t('m.Auth')" width="100">
+        <vxe-table-column :title="$t('m.Auth')" width="150">
           <template v-slot="{ row }">
             <el-tooltip
               :content="$t('m.' + CONTEST_TYPE_REVERSE[row.auth].tips)"
@@ -90,7 +93,7 @@
               <el-tag
                 :type="CONTEST_TYPE_REVERSE[row.auth].color"
                 effect="plain"
-              >{{ CONTEST_TYPE_REVERSE[row.auth].name }}</el-tag>
+              >{{ $t('m.' + CONTEST_TYPE_REVERSE[row.auth].name) }}</el-tag>
             </el-tooltip>
           </template>
         </vxe-table-column>

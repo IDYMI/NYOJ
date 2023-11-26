@@ -84,6 +84,10 @@ export default {
     return {
       formProfile: {
         uiLanguage: "",
+        codeLanguage: "",
+        codeSize: "",
+        ideTheme: "",
+        codeTemplate: "",
       },
       btnLoginLoading: false,
       verify: {

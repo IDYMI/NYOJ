@@ -296,7 +296,7 @@ public class ContestManager {
         List<ContestProblemVO> contestProblemList = getContestProblem(cid, isContainsContestEndJudge);
 
         // 是否开启同步赛
-        if (contest.getSynchronous() != null && contest.getSynchronous()) {
+        if (contest.getAuth() == 4 || contest.getAuth() == 5) {
             List<ContestProblemVO> synchronousResultList = synchronousManager.getSynchronousContestProblemList(contest,
                     isContainsContestEndJudge);
 
@@ -636,7 +636,7 @@ public class ContestManager {
         IPage<JudgeVO> newContestJudgeList = new Page<>();
 
         // 是否为同步赛
-        if (contest.getSynchronous() != null && contest.getSynchronous() && !onlyMine) {
+        if ((contest.getAuth() == 4 || contest.getAuth() == 5) && !onlyMine) {
             // 如果不是只有自己的提交
             List<JudgeVO> synchronousResultList = synchronousManager.getSynchronousSubmissionList(contest,
                     isContainsContestEndJudge, searchUsername, displayId, searchStatus);

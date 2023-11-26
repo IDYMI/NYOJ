@@ -7,14 +7,14 @@
  * See http://pajhome.org.uk/crypt/md5 for details.
  * http://www.sharejs.com/codes
  */
- 
+
 /*
  * Configurable variables. You may need to tweak these to be compatible with
  * the server-side, but the defaults work in most cases.
  */
 var hexcase = 0;  /* hex output format. 0 - lowercase; 1 - uppercase        */
 var b64pad  = ""; /* base-64 pad character. "=" for strict RFC compliance   */
- 
+
 /*
  * These are the functions you'll usually want to call
  * They take string arguments and return either hex or base-64 encoded strings
@@ -28,7 +28,7 @@ function b64_hmac_sha512(k, d)
   { return rstr2b64(rstr_hmac_sha512(str2rstr_utf8(k), str2rstr_utf8(d))); }
 function any_hmac_sha512(k, d, e)
   { return rstr2any(rstr_hmac_sha512(str2rstr_utf8(k), str2rstr_utf8(d)), e);}
- 
+
 /*
  * Perform a simple self-test to see if the VM is working
  */
@@ -38,7 +38,7 @@ function sha512_vm_test()
     "ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a" +
     "2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f";
 }
- 
+
 /*
  * Calculate the SHA-512 of a raw string
  */
@@ -46,7 +46,7 @@ function rstr_sha512(s)
 {
   return binb2rstr(binb_sha512(rstr2binb(s), s.length * 8));
 }
- 
+
 /*
  * Calculate the HMAC-SHA-512 of a key and some data (raw strings)
  */
@@ -54,18 +54,18 @@ function rstr_hmac_sha512(key, data)
 {
   var bkey = rstr2binb(key);
   if(bkey.length > 32) bkey = binb_sha512(bkey, key.length * 8);
- 
+
   var ipad = Array(32), opad = Array(32);
   for(var i = 0; i < 32; i++)
   {
     ipad[i] = bkey[i] ^ 0x36363636;
     opad[i] = bkey[i] ^ 0x5C5C5C5C;
   }
- 
+
   var hash = binb_sha512(ipad.concat(rstr2binb(data)), 1024 + data.length * 8);
   return binb2rstr(binb_sha512(opad.concat(hash), 1024 + 512));
 }
- 
+
 /*
  * Convert a raw string to a hex string
  */
@@ -83,7 +83,7 @@ function rstr2hex(input)
   }
   return output;
 }
- 
+
 /*
  * Convert a raw string to a base-64 string
  */
@@ -106,7 +106,7 @@ function rstr2b64(input)
   }
   return output;
 }
- 
+
 /*
  * Convert a raw string to an arbitrary string encoding
  */
@@ -114,14 +114,14 @@ function rstr2any(input, encoding)
 {
   var divisor = encoding.length;
   var i, j, q, x, quotient;
- 
+
   /* Convert to an array of 16-bit big-endian values, forming the dividend */
   var dividend = Array(Math.ceil(input.length / 2));
   for(i = 0; i < dividend.length; i++)
   {
     dividend[i] = (input.charCodeAt(i * 2) << 8) | input.charCodeAt(i * 2 + 1);
   }
- 
+
   /*
    * Repeatedly perform a long division. The binary array forms the dividend,
    * the length of the encoding is the divisor. Once computed, the quotient
@@ -146,15 +146,15 @@ function rstr2any(input, encoding)
     remainders[j] = x;
     dividend = quotient;
   }
- 
+
   /* Convert the remainders to the output string */
   var output = "";
   for(i = remainders.length - 1; i >= 0; i--)
     output += encoding.charAt(remainders[i]);
- 
+
   return output;
 }
- 
+
 /*
  * Encode a string as utf-8.
  * For efficiency, this assumes the input is valid utf-16.
@@ -164,7 +164,7 @@ function str2rstr_utf8(input)
   var output = "";
   var i = -1;
   var x, y;
- 
+
   while(++i < input.length)
   {
     /* Decode utf-16 surrogate pairs */
@@ -175,7 +175,7 @@ function str2rstr_utf8(input)
       x = 0x10000 + ((x & 0x03FF) << 10) + (y & 0x03FF);
       i++;
     }
- 
+
     /* Encode output as utf-8 */
     if(x <= 0x7F)
       output += String.fromCharCode(x);
@@ -194,7 +194,7 @@ function str2rstr_utf8(input)
   }
   return output;
 }
- 
+
 /*
  * Encode a string as utf-16
  */
@@ -206,7 +206,7 @@ function str2rstr_utf16le(input)
                                   (input.charCodeAt(i) >>> 8) & 0xFF);
   return output;
 }
- 
+
 function str2rstr_utf16be(input)
 {
   var output = "";
@@ -215,7 +215,7 @@ function str2rstr_utf16be(input)
                                    input.charCodeAt(i)        & 0xFF);
   return output;
 }
- 
+
 /*
  * Convert a raw string to an array of big-endian words
  * Characters >255 have their high-byte silently ignored.
@@ -229,7 +229,7 @@ function rstr2binb(input)
     output[i>>5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
   return output;
 }
- 
+
 /*
  * Convert an array of big-endian words to a string
  */
@@ -240,7 +240,7 @@ function binb2rstr(input)
     output += String.fromCharCode((input[i>>5] >>> (24 - i % 32)) & 0xFF);
   return output;
 }
- 
+
 /*
  * Calculate the SHA-512 of an array of big-endian dwords, and a bit length
  */
@@ -292,7 +292,7 @@ new int64(0x3c9ebe0a, 0x15c9bebc), new int64(0x431d67c4, -1676669620),
 new int64(0x4cc5d4be, -885112138), new int64(0x597f299c, -60457430),
 new int64(0x5fcb6fab, 0x3ad6faec), new int64(0x6c44198c, 0x4a475817));
   }
- 
+
   //Initial hash values
   var H = new Array(
 new int64(0x6a09e667, -205731576),
@@ -303,7 +303,7 @@ new int64(0x510e527f, -1377402159),
 new int64(-1694144372, 0x2b3e6c1f),
 new int64(0x1f83d9ab, -79577749),
 new int64(0x5be0cd19, 0x137e2179));
- 
+
   var T1 = new int64(0, 0),
     T2 = new int64(0, 0),
     a = new int64(0,0),
@@ -326,11 +326,11 @@ new int64(0x5be0cd19, 0x137e2179));
   var W = new Array(80);
   for(i=0; i<80; i++)
     W[i] = new int64(0, 0);
- 
+
   // append padding to the source string. The format is described in the FIPS.
   x[len >> 5] |= 0x80 << (24 - (len & 0x1f));
   x[((len + 128 >> 10)<< 5) + 31] = len;
- 
+
   for(i = 0; i<x.length; i+=32) //32 dwords is the block size
   {
     int64copy(a, H[0]);
@@ -341,13 +341,13 @@ new int64(0x5be0cd19, 0x137e2179));
     int64copy(f, H[5]);
     int64copy(g, H[6]);
     int64copy(h, H[7]);
- 
+
     for(j=0; j<16; j++)
     {
         W[j].h = x[i + 2*j];
         W[j].l = x[i + 2*j + 1];
     }
- 
+
     for(j=16; j<80; j++)
     {
       //sigma1
@@ -362,37 +362,37 @@ new int64(0x5be0cd19, 0x137e2179));
       int64shr(r3, W[j-15], 7);
       s0.l = r1.l ^ r2.l ^ r3.l;
       s0.h = r1.h ^ r2.h ^ r3.h;
- 
+
       int64add4(W[j], s1, W[j-7], s0, W[j-16]);
     }
- 
+
     for(j = 0; j < 80; j++)
     {
       //Ch
       Ch.l = (e.l & f.l) ^ (~e.l & g.l);
       Ch.h = (e.h & f.h) ^ (~e.h & g.h);
- 
+
       //Sigma1
       int64rrot(r1, e, 14);
       int64rrot(r2, e, 18);
       int64revrrot(r3, e, 9);
       s1.l = r1.l ^ r2.l ^ r3.l;
       s1.h = r1.h ^ r2.h ^ r3.h;
- 
+
       //Sigma0
       int64rrot(r1, a, 28);
       int64revrrot(r2, a, 2);
       int64revrrot(r3, a, 7);
       s0.l = r1.l ^ r2.l ^ r3.l;
       s0.h = r1.h ^ r2.h ^ r3.h;
- 
+
       //Maj
       Maj.l = (a.l & b.l) ^ (a.l & c.l) ^ (b.l & c.l);
       Maj.h = (a.h & b.h) ^ (a.h & c.h) ^ (b.h & c.h);
- 
+
       int64add5(T1, h, s1, Ch, sha512_k[j], W[j]);
       int64add(T2, s0, Maj);
- 
+
       int64copy(h, g);
       int64copy(g, f);
       int64copy(f, e);
@@ -411,7 +411,7 @@ new int64(0x5be0cd19, 0x137e2179));
     int64add(H[6], H[6], g);
     int64add(H[7], H[7], h);
   }
- 
+
   //represent the hash as an array of 32-bit dwords
   var hash = new Array(16);
   for(i=0; i<8; i++)
@@ -421,7 +421,7 @@ new int64(0x5be0cd19, 0x137e2179));
   }
   return hash;
 }
- 
+
 //A constructor for 64-bit numbers
 function int64(h, l)
 {
@@ -429,14 +429,14 @@ function int64(h, l)
   this.l = l;
   //this.toString = int64toString;
 }
- 
+
 //Copies src into dst, assuming both are 64-bit numbers
 function int64copy(dst, src)
 {
   dst.h = src.h;
   dst.l = src.l;
 }
- 
+
 //Right-rotates a 64-bit number by shift
 //Won't handle cases of shift>=32
 //The function revrrot() is for that
@@ -445,7 +445,7 @@ function int64rrot(dst, x, shift)
     dst.l = (x.l >>> shift) | (x.h << (32-shift));
     dst.h = (x.h >>> shift) | (x.l << (32-shift));
 }
- 
+
 //Reverses the dwords of the source and then rotates right by shift.
 //This is equivalent to rotation by 32+shift
 function int64revrrot(dst, x, shift)
@@ -453,7 +453,7 @@ function int64revrrot(dst, x, shift)
     dst.l = (x.h >>> shift) | (x.l << (32-shift));
     dst.h = (x.l >>> shift) | (x.h << (32-shift));
 }
- 
+
 //Bitwise-shifts right a 64-bit number by shift
 //Won't handle shift>=32, but it's never needed in SHA512
 function int64shr(dst, x, shift)
@@ -461,7 +461,7 @@ function int64shr(dst, x, shift)
     dst.l = (x.l >>> shift) | (x.h << (32-shift));
     dst.h = (x.h >>> shift);
 }
- 
+
 //Adds two 64-bit numbers
 //Like the original implementation, does not rely on 32-bit operations
 function int64add(dst, x, y)
@@ -473,7 +473,7 @@ function int64add(dst, x, y)
    dst.l = (w0 & 0xffff) | (w1 << 16);
    dst.h = (w2 & 0xffff) | (w3 << 16);
 }
- 
+
 //Same, except with 4 addends. Works faster than adding them one by one.
 function int64add4(dst, a, b, c, d)
 {
@@ -484,7 +484,7 @@ function int64add4(dst, a, b, c, d)
    dst.l = (w0 & 0xffff) | (w1 << 16);
    dst.h = (w2 & 0xffff) | (w3 << 16);
 }
- 
+
 //Same, except with 5 addends
 function int64add5(dst, a, b, c, d, e)
 {
@@ -503,7 +503,7 @@ function int64add5(dst, a, b, c, d, e)
  * Author: qinshaoxuan qsxuan.com
  * Github: https://github.com/qinshaoxuan/ScrollBoard
  * Demo: https://qinshaoxuan.github.io/ScrollBoard/
- * 
+ *
  */
 
 /**
@@ -512,7 +512,7 @@ function int64add5(dst, a, b, c, d, e)
 const TEST_BACKEND_API = '';
 
 /**
- * 
+ *
  * 提交结果状态值与HOJ的对应转换
  * @value 0 Accepted
  * @value 1 Presentation Error
@@ -560,7 +560,7 @@ function getContestInfo(cid){
         success: function(result) {
             if(result.status == 200){
                 let info = result.data;
-                contestInfo = new ContestInfo(info.id, info.rankShowName, info.problemCount, 
+                contestInfo = new ContestInfo(info.id, info.rankShowName, info.problemCount,
                     info.startTime, info.sealRankTime, info.starUserList, info.balloonColor);
             }else{
                 closeLoading();
@@ -668,7 +668,7 @@ function getRequestParams() {
 function showErrorMessage(title, message){
     $('#myModalTitle').text(title);
     $('#errorMsg').text(message);
-    $('#myModal').modal(); 
+    $('#myModal').modal();
 }
 
 /**
@@ -745,8 +745,8 @@ function PrefixInteger(num, m) {
  */
  function ContestInfo(id, rankShowName, problemCount, startTime, sealRankTime, starUserList, balloonColor) {
     this.id = id;
-    this.rankShowName = rankShowName; 
-    this.problemCount = problemCount; 
+    this.rankShowName = rankShowName;
+    this.problemCount = problemCount;
     this.startTime = startTime;
     this.sealRankTime = sealRankTime;
     this.starUserList = starUserList;
@@ -1046,7 +1046,7 @@ Board.prototype.updateTeamSequence = function() {
 Board.prototype.UpdateOneTeam = function() {
     //得到需要更新的队伍在当前排名中的的位置
     var updateTeamPos = this.nowPos;
-    
+
     // while (updateTeamPos >= 0 && this.teamNextSequence[updateTeamPos].countUnkonwnProblme() < 1)
     //     updateTeamPos--;
     //如果有队伍可更新
@@ -1095,7 +1095,7 @@ Board.prototype.showInitBoard = function() {
     //题目列
     for (var i = 0; i < this.problemList.length; i++) {
         var alphabetId = this.problemList[i];
-        var bodyHTML = "<th width=\"" + problemStatusPer + "%\">" 
+        var bodyHTML = "<th width=\"" + problemStatusPer + "%\">"
 
         var color = this.balloonColor[alphabetId];
         if(color){
@@ -1345,7 +1345,7 @@ Board.prototype.updateTeamStatus = function(team) {
                     rankValue = maxRank;
                     medal = -1;
                 }
-				
+
 
                 if (medal != -1 && t.official == true)
                     $("div[team-id=\"" + t.teamId + "\"]  .rank").addClass(thisBoard.medalStr[medal]);
@@ -1354,7 +1354,7 @@ Board.prototype.updateTeamStatus = function(team) {
                 }
 				if (t.official==true)
                 	$("#team_" + t.teamId + " .rank").html(rankValue);
-				else 
+				else
 					$("#team_" + t.teamId + " .rank").html("*");
 
             }

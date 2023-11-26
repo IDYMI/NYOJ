@@ -184,9 +184,10 @@
         cp.display_id
         from
         (
-            select j.submit_id, j.submit_time, j.status,j.cpid, u.uuid as uid, u.username, u.nickname, u.realname, u.gender, u.school
-            from judge j, user_info u
+            select j.submit_id, j.submit_time, j.status,j.cpid, u.uuid as uid, u.username, u.nickname, us.realname, u.gender, us.school
+            from judge j, user_info u, user_sign us
             where j.cid = #{cid}
+            and us.uid = u.uuid
             and j.uid = u.uuid
             and j.status != -4
             and j.uid not in

@@ -83,6 +83,12 @@ public class UserRolesVO implements Serializable {
     @ApiModelProperty(value = "个人代码模板")
     private String codeTemplate;
 
+    @ApiModelProperty(value = "衣服尺寸")
+    private String clothesSize;
+
+    @ApiModelProperty(value = "联系方式")
+    private String phoneNumber;
+
     @ApiModelProperty(value = "个性签名")
     private String signature;
 

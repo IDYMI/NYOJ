@@ -3,9 +3,9 @@
 <mapper namespace="top.hcode.hoj.mapper.TrainingRecordMapper">
     <select id="getTrainingRecord" resultType="top.hcode.hoj.pojo.vo.TrainingRecordVO">
         SELECT tr.tid,tr.uid,tr.pid,tr.tpid,tr.submit_id,j.status,j.score,j.time as use_time,
-        u.gender,u.realname as realname,u.username,u.avatar,u.school,u.nickname
-        FROM training_record tr,user_info u,judge j
-        WHERE tr.uid = u.uuid
+        u.gender,us.realname as realname,u.username,u.avatar,us.school,u.nickname
+        FROM training_record tr,user_info u,judge j,user_sign us
+        WHERE tr.uid = u.uuid AND u.uuid = us.uid
         AND tr.submit_id = j.submit_id
         AND tr.tid = #{tid}
         AND j.status IN (-3,-2,-1,0,1,2,3,8)

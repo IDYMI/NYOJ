@@ -47,6 +47,17 @@
           <router-view v-if="route_name === 'LikeMsg'"></router-view>
         </transition>
       </el-tab-pane>
+      <el-tab-pane name="InventMsg">
+        <span slot="label">
+          <span>{{ $t('m.InventMsg') }}</span>
+          <span style=" margin-left: 2px;" v-if="unreadMessage.invent > 0">
+            <MsgSvg :total="unreadMessage.invent"></MsgSvg>
+          </span>
+        </span>
+        <transition name="fadeInUp" mode="out-in">
+          <router-view v-if="route_name === 'InventMsg'"></router-view>
+        </transition>
+      </el-tab-pane>
       <el-tab-pane name="SysMsg">
         <span slot="label">
           <span>{{ $t('m.SysMsg') }}</span>
