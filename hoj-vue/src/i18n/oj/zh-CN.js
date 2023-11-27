@@ -158,6 +158,7 @@ export const m = {
   Display_Preference: '显示偏好',
   Usage_Preference: '使用偏好',
   UI_Language: '界面语言',
+  UI_Theme: '界面主题',
   Font_Family: '界面字体',
   Code_FontFamily: '代码字体',
   Code_Language: '代码语言',

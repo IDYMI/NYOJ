@@ -15,7 +15,7 @@ const rootState = {
     visible: false
   },
   websiteConfig: {
-    recordName: '© 2020-2022',
+    recordName: '© 2020-2023',
     projectName: 'NYOJ',
     shortName: 'OJ',
     recordUrl: '#',
@@ -27,6 +27,7 @@ const rootState = {
   registerTimeOut: 60,
   resetTimeOut: 90,
   language: storage.get('Web_Language') || 'zh-CN',
+  theme: storage.get('Web_Theme') || 'Light'
 }
 
 const rootGetters = {
@@ -44,6 +45,9 @@ const rootGetters = {
   },
   'webLanguage'(state) {
     return state.language
+  },
+  'webTheme'(state) {
+    return state.theme
   }
 }
 
@@ -108,6 +112,14 @@ const rootMutations = {
       moment.locale(language);
     }
     storage.set('Web_Language', language)
+  },
+  changeWebTheme(state, {
+    theme
+  }) {
+    if (theme) {
+      state.theme = theme
+    }
+    storage.set('Web_Theme', theme)
   }
 }
 const rootActions = {

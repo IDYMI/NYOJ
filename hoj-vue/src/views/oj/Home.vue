@@ -487,7 +487,8 @@ export default {
         this.$refs.carousel && this.$refs.carousel.activeIndex;
       return (
         activeIndex !== undefined &&
-        item.url === this.carouselImgList[activeIndex].url
+        this.carouselImgList[activeIndex] &&
+        this.carouselImgList[activeIndex].url !== undefined
       );
     },
 
