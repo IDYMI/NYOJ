@@ -7,9 +7,11 @@
           mode="horizontal"
           router
           active-text-color="#2196f3"
-          text-color="#495060"
           class="custom-menu"
         >
+          <router-link to="/home" v-if="mode == 'defalut'">
+            <el-image :src="big_imgUrl" style="width:100%;"></el-image>
+          </router-link>
           <div class="logo">
             <router-link to="/home">
               <el-image style="width: 139px; height: 50px" :src="imgUrl" fit="scale-down"></el-image>
@@ -130,71 +132,74 @@
             </el-menu-item>
           </template>
 
-          <template v-if="!isAuthenticated">
-            <div class="btn-menu">
-              <el-button
-                type="primary"
-                size="medium"
-                round
-                @click="handleBtnClick('Login')"
-              >{{ $t("m.NavBar_Login") }}</el-button>
-              <el-button
-                v-if="websiteConfig.register"
-                size="medium"
-                round
-                @click="handleBtnClick('Register')"
-                style="margin-left: 5px"
-              >{{ $t("m.NavBar_Register") }}</el-button>
-            </div>
-          </template>
-          <template v-else>
-            <el-dropdown
-              class="drop-menu"
-              @command="handleRoute"
-              placement="bottom"
-              trigger="hover"
-            >
-              <span class="el-dropdown-link">
-                {{ userInfo.username }}
-                <i class="el-icon-caret-bottom"></i>
-              </span>
+          <div style="margin-left: auto;">
+            <template v-if="!isAuthenticated">
+              <div class="btn-menu">
+                <el-button
+                  type="primary"
+                  size="medium"
+                  round
+                  @click="handleBtnClick('Login')"
+                >{{ $t("m.NavBar_Login") }}</el-button>
+                <el-button
+                  v-if="websiteConfig.register"
+                  size="medium"
+                  round
+                  @click="handleBtnClick('Register')"
+                  style="margin-left: 5px"
+                >{{ $t("m.NavBar_Register") }}</el-button>
+              </div>
+            </template>
+            <template v-else>
+              <el-dropdown
+                class="drop-menu"
+                @command="handleRoute"
+                placement="bottom"
+                trigger="hover"
+              >
+                <span class="el-dropdown-link">
+                  {{ userInfo.username }}
+                  <i class="el-icon-caret-bottom"></i>
+                </span>
 
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="/user-home">
-                  {{
-                  $t("m.NavBar_UserHome")
-                  }}
-                </el-dropdown-item>
-                <el-dropdown-item command="/setting">
-                  {{
-                  $t("m.NavBar_Setting")
-                  }}
-                </el-dropdown-item>
-                <el-dropdown-item v-if="isAdminRole" command="/admin">
-                  {{
-                  $t("m.NavBar_Management")
-                  }}
-                </el-dropdown-item>
-                <el-dropdown-item divided command="/logout">
-                  {{
-                  $t("m.NavBar_Logout")
-                  }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-            <avatar
-              :username="userInfo.username"
-              :inline="true"
-              :size="30"
-              color="#FFF"
-              :src="avatar"
-              class="drop-avatar"
-            ></avatar>
-            <el-dropdown class="drop-msg" @command="handleRoute" placement="bottom">
-              <span class="el-dropdown-link">
-                <i class="el-icon-message-solid"></i>
-                <svg
-                  v-if="
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="/user-home">
+                    {{
+                    $t("m.NavBar_UserHome")
+                    }}
+                  </el-dropdown-item>
+                  <el-dropdown-item command="/setting">
+                    {{
+                    $t("m.NavBar_Setting")
+                    }}
+                  </el-dropdown-item>
+                  <el-dropdown-item v-if="isAdminRole" command="/admin">
+                    {{
+                    $t("m.NavBar_Management")
+                    }}
+                  </el-dropdown-item>
+                  <div style="display: flex; justify-content: center; align-items: center;">
+                    <el-dropdown-item divided command="/logout">
+                      {{
+                      $t("m.NavBar_Logout")
+                      }}
+                    </el-dropdown-item>
+                  </div>
+                </el-dropdown-menu>
+              </el-dropdown>
+              <avatar
+                :username="userInfo.username"
+                :inline="true"
+                :size="30"
+                color="#FFF"
+                :src="avatar"
+                class="drop-avatar"
+              ></avatar>
+              <el-dropdown class="drop-msg" @command="handleRoute" placement="bottom">
+                <span class="el-dropdown-link">
+                  <i class="el-icon-message-solid"></i>
+                  <svg
+                    v-if="
                     unreadMessage.comment > 0 ||
                     unreadMessage.reply > 0 ||
                     unreadMessage.like > 0 ||
@@ -202,58 +207,59 @@
                     unreadMessage.mine > 0 ||
                     unreadMessage.invent > 0
                   "
-                  width="10"
-                  height="10"
-                  style="
+                    width="10"
+                    height="10"
+                    style="
                     vertical-align: top;
                     margin-left: -11px;
                     margin-top: 3px;
                   "
-                >
-                  <circle cx="5" cy="5" r="5" style="fill: red" />
-                </svg>
-              </span>
+                  >
+                    <circle cx="5" cy="5" r="5" style="fill: red" />
+                  </svg>
+                </span>
 
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="/message/discuss">
-                  <span>{{ $t("m.DiscussMsg") }}</span>
-                  <span class="drop-msg-count" v-if="unreadMessage.comment > 0">
-                    <MsgSvg :total="unreadMessage.comment"></MsgSvg>
-                  </span>
-                </el-dropdown-item>
-                <el-dropdown-item command="/message/reply">
-                  <span>{{ $t("m.ReplyMsg") }}</span>
-                  <span class="drop-msg-count" v-if="unreadMessage.reply > 0">
-                    <MsgSvg :total="unreadMessage.reply"></MsgSvg>
-                  </span>
-                </el-dropdown-item>
-                <el-dropdown-item command="/message/like">
-                  <span>{{ $t("m.LikeMsg") }}</span>
-                  <span class="drop-msg-count" v-if="unreadMessage.like > 0">
-                    <MsgSvg :total="unreadMessage.like"></MsgSvg>
-                  </span>
-                </el-dropdown-item>
-                <el-dropdown-item command="/message/invent">
-                  <span>{{ $t("m.InventMsg") }}</span>
-                  <span class="drop-msg-count" v-if="unreadMessage.invent > 0">
-                    <MsgSvg :total="unreadMessage.invent"></MsgSvg>
-                  </span>
-                </el-dropdown-item>
-                <el-dropdown-item command="/message/sys">
-                  <span>{{ $t("m.SysMsg") }}</span>
-                  <span class="drop-msg-count" v-if="unreadMessage.sys > 0">
-                    <MsgSvg :total="unreadMessage.sys"></MsgSvg>
-                  </span>
-                </el-dropdown-item>
-                <el-dropdown-item command="/message/mine">
-                  <span>{{ $t("m.MineMsg") }}</span>
-                  <span class="drop-msg-count" v-if="unreadMessage.mine > 0">
-                    <MsgSvg :total="unreadMessage.mine"></MsgSvg>
-                  </span>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-          </template>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="/message/discuss">
+                    <span>{{ $t("m.DiscussMsg") }}</span>
+                    <span class="drop-msg-count" v-if="unreadMessage.comment > 0">
+                      <MsgSvg :total="unreadMessage.comment"></MsgSvg>
+                    </span>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="/message/reply">
+                    <span>{{ $t("m.ReplyMsg") }}</span>
+                    <span class="drop-msg-count" v-if="unreadMessage.reply > 0">
+                      <MsgSvg :total="unreadMessage.reply"></MsgSvg>
+                    </span>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="/message/like">
+                    <span>{{ $t("m.LikeMsg") }}</span>
+                    <span class="drop-msg-count" v-if="unreadMessage.like > 0">
+                      <MsgSvg :total="unreadMessage.like"></MsgSvg>
+                    </span>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="/message/invent">
+                    <span>{{ $t("m.InventMsg") }}</span>
+                    <span class="drop-msg-count" v-if="unreadMessage.invent > 0">
+                      <MsgSvg :total="unreadMessage.invent"></MsgSvg>
+                    </span>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="/message/sys">
+                    <span>{{ $t("m.SysMsg") }}</span>
+                    <span class="drop-msg-count" v-if="unreadMessage.sys > 0">
+                      <MsgSvg :total="unreadMessage.sys"></MsgSvg>
+                    </span>
+                  </el-dropdown-item>
+                  <el-dropdown-item command="/message/mine">
+                    <span>{{ $t("m.MineMsg") }}</span>
+                    <span class="drop-msg-count" v-if="unreadMessage.mine > 0">
+                      <MsgSvg :total="unreadMessage.mine"></MsgSvg>
+                    </span>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </template>
+          </div>
         </el-menu>
       </div>
       <!-- <div id="header-hidden" v-show="isScrolled"></div> -->
@@ -575,6 +581,7 @@
                 </mu-list-item-title>
               </mu-list-item>
             </mu-list-item>
+
             <mu-list-item
               v-if="websiteConfig.openPublicDiscussion"
               button
@@ -717,6 +724,7 @@ export default {
       openusermenu: false,
       openmsgmenu: false,
       openSideMenu: "",
+      big_imgUrl: require("@/assets/nyoj-logo.png"),
       imgUrl: require("@/assets/logo.png"),
       avatarStyle:
         "display: inline-flex;width: 30px;height: 30px;border-radius: 50%;align-items: center;justify-content: center;text-align: center;user-select: none;",
@@ -908,7 +916,7 @@ export default {
     width: 80%;
     margin: 0 auto;
     z-index: 2000;
-    background-color: #fff;
+    /* background-color: #fff; */
     box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
   }
 }
@@ -923,7 +931,7 @@ export default {
     width: 100%;
     margin: 0 auto;
     z-index: 2000;
-    background-color: #fff;
+    /* background-color: #fff; */
     box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
   }
 }
@@ -950,8 +958,8 @@ export default {
   bottom: 0px;
   z-index: 1000;
   width: 100%;
-  box-shadow: 00px 0px 00px rgb(255, 255, 255), 0px 0px 10px rgb(255, 255, 255),
-    0px 0px 0px rgb(255, 255, 255), 1px 1px 0px rgb(218, 218, 218);
+  /* box-shadow: 00px 0px 00px rgb(255, 255, 255), 0px 0px 10px rgb(255, 255, 255),
+    0px 0px 0px rgb(255, 255, 255), 1px 1px 0px rgb(218, 218, 218); */
 }
 
 .logo {
@@ -1013,7 +1021,7 @@ export default {
   color: #4e4e4e;
 }
 .el-submenu__title i {
-  color: #495060 !important;
+  color: white !important;
 }
 .el-menu-item {
   padding: 0 13px;

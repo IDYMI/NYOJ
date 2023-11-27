@@ -18,8 +18,6 @@ import top.hcode.hoj.dao.problem.ProblemEntityService;
 import top.hcode.hoj.dao.contest.ContestEntityService;
 import top.hcode.hoj.dao.user.*;
 import top.hcode.hoj.manager.email.EmailManager;
-import top.hcode.hoj.mapper.UserPreferencesMapper;
-import top.hcode.hoj.mapper.UserSignMapper;
 import top.hcode.hoj.pojo.dto.ChangeEmailDTO;
 import top.hcode.hoj.pojo.dto.ChangePasswordDTO;
 import top.hcode.hoj.pojo.dto.CheckUsernameOrEmailDTO;
@@ -63,12 +61,6 @@ public class AccountManager {
 
     @Autowired
     private UserSignEntityService userSignEntityService;
-
-    @Autowired
-    private UserPreferencesMapper userPreferencesMapper;
-
-    @Autowired
-    private UserSignMapper userSignMapper;
 
     @Autowired
     private UserRoleEntityService userRoleEntityService;
@@ -616,6 +608,7 @@ public class AccountManager {
         UpdateWrapper<UserPreferences> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("uid", userRolesVo.getUid())
                 .set("ui_language", userInfoVo.getUiLanguage())
+                .set("ui_theme", userInfoVo.getUiTheme())
                 .set("code_language", userInfoVo.getCodeLanguage())
                 .set("code_size", userInfoVo.getCodeSize())
                 .set("ide_theme", userInfoVo.getIdeTheme())
@@ -623,6 +616,7 @@ public class AccountManager {
 
         boolean isOk = userPreferencesEntityService.saveOrUpdate(new UserPreferences().setUid(userRolesVo.getUid())
                 .setUiLanguage(userInfoVo.getUiLanguage())
+                .setUiTheme(userInfoVo.getUiTheme())
                 .setCodeLanguage(userInfoVo.getCodeLanguage())
                 .setCodeSize(userInfoVo.getCodeSize())
                 .setIdeTheme(userInfoVo.getIdeTheme())

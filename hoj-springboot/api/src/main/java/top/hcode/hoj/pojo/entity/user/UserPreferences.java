@@ -36,6 +36,10 @@ public class UserPreferences implements Serializable {
     private String uiLanguage;
 
     @TableField(updateStrategy = FieldStrategy.IGNORED)
+    @ApiModelProperty(value = "界面风格")
+    private String uiTheme;
+
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     @ApiModelProperty(value = "代码语言")
     private String codeLanguage;
 

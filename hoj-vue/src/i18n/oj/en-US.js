@@ -160,6 +160,7 @@ export const m = {
   Display_Preference: 'Display Preference',
   Usage_Preference: 'Usage Preference',
   UI_Language: 'UI Language',
+  UI_Theme: 'UI Theme',
   Font_Family: 'Font Family',
   Code_FontFamily: 'Code Font Family',
   Code_Language: 'Code Language',

@@ -19,7 +19,7 @@
     <el-row :gutter="30" justify="space-around">
       <el-col :md="10" :xs="24">
         <div class="left">
-          <el-form-item :label="$t('m.UI_Language')" prop="oldPassword">
+          <el-form-item :label="$t('m.UI_Language')">
             <el-select
               :value="findLabelByValue(formProfile.uiLanguage)"
               @change="changeWebLanguage"
@@ -32,6 +32,17 @@
                 :key="item"
                 :value="item.value"
               >{{ item.label }}</el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$t('m.UI_Theme')">
+            <el-select
+              :value="findLabelByValue2(formProfile.uiTheme)"
+              @change="changeWebTheme"
+              class="left-adjust"
+              size="small"
+              style="width: 100%"
+            >
+              <el-option v-for="item in themes" :key="item" :value="item.value">{{ item.label }}</el-option>
             </el-select>
           </el-form-item>
         </div>
@@ -53,7 +64,7 @@
               <el-option v-for="item in languages" :key="item" :value="item">{{ item }}</el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('m.IDE_Theme')" prop="code">
+          <el-form-item :label="$t('m.IDE_Theme')">
             <el-select
               :value="formProfile.ideTheme"
               @change="changeIdeTheme"
@@ -61,14 +72,14 @@
               style="width: 100%"
             >
               <el-option
-                v-for="item in themes"
+                v-for="item in ideThemes"
                 :key="item.label"
                 :label="$t('m.' + item.label)"
                 :value="item.value"
               >{{ $t("m." + item.label) }}</el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('m.Code_Size')" prop="password">
+          <el-form-item :label="$t('m.Code_Size')">
             <el-select
               :value="formProfile.codeSize"
               @change="changeCodeSize"
@@ -209,12 +220,13 @@ export default {
       formProfile: {
         username: "",
         uiLanguage: "",
+        uiTheme: "",
         codeLanguage: "",
         codeSize: "",
         ideTheme: "",
         codeTemplate: "",
       },
-      themes: [
+      ideThemes: [
         { label: "monokai", value: "monokai" },
         { label: "solarized", value: "solarized" },
         { label: "material", value: "material" },
@@ -228,6 +240,10 @@ export default {
       webLanguages: [
         { value: "zh-CN", label: "简体中文" },
         { value: "en-US", label: "English" },
+      ],
+      themes: [
+        { value: "Light", label: "亮色" },
+        { value: "Dark", label: "暗色" },
       ],
     };
   },
@@ -252,16 +268,25 @@ export default {
       const language = this.webLanguages.find((lang) => lang.value === value);
       return language ? language.label : "";
     },
+    findLabelByValue2(value) {
+      // 根据选中的值返回对应的标签
+      const theme = this.themes.find((lang) => lang.value === value);
+      return theme ? theme.label : "";
+    },
     changeWebLanguage(language) {
       // language = language === '简体中文' ? "zh-CN" : "en-US";
       this.$store.commit("changeWebLanguage", { language: language });
       this.formProfile.uiLanguage = language;
     },
+    changeWebTheme(theme) {
+      this.$store.commit("changeWebTheme", { theme: theme });
+      this.formProfile.uiTheme = theme;
+    },
     changeCodeLanguage(codelanguage) {
       this.formProfile.codeLanguage = codelanguage;
     },
-    changeIdeTheme(idetheme) {
-      this.formProfile.ideTheme = idetheme;
+    changeIdeTheme(theme) {
+      this.formProfile.ideTheme = theme;
     },
     changeCodeSize(codesize) {
       this.formProfile.codeSize = codesize;

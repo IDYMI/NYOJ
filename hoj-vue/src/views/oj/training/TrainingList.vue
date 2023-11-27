@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <el-card>
+    <el-card style="width: 100%;">
       <section>
         <span class="find-training">{{ $t('m.Search_Training') }}</span>
         <vxe-input
@@ -54,7 +54,7 @@
       </section>
     </el-card>
 
-    <el-card style="margin-top:2em">
+    <el-card style="margin-top:2em; width: 100%;">
       <vxe-table
         border="inner"
         stripe
@@ -166,6 +166,7 @@
       :pageSize="limit"
       @on-change="filterByPage"
       :current.sync="currentPage"
+      style="margin-left: auto;"
     ></Pagination>
   </el-row>
 </template>

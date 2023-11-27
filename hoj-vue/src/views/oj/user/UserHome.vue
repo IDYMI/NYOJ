@@ -586,7 +586,7 @@ export default {
     left: 50%;
     transform: translate(-50%);
     z-index: 1;
-    margin-top: -110px;
+    margin-top: -85px;
   }
 
   .container1 .recent-login {
@@ -607,7 +607,7 @@ export default {
     left: 50%;
     transform: translate(-50%);
     z-index: 1;
-    margin-top: -4%;
+    margin-top: -7%;
   }
   .container1 .recent-login {
     position: absolute;

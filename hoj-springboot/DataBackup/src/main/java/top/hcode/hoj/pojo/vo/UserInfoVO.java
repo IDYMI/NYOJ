@@ -64,6 +64,9 @@ public class UserInfoVO {
     @ApiModelProperty(value = "界面语言")
     private String uiLanguage;
 
+    @ApiModelProperty(value = "界面风格")
+    private String uiTheme;
+
     @ApiModelProperty(value = "代码语言")
     private String codeLanguage;
 

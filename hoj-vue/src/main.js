@@ -4,7 +4,8 @@ import store from './store'
 import Element from 'element-ui'
 import i18n from '@/i18n'
 
-// import "element-ui/lib/theme-chalk/index.css"
+// 明亮模式
+import "element-ui/lib/theme-chalk/index.css";
 import 'font-awesome/css/font-awesome.min.css'
 import Message from 'vue-m-message'
 import 'vue-m-message/dist/index.css'
@@ -95,27 +96,3 @@ new Vue({
   i18n,
   render: h => h(App)
 }).$mount('#app')
-
-// Vue.prototype.watchCanvs = (width, height, text, classname) => {
-//   let canvas = document.createElement('canvas')
-//   canvas.width = width
-//   canvas.height = height
-//   let context = canvas.getContext('2d')
-//   let text1 = ''
-//   for (let i = 0; i < 30; i++) {
-//     text1 += (' ' + text)
-//   }
-//   for (let i = 0; i < 2000; i++) {
-//     context.rotate((-45 * Math.PI) / 180) // 水印初始偏转角度
-//     context.font = '20px microsoft yahei'
-//     context.fillStyle = 'rgba(0,0,0,0.1)'
-//     context.fillText(text1, -1000, i * 90)
-//     context.rotate((45 * Math.PI) / 180) // 把水印偏转角度调整为原来的，不然他会一直转
-//   }
-
-//   // 生成base64格式的图片路径
-//   let curl = canvas.toDataURL('image/png')
-//   // 将图片作为背景样式插入
-//   classname.style.background =
-//     '#ffffff url(' + curl + ')'
-// }

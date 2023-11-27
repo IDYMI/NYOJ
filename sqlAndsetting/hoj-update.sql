@@ -1287,7 +1287,7 @@ IF NOT EXISTS (
 	  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
 	  `uid` varchar(32) NOT NULL COMMENT '用户id',
 	  `ui_language` varchar(255) DEFAULT NULL COMMENT '界面语言',
-	  `font_family` varchar(255) DEFAULT NULL COMMENT '界面字体',
+	  `ui_theme` varchar(255) DEFAULT NULL COMMENT '界面风格',
 	  `code_language` varchar(255) DEFAULT NULL COMMENT '代码语言',
 	  `code_size` varchar(255) DEFAULT NULL COMMENT '字体大小',
 	  `ide_theme` varchar(255) DEFAULT NULL COMMENT '编译器主题',

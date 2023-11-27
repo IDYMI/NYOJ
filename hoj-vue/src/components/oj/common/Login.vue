@@ -84,10 +84,7 @@ export default {
     return {
       formProfile: {
         uiLanguage: "",
-        codeLanguage: "",
-        codeSize: "",
-        ideTheme: "",
-        codeTemplate: "",
+        uiTheme: "",
       },
       btnLoginLoading: false,
       verify: {
@@ -170,7 +167,12 @@ export default {
               Object.keys(this.formProfile).forEach((element) => {
                 if (profile[element] !== undefined) {
                   this.formProfile[element] = profile[element];
-                  this.autoChangeLanguge(this.formProfile.uiLanguage);
+                  this.$store.commit("changeWebLanguage", {
+                    language: this.formProfile.uiLanguage,
+                  });
+                  this.$store.commit("changeWebTheme", {
+                    theme: this.formProfile.uiTheme,
+                  });
                 }
               });
               mMessage.success(this.$i18n.t("m.Welcome_Back"));
@@ -182,41 +184,6 @@ export default {
           );
         }
       });
-    },
-    autoChangeLanguge(user_lang) {
-      /**
-       * 语言自动转换优先级：配置 > 路径参数 > 本地存储 > 浏览器自动识别
-       */
-
-      if (user_lang) {
-        this.$store.commit("changeWebLanguage", { language: user_lang });
-        // mMessage.success(user_lang);
-        return;
-      }
-
-      let lang = this.$route.query.l;
-      if (lang) {
-        lang = lang.toLowerCase();
-        if (lang == "zh-cn") {
-          this.$store.commit("changeWebLanguage", { language: "zh-CN" });
-        } else {
-          this.$store.commit("changeWebLanguage", { language: "en-US" });
-        }
-        return;
-      }
-
-      lang = storage.get("Web_Language");
-      if (lang) {
-        return;
-      }
-
-      lang = navigator.userLanguage || window.navigator.language;
-      lang = lang.toLowerCase();
-      if (lang == "zh-cn") {
-        this.$store.commit("changeWebLanguage", { language: "zh-CN" });
-      } else {
-        this.$store.commit("changeWebLanguage", { language: "en-US" });
-      }
     },
   },
   computed: {

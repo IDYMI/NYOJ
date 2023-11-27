@@ -1,11 +1,9 @@
 <template>
   <div class="main">
+    <interpolator :dark="getTheme()" :watch-system="true" />
     <div id="app">
       <el-backtop :right="10"></el-backtop>
 
-      <router-link to="/home">
-        <el-image :src="imgUrl" class="centered-image"></el-image>
-      </router-link>
       <div v-if="!isAdminView" class="full-height flex-column">
         <NavBar></NavBar>
         <div id="oj-content">
@@ -55,24 +53,7 @@
                   <a @click="goRoute('/introduction')">{{ $t("m.NavBar_About") }}</a>
                 </p>
               </el-col>
-              <!-- <el-col
-              :md="6"
-              :xs="24"
-            >
-              <h1>{{ $t('m.Development') }}</h1>
-              <p class="mb-1">
-                <a
-                  href="https://gitee.com/himitzh0730/hoj"
-                  target="_blank"
-                >{{
-                  $t('m.Open_Source')
-                }}</a>
-              </p>
-              <p class="mb-1"><a @click="goRoute('/#')">API</a></p>
-            </el-col>
-            <el-col class="hr-none">
-              <el-divider></el-divider>
-              </el-col>-->
+              <!-- <el-col :md="6" :xs="24"></el-col> -->
             </el-row>
           </div>
           <div class="mundb-footer">
@@ -103,6 +84,21 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </span>
+            <span style="margin-left: 10px">
+              <el-dropdown @command="changeWebTheme" placement="top">
+                <span class="el-dropdown-link">
+                  <i
+                    class="fa fa-globe"
+                    aria-hidden="true"
+                  >{{ this.webTheme == "Light" ? "亮色" : "暗色" }}</i>
+                  <i class="el-icon-arrow-up el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="Light">亮色</el-dropdown-item>
+                  <el-dropdown-item command="Dark">暗色</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </span>
           </div>
         </footer>
       </div>
@@ -123,20 +119,28 @@ import { mapActions, mapState, mapGetters } from "vuex";
 import { LOGO, MOTTO } from "@/common/logo";
 import storage from "@/common/storage";
 import utils from "@/common/utils";
+
+import interpolator from "vue-apply-darkmode/src/vue-apply-darkmode.vue";
+
 export default {
   name: "app-content",
   components: {
     NavBar,
+    interpolator,
   },
   data() {
     return {
-      imgUrl: require("@/assets/nyoj-logo.png"),
       isAdminView: false,
       showFooter: true,
+      isDark: true,
     };
   },
   methods: {
     ...mapActions(["changeDomTitle", "getWebsiteConfig"]),
+    getTheme() {
+      let theme = this.webTheme;
+      return theme == "Dark";
+    },
     goRoute(path) {
       this.$router.push({
         path: path,
@@ -144,6 +148,9 @@ export default {
     },
     changeWebLanguage(language) {
       this.$store.commit("changeWebLanguage", { language: language });
+    },
+    changeWebTheme(theme) {
+      this.$store.commit("changeWebTheme", { theme: theme });
     },
     autoChangeLanguge() {
       /**
@@ -229,7 +236,7 @@ export default {
   },
   computed: {
     ...mapState(["websiteConfig"]),
-    ...mapGetters(["webLanguage", "token", "isAuthenticated"]),
+    ...mapGetters(["webLanguage", "webTheme", "token", "isAuthenticated"]),
   },
   created: function () {
     this.$nextTick(function () {
@@ -546,13 +553,6 @@ a:hover {
   background: #66b1ff !important;
 }
 @media screen and (min-width: 1050px) {
-  .centered-image {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 80%;
-    height: auto;
-  }
   #oj-content {
     width: 86%;
     margin: 0 auto;
@@ -568,13 +568,6 @@ a:hover {
   max-width: 100%;
 }
 @media screen and (max-width: 1050px) {
-  .centered-image {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    height: auto;
-  }
   #oj-content {
     width: 100%;
     margin: 0 auto;
@@ -899,7 +892,18 @@ footer h1 {
   word-wrap: break-word;
   word-break: break-word;
   line-height: 1.8;
+  color: black;
 }
+.markdown-body li {
+  color: black;
+}
+.markdown-body {
+  color: black;
+}
+.el-input__inner {
+  color: black;
+}
+
 .hljs {
   padding: 0 !important;
 }
