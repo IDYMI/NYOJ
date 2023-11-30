@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import top.hcode.hoj.common.exception.StatusFailException;
+import top.hcode.hoj.dao.discussion.DiscussionEntityService;
+import top.hcode.hoj.dao.problem.ProblemEntityService;
 import top.hcode.hoj.dao.user.UserInfoEntityService;
 import top.hcode.hoj.dao.user.UserPreferencesEntityService;
 import top.hcode.hoj.dao.user.UserRecordEntityService;
@@ -22,6 +24,8 @@ import top.hcode.hoj.dao.user.UserSignEntityService;
 import top.hcode.hoj.dao.user.UserRoleEntityService;
 import top.hcode.hoj.manager.msg.AdminNoticeManager;
 import top.hcode.hoj.pojo.dto.AdminEditUserDTO;
+import top.hcode.hoj.pojo.entity.discussion.Discussion;
+import top.hcode.hoj.pojo.entity.problem.Problem;
 import top.hcode.hoj.pojo.entity.user.UserInfo;
 import top.hcode.hoj.pojo.entity.user.UserPreferences;
 import top.hcode.hoj.pojo.entity.user.UserSign;
@@ -49,6 +53,12 @@ public class AdminUserManager {
 
     @Autowired
     private UserInfoEntityService userInfoEntityService;
+
+    @Autowired
+    private DiscussionEntityService discussionEntityService;
+
+    @Autowired
+    private ProblemEntityService problemEntityService;
 
     @Autowired
     private AdminNoticeManager adminNoticeManager;
@@ -167,6 +177,16 @@ public class AdminUserManager {
     }
 
     public void deleteUser(List<String> deleteUserIdList) throws StatusFailException {
+
+        // 删除对应评论和对应题目
+        for (String deleteUser : deleteUserIdList) {
+            UpdateWrapper<Discussion> discussionUpdateWrapper = new UpdateWrapper<Discussion>().eq("uid", deleteUser);
+            discussionEntityService.remove(discussionUpdateWrapper);
+            UserRolesVO userRolesVO = userRoleEntityService.getUserRoles(deleteUs   er, null);
+            UpdateWrapper<Problem> problemUpdateWrapper = new UpdateWrapper<Problem>().eq("author", userRolesVO.getUsername());
+            problemEntityService.remove(problemUpdateWrapper);
+        }
+
         boolean isOk = userInfoEntityService.removeByIds(deleteUserIdList);
         if (!isOk) {
             throw new StatusFailException("删除失败！");
