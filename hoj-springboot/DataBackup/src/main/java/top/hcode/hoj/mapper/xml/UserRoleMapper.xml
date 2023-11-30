@@ -125,10 +125,14 @@
 
     <!-- 主查询 -->
     <select id="getAdminUserList" resultMap="map_UserRolesList" resultType="list">
-        SELECT u.* FROM user_info u, (SELECT DISTINCT ur.uid AS uid FROM user_role ur
-        WHERE ur.role_id=1000 OR ur.role_id=1001 OR ur.role_id=1008) t
+        SELECT up.ui_language as ui_language, up.ui_theme as ui_theme, up.code_language as code_language, up.code_size as code_size, up.ide_theme as ide_theme, up.code_template as code_template,
+        us.realname as realname, us.school as school, us.course as course, us.number as number, us.clothes_size as clothes_size, us.phone_number as phone_number,
+        u.* FROM user_info u
+        LEFT JOIN user_preferences up ON u.uuid=up.uid
+        LEFT JOIN user_sign us ON u.uuid=us.uid
+        LEFT JOIN user_role ur ON (ur.role_id=1000 OR ur.role_id=1001 OR ur.role_id=1008)
         <where>
-         t.uid = u.uuid
+         ur.uid = u.uuid
             <if test="keyword!=null and keyword!=''">
                 and (u.username like CONCAT("%",#{keyword},"%")
                 or u.email like CONCAT("%",#{keyword},"%")
