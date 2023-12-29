@@ -292,6 +292,11 @@ export const m = {
   Create_Problem: '创建题目',
   Change_Judge_Mode: '注意：切换判题模式后可能会改变评测的逻辑！',
   Add_Tag_Error: '不要添加已有的标签！',
+  The_title_role: '不合规范（不能含有‘$’）',
+  Title_Required: '标题不能为空',
+  Input_Description_Required: '输入描述不能为空',
+  Output_Description_Required: '输出描述不能为空',
+  Rule_NotDeal: '不符合题目的规范',
 
   Upload_Testcase_Successfully: '上传评测数据成功',
   Upload_Testcase_Failed: '上传评测数据失败',

@@ -683,7 +683,7 @@ public class ContestManager {
         return newContestJudgeList;
     }
 
-    public IPage getContestStatistic(ContestStatisticDTO ContestStatisticDto)
+    public IPage getStatisticRank(ContestStatisticDTO ContestStatisticDto)
             throws StatusFailException, StatusForbiddenException {
         String cids = ContestStatisticDto.getCids();
         Integer currentPage = ContestStatisticDto.getCurrentPage();
@@ -696,7 +696,7 @@ public class ContestManager {
         if (limit == null || limit < 1)
             limit = 30;
 
-        return contestRankManager.getContestStatisticPage(cids, currentPage, limit, keyword);
+        return contestRankManager.getStatisticRankPage(cids, currentPage, limit, keyword);
     }
 
     public IPage getContestRank(ContestRankDTO contestRankDto) throws StatusFailException, StatusForbiddenException {

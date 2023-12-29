@@ -200,16 +200,16 @@ public class ContestController {
     }
 
     /**
-     * @MethodName getContestStatistic
+     * @MethodName getStatisticRank
      * @Description 获得系列比赛做题记录以用来排名
      * @Return
      * @Since
      */
-    @PostMapping("/get-contest-statistic")
+    @PostMapping("/get-statistic-rank")
     @RequiresAuthentication
-    public CommonResult<IPage> getContestStatistic(@RequestBody ContestStatisticDTO ContestStatisticDto) {
+    public CommonResult<IPage> getStatisticRank(@RequestBody ContestStatisticDTO ContestStatisticDto) {
 
-        return contestService.getContestStatistic(ContestStatisticDto);
+        return contestService.getStatisticRank(ContestStatisticDto);
     }
 
     /**

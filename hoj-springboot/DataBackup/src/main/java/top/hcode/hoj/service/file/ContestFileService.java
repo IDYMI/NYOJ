@@ -14,12 +14,15 @@ import java.io.IOException;
 
 public interface ContestFileService {
 
-    public void downloadContestRank(Long cid, Boolean forceRefresh, Boolean removeStar,
-            Boolean isContainsAfterContestJudge,
-            HttpServletResponse response) throws StatusFailException, IOException, StatusForbiddenException;
+        public void downloadContestRank(Long cid, Boolean forceRefresh, Boolean removeStar,
+                        Boolean isContainsAfterContestJudge, HttpServletResponse response)
+                        throws StatusFailException, IOException, StatusForbiddenException;
 
-    public void downloadContestACSubmission(Long cid, Boolean excludeAdmin, String splitType,
-            HttpServletResponse response) throws StatusFailException, StatusForbiddenException;
+        public void downloadStatisticRank(String cids, HttpServletResponse response)
+                        throws StatusFailException, IOException, StatusForbiddenException;
 
-    public void downloadContestPrintText(Long id, HttpServletResponse response) throws StatusForbiddenException;
+        public void downloadContestACSubmission(Long cid, Boolean excludeAdmin, String splitType,
+                        HttpServletResponse response) throws StatusFailException, StatusForbiddenException;
+
+        public void downloadContestPrintText(Long id, HttpServletResponse response) throws StatusForbiddenException;
 }

@@ -56,7 +56,7 @@ public interface ContestService {
 
         public CommonResult<IPage> getSynchronousRank(ContestRankDTO contestRankDto);
 
-        public CommonResult<IPage> getContestStatistic(ContestStatisticDTO ContestStatisticDto);
+        public CommonResult<IPage> getStatisticRank(ContestStatisticDTO ContestStatisticDto);
 
         public CommonResult<IPage<AnnouncementVO>> getContestAnnouncement(Long cid, Integer limit, Integer currentPage);
 

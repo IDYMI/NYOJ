@@ -549,16 +549,35 @@ export default {
       this.pushRouter();
     },
     addRemoteOJProblem() {
+      const validateField = (field, fieldName) => {
+        if (!field) {
+          myMessage.error(
+            this.$i18n.t(`m.${fieldName}`) + " " + this.$i18n.t("m.is_required")
+          );
+          return true;
+        } else {
+          let value = field;
+          if (value && value.indexOf("$") !== -1) {
+            myMessage.error(
+              this.$i18n.t(`m.${fieldName}`) +
+                " " +
+                this.$i18n.t("m.The_title_role")
+            );
+            return true;
+          }
+        }
+        return false;
+      };
+
       if (!this.otherOJProblemId) {
         myMessage.error(this.$i18n.t("m.Problem_ID_is_required"));
         return;
       }
 
-      if (!this.displayId && this.query.contestId) {
-        myMessage.error(
-          this.$i18n.t("m.The_Problem_Display_ID_in_the_Contest_is_required")
-        );
-        return;
+      if (this.query.contestId) {
+        if (validateField(this.displayId, "Contest_Display_ID")) {
+          return;
+        }
       }
 
       this.addRemoteOJproblemLoading = true;

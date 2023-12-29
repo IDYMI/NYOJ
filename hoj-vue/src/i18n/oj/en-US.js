@@ -387,7 +387,7 @@ export const m = {
 
   // /views/oj/rank/ACMRank.vue
   NEW_ACM_Ranklist: 'NEW ACM Ranklist',
-  ACM_RankStatistic: 'ACM Rank Statistic Ranlist',
+  ACM_StatisticRank: 'ACM Rank Statistic Ranlist',
   ACM_Ranklist: 'ACM Ranklist',
   User: 'User',
   Nickname: 'Nickname',
@@ -479,6 +479,7 @@ export const m = {
   Admin_Print: 'Admin Print',
   Admin_Sign: 'Admin Sign',
   Admin_Helper: 'AC Info',
+  Admin_Moss: 'Admin Moss',
   ScrollBoard: 'Scroll Board',
   Register_contest_successfully: 'Register contest successfully',
   Please_check_the_contest_announcement_for_details: 'Please check the contest announcement for details',
@@ -595,6 +596,16 @@ export const m = {
   Delete_Sign_Tips: 'Are you sure you want to refuse this sign?',
   The_number_of_signs_selected_cannot_be_empty: 'The number of signs selected cannot be empty',
   Enter_Signkeyword: 'Enter keyword (Chinese or English TeamName or Username)',
+
+  // /views/oj/contest/children/ContestAdminMoss.vue
+  Plagiarism_Percentage: 'Plagiarism Percentage',
+  Plagiarism_Length: 'Plagiarism Length',
+  Plagiarism_Language: 'Language',
+  Plagiarism_Time: 'Time',
+  Plagiarism_LanguageList:'Language List',
+  Add_Moss: 'Add Moss',
+  Enter_Mosskeyword: 'Enter keyword (Username)',
+  Moss_View: 'View',
 
   // /views/oj/contest/children/ContestRejudgeAdmin.vue
   Contest_Rejudge: 'Contest Rejudge',

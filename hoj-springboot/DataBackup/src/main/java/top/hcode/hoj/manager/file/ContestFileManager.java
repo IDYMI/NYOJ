@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import top.hcode.hoj.common.exception.StatusFailException;
 import top.hcode.hoj.common.exception.StatusForbiddenException;
 import top.hcode.hoj.common.result.ResultStatus;
@@ -23,11 +22,13 @@ import top.hcode.hoj.dao.contest.ContestProblemEntityService;
 import top.hcode.hoj.dao.judge.JudgeEntityService;
 import top.hcode.hoj.dao.user.UserInfoEntityService;
 import top.hcode.hoj.manager.oj.ContestCalculateRankManager;
+import top.hcode.hoj.manager.oj.ContestRankManager;
 import top.hcode.hoj.pojo.entity.contest.Contest;
 import top.hcode.hoj.pojo.entity.contest.ContestPrint;
 import top.hcode.hoj.pojo.entity.contest.ContestProblem;
 import top.hcode.hoj.pojo.entity.judge.Judge;
 import top.hcode.hoj.pojo.vo.ACMContestRankVO;
+import top.hcode.hoj.pojo.vo.ACMStatisticContestVO;
 import top.hcode.hoj.pojo.vo.OIContestRankVO;
 import top.hcode.hoj.shiro.AccountProfile;
 import top.hcode.hoj.utils.Constants;
@@ -73,6 +74,9 @@ public class ContestFileManager {
 
     @Autowired
     private ContestCalculateRankManager contestCalculateRankManager;
+
+    @Autowired
+    private ContestRankManager contestRankManager;
 
     @Autowired
     private ContestValidator contestValidator;
@@ -154,6 +158,33 @@ public class ContestFileManager {
         }
     }
 
+    public void downloadStatisticRank(String cids, HttpServletResponse response)
+            throws IOException, StatusFailException, StatusForbiddenException {
+
+        List<ACMStatisticContestVO> acmStatisticContestRankVOList = contestRankManager.getStatisticRankList(cids, null,
+                true);
+        List<Long> contestID = contestRankManager.getSplitedCid(cids);
+
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+
+        // 这里URLEncoder.encode可以防止中文乱码
+        String fileName = encodeFileName("contest_" + cids + "_rank");
+
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+        response.setHeader("Content-Type", "application/xlsx");
+
+        EasyExcel.write(response.getOutputStream())
+                .head(fileEntityService.getStatisticRankExcelHead(contestID))
+                .sheet("rank")
+                .doWrite(fileEntityService.changeStatisticContestRankToExcelRowList(acmStatisticContestRankVOList,
+                        contestID));
+    }
+
+    private String encodeFileName(String fileName) throws UnsupportedEncodingException {
+        return URLEncoder.encode(fileName, "UTF-8").replace("+", "%20").replace("%2B", "+");
+    }
+
     public void downloadContestACSubmission(Long cid, Boolean excludeAdmin, String splitType,
             HttpServletResponse response) throws StatusForbiddenException, StatusFailException {
 
@@ -180,22 +211,9 @@ public class ContestFileManager {
 
         boolean isACM = contest.getType().intValue() == Constants.Contest.TYPE_ACM.getCode();
 
-        QueryWrapper<ContestProblem> contestProblemQueryWrapper = new QueryWrapper<>();
-        contestProblemQueryWrapper.eq("cid", contest.getId());
-        List<ContestProblem> contestProblemList = contestProblemEntityService.list(contestProblemQueryWrapper);
+        List<Judge> judgeList = getJudgeList(isACM, cid, excludeAdmin);
 
-        List<String> AdminUidList = userInfoEntityService.getNowContestAdmin(contest.getId());
-
-        QueryWrapper<Judge> judgeQueryWrapper = new QueryWrapper<>();
-        judgeQueryWrapper.eq("cid", cid)
-                .eq(isACM, "status", Constants.Judge.STATUS_ACCEPTED.getStatus())
-                .isNotNull(!isACM, "score") // OI模式取得分不为null的
-                .between("submit_time", contest.getStartTime(), contest.getEndTime())
-                .ne(excludeAdmin, "uid", contest.getUid()) // 排除比赛创建者和root
-                .notIn(excludeAdmin && AdminUidList.size() > 0, "uid", AdminUidList)
-                .orderByDesc("submit_time");
-
-        List<Judge> judgeList = judgeEntityService.list(judgeQueryWrapper);
+        List<ContestProblem> contestProblemList = getContestProblemList(cid);
 
         // 打包文件的临时路径 -> username为文件夹名字
         String tmpFilesDir = Constants.File.CONTEST_AC_SUBMISSION_TMP_FOLDER.getPath() + File.separator
@@ -216,11 +234,16 @@ public class ContestFileManager {
                 cpIdMap.put(contestProblem.getId(), contestProblem.getDisplayId());
             }
 
+            HashMap<Long, String> displayTitleMap = new HashMap<>();
+            for (ContestProblem contestProblem : contestProblemList) {
+                displayTitleMap.put(contestProblem.getId(), contestProblem.getDisplayTitle());
+            }
+
             for (String username : usernameList) {
                 // 对于每个用户生成对应的文件夹
                 String userDir = tmpFilesDir + File.separator + username;
                 FileUtil.mkdir(userDir);
-                // 如果是ACM模式，则所有提交代码都要生成，如果同一题多次提交AC，加上提交时间秒后缀 ---> A_(666666).c
+                // 如果是ACM模式，则所有提交代码都要生成，如果同一题多次提交AC，加上提交提交Id---> A_(666666).c
                 // 如果是OI模式就生成最近一次提交即可，且带上分数 ---> A_(666666)_100.c
                 List<Judge> userSubmissionList = judgeList.stream()
                         .filter(judge -> judge.getUsername().equals(username)) // 过滤出对应用户的提交
@@ -228,22 +251,22 @@ public class ContestFileManager {
                         .collect(Collectors.toList());
 
                 for (Judge judge : userSubmissionList) {
-                    String filePath = userDir + File.separator + cpIdMap.getOrDefault(judge.getCpid(), "null");
+                    String filePath = userDir + File.separator + cpIdMap.getOrDefault(judge.getCpid(), "null") + "_"
+                            + displayTitleMap.getOrDefault(judge.getCpid(), "null");
 
                     // OI模式只取最后一次提交
                     if (!isACM) {
                         String key = judge.getUsername() + "_" + judge.getPid();
                         if (!recordMap.containsKey(key)) {
-                            filePath += "_" + judge.getScore() + "_("
-                                    + threadLocalTime.get().format(judge.getSubmitTime()) + ")."
+                            filePath += "_(" + judge.getSubmitId().toString() + ")"
+                                    + judge.getScore() + "."
                                     + languageToFileSuffix(judge.getLanguage().toLowerCase());
                             FileWriter fileWriter = new FileWriter(filePath);
                             fileWriter.write(judge.getCode());
                             recordMap.put(key, true);
                         }
-
                     } else {
-                        filePath += "_(" + threadLocalTime.get().format(judge.getSubmitTime()) + ")."
+                        filePath += "_(" + judge.getSubmitId().toString() + ")."
                                 + languageToFileSuffix(judge.getLanguage().toLowerCase());
                         FileWriter fileWriter = new FileWriter(filePath);
                         fileWriter.write(judge.getCode());
@@ -260,7 +283,7 @@ public class ContestFileManager {
                 // 对于每题目生成对应的文件夹
                 String problemDir = tmpFilesDir + File.separator + contestProblem.getDisplayId();
                 FileUtil.mkdir(problemDir);
-                // 如果是ACM模式，则所有提交代码都要生成，如果同一题多次提交AC，加上提交时间秒后缀 ---> username_(666666).c
+                // 如果是ACM模式，则所有提交代码都要生成，如果同一题多次提交AC，加上提交提交Id ---> username_(666666).c
                 // 如果是OI模式就生成最近一次提交即可，且带上分数 ---> username_(666666)_100.c
                 List<Judge> problemSubmissionList = judgeList.stream()
                         .filter(judge -> judge.getPid().equals(contestProblem.getPid())) // 过滤出对应题目的提交
@@ -290,7 +313,7 @@ public class ContestFileManager {
             }
         }
 
-        String zipFileName = "contest_" + contest.getId() + "_" + System.currentTimeMillis() + ".zip";
+        String zipFileName = "contest_" + contest.getId() + ".zip";
         String zipPath = Constants.File.CONTEST_AC_SUBMISSION_TMP_FOLDER.getPath() + File.separator + zipFileName;
         ZipUtil.zip(tmpFilesDir, zipPath);
         // 将zip变成io流返回给前端
@@ -342,6 +365,30 @@ public class ContestFileManager {
         FileUtil.del(tmpFilesDir);
         FileUtil.del(zipPath);
 
+    }
+
+    public List<Judge> getJudgeList(Boolean isACM, Long cid, Boolean excludeAdmin) {
+        Contest contest = contestEntityService.getById(cid);
+        List<String> AdminUidList = userInfoEntityService.getNowContestAdmin(contest.getId());
+        QueryWrapper<Judge> judgeQueryWrapper = new QueryWrapper<>();
+        judgeQueryWrapper.eq("cid", cid)
+                .eq(isACM, "status", Constants.Judge.STATUS_ACCEPTED.getStatus())
+                .isNotNull(!isACM, "score") // OI模式取得分不为null的
+                .between("submit_time", contest.getStartTime(), contest.getEndTime())
+                .ne(excludeAdmin, "uid", contest.getUid()) // 排除比赛创建者和root
+                .notIn(excludeAdmin && AdminUidList.size() > 0, "uid", AdminUidList)
+                .orderByDesc("submit_time");
+
+        List<Judge> judgeList = judgeEntityService.list(judgeQueryWrapper);
+
+        return judgeList;
+    }
+
+    public List<ContestProblem> getContestProblemList(Long cid) {
+        QueryWrapper<ContestProblem> contestProblemQueryWrapper = new QueryWrapper<>();
+        contestProblemQueryWrapper.eq("cid", cid);
+        List<ContestProblem> contestProblemList = contestProblemEntityService.list(contestProblemQueryWrapper);
+        return contestProblemList;
     }
 
     public void downloadContestPrintText(Long id, HttpServletResponse response) throws StatusForbiddenException {
@@ -419,37 +466,29 @@ public class ContestFileManager {
         }
     }
 
-    private static final ThreadLocal<SimpleDateFormat> threadLocalTime = new ThreadLocal<SimpleDateFormat>() {
+    public final ThreadLocal<SimpleDateFormat> threadLocalTime = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
             return new SimpleDateFormat("yyyyMMddHHmmss");
         }
     };
 
-    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+    public <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
-    private static String languageToFileSuffix(String language) {
+    public String languageToFileSuffix(String language) {
+        // 统一转化为小写
+        language = language.toLowerCase();
 
-        List<String> CLang = Arrays.asList("c", "gcc", "clang");
-        List<String> CPPLang = Arrays.asList("c++", "g++", "clang++");
+        List<String> CPPLang = Arrays.asList("c++", "c", "g++", "gcc", "clang++", "clang");
         List<String> PythonLang = Arrays.asList("python", "pypy");
+        List<String> CsLang = Arrays.asList("c#", "csharp");
 
         for (String lang : CPPLang) {
             if (language.contains(lang)) {
                 return "cpp";
-            }
-        }
-
-        if (language.contains("c#")) {
-            return "cs";
-        }
-
-        for (String lang : CLang) {
-            if (language.contains(lang)) {
-                return "c";
             }
         }
 
@@ -459,16 +498,87 @@ public class ContestFileManager {
             }
         }
 
+        for (String lang : CsLang) {
+            if (language.contains(lang)) {
+                return "cs";
+            }
+        }
+
         if (language.contains("javascript")) {
             return "js";
         }
 
+        if (language.contains("pascal")) {
+            return "pas";
+        }
+
+        if (language.contains("haskell")) {
+            return "hs";
+        }
+
+        if (language.contains("fortran")) {
+            return "f";
+        }
+
+        if (language.contains("perl")) {
+            return "pl";
+        }
+
+        if (language.contains("matlab")) {
+            return "m";
+        }
+
+        if (language.contains("prolog")) {
+            return "pl";
+        }
+
+        if (language.contains("modula2")) {
+            return "mod";
+        }
+
+        if (language.contains("a8086")) {
+            return "asm";
+        }
+
+        // 语言和文件后缀相同
         if (language.contains("java")) {
             return "java";
         }
 
-        if (language.contains("pascal")) {
-            return "pas";
+        if (language.contains("ada")) {
+            return "ada";
+        }
+
+        if (language.contains("ml")) {
+            return "ml";
+        }
+
+        if (language.contains("lisp")) {
+            return "lisp";
+        }
+
+        if (language.contains("schema")) {
+            return "schema";
+        }
+
+        if (language.contains("vhdl")) {
+            return "vhdl";
+        }
+
+        if (language.contains("mips")) {
+            return "mips";
+        }
+
+        if (language.contains("spice")) {
+            return "spice";
+        }
+
+        if (language.contains("vb")) {
+            return "vb";
+        }
+
+        if (language.contains("plsql")) {
+            return "plsql";
         }
 
         if (language.contains("go")) {

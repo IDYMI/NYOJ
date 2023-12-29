@@ -182,7 +182,7 @@ public class AdminUserManager {
         for (String deleteUser : deleteUserIdList) {
             UpdateWrapper<Discussion> discussionUpdateWrapper = new UpdateWrapper<Discussion>().eq("uid", deleteUser);
             discussionEntityService.remove(discussionUpdateWrapper);
-            UserRolesVO userRolesVO = userRoleEntityService.getUserRoles(deleteUs   er, null);
+            UserRolesVO userRolesVO = userRoleEntityService.getUserRoles(deleteUser, null);
             UpdateWrapper<Problem> problemUpdateWrapper = new UpdateWrapper<Problem>().eq("author", userRolesVO.getUsername());
             problemEntityService.remove(problemUpdateWrapper);
         }

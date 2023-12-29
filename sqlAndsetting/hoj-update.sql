@@ -1352,3 +1352,92 @@ CALL Add_contest_sign ;
 
 DROP PROCEDURE Add_contest_sign;
 
+
+/*
+* 增加查重的查重表
+
+*/
+DROP PROCEDURE
+IF EXISTS Add_contest_moss;
+DELIMITER $$
+
+CREATE PROCEDURE Add_contest_moss ()
+BEGIN
+
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		information_schema.`COLUMNS`
+	WHERE
+		table_name = 'contest_moss'
+) THEN
+	CREATE TABLE `contest_moss` (
+	  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+	  `cid` bigint(20) unsigned DEFAULT NULL COMMENT '比赛id',
+	  `html` varchar(255) DEFAULT NULL COMMENT '查重预览页',
+	  `username1` varchar(100) DEFAULT NULL COMMENT '用户名',
+	  `uid1` varchar(32) DEFAULT NULL COMMENT '用户id',
+	  `percent1` bigint(20) DEFAULT NULL COMMENT '重复片段占代码总长度百分比',
+	  `username2` varchar(100) DEFAULT NULL COMMENT '用户名',
+	  `uid2` varchar(32) DEFAULT NULL COMMENT '用户id',
+	  `percent2` bigint(20) DEFAULT NULL COMMENT '重复片段占代码总长度百分比',
+	  `length` bigint DEFAULT NULL COMMENT '重复片段长度',
+	  `href` varchar(255) DEFAULT NULL COMMENT '查重详情页',
+	  `language` varchar(255) DEFAULT NULL COMMENT '查重语言',
+	  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+	  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP,
+	  PRIMARY KEY (`id`),
+	  KEY `cid` (`cid`),
+	  CONSTRAINT `contest_moss_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `contest` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+END
+IF ; END$$
+
+DELIMITER ;
+CALL Add_contest_moss ;
+
+DROP PROCEDURE Add_contest_moss;
+
+/*
+* 增加查重的结果表
+
+*/
+DROP PROCEDURE
+IF EXISTS Add_contest_moss_result;
+DELIMITER $$
+
+CREATE PROCEDURE Add_contest_moss_result ()
+BEGIN
+
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		information_schema.`COLUMNS`
+	WHERE
+		table_name = 'contest_moss_result'
+) THEN
+	CREATE TABLE `contest_moss_result` (
+	  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+	  `cid` bigint(20) unsigned DEFAULT NULL COMMENT '比赛id',
+	  `href` varchar(255) DEFAULT NULL COMMENT '查重详情页',
+	  `col1` varchar(255) DEFAULT NULL COMMENT '重复片段行数位置列表',
+	  `icon1` longtext DEFAULT NULL COMMENT '重复率按键列表',
+	  `code1` longtext DEFAULT NULL COMMENT '代码',
+	  `col2` varchar(255) DEFAULT NULL COMMENT '重复片段行数位置列表',
+	  `icon2` longtext DEFAULT NULL COMMENT '重复率按键列表',
+	  `code2` longtext DEFAULT NULL COMMENT '代码',
+	  `gmt_create` datetime DEFAULT CURRENT_TIMESTAMP,
+	  `gmt_modified` datetime DEFAULT CURRENT_TIMESTAMP,
+	  PRIMARY KEY (`id`),
+	  KEY `cid` (`cid`),
+	  CONSTRAINT `contest_moss_result_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `contest` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+END
+IF ; END$$
+
+DELIMITER ;
+CALL Add_contest_moss_result ;
+
+DROP PROCEDURE Add_contest_moss_result;

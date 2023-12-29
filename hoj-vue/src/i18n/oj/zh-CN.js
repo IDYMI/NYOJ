@@ -389,7 +389,7 @@ export const m = {
   // /views/oj/rank/ACMRank.vue
   NEW_ACM_Ranklist: '新生 ACM 排行榜',
   ACM_Ranklist: 'ACM 排行榜',
-  ACM_RankStatistic: 'ACM 系列比赛排行榜',
+  ACM_StatisticRank: 'ACM 系列比赛排行榜',
   User: '用户',
   Nickname: '昵称',
   Signature: '个性简介',
@@ -480,6 +480,7 @@ export const m = {
   Admin_Print: '管理打印',
   Admin_Sign: '管理报名',
   Admin_Helper: 'AC助手',
+  Admin_Moss: 'Moss 查重',
   ScrollBoard: '滚榜',
   Register_contest_successfully: '比赛报名成功',
   Please_check_the_contest_announcement_for_details: '具体内容请查看比赛公告',
@@ -596,6 +597,16 @@ export const m = {
   Delete_Sign_Tips: '你确定要拒绝该报名吗？',
   The_number_of_signs_selected_cannot_be_empty: '选择的报名不能为空',
   Enter_Signkeyword: '输入关键词 （队伍中文/英文名称，用户名）',
+
+  // /views/oj/contest/children/ContestAdminMoss.vue
+  Plagiarism_Percentage: '占原代码段的百分比',
+  Plagiarism_Length: '相似代码的长度',
+  Plagiarism_Language: '语言',
+  Plagiarism_Time: '时间',
+  Plagiarism_LanguageList:'查重语言列表',
+  Add_Moss: '提交查重',
+  Enter_Mosskeyword: '输入关键词 （用户名）',
+  Moss_View: '查看',
 
   // /views/oj/contest/children/ContestRejudgeAdmin.vue
   Contest_Rejudge: '比赛重新测评',

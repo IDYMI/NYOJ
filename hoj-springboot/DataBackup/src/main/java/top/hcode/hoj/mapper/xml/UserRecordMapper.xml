@@ -4,8 +4,8 @@
     <select id="getACMRankList" resultType="top.hcode.hoj.pojo.vo.ACMRankVO" useCache="true">
         SELECT u.uuid as uid,u.nickname,u.username,left(u.signature,100) as signature,u.avatar,
         u.title_name,u.title_color,
-        (SELECT COUNT( DISTINCT pid ) FROM judge WHERE status = 0 and uid = u.uuid) AS ac,
-        (SELECT COUNT( pid ) FROM judge WHERE uid=u.uuid) AS total
+        (SELECT COUNT( DISTINCT pid ) FROM user_acproblem WHERE uid = u.uuid) AS ac,
+        (SELECT COUNT(uid) FROM judge WHERE uid=u.uuid) AS total
         FROM user_info u
         <where>
             u.status = 0
@@ -22,8 +22,8 @@
     <select id="getNewACMRankList" resultType="top.hcode.hoj.pojo.vo.ACMRankVO" useCache="true">
         SELECT u.uuid as uid,u.nickname,u.username,left(u.signature,100) as signature,u.avatar,
         u.title_name,u.title_color,
-        (SELECT COUNT( DISTINCT pid ) FROM judge WHERE status = 0 and uid = u.uuid) AS ac,
-        (SELECT COUNT( pid ) FROM judge WHERE uid=u.uuid) AS total
+        (SELECT COUNT( DISTINCT pid ) FROM user_acproblem WHERE uid = u.uuid) AS ac,
+        (SELECT COUNT(uid) FROM judge WHERE uid=u.uuid) AS total
         FROM user_info u
         <where>
             u.status = 0 and u.gmt_create > CONVERT_TZ(DATE_FORMAT(CONCAT(YEAR(NOW()), '-06-01 00:00:00'), '%Y-%m-%d %H:%i:%s'), '+00:00', '+08:00')
