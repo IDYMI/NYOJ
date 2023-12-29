@@ -523,24 +523,6 @@
             <router-view v-if="route_name === 'ContestPrint'"></router-view>
           </transition>
         </el-tab-pane>
-
-        <el-tab-pane
-          name="ContestACInfo"
-          lazy
-          :disabled="contestMenuDisabled"
-          v-if="showAdminHelper"
-        >
-          <span slot="label">
-            <i class="el-icon-s-help" aria-hidden="true"></i>
-            &nbsp;{{
-            $t("m.Admin_Helper")
-            }}
-          </span>
-          <transition name="el-zoom-in-bottom">
-            <router-view v-if="route_name === 'ContestACInfo'"></router-view>
-          </transition>
-        </el-tab-pane>
-
         <el-tab-pane
           name="ContestAdminPrint"
           lazy
@@ -576,6 +558,22 @@
         </el-tab-pane>
 
         <el-tab-pane
+          name="ContestACInfo"
+          lazy
+          :disabled="contestMenuDisabled"
+          v-if="showAdminHelper"
+        >
+          <span slot="label">
+            <i class="el-icon-s-help" aria-hidden="true"></i>
+            &nbsp;{{
+            $t("m.Admin_Helper")
+            }}
+          </span>
+          <transition name="el-zoom-in-bottom">
+            <router-view v-if="route_name === 'ContestACInfo'"></router-view>
+          </transition>
+        </el-tab-pane>
+        <el-tab-pane
           name="ContestRejudgeAdmin"
           lazy
           :disabled="contestMenuDisabled"
@@ -589,6 +587,23 @@
           </span>
           <transition name="el-zoom-in-bottom">
             <router-view v-if="route_name === 'ContestRejudgeAdmin'"></router-view>
+          </transition>
+        </el-tab-pane>
+
+        <el-tab-pane
+          name="ContestAdminMoss"
+          lazy
+          :disabled="contestMenuDisabled"
+          v-if="isContestAdmin"
+        >
+          <span slot="label">
+            <i class="el-icon-connection"></i>
+            &nbsp;{{
+            $t("m.Admin_Moss")
+            }}
+          </span>
+          <transition name="el-zoom-in-bottom">
+            <router-view v-if="route_name === 'ContestAdminMoss'"></router-view>
           </transition>
         </el-tab-pane>
 
@@ -723,6 +738,9 @@ export default {
     }
     if (this.route_name == "ContestSubmissionDetails") {
       this.route_name = "ContestSubmissionList";
+    }
+    if (this.route_name == "ContestAdminMossDetails") {
+      this.route_name = "ContestAdminMoss";
     }
     this.CONTEST_TYPE_REVERSE = Object.assign({}, CONTEST_TYPE_REVERSE);
     this.CONTEST_STATUS = Object.assign({}, CONTEST_STATUS);
@@ -1042,6 +1060,8 @@ export default {
         this.route_name = "ContestProblemList";
       } else if (this.route_name == "ContestSubmissionDetails") {
         this.route_name = "ContestSubmissionList";
+      } else if (this.route_name == "ContestAdminMossDetails") {
+        this.route_name = "ContestAdminMoss";
       }
       this.contestID = newVal.params.contestID;
       this.changeDomTitle({ title: this.contest.title });

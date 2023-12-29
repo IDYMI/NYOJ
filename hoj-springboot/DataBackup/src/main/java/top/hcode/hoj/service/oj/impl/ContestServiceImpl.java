@@ -165,9 +165,9 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public CommonResult<IPage> getContestStatistic(ContestStatisticDTO ContestStatisticDto) {
+    public CommonResult<IPage> getStatisticRank(ContestStatisticDTO ContestStatisticDto) {
         try {
-            return CommonResult.successResponse(contestManager.getContestStatistic(ContestStatisticDto));
+            return CommonResult.successResponse(contestManager.getStatisticRank(ContestStatisticDto));
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         } catch (StatusForbiddenException e) {

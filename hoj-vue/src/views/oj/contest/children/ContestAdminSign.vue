@@ -19,7 +19,7 @@
             size="large"
             @search-click="filterByKeyword"
             @keyup.enter.native="filterByKeyword"
-            style="width: 350px;"
+            style="width: 320px;"
           ></vxe-input>
         </span>
         <span>

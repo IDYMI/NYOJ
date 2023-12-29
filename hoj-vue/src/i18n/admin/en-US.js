@@ -293,6 +293,11 @@ export const m = {
   Create_Problem: 'Create Problem',
   Change_Judge_Mode: 'Note: switching the judgment mode may change the evaluation logic!',
   Add_Tag_Error: 'The tag has been added, please do not add it repeatedly!',
+  The_title_role: 'is not in compliance (cannot contain $).',
+  Title_Required: 'The Title is required',
+  Input_Description_Required: 'Input Description is required',
+  Output_Description_Required: 'Output Description is required',
+  Rule_NotDeal: 'Not Deal Rules',
 
   Upload_Testcase_Successfully: 'Upload Testcase Successfully',
   Upload_Testcase_Failed: 'Upload Testcase Failed',

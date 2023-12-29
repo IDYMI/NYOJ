@@ -35,6 +35,13 @@ public class ContestFileController {
         contestFileService.downloadContestRank(cid, forceRefresh, removeStar, isContainsAfterContestJudge, response);
     }
 
+    @GetMapping("/download-statistic-rank")
+    @RequiresAuthentication
+    public void downloadStatisticRank(@RequestParam("cids") String cids, HttpServletResponse response)
+            throws StatusFailException, IOException, StatusForbiddenException {
+        contestFileService.downloadStatisticRank(cids, response);
+    }
+
     @GetMapping("/download-contest-ac-submission")
     @RequiresAuthentication
     public void downloadContestACSubmission(@RequestParam("cid") Long cid,

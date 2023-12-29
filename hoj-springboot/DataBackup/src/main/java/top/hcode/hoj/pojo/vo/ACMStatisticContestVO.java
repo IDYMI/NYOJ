@@ -13,7 +13,7 @@ import java.util.HashMap;
  */
 @Data
 @Accessors(chain = true)
-public class ACMContestStatisticVO {
+public class ACMStatisticContestVO {
 
     @ApiModelProperty(value = "排名,排名为-1则为打星队伍")
     private Integer rank;

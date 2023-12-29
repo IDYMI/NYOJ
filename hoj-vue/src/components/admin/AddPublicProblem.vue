@@ -105,12 +105,34 @@ export default {
         });
     },
     handleAddProblem(id, problemId) {
+      const validateField = (field, fieldName) => {
+        if (!field) {
+          myMessage.error(
+            this.$i18n.t(`m.${fieldName}`) + " " + this.$i18n.t("m.is_required")
+          );
+          return true;
+        } else {
+          let value = field;
+          if (value && value.indexOf("$") !== -1) {
+            myMessage.error(
+              this.$i18n.t(`m.${fieldName}`) +
+                " " +
+                this.$i18n.t("m.The_title_role")
+            );
+            return true;
+          }
+        }
+        return false;
+      };
       if (this.contestID) {
         this.$prompt(
           this.$i18n.t("m.Enter_The_Problem_Display_ID_in_the_Contest"),
           "Tips"
         ).then(
           ({ value }) => {
+            if (validateField(value, "Contest_Display_ID")) {
+              return;
+            }
             let data = {
               pid: id,
               cid: this.contestID,

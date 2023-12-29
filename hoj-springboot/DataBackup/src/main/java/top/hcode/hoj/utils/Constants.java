@@ -1,5 +1,9 @@
 package top.hcode.hoj.utils;
 
+import java.util.Random;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @Date: 2021/1/1 13:00
@@ -91,6 +95,21 @@ public class Constants {
 
         public String getMode() {
             return mode;
+        }
+    }
+
+    public enum MossUser {
+        UserId(Arrays.asList("835454623", "514297045", "613190915", "781494531"));
+
+        private final List<String> userIdList;
+
+        MossUser(List<String> userIdList) {
+            this.userIdList = userIdList;
+        }
+
+        public String getMode() {
+            int randomIndex = new Random().nextInt(userIdList.size());
+            return userIdList.get(randomIndex);
         }
     }
 

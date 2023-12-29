@@ -5,7 +5,7 @@
         <div slot="header">
           <ul class="nav-list">
             <li>
-              <span class="panel-title-acm">{{ $t("m.ACM_RankStatistic") }}</span>
+              <span class="panel-title-acm">{{ $t("m.ACM_StatisticRank") }}</span>
             </li>
           </ul>
         </div>
@@ -15,13 +15,13 @@
               <el-input
                 :placeholder="$t('m.Contest_Rank_Search_Placeholder')"
                 v-model="keyword"
-                @keyup.enter.native="getContestStatisticData(page)"
+                @keyup.enter.native="getStatisticRankData(page)"
               >
                 <el-button
                   slot="append"
                   icon="el-icon-search"
                   class="search-btn"
-                  @click="getContestStatisticData(page)"
+                  @click="getStatisticRankData(page)"
                 ></el-button>
               </el-input>
             </div>
@@ -146,13 +146,6 @@
                 </div>
               </template>
             </vxe-table-column>
-            <vxe-table-column
-              field="realname"
-              min-width="96"
-              :title="$t('m.RealName')"
-              show-overflow
-              v-if="isContestAdmin"
-            ></vxe-table-column>
             <vxe-table-column field="rating" :title="$t('m.AC')" min-width="60">
               <template v-slot="{ row }">
                 <span>{{ row.ac }}</span>
@@ -205,8 +198,8 @@
           :page-size.sync="limit"
           :page-sizes="[10, 30, 50, 100, 300, 500]"
           :current.sync="page"
-          @on-change="getContestStatisticData"
-          @on-page-size-change="getContestStatisticData(1)"
+          @on-change="getStatisticRankData"
+          @on-page-size-change="getStatisticRankData(1)"
           :layout="'prev, pager, next, sizes'"
         ></Pagination>
       </el-card>
@@ -242,7 +235,7 @@ export default {
     };
   },
   mounted() {
-    this.getContestStatisticData(1);
+    this.getStatisticRankData(1);
     this.getContestCids();
   },
   methods: {
@@ -251,14 +244,14 @@ export default {
     getContestCids() {
       this.contestCids = this.$route.params.cids.split("+");
     },
-    getContestStatisticData(page = 1) {
+    getStatisticRankData(page = 1) {
       let data = {
         currentPage: page,
         limit: this.limit,
         cids: this.cids,
         keyword: this.keyword == null ? null : this.keyword.trim(),
       };
-      api.getContestStatistic(data).then((res) => {
+      api.getStatisticRank(data).then((res) => {
         this.total = res.data.data.total;
         this.applyToTable(res.data.data.records);
       });
@@ -348,13 +341,8 @@ export default {
       return time.secondFormat(totalTime);
     },
     downloadRankCSV() {
-      utils.downloadFile(
-        `/api/file/download-contest-rank?cid=${
-          this.$route.params.contestID
-        }&forceRefresh=${this.forceUpdate ? true : false}&containEnd=${
-          this.isContainsAfterContestJudge
-        }`
-      );
+      const cids = this.$route.params.cids.replace(/\+/g, "%2B");
+      utils.downloadFile(`/api/file/download-statistic-rank?cids=${cids}`);
     },
   },
   computed: {
@@ -381,6 +369,12 @@ export default {
   /* justify-content: center;
   align-items: center; */
   list-style: none;
+}
+
+.panel-title-acm {
+  font-size: 2em;
+  font-weight: 500;
+  line-height: 30px;
 }
 
 .nav-list li {

@@ -4,7 +4,13 @@
       <div slot="header">
         <span class="panel-title home-title">{{ title }}</span>
       </div>
-      <el-form ref="form" :model="problem" :rules="rules" label-position="top" label-width="70px">
+      <el-form
+        ref="problem"
+        :model="problem"
+        :rules="rules"
+        label-position="top"
+        label-width="70px"
+      >
         <el-row :gutter="20">
           <el-col :span="24">
             <el-form-item prop="problemId" :label="$t('m.Problem_Display_ID')" required>
@@ -103,12 +109,12 @@
 
         <el-row :gutter="20">
           <el-col :span="24">
-            <el-form-item prop="input_description" :label="$t('m.Input')" required>
+            <el-form-item prop="input" :label="$t('m.Input')" required>
               <Editor :value.sync="problem.input"></Editor>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item prop="output_description" :label="$t('m.Output')" required>
+            <el-form-item prop="output" :label="$t('m.Output')" required>
               <Editor :value.sync="problem.output"></Editor>
             </el-form-item>
           </el-col>
@@ -672,22 +678,42 @@ export default {
     Editor,
   },
   data() {
+    const checkTitleFormat = (rule, value, callback) => {
+      // 使用正则表达式检查是否包含 '$' 字符
+      if (value && value.indexOf("$") !== -1) {
+        callback(
+          new Error(
+            this.$i18n.t("m.Title") + " " + this.$i18n.t("m.The_title_role")
+          )
+        );
+      } else {
+        callback();
+      }
+    };
     return {
       problemLastId: "",
       rules: {
-        title: {
+        title: [
+          {
+            required: true,
+            message: this.$i18n.t("m.Title_Required"),
+            trigger: "blur",
+          },
+          {
+            validator: checkTitleFormat, // 使用自定义验证规则
+            trigger: "blur",
+            message:
+              this.$i18n.t("m.Title") + " " + this.$i18n.t("m.The_title_role"),
+          },
+        ],
+        input: {
           required: true,
-          message: "Title is required",
+          message: this.$i18n.t("m.Input_Description_Required"),
           trigger: "blur",
         },
-        input_description: {
+        output: {
           required: true,
-          message: "Input Description is required",
-          trigger: "blur",
-        },
-        output_description: {
-          required: true,
-          message: "Output Description is required",
+          message: this.$i18n.t("m.Output_Description_Required"),
           trigger: "blur",
         },
       },
@@ -1321,375 +1347,411 @@ export default {
       });
     },
     submit() {
-      if (!this.problem.problemId) {
-        myMessage.error(
-          this.$i18n.t("m.Problem_Display_ID") +
-            " " +
-            this.$i18n.t("m.is_required")
-        );
-        return;
-      }
-
-      if (this.contestID) {
-        if (!this.contestProblem.displayId) {
+      const validateField = (field, fieldName) => {
+        if (!field) {
           myMessage.error(
-            this.$i18n.t("m.Contest_Display_ID") +
-              " " +
-              this.$i18n.t("m.is_required")
+            this.$i18n.t(`m.${fieldName}`) + " " + this.$i18n.t("m.is_required")
           );
-          return;
-        }
-        if (!this.contestProblem.displayTitle) {
-          myMessage.error(
-            this.$i18n.t("m.Contest_Display_Title") +
-              " " +
-              this.$i18n.t("m.is_required")
-          );
-          return;
-        }
-      }
-
-      if (
-        this.problem.isFileIO &&
-        (!this.problem.ioReadFileName || !this.problem.ioWriteFileName)
-      ) {
-        myMessage.error(
-          this.$i18n.t(
-            "m.When_the_read_write_mode_is_File_IO_the_input_file_name_or_output_file_name_cannot_be_empty"
-          )
-        );
-        return;
-      }
-
-      // // 不强制校验题目样例不能为空
-      // if (!this.problem.examples.length && !this.problem.isRemote) {
-      //   myMessage.error(
-      //     this.$i18n.t('m.Problem_Examples') +
-      //       ' ' +
-      //       this.$i18n.t('m.is_required')
-      //   );
-      //   return;
-      // }
-
-      if (!this.problem.isRemote) {
-        // 选择手动输入
-        if (!this.problem.isUploadCase) {
-          if (!this.problemSamples.length) {
+          return true;
+        } else {
+          let value = field;
+          if (value && value.indexOf("$") !== -1) {
             myMessage.error(
-              this.$i18n.t("m.Judge_Samples") +
+              this.$i18n.t(`m.${fieldName}`) +
                 " " +
-                this.$i18n.t("m.is_required")
+                this.$i18n.t("m.The_title_role")
             );
+            return true;
+          }
+        }
+        return false;
+      };
+
+      // 添加检测是否符合 rules 规范
+      this.$refs["problem"].validate((valid) => {
+        if (!valid) {
+          myMessage.error(this.$i18n.t("m.Rule_NotDeal"));
+          return;
+        }
+
+        if (!this.problem.problemId) {
+          myMessage.error(
+            this.$i18n.t("m.Problem_Display_ID") +
+              " " +
+              this.$i18n.t("m.is_required")
+          );
+          return;
+        }
+
+        // 符合规范
+        if (this.contestID) {
+          if (
+            validateField(this.contestProblem.displayId, "Contest_Display_ID")
+          ) {
             return;
           }
 
-          for (let sample of this.problemSamples) {
-            if (!sample.input && !sample.output) {
+          if (
+            validateField(
+              this.contestProblem.displayTitle,
+              "Contest_Display_Title"
+            )
+          ) {
+            return;
+          }
+        }
+
+        if (
+          this.problem.isFileIO &&
+          (!this.problem.ioReadFileName || !this.problem.ioWriteFileName)
+        ) {
+          myMessage.error(
+            this.$i18n.t(
+              "m.When_the_read_write_mode_is_File_IO_the_input_file_name_or_output_file_name_cannot_be_empty"
+            )
+          );
+          return;
+        }
+
+        // // 不强制校验题目样例不能为空
+        // if (!this.problem.examples.length && !this.problem.isRemote) {
+        //   myMessage.error(
+        //     this.$i18n.t('m.Problem_Examples') +
+        //       ' ' +
+        //       this.$i18n.t('m.is_required')
+        //   );
+        //   return;
+        // }
+
+        if (!this.problem.isRemote) {
+          // 选择手动输入
+          if (!this.problem.isUploadCase) {
+            if (!this.problemSamples.length) {
               myMessage.error(
-                this.$i18n.t("m.Sample_Input") +
-                  " or " +
-                  this.$i18n.t("m.Sample_Output") +
+                this.$i18n.t("m.Judge_Samples") +
                   " " +
                   this.$i18n.t("m.is_required")
               );
               return;
             }
-          }
 
-          // 同时是oi题目，则对应的每个测试样例的io得分不能为空或小于0
-          if (this.problem.type == 1) {
-            for (let i = 0; i < this.problemSamples.length; i++) {
-              if (this.problemSamples[i].score == "") {
+            for (let sample of this.problemSamples) {
+              if (!sample.input && !sample.output) {
                 myMessage.error(
-                  this.$i18n.t("m.Problem_Sample") +
-                    this.problemSamples[i].index +
+                  this.$i18n.t("m.Sample_Input") +
+                    " or " +
+                    this.$i18n.t("m.Sample_Output") +
                     " " +
-                    this.$i18n.t("m.Score_must_be_an_integer")
+                    this.$i18n.t("m.is_required")
                 );
                 return;
               }
-              try {
-                if (parseInt(this.problemSamples[i].score) < 0) {
+            }
+
+            // 同时是oi题目，则对应的每个测试样例的io得分不能为空或小于0
+            if (this.problem.type == 1) {
+              for (let i = 0; i < this.problemSamples.length; i++) {
+                if (this.problemSamples[i].score == "") {
                   myMessage.error(
                     this.$i18n.t("m.Problem_Sample") +
                       this.problemSamples[i].index +
                       " " +
-                      this.$i18n.t("m.Score_must_be_greater_than_or_equal_to_0")
+                      this.$i18n.t("m.Score_must_be_an_integer")
                   );
                   return;
                 }
-              } catch (e) {
-                myMessage.error(this.$i18n.t("m.Score_must_be_an_integer"));
-                return;
-              }
-              if (
-                (this.problem.judgeCaseMode ==
-                  this.JUDGE_CASE_MODE.SUBTASK_LOWEST ||
-                  this.problem.judgeCaseMode ==
-                    this.JUDGE_CASE_MODE.SUBTASK_AVERAGE) &&
-                this.problemSamples[i].groupNum == ""
-              ) {
-                myMessage.error(
-                  this.$i18n.t("m.Problem_Sample") +
-                    this.problemSamples[i].index +
-                    "：" +
-                    this.$i18n.t(
-                      "m.Non_Default_Judge_Case_Mode_And_Group_Num_IS_NULL"
-                    )
-                );
-                return;
+                try {
+                  if (parseInt(this.problemSamples[i].score) < 0) {
+                    myMessage.error(
+                      this.$i18n.t("m.Problem_Sample") +
+                        this.problemSamples[i].index +
+                        " " +
+                        this.$i18n.t(
+                          "m.Score_must_be_greater_than_or_equal_to_0"
+                        )
+                    );
+                    return;
+                  }
+                } catch (e) {
+                  myMessage.error(this.$i18n.t("m.Score_must_be_an_integer"));
+                  return;
+                }
+                if (
+                  (this.problem.judgeCaseMode ==
+                    this.JUDGE_CASE_MODE.SUBTASK_LOWEST ||
+                    this.problem.judgeCaseMode ==
+                      this.JUDGE_CASE_MODE.SUBTASK_AVERAGE) &&
+                  this.problemSamples[i].groupNum == ""
+                ) {
+                  myMessage.error(
+                    this.$i18n.t("m.Problem_Sample") +
+                      this.problemSamples[i].index +
+                      "：" +
+                      this.$i18n.t(
+                        "m.Non_Default_Judge_Case_Mode_And_Group_Num_IS_NULL"
+                      )
+                  );
+                  return;
+                }
               }
             }
-          }
-        } else {
-          // 选择上传文件
-          // 两种情况：create模式是需要校验是否上传成功了，edit模式获取题目数据已经默认为true了，若是edit又重新上传数据，需要校验
-          if (!this.testCaseUploaded) {
-            this.error.testCase =
-              this.$i18n.t("m.Judge_Samples") +
-              " " +
-              this.$i18n.t("m.is_required");
-            myMessage.error(this.error.testCase);
-            return;
-          }
+          } else {
+            // 选择上传文件
+            // 两种情况：create模式是需要校验是否上传成功了，edit模式获取题目数据已经默认为true了，若是edit又重新上传数据，需要校验
+            if (!this.testCaseUploaded) {
+              this.error.testCase =
+                this.$i18n.t("m.Judge_Samples") +
+                " " +
+                this.$i18n.t("m.is_required");
+              myMessage.error(this.error.testCase);
+              return;
+            }
 
-          // 如果是oi题目，需要检查上传的数据的得分
-          if (this.problem.type == 1) {
-            let problemSamples = this.problem.testCaseScore;
-            for (let i = 0; i < problemSamples.length; i++) {
-              if (problemSamples[i].score == "") {
-                myMessage.error(
-                  this.$i18n.t("m.Problem_Sample") +
-                    (i + 1) +
-                    " " +
-                    this.$i18n.t("m.Score_must_be_an_integer")
-                );
-                return;
-              }
-              try {
-                if (parseInt(problemSamples[i].score) < 0) {
+            // 如果是oi题目，需要检查上传的数据的得分
+            if (this.problem.type == 1) {
+              let problemSamples = this.problem.testCaseScore;
+              for (let i = 0; i < problemSamples.length; i++) {
+                if (problemSamples[i].score == "") {
                   myMessage.error(
                     this.$i18n.t("m.Problem_Sample") +
                       (i + 1) +
                       " " +
-                      this.$i18n.t("m.Score_must_be_greater_than_or_equal_to_0")
+                      this.$i18n.t("m.Score_must_be_an_integer")
                   );
                   return;
                 }
-              } catch (e) {
-                myMessage.error(this.$i18n.t("m.Score_must_be_an_integer"));
-                return;
-              }
-              if (
-                (this.problem.judgeCaseMode ==
-                  this.JUDGE_CASE_MODE.SUBTASK_LOWEST ||
-                  this.problem.judgeCaseMode ==
-                    this.JUDGE_CASE_MODE.SUBTASK_AVERAGE) &&
-                problemSamples[i].groupNum == ""
-              ) {
-                myMessage.error(
-                  this.$i18n.t("m.Problem_Sample") +
-                    (i + 1) +
-                    "：" +
-                    this.$i18n.t(
-                      "m.Non_Default_Judge_Case_Mode_And_Group_Num_IS_NULL"
-                    )
-                );
-                return;
+                try {
+                  if (parseInt(problemSamples[i].score) < 0) {
+                    myMessage.error(
+                      this.$i18n.t("m.Problem_Sample") +
+                        (i + 1) +
+                        " " +
+                        this.$i18n.t(
+                          "m.Score_must_be_greater_than_or_equal_to_0"
+                        )
+                    );
+                    return;
+                  }
+                } catch (e) {
+                  myMessage.error(this.$i18n.t("m.Score_must_be_an_integer"));
+                  return;
+                }
+                if (
+                  (this.problem.judgeCaseMode ==
+                    this.JUDGE_CASE_MODE.SUBTASK_LOWEST ||
+                    this.problem.judgeCaseMode ==
+                      this.JUDGE_CASE_MODE.SUBTASK_AVERAGE) &&
+                  problemSamples[i].groupNum == ""
+                ) {
+                  myMessage.error(
+                    this.$i18n.t("m.Problem_Sample") +
+                      (i + 1) +
+                      "：" +
+                      this.$i18n.t(
+                        "m.Non_Default_Judge_Case_Mode_And_Group_Num_IS_NULL"
+                      )
+                  );
+                  return;
+                }
               }
             }
           }
         }
-      }
-      // 运行题目标签为空
-      // if (!this.problemTags.length) {
-      //   this.error.tags =
-      //     this.$i18n.t('m.Tags') + ' ' + this.$i18n.t('m.is_required');
-      //   myMessage.error(this.error.tags);
-      //   return;
-      // }
-      let isChangeModeCode =
-        this.spjRecord.spjLanguage != this.problem.spjLanguage ||
-        this.spjRecord.spjCode != this.problem.spjCode;
-      if (!this.problem.isRemote) {
-        if (this.problem.judgeMode != "default") {
-          if (!this.problem.spjCode) {
-            this.error.spj =
-              this.$i18n.t("m.Spj_Or_Interactive_Code") +
-              " " +
-              this.$i18n.t("m.is_required");
-            myMessage.error(this.error.spj);
-          } else if (!this.problem.spjCompileOk && isChangeModeCode) {
-            this.error.spj = this.$i18n.t(
-              "m.Spj_Or_Interactive_Code_not_Compile_Success"
-            );
-          }
-          if (this.error.spj) {
-            myMessage.error(this.error.spj);
-            return;
+        // 运行题目标签为空
+        // if (!this.problemTags.length) {
+        //   this.error.tags =
+        //     this.$i18n.t('m.Tags') + ' ' + this.$i18n.t('m.is_required');
+        //   myMessage.error(this.error.tags);
+        //   return;
+        // }
+        let isChangeModeCode =
+          this.spjRecord.spjLanguage != this.problem.spjLanguage ||
+          this.spjRecord.spjCode != this.problem.spjCode;
+        if (!this.problem.isRemote) {
+          if (this.problem.judgeMode != "default") {
+            if (!this.problem.spjCode) {
+              this.error.spj =
+                this.$i18n.t("m.Spj_Or_Interactive_Code") +
+                " " +
+                this.$i18n.t("m.is_required");
+              myMessage.error(this.error.spj);
+            } else if (!this.problem.spjCompileOk && isChangeModeCode) {
+              this.error.spj = this.$i18n.t(
+                "m.Spj_Or_Interactive_Code_not_Compile_Success"
+              );
+            }
+            if (this.error.spj) {
+              myMessage.error(this.error.spj);
+              return;
+            }
           }
         }
-      }
 
-      if (!this.problemLanguages.length) {
-        this.error.languages =
-          this.$i18n.t("m.Language") + " " + this.$i18n.t("m.is_required");
-        myMessage.error(this.error.languages);
-        return;
-      }
+        if (!this.problemLanguages.length) {
+          this.error.languages =
+            this.$i18n.t("m.Language") + " " + this.$i18n.t("m.is_required");
+          myMessage.error(this.error.languages);
+          return;
+        }
 
-      let funcName = {
-        "admin-create-problem": "admin_createProblem",
-        "admin-edit-problem": "admin_editProblem",
-        "admin-create-contest-problem": "admin_createContestProblem",
-        "admin-edit-contest-problem": "admin_editContestProblem",
-      }[this.routeName];
-      // edit contest problem 时, contest_id会被后来的请求覆盖掉
-      if (funcName === "editContestProblem") {
-        this.problem.cid = this.contest.id;
-      }
-      if (
-        funcName === "admin_createProblem" ||
-        funcName === "admin_createContestProblem"
-      ) {
-        this.problem.author = this.userInfo.username;
-      }
+        let funcName = {
+          "admin-create-problem": "admin_createProblem",
+          "admin-edit-problem": "admin_editProblem",
+          "admin-create-contest-problem": "admin_createContestProblem",
+          "admin-edit-contest-problem": "admin_editContestProblem",
+        }[this.routeName];
+        // edit contest problem 时, contest_id会被后来的请求覆盖掉
+        if (funcName === "editContestProblem") {
+          this.problem.cid = this.contest.id;
+        }
+        if (
+          funcName === "admin_createProblem" ||
+          funcName === "admin_createContestProblem"
+        ) {
+          this.problem.author = this.userInfo.username;
+        }
 
-      var ojName = "ME";
-      if (this.problem.isRemote) {
-        ojName = this.problem.problemId.split("-")[0];
-      }
+        var ojName = "ME";
+        if (this.problem.isRemote) {
+          ojName = this.problem.problemId.split("-")[0];
+        }
 
-      let problemTagList = [];
-      if (this.problemTags.length > 0) {
-        problemTagList = Object.assign([], this.problemTags);
-        for (let i = 0; i < problemTagList.length; i++) {
-          //避免后台插入违反唯一性
-          for (let tag2 of this.allTags) {
-            if (problemTagList[i].name == tag2.name && tag2.oj == ojName) {
-              problemTagList[i] = tag2;
+        let problemTagList = [];
+        if (this.problemTags.length > 0) {
+          problemTagList = Object.assign([], this.problemTags);
+          for (let i = 0; i < problemTagList.length; i++) {
+            //避免后台插入违反唯一性
+            for (let tag2 of this.allTags) {
+              if (problemTagList[i].name == tag2.name && tag2.oj == ojName) {
+                problemTagList[i] = tag2;
+                break;
+              }
+            }
+          }
+        }
+        this.problemCodeTemplate = [];
+        let problemLanguageList = Object.assign([], this.problemLanguages); // 深克隆 防止影响
+        for (let i = 0; i < problemLanguageList.length; i++) {
+          problemLanguageList[i] = { name: problemLanguageList[i] };
+          for (let lang of this.allLanguage) {
+            if (problemLanguageList[i].name == lang.name) {
+              problemLanguageList[i] = lang;
+              if (this.codeTemplate[lang.name].status) {
+                if (
+                  this.codeTemplate[lang.name].code == null ||
+                  this.codeTemplate[lang.name].code.length == 0
+                ) {
+                  myMessage.error(
+                    lang.name +
+                      "：" +
+                      this.$i18n.t(
+                        "m.Code_template_of_the_language_cannot_be_empty"
+                      )
+                  );
+                  return;
+                }
+                this.problemCodeTemplate.push({
+                  id: this.codeTemplate[lang.name].id,
+                  pid: this.pid,
+                  code: this.codeTemplate[lang.name].code,
+                  lid: lang.id,
+                  status: this.codeTemplate[lang.name].status,
+                });
+              }
               break;
             }
           }
         }
-      }
-      this.problemCodeTemplate = [];
-      let problemLanguageList = Object.assign([], this.problemLanguages); // 深克隆 防止影响
-      for (let i = 0; i < problemLanguageList.length; i++) {
-        problemLanguageList[i] = { name: problemLanguageList[i] };
-        for (let lang of this.allLanguage) {
-          if (problemLanguageList[i].name == lang.name) {
-            problemLanguageList[i] = lang;
-            if (this.codeTemplate[lang.name].status) {
-              if (
-                this.codeTemplate[lang.name].code == null ||
-                this.codeTemplate[lang.name].code.length == 0
-              ) {
-                myMessage.error(
-                  lang.name +
-                    "：" +
-                    this.$i18n.t(
-                      "m.Code_template_of_the_language_cannot_be_empty"
-                    )
-                );
-                return;
-              }
-              this.problemCodeTemplate.push({
-                id: this.codeTemplate[lang.name].id,
-                pid: this.pid,
-                code: this.codeTemplate[lang.name].code,
-                lid: lang.id,
-                status: this.codeTemplate[lang.name].status,
-              });
+        let problemDto = {}; // 上传给后台的数据
+        if (!this.problem.isRemote) {
+          if (this.problem.judgeMode != "default") {
+            if (isChangeModeCode) {
+              problemDto["changeModeCode"] = true;
             }
-            break;
-          }
-        }
-      }
-      let problemDto = {}; // 上传给后台的数据
-      if (!this.problem.isRemote) {
-        if (this.problem.judgeMode != "default") {
-          if (isChangeModeCode) {
-            problemDto["changeModeCode"] = true;
-          }
-        } else {
-          // 原本是spj或交互，但现在关闭了
-          if (!this.spjRecord.spjCode) {
-            problemDto["changeModeCode"] = true;
-            this.problem.spjCode = null;
-            this.problem.spjLanguage = null;
-          }
-        }
-
-        if (this.userExtraFile && Object.keys(this.userExtraFile).length != 0) {
-          this.problem.userExtraFile = JSON.stringify(this.userExtraFile);
-        } else {
-          this.problem.userExtraFile = null;
-        }
-
-        if (
-          this.judgeExtraFile &&
-          Object.keys(this.judgeExtraFile).length != 0
-        ) {
-          this.problem.judgeExtraFile = JSON.stringify(this.judgeExtraFile);
-        } else {
-          this.problem.judgeExtraFile = null;
-        }
-      }
-
-      problemDto["problem"] = Object.assign({}, this.problem); // 深克隆
-      problemDto.problem.examples = utils.examplesToString(
-        this.problem.examples
-      ); // 需要转换格式
-
-      problemDto["codeTemplates"] = this.problemCodeTemplate;
-      problemDto["tags"] = problemTagList;
-      problemDto["languages"] = problemLanguageList;
-      problemDto["isUploadTestCase"] = this.problem.isUploadCase;
-      problemDto["uploadTestcaseDir"] = this.problem.uploadTestcaseDir;
-      problemDto["judgeMode"] = this.problem.judgeMode;
-
-      // 如果选择上传文件，则使用上传后的结果
-      if (this.problem.isUploadCase) {
-        problemDto["samples"] = this.problem.testCaseScore;
-      } else {
-        problemDto["samples"] = this.problemSamples;
-      }
-
-      if (this.judgeCaseModeRecord != this.problem.judgeCaseModeRecord) {
-        problemDto["changeJudgeCaseMode"] = true;
-      } else {
-        problemDto["changeJudgeCaseMode"] = false;
-      }
-
-      api[funcName](problemDto)
-        .then((res) => {
-          if (
-            this.routeName === "admin-create-contest-problem" ||
-            this.routeName === "admin-edit-contest-problem"
-          ) {
-            if (res.data.data) {
-              // 新增题目操作 需要使用返回来的pid
-              this.contestProblem["pid"] = res.data.data.pid;
-              this.contestProblem["cid"] = this.$route.params.contestId;
-            }
-            api.admin_setContestProblemInfo(this.contestProblem).then((res) => {
-              myMessage.success("success");
-              this.$router.push({
-                name: "admin-contest-problem-list",
-                params: { contestId: this.$route.params.contestId },
-              });
-            });
           } else {
-            myMessage.success("success");
-            if (this.backPath) {
-              this.$router.push({ path: this.backPath });
-            } else {
-              this.$router.push({ name: "admin-problem-list" });
+            // 原本是spj或交互，但现在关闭了
+            if (!this.spjRecord.spjCode) {
+              problemDto["changeModeCode"] = true;
+              this.problem.spjCode = null;
+              this.problem.spjLanguage = null;
             }
           }
-        })
-        .catch(() => {});
+
+          if (
+            this.userExtraFile &&
+            Object.keys(this.userExtraFile).length != 0
+          ) {
+            this.problem.userExtraFile = JSON.stringify(this.userExtraFile);
+          } else {
+            this.problem.userExtraFile = null;
+          }
+
+          if (
+            this.judgeExtraFile &&
+            Object.keys(this.judgeExtraFile).length != 0
+          ) {
+            this.problem.judgeExtraFile = JSON.stringify(this.judgeExtraFile);
+          } else {
+            this.problem.judgeExtraFile = null;
+          }
+        }
+
+        problemDto["problem"] = Object.assign({}, this.problem); // 深克隆
+        problemDto.problem.examples = utils.examplesToString(
+          this.problem.examples
+        ); // 需要转换格式
+
+        problemDto["codeTemplates"] = this.problemCodeTemplate;
+        problemDto["tags"] = problemTagList;
+        problemDto["languages"] = problemLanguageList;
+        problemDto["isUploadTestCase"] = this.problem.isUploadCase;
+        problemDto["uploadTestcaseDir"] = this.problem.uploadTestcaseDir;
+        problemDto["judgeMode"] = this.problem.judgeMode;
+
+        // 如果选择上传文件，则使用上传后的结果
+        if (this.problem.isUploadCase) {
+          problemDto["samples"] = this.problem.testCaseScore;
+        } else {
+          problemDto["samples"] = this.problemSamples;
+        }
+
+        if (this.judgeCaseModeRecord != this.problem.judgeCaseModeRecord) {
+          problemDto["changeJudgeCaseMode"] = true;
+        } else {
+          problemDto["changeJudgeCaseMode"] = false;
+        }
+
+        api[funcName](problemDto)
+          .then((res) => {
+            if (
+              this.routeName === "admin-create-contest-problem" ||
+              this.routeName === "admin-edit-contest-problem"
+            ) {
+              if (res.data.data) {
+                // 新增题目操作 需要使用返回来的pid
+                this.contestProblem["pid"] = res.data.data.pid;
+                this.contestProblem["cid"] = this.$route.params.contestId;
+              }
+              api
+                .admin_setContestProblemInfo(this.contestProblem)
+                .then((res) => {
+                  myMessage.success("success");
+                  this.$router.push({
+                    name: "admin-contest-problem-list",
+                    params: { contestId: this.$route.params.contestId },
+                  });
+                });
+            } else {
+              myMessage.success("success");
+              if (this.backPath) {
+                this.$router.push({ path: this.backPath });
+              } else {
+                this.$router.push({ name: "admin-problem-list" });
+              }
+            }
+          })
+          .catch(() => {});
+      });
     },
   },
   computed: {
