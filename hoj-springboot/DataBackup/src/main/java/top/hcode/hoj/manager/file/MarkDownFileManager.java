@@ -51,8 +51,8 @@ public class MarkDownFileManager {
         if (image == null) {
             throw new StatusFailException("上传的图片不能为空！");
         }
-        if (image.getSize() > 1024 * 1024 * 4) {
-            throw new StatusFailException("上传的图片文件大小不能大于4M！");
+        if (image.getSize() > 1024 * 1024 * 10) {
+            throw new StatusFailException("上传的图片文件大小不能大于10M！");
         }
         // 获取文件后缀
         String suffix = image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1);

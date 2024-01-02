@@ -115,6 +115,12 @@ public class AdminContestVO {
     @ApiModelProperty(value = "队员上限(最大为3)")
     private Integer maxParticipants;
 
+    @ApiModelProperty(value = "是否开启文件柜")
+    private Boolean openFile;
+
+    @ApiModelProperty(value = "文件柜配置 json")
+    private List<ContestFileConfigVO> fileConfigList;
+
     private Date gmtCreate;
 
     private Date gmtModified;

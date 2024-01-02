@@ -34,6 +34,11 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
+    public CommonResult<List<HashMap<String, Object>>> getBoxFile() {
+        return CommonResult.successResponse(homeManager.getBoxFile());
+    }
+
+    @Override
     public CommonResult<List<ACMRankVO>> getRecentSevenACRank() {
         return CommonResult.successResponse(homeManager.getRecentSevenACRank());
     }

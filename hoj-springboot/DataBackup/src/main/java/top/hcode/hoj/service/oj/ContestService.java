@@ -19,6 +19,8 @@ public interface ContestService {
 
         public CommonResult<ContestVO> getContestInfo(Long cid);
 
+        public CommonResult<List<ContestFileConfigVO>> getContestFileList(Long cid);
+
         public CommonResult<Void> toRegisterContest(RegisterContestDTO registerContestDto);
 
         public CommonResult<AccessVO> getContestAccess(Long cid);

@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import top.hcode.hoj.common.exception.StatusFailException;
+import top.hcode.hoj.common.exception.StatusForbiddenException;
 import top.hcode.hoj.config.NacosSwitchConfig;
 import top.hcode.hoj.config.SwitchConfig;
 import top.hcode.hoj.config.WebConfig;
@@ -187,6 +188,21 @@ public class ConfigManager {
             throw new StatusFailException("文件id错误，图片不存在");
         }
         boolean isOk = fileEntityService.editHomeCarousel(id, addLink, addHint);
+        if (!isOk) {
+            throw new StatusFailException("更新失败！");
+        }
+    }
+
+    public void editFileHint(Long id, String hint) throws StatusFailException, StatusForbiddenException {
+
+        File file = fileEntityService.getById(id);
+        if (file == null) {
+            throw new StatusFailException("错误：文件不存在！");
+        }
+        if (!file.getType().equals("file")) {
+            throw new StatusForbiddenException("错误：不支持更新！");
+        }
+        boolean isOk = fileEntityService.editFileHint(id, hint);
         if (!isOk) {
             throw new StatusFailException("更新失败！");
         }

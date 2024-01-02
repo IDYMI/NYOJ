@@ -488,6 +488,8 @@ export const m = {
   Group_Contest_Tag: '团队比赛',
   Contains_Submission_After_Contest: '包含赛后的提交',
 
+  Box_File: '赛供文件',
+
   Sign_Required: '需要报名',
   Waiting_Sign: '等待',
   Success_Sign: '成功',
@@ -902,5 +904,6 @@ export const m = {
   // /views/admin/general/SystemConfig.vue
   Url: '链接',
   Hint2: '描述',
-  Edit_Home_Rotation_Chart: '编辑首页轮播图'
+  Edit_Home_Rotation_Chart: '编辑首页轮播图',
+  Edit_Box_File: '编辑文件名称'
 }

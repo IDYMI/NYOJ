@@ -1441,3 +1441,35 @@ DELIMITER ;
 CALL Add_contest_moss_result ;
 
 DROP PROCEDURE Add_contest_moss_result;
+
+/*
+* 增加文件柜
+
+*/
+DROP PROCEDURE
+IF EXISTS add_BoxFile;
+DELIMITER $$
+
+CREATE PROCEDURE add_BoxFile ()
+BEGIN
+
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		information_schema.`COLUMNS`
+	WHERE
+		table_name = 'contest'
+	AND column_name = 'open_file'
+) THEN
+
+	ALTER TABLE `hoj`.`contest`  ADD COLUMN `open_file` tinyint(1) DEFAULT '0' COMMENT '是否打开文件柜';
+	ALTER TABLE `hoj`.`contest`  ADD COLUMN `file_config` text DEFAULT NULL COMMENT '文件柜配置 json';
+
+END
+IF ; END$$
+
+DELIMITER ;
+CALL add_BoxFile ;
+
+DROP PROCEDURE add_BoxFile;

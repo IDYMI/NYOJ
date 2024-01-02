@@ -334,6 +334,14 @@ export default {
 .filter-right {
   float: right;
 }
+.filter-item {
+  margin-right: 1em;
+  margin-top: 0.5em;
+  font-size: 13px;
+}
+.filter-item:hover {
+  cursor: pointer;
+}
 @media screen and (max-width: 768px) {
   .filter-row span {
     margin-right: 5px;

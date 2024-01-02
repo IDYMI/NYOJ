@@ -17,6 +17,8 @@ public interface FileEntityService extends IService<File> {
 
         List<File> queryCarouselFileList();
 
+        List<File> queryBoxFileList();
+
         List<List<String>> getContestRankExcelHead(List<String> contestProblemDisplayIDList, Boolean isACM);
 
         List<List<String>> getStatisticRankExcelHead(List<Long> cidList);
@@ -25,7 +27,8 @@ public interface FileEntityService extends IService<File> {
                         List<String> contestProblemDisplayIDList,
                         String rankShowName);
 
-        List<List<Object>> changeStatisticContestRankToExcelRowList(List<ACMStatisticContestVO> acmStatisticContestRankVOList,
+        List<List<Object>> changeStatisticContestRankToExcelRowList(
+                        List<ACMStatisticContestVO> acmStatisticContestRankVOList,
                         List<Long> cidList);
 
         List<List<Object>> changOIContestRankToExcelRowList(List<OIContestRankVO> oiContestRankVOList,
@@ -33,4 +36,6 @@ public interface FileEntityService extends IService<File> {
                         String rankShowName);
 
         Boolean editHomeCarousel(Long id, String addLink, String addHint);
+
+        Boolean editFileHint(Long id, String hint);
 }

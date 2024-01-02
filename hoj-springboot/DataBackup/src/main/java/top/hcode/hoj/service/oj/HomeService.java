@@ -19,6 +19,8 @@ public interface HomeService {
 
     public CommonResult<List<HashMap<String, Object>>> getHomeCarousel();
 
+    public CommonResult<List<HashMap<String, Object>>> getBoxFile();
+
     public CommonResult<List<ACMRankVO>> getRecentSevenACRank();
 
     @Deprecated

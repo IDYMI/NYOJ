@@ -26,6 +26,12 @@ public interface FileMapper extends BaseMapper<File> {
     @Select("select * from file where (type = 'carousel')")
     List<File> queryCarouselFileList();
 
+    @Select("select * from file where (type = 'file')")
+    List<File> queryBoxFileList();
+
     @Update("UPDATE `file` SET `link` = #{addLink}, `hint` = #{addHint}  WHERE `id` = #{id}")
     Boolean editHomeCarousel(@Param("id") Long id, @Param("addLink") String addLink, @Param("addHint") String addHint);
+
+    @Update("UPDATE `file` SET `hint` = #{hint}  WHERE `id` = #{id}")
+    Boolean editFileHint(@Param("id") Long id, @Param("hint") String hint);
 }

@@ -272,6 +272,8 @@ public class Constants {
 
         TESTCASE_BASE_FOLDER("/hoj/testcase"),
 
+        BOXFILE_BASE_FOLDER("/hoj/file/file"),
+
         FILE_DOWNLOAD_TMP_FOLDER("/hoj/file/zip/download"),
 
         CONTEST_AC_SUBMISSION_TMP_FOLDER("/hoj/file/zip/contest_ac");

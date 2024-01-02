@@ -60,6 +60,18 @@ public class ContestController {
     }
 
     /**
+     * @MethodName getContestFileList
+     * @Description 获得指定比赛的文件列表
+     * @Return
+     */
+    @GetMapping("/get-contest-file")
+    @RequiresAuthentication
+    public CommonResult<List<ContestFileConfigVO>> getContestFileList(@RequestParam(value = "cid", required = true) Long cid) {
+
+        return contestService.getContestFileList(cid);
+    }
+
+    /**
      * @MethodName toRegisterContest
      * @Description 注册比赛
      * @Return

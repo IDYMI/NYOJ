@@ -163,62 +163,6 @@
           </el-card>
         </el-col>
       </el-row>
-      <el-row :gutter="15">
-        <el-col :xs="24" :md="12" style="margin-top: 15px;">
-          <RemoteJudgeAccount
-            :usernameList.sync="switchConfig.hduUsernameList"
-            :passwordList.sync="switchConfig.hduPasswordList"
-            :loading.sync="loading"
-            @saveSwitchConfig="saveSwitchConfig"
-            OJ="HDU"
-          ></RemoteJudgeAccount>
-        </el-col>
-        <el-col :xs="24" :md="12" style="margin-top: 15px;">
-          <RemoteJudgeAccount
-            :usernameList.sync="switchConfig.cfUsernameList"
-            :passwordList.sync="switchConfig.cfPasswordList"
-            :loading.sync="loading"
-            @saveSwitchConfig="saveSwitchConfig"
-            OJ="Codeforces"
-          ></RemoteJudgeAccount>
-        </el-col>
-        <el-col :xs="24" :md="12" style="margin-top: 15px;">
-          <RemoteJudgeAccount
-            :usernameList.sync="switchConfig.pojUsernameList"
-            :passwordList.sync="switchConfig.pojPasswordList"
-            :loading.sync="loading"
-            @saveSwitchConfig="saveSwitchConfig"
-            OJ="POJ"
-          ></RemoteJudgeAccount>
-        </el-col>
-        <el-col :xs="24" :md="12" style="margin-top: 15px;">
-          <RemoteJudgeAccount
-            :usernameList.sync="switchConfig.atcoderUsernameList"
-            :passwordList.sync="switchConfig.atcoderPasswordList"
-            :loading.sync="loading"
-            @saveSwitchConfig="saveSwitchConfig"
-            OJ="Atcoder"
-          ></RemoteJudgeAccount>
-        </el-col>
-        <el-col :xs="24" :md="12" style="margin-top: 15px;">
-          <RemoteJudgeAccount
-            :usernameList.sync="switchConfig.spojUsernameList"
-            :passwordList.sync="switchConfig.spojPasswordList"
-            :loading.sync="loading"
-            @saveSwitchConfig="saveSwitchConfig"
-            OJ="SPOJ"
-          ></RemoteJudgeAccount>
-        </el-col>
-        <el-col :xs="24" :md="12" style="margin-top: 15px;">
-          <RemoteJudgeAccount
-            :usernameList.sync="switchConfig.scpcUsernameList"
-            :passwordList.sync="switchConfig.scpcPasswordList"
-            :loading.sync="loading"
-            @saveSwitchConfig="saveSwitchConfig"
-            OJ="SCPC"
-          ></RemoteJudgeAccount>
-        </el-col>
-      </el-row>
     </el-card>
   </div>
 </template>
