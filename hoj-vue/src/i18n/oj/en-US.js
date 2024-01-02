@@ -487,6 +487,8 @@ export const m = {
   Group_Contest_Tag: 'Group Contest',
   Contains_Submission_After_Contest: 'Contains Submission After Contest',
 
+  Box_File: 'Offered File',
+
   Sign_Required: 'Sign Required',
   Waiting_Sign: 'Wating',
   Success_Sign: 'Success',
@@ -901,5 +903,6 @@ export const m = {
   // /views/admin/general/SystemConfig.vue
   Url: 'Add Url',
   Hint: 'Add Hint',
-  Edit_Home_Rotation_Chart: 'Edit Home Rotation Chart'
+  Edit_Home_Rotation_Chart: 'Edit Home Rotation Chart',
+  Edit_Box_File: 'Edit Box FileName'
 }

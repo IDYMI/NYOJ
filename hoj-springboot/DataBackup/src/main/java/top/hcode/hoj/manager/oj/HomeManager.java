@@ -99,6 +99,18 @@ public class HomeManager {
         return apiList;
     }
 
+    public List<HashMap<String, Object>> getBoxFile() {
+        List<File> fileList = fileEntityService.queryBoxFileList();
+        List<HashMap<String, Object>> apiList = fileList.stream().map(f -> {
+            HashMap<String, Object> param = new HashMap<>(2);
+            param.put("id", f.getId());
+            param.put("url", Constants.File.FILE_API.getPath() + f.getName());
+            param.put("hint", f.getHint());
+            return param;
+        }).collect(Collectors.toList());
+        return apiList;
+    }
+
     /**
      * @MethodName getRecentSevenACRank
      * @Params

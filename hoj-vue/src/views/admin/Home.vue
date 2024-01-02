@@ -2,11 +2,7 @@
   <div class="admin-container">
     <div v-if="!mobileNar">
       <el-menu class="vertical_menu" :router="true" :default-active="currentPath">
-        <el-tooltip
-          :content="$t('m.Click_To_Home')"
-          placement="bottom"
-          effect="dark"
-        >
+        <el-tooltip :content="$t('m.Click_To_Home')" placement="bottom" effect="dark">
           <div class="logo">
             <router-link to="/home">
               <img :src="imgUrl" alt="Online Judge Admin" />
@@ -45,6 +41,16 @@
           <el-menu-item index="/admin/switch">
             {{
             $t("m.System_Switch")
+            }}
+          </el-menu-item>
+          <el-menu-item index="/admin/account">
+            {{
+            $t("m.Account_Config")
+            }}
+          </el-menu-item>
+          <el-menu-item index="/admin/file">
+            {{
+            $t("m.File_Admin")
             }}
           </el-menu-item>
         </el-submenu>
@@ -296,6 +302,34 @@
               <mu-list-item-title>
                 {{
                 $t("m.System_Switch")
+                }}
+              </mu-list-item-title>
+            </mu-list-item>
+            <mu-list-item
+              button
+              :ripple="false"
+              slot="nested"
+              to="/admin/account"
+              @click="opendrawer = !opendrawer"
+              active-class="mobile-menu-active"
+            >
+              <mu-list-item-title>
+                {{
+                $t("m.Account_Config")
+                }}
+              </mu-list-item-title>
+            </mu-list-item>
+            <mu-list-item
+              button
+              :ripple="false"
+              slot="nested"
+              to="/admin/file"
+              @click="opendrawer = !opendrawer"
+              active-class="mobile-menu-active"
+            >
+              <mu-list-item-title>
+                {{
+                $t("m.File_Admin")
                 }}
               </mu-list-item-title>
             </mu-list-item>

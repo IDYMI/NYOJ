@@ -157,7 +157,6 @@
           </el-card>
 
           <!-- 正式赛报名窗口 -->
-
           <el-card
             v-if="signFormVisible"
             class="box-card"
@@ -441,9 +440,14 @@
               </el-form-item>
             </el-form>
           </el-dialog>
+
           <el-card class="box-card">
             <Markdown :isAvoidXss="contest.gid != null" :content="contest.description"></Markdown>
           </el-card>
+
+          <div v-if="contest.openFile">
+            <box-file :isAdmin="false" :boxFileList="fileList"></box-file>
+          </div>
         </el-tab-pane>
 
         <el-tab-pane name="ContestProblemList" lazy :disabled="contestMenuDisabled">
@@ -627,6 +631,7 @@ import api from "@/common/api";
 import { mapState, mapGetters, mapActions } from "vuex";
 import { addCodeBtn } from "@/common/codeblock";
 import Timebar from "@/components/oj/common/Timebar.vue";
+import BoxFile from "@/components/oj/common/BoxFile";
 
 import {
   CONTEST_STATUS_REVERSE,
@@ -646,6 +651,7 @@ export default {
   components: {
     Markdown,
     Timebar,
+    BoxFile,
   },
   data() {
     return {
@@ -727,7 +733,11 @@ export default {
           },
         ],
       },
+      fileList: [],
     };
+  },
+  mounted() {
+    this.getContestFile();
   },
   created() {
     this.SIGN_TYPE_REVERSE = Object.assign({}, SIGN_TYPE_REVERSE);
@@ -801,7 +811,18 @@ export default {
     getStopFlag(percentage) {
       this.percentage = percentage;
     },
-    init() {},
+    getContestFile() {
+      let cid = this.$route.params.contestID;
+      api.getContestFile(cid).then(
+        (res) => {
+          let data = res.data.data;
+          this.fileList = data;
+        },
+        (_) => {
+          this.fileList = [];
+        }
+      );
+    },
     getSign() {
       if (this.contest.auth === 3) {
         // 如果是同步赛

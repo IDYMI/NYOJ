@@ -3,7 +3,9 @@ package top.hcode.hoj.service.admin.system.impl;
 import cn.hutool.json.JSONObject;
 import org.springframework.stereotype.Service;
 import top.hcode.hoj.common.exception.StatusFailException;
+import top.hcode.hoj.common.exception.StatusForbiddenException;
 import top.hcode.hoj.common.result.CommonResult;
+import top.hcode.hoj.common.result.ResultStatus;
 import top.hcode.hoj.manager.admin.system.ConfigManager;
 import top.hcode.hoj.pojo.dto.*;
 import top.hcode.hoj.service.admin.system.ConfigService;
@@ -49,6 +51,18 @@ public class ConfigServiceImpl implements ConfigService {
             return CommonResult.successResponse();
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
+        }
+    }
+
+    @Override
+    public CommonResult<Void> editFileHint(Long id, String hint) {
+        try {
+            configManager.editFileHint(id, hint);
+            return CommonResult.successResponse();
+        } catch (StatusFailException e) {
+            return CommonResult.errorResponse(e.getMessage());
+        } catch (StatusForbiddenException e) {
+            return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         }
     }
 

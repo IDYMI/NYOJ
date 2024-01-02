@@ -59,6 +59,17 @@ public class HomeController {
     }
 
     /**
+     * @MethodName getBoxFile
+     * @Params
+     * @Description 获取文件柜文件
+     * @Return
+     */
+    @GetMapping("/box-file")
+    public CommonResult<List<HashMap<String, Object>>> getBoxFile() {
+        return homeService.getBoxFile();
+    }
+
+    /**
      * @MethodName getRecentSevenACRank
      * @Params * @param null
      * @Description 获取最近7天用户做题榜单

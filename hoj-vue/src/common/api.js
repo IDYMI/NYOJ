@@ -112,8 +112,8 @@ axios.interceptors.response.use(
           }
           store.commit('clearUserInfoAndToken');
           break;
-          // 403
-          // 无权限访问或操作的请求
+        // 403
+        // 无权限访问或操作的请求
         case 403:
           if (error.response.data.msg) {
             mMessage.error(error.response.data.msg);
@@ -133,11 +133,11 @@ axios.interceptors.response.use(
             }
           })
           break;
-          // 404请求不存在
+        // 404请求不存在
         case 404:
           mMessage.error(i18n.t('m.Query_error_unable_to_find_the_resource_to_request'));
           break;
-          // 其他错误，直接抛出错误提示
+        // 其他错误，直接抛出错误提示
         default:
           if (error.response.data) {
             if (error.response.data.msg) {
@@ -177,6 +177,9 @@ const ojApi = {
   },
   getHomeCarousel() {
     return ajax('/api/home-carousel', 'get', {})
+  },
+  getBoxFileList() {
+    return ajax('/api/box-file', 'get', {})
   },
   getRecentContests() {
     return ajax('/api/get-recent-contest', 'get', {})
@@ -563,6 +566,13 @@ const ojApi = {
       }
     })
   },
+  getContestFile(cid) {
+    return ajax('/api/get-contest-file', 'get', {
+      params: {
+        cid
+      }
+    })
+  },
   // 获取赛外榜单比赛的信息
   getScoreBoardContestInfo(cid) {
     return ajax('/api/get-contest-outsize-info', 'get', {
@@ -750,13 +760,13 @@ const ojApi = {
     })
   },
   // 获取比赛提交代码的语言
-  getContestLanguage(params){
+  getContestLanguage(params) {
     return ajax('/api/get-contest-language', 'get', {
       params
     })
   },
   // 获取moss查重的结果列表
-  getMossList(params){
+  getMossList(params) {
     return ajax('/api/get-moss-list', 'get', {
       params
     })
@@ -1811,6 +1821,15 @@ const adminApi = {
         id,
         addLink,
         addHint
+      }
+    })
+  },
+
+  admin_editFileHint(id, hint) {
+    return ajax('/api/admin/config/update-file-hint', 'post', {
+      params: {
+        id,
+        hint,
       }
     })
   },

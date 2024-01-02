@@ -106,6 +106,71 @@ function downloadFile(url) {
   })
 }
 
+function downloadBoxFile(url, fileName) {
+  return new Promise((resolve, reject) => {
+    Vue.prototype.$axios.get(url, {
+      responseType: 'blob',
+      timeout: 5 * 60 * 1000
+    }).then(resp => {
+      let headers = resp.headers;
+
+      // 从URL中解析出文件类型
+      let fileNameWithExtension = url.split('/').pop();
+      let fileType = fileNameWithExtension.split('.').pop() || 'txt';
+      let filename = fileName.split('.')[0];
+
+      headers['content-disposition'] = `attachment; filename=${filename}.${fileType}`;
+      headers['content-type'] = getContentType(fileType); // 获取 MIME 类型
+
+      let link = document.createElement('a');
+      link.href = window.URL.createObjectURL(new window.Blob([resp.data], { type: headers['content-type'] }));
+      link.download = (headers['content-disposition'] || '').split('filename=')[1];
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      myMessage.success("Downloading...");
+      resolve();
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+}
+
+
+function getContentType(fileType) {
+  switch (fileType.toLowerCase()) {
+    case 'txt':
+      return 'text/plain';
+    case 'pdf':
+      return 'application/pdf';
+    case 'doc':
+    case 'docx':
+      return 'application/msword';
+    case 'xls':
+    case 'xlsx':
+      return 'application/vnd.ms-excel';
+    case 'ppt':
+    case 'pptx':
+      return 'application/vnd.ms-powerpoint';
+    case 'jpeg':
+    case 'jpg':
+      return 'image/jpeg';
+    case 'png':
+      return 'image/png';
+    case 'gif':
+      return 'image/gif';
+    case 'mp3':
+      return 'audio/mpeg';
+    case 'mp4':
+      return 'video/mp4';
+    case 'zip':
+      return 'application/zip';
+    // 添加其他常见文件类型的映射...
+    default:
+      return 'application/octet-stream'; // 未知类型，默认为二进制流
+  }
+}
+
 function downloadFileByText(fileName, fileContent) {
   return new Promise((resolve, reject) => {
     let link = document.createElement('a')
@@ -224,6 +289,7 @@ export default {
   filterEmptyValue: filterEmptyValue,
   breakLongWords: breakLongWords,
   downloadFile: downloadFile,
+  downloadBoxFile: downloadBoxFile,
   downloadFileByText: downloadFileByText,
   getLanguages: getLanguages,
   stringToExamples: stringToExamples,

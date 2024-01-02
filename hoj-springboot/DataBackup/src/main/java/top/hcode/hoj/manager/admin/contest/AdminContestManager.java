@@ -21,6 +21,7 @@ import top.hcode.hoj.pojo.entity.contest.Contest;
 import top.hcode.hoj.pojo.entity.contest.ContestRegister;
 import top.hcode.hoj.pojo.vo.AdminContestVO;
 import top.hcode.hoj.pojo.vo.ContestAwardConfigVO;
+import top.hcode.hoj.pojo.vo.ContestFileConfigVO;
 import top.hcode.hoj.pojo.vo.ContestSynchronousConfigVO;
 import top.hcode.hoj.shiro.AccountProfile;
 import top.hcode.hoj.utils.Constants;
@@ -125,6 +126,20 @@ public class AdminContestManager {
             adminContestVo.setAwardConfigList(new ArrayList<>());
         }
 
+        if (contest.getOpenFile() != null && contest.getOpenFile()) {
+            try {
+                JSONObject jsonObject = JSONUtil.parseObj(contest.getFileConfig());
+                List<ContestFileConfigVO> fileConfigList = jsonObject.get("config", List.class);
+
+                adminContestVo.setFileConfigList(fileConfigList);
+
+            } catch (Exception e) {
+                adminContestVo.setFileConfigList(new ArrayList<>());
+            }
+        } else {
+            adminContestVo.setFileConfigList(new ArrayList<>());
+        }
+
         // 同步赛
         if (contest.getAuth() == 4 || contest.getAuth() == 5) {
             try {
@@ -174,6 +189,14 @@ public class AdminContestManager {
             awardConfigList.sort(Comparator.comparingInt(ContestAwardConfigVO::getPriority));
             awardConfigJson.set("config", awardConfigList);
             contest.setAwardConfig(awardConfigJson.toString());
+        }
+
+        // 文件柜
+        if (adminContestVo.getOpenFile() != null && adminContestVo.getOpenFile()) {
+            JSONObject fileConfigJson = new JSONObject();
+            List<ContestFileConfigVO> fileConfigList = adminContestVo.getFileConfigList();
+            fileConfigJson.set("config", fileConfigList);
+            contest.setFileConfig(fileConfigJson.toString());
         }
 
         // 同步赛
@@ -242,6 +265,14 @@ public class AdminContestManager {
             JSONObject awardConfigJson = new JSONObject();
             awardConfigJson.set("config", awardConfigList);
             contest.setAwardConfig(awardConfigJson.toString());
+        }
+
+        // 文件柜
+        if (adminContestVo.getOpenFile() != null && adminContestVo.getOpenFile()) {
+            JSONObject fileConfigJson = new JSONObject();
+            List<ContestFileConfigVO> fileConfigList = adminContestVo.getFileConfigList();
+            fileConfigJson.set("config", fileConfigList);
+            contest.setFileConfig(fileConfigJson.toString());
         }
 
         // 同步赛

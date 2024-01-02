@@ -45,6 +45,11 @@ public class FileEntityEntityServiceImpl extends ServiceImpl<FileMapper, File> i
     }
 
     @Override
+    public Boolean editFileHint(Long id, String hint) {
+        return fileMapper.editFileHint(id, hint);
+    }
+
+    @Override
     public List<File> queryDeleteAvatarList() {
         return fileMapper.queryDeleteAvatarList();
     }
@@ -52,6 +57,11 @@ public class FileEntityEntityServiceImpl extends ServiceImpl<FileMapper, File> i
     @Override
     public List<File> queryCarouselFileList() {
         return fileMapper.queryCarouselFileList();
+    }
+
+    @Override
+    public List<File> queryBoxFileList() {
+        return fileMapper.queryBoxFileList();
     }
 
     @Override

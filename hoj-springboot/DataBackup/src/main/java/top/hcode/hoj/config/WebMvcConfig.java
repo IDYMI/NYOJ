@@ -44,7 +44,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "file:" + Constants.File.GROUP_AVATAR_FOLDER.getPath() + File.separator,
                         "file:" + Constants.File.MARKDOWN_FILE_FOLDER.getPath() + File.separator,
                         "file:" + Constants.File.HOME_CAROUSEL_FOLDER.getPath() + File.separator,
-                        "file:" + Constants.File.PROBLEM_FILE_FOLDER.getPath() + File.separator);
+                        "file:" + Constants.File.PROBLEM_FILE_FOLDER.getPath() + File.separator,
+                        "file:" + Constants.File.BOXFILE_BASE_FOLDER.getPath() + File.separator);
     }
 
     @Override

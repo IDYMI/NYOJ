@@ -96,4 +96,7 @@ public class ContestVO implements Serializable {
     @ApiModelProperty(value = "队员上限(最大为3)")
     private Integer maxParticipants;
 
+    @ApiModelProperty(value = "是否开启文件柜")
+    private Boolean openFile;
+
 }
