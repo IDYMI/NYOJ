@@ -209,9 +209,9 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public CommonResult<IPage<AnnouncementVO>> getContestAnnouncement(Long cid, Integer limit, Integer currentPage) {
+    public CommonResult<IPage<AnnouncementVO>> getContestAnnouncement(Long cid, Integer limit, Integer currentPage, Long id) {
         try {
-            return CommonResult.successResponse(contestManager.getContestAnnouncement(cid, limit, currentPage));
+            return CommonResult.successResponse(contestManager.getContestAnnouncement(cid, limit, currentPage, id));
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         } catch (StatusForbiddenException e) {

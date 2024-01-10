@@ -143,12 +143,12 @@ public class HomeManager {
      * @Return CommonResult
      * @Since 2020/12/29
      */
-    public IPage<AnnouncementVO> getCommonAnnouncement(Integer limit, Integer currentPage) {
+    public IPage<AnnouncementVO> getCommonAnnouncement(Integer limit, Integer currentPage, Long id) {
         if (currentPage == null || currentPage < 1)
             currentPage = 1;
         if (limit == null || limit < 1)
             limit = 10;
-        return announcementEntityService.getAnnouncementList(limit, currentPage, true);
+        return announcementEntityService.getAnnouncementList(limit, currentPage, true, id);
     }
 
     /**

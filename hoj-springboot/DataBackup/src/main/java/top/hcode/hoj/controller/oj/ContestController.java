@@ -235,9 +235,11 @@ public class ContestController {
     public CommonResult<IPage<AnnouncementVO>> getContestAnnouncement(
             @RequestParam(value = "cid", required = true) Long cid,
             @RequestParam(value = "limit", required = false) Integer limit,
-            @RequestParam(value = "currentPage", required = false) Integer currentPage) {
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "id", required = false) Long id
+            ) {
 
-        return contestService.getContestAnnouncement(cid, limit, currentPage);
+        return contestService.getContestAnnouncement(cid, limit, currentPage, id);
     }
 
     /**

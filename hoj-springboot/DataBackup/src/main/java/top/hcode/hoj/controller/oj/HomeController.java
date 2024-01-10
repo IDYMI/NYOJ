@@ -103,8 +103,9 @@ public class HomeController {
     @GetMapping("/get-common-announcement")
     public CommonResult<IPage<AnnouncementVO>> getCommonAnnouncement(
             @RequestParam(value = "limit", required = false) Integer limit,
-            @RequestParam(value = "currentPage", required = false) Integer currentPage) {
-        return homeService.getCommonAnnouncement(limit, currentPage);
+            @RequestParam(value = "currentPage", required = false) Integer currentPage,
+            @RequestParam(value = "id", required = false) Long id) {
+        return homeService.getCommonAnnouncement(limit, currentPage, id);
     }
 
     /**

@@ -187,10 +187,11 @@ const ojApi = {
   getRecentOtherContests() {
     return ajax('/api/get-recent-other-contest', 'get', {})
   },
-  getAnnouncementList(currentPage, limit) {
+  getAnnouncementList(currentPage, limit, id) {
     let params = {
       currentPage: currentPage,
-      limit: limit
+      limit: limit,
+      id: id
     }
     return ajax('/api/get-common-announcement', 'get', {
       params
@@ -668,11 +669,12 @@ const ojApi = {
   },
 
   // 获取比赛公告列表
-  getContestAnnouncementList(currentPage, limit, cid) {
+  getContestAnnouncementList(currentPage, limit, cid, id) {
     let params = {
       currentPage,
       limit,
-      cid
+      cid,
+      id
     }
     return ajax('/api/get-contest-announcement', 'get', {
       params

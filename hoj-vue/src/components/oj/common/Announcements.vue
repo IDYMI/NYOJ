@@ -22,6 +22,13 @@
           @click="goBack"
           size="small"
         >{{ $t("m.Back") }}</el-button>
+        <el-button
+          v-if="listVisible && isMainAdminRole"
+          type="primary"
+          @click="goEditAnnouncement"
+          size="small"
+          icon="el-icon-plus"
+        >{{ $t("m.Create") }}</el-button>
       </span>
     </div>
     <transition-group name="el-zoom-in-bottom">
@@ -54,7 +61,7 @@
           key="page"
           :total="total"
           :page-size="limit"
-          @on-change="getAnnouncementList"
+          @on-change="handlePaginationChange"
         ></Pagination>
       </template>
 
@@ -75,8 +82,10 @@
 import api from "@/common/api";
 import { addCodeBtn } from "@/common/codeblock";
 import Pagination from "@/components/oj/common/Pagination";
+import { mapGetters } from "vuex";
+
 export default {
-  name: "Announcement",
+  name: "Announcements",
   components: {
     Pagination,
   },
@@ -100,38 +109,52 @@ export default {
   },
   methods: {
     init() {
+      let announcementID = this.announcementID;
+      this.listVisible = !announcementID;
       if (this.isContest) {
-        this.getContestAnnouncementList();
+        this.getContestAnnouncementList(announcementID);
       } else {
-        this.getAnnouncementList();
+        this.getAnnouncementList(announcementID);
       }
     },
-    getAnnouncementList(page = 1) {
+    handlePaginationChange(newPage) {
+      this.getAnnouncementList(null, newPage);
+    },
+    getAnnouncementList(announcementID, page = 1) {
       this.btnLoading = true;
-      api.getAnnouncementList(page, this.limit).then(
+      api.getAnnouncementList(page, this.limit, announcementID).then(
         (res) => {
           this.btnLoading = false;
           this.announcements = res.data.data.records;
           this.total = res.data.data.total;
+          if (announcementID) {
+            this.goAnnouncement(this.announcements[0]);
+          } else {
+            this.goBack();
+          }
         },
         () => {
           this.btnLoading = false;
         }
       );
     },
-    getContestAnnouncementList(page = 1) {
+    getContestAnnouncementList(announcementID, page = 1) {
       this.btnLoading = true;
       api
         .getContestAnnouncementList(
           page,
           this.limit,
-          this.$route.params.contestID
+          this.$route.params.contestID,
+          announcementID
         )
         .then(
           (res) => {
             this.btnLoading = false;
             this.announcements = res.data.data.records;
             this.total = res.data.data.total;
+            if (announcementID) {
+              this.goAnnouncement(this.announcements[0]);
+            }
           },
           () => {
             this.btnLoading = false;
@@ -139,6 +162,16 @@ export default {
         );
     },
     goAnnouncement(announcement) {
+      let announcementID = announcement.id;
+      let router_name = this.route_name;
+      if (announcementID) {
+        this.$router.push({
+          name: router_name,
+          params: { announcementID },
+        });
+      } else {
+        this.goBack();
+      }
       this.announcement = announcement;
       this.announcement.content = this.$markDown.render(announcement.content);
       this.listVisible = false;
@@ -149,9 +182,21 @@ export default {
     goBack() {
       this.listVisible = true;
       this.announcement = "";
+      let router_name = this.route_name;
+      this.$router.push({ name: router_name });
+    },
+    goEditAnnouncement() {
+      let contestId = this.$route.params.contestID;
+      const params = this.isContest ? { contestId } : {};
+      console.log(params);
+      this.$router.push({
+        name: this.edit_route_name,
+        params: params,
+      });
     },
   },
   computed: {
+    ...mapGetters(["isMainAdminRole"]),
     title() {
       if (this.listVisible) {
         return this.isContest
@@ -163,6 +208,25 @@ export default {
     },
     isContest() {
       return !!this.$route.params.contestID;
+    },
+    announcementID() {
+      return this.$route.params.announcementID;
+    },
+    route_name() {
+      return this.isContest ? "ContestAnnouncementList" : "Announcements";
+    },
+    edit_route_name() {
+      return this.isContest
+        ? "admin-contest-announcement"
+        : "admin-announcement";
+    },
+  },
+  watch: {
+    "$route.params.announcementID"(newVal, oldVal) {
+      // 在announcementID发生变化时调用
+      if (newVal !== oldVal) {
+        this.init();
+      }
     },
   },
 };

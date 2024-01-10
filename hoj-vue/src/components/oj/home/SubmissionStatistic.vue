@@ -1,25 +1,23 @@
 <template>
-  <span v-if="isMainAdminRole">
-    <el-card>
-      <div shadow slot="header" :padding="10">
-        <span class="home-title panel-title">
-          <i class="el-icon-data-line"></i>
-          {{ $t("m.Statistics_Submissions_In_The_Last_Week") }}
-        </span>
-        <el-button
-          type="primary"
-          icon="el-icon-refresh"
-          style="float: right"
-          size="small"
-          :loading="loading"
-          @click="getLastWeekSubmissionStatistics(true)"
-        >{{ $t("m.Refresh") }}</el-button>
-      </div>
-      <div class="echarts" v-loading="loading">
-        <ECharts :options="options" ref="chart" :autoresize="true"></ECharts>
-      </div>
-    </el-card>
-  </span>
+  <el-card v-if="isMainAdminRole" class="card-top">
+    <div shadow slot="header" :padding="10">
+      <span class="home-title panel-title">
+        <i class="el-icon-data-line"></i>
+        {{ $t("m.Statistics_Submissions_In_The_Last_Week") }}
+      </span>
+      <el-button
+        type="primary"
+        icon="el-icon-refresh"
+        style="float: right"
+        size="small"
+        :loading="loading"
+        @click="getLastWeekSubmissionStatistics(true)"
+      >{{ $t("m.Refresh") }}</el-button>
+    </div>
+    <div class="echarts" v-loading="loading">
+      <ECharts :options="options" ref="chart" :autoresize="true"></ECharts>
+    </div>
+  </el-card>
 </template>
 <script>
 import api from "@/common/api";

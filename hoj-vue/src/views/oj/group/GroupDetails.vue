@@ -123,7 +123,7 @@
                 <div class="separator hidden-sm-and-down"></div>
                 <p></p>
               </el-col>
-              <el-col v-if="isAdminRole" :md="11" :sm="24" :xs="24">
+              <el-col :md="11" :sm="24" :xs="24">
                 <Announcement></Announcement>
               </el-col>
             </el-row>
@@ -483,7 +483,6 @@ export default {
       "userAuth",
       "isSuperAdmin",
       "isMainAdminRole",
-      "isAdminRole",
       "websiteConfig",
     ]),
   },

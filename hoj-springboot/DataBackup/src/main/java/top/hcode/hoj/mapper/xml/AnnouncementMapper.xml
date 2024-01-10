@@ -8,6 +8,9 @@
         <if test="notAdmin">
             and a.status = 0
         </if>
+        <if test="id">
+            and a.id = #{id}
+        </if>
         order by a.gmt_create desc
     </select>
 
@@ -16,6 +19,9 @@
         where a.uid = u.uuid and ca.cid =#{cid} and ca.aid = a.id
         <if test="notAdmin">
             and a.status = 0
+        </if>
+        <if test="id">
+            and a.id = #{id}
         </if>
         order by a.gmt_create desc
     </select>

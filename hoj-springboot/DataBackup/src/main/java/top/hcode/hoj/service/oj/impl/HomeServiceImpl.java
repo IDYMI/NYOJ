@@ -49,8 +49,8 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public CommonResult<IPage<AnnouncementVO>> getCommonAnnouncement(Integer limit, Integer currentPage) {
-        return CommonResult.successResponse(homeManager.getCommonAnnouncement(limit, currentPage));
+    public CommonResult<IPage<AnnouncementVO>> getCommonAnnouncement(Integer limit, Integer currentPage, Long id) {
+        return CommonResult.successResponse(homeManager.getCommonAnnouncement(limit, currentPage, id));
     }
 
     @Override

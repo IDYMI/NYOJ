@@ -876,7 +876,7 @@ public class ContestManager {
         return resultList;
     }
 
-    public IPage<AnnouncementVO> getContestAnnouncement(Long cid, Integer limit, Integer currentPage)
+    public IPage<AnnouncementVO> getContestAnnouncement(Long cid, Integer limit, Integer currentPage, Long id)
             throws StatusFailException, StatusForbiddenException {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
@@ -897,7 +897,7 @@ public class ContestManager {
         if (limit == null || limit < 1)
             limit = 10;
 
-        return announcementEntityService.getContestAnnouncement(cid, true, limit, currentPage);
+        return announcementEntityService.getContestAnnouncement(cid, true, limit, currentPage, id);
     }
 
     public List<Announcement> getContestUserNotReadAnnouncement(

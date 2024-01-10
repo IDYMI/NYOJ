@@ -121,6 +121,7 @@
         </el-card>
       </el-col>
     </el-row>
+    <Announcement></Announcement>
     <div class="sub-menu">
       <el-tabs @tab-click="tabClick" v-model="route_name">
         <el-tab-pane name="ContestDetails" lazy>
@@ -645,6 +646,7 @@ import storage from "@/common/storage";
 import Markdown from "@/components/oj/common/Markdown";
 import ClickRank from "@/views/oj/contest/ClickRank";
 import { SIGN_TYPE_REVERSE } from "@/common/constants";
+const Announcement = () => import("@/views/oj/about/Switch_Announcement.vue");
 
 export default {
   name: "ContestDetails",
@@ -652,6 +654,7 @@ export default {
     Markdown,
     Timebar,
     BoxFile,
+    Announcement,
   },
   data() {
     return {

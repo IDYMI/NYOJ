@@ -26,7 +26,8 @@
         (SELECT COUNT(uid) FROM judge WHERE uid=u.uuid) AS total
         FROM user_info u
         <where>
-            u.status = 0 and u.gmt_create > CONVERT_TZ(DATE_FORMAT(CONCAT(YEAR(NOW()), '-06-01 00:00:00'), '%Y-%m-%d %H:%i:%s'), '+00:00', '+08:00')
+            u.status = 0
+            AND u.gmt_create >= CONCAT(YEAR(NOW()), '-06-01')
             <if test="uidList!=null">
                 AND u.uuid in
                 <foreach collection="uidList" item="uid" open="(" separator="," close=")">
@@ -108,7 +109,8 @@
                 GROUP BY u.uuid
             ) ss
         <where>
-            ss.uid = ui.uuid  and ui.gmt_create > CONVERT_TZ(DATE_FORMAT(CONCAT(YEAR(NOW()), '-06-01 00:00:00'), '%Y-%m-%d %H:%i:%s'), '+00:00', '+08:00')
+            ss.uid = ui.uuid
+            AND ui.gmt_create >= CONCAT(YEAR(NOW()), '-06-01')
             <if test="uidList!=null">
                 AND ui.uuid in
                 <foreach collection="uidList" item="uid" open="(" separator="," close=")">

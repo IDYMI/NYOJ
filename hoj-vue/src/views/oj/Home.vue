@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Announcement></Announcement>
     <el-row :gutter="20">
       <el-col :md="15" :sm="24">
         <el-card>
@@ -18,12 +19,6 @@
             style="background-color: #fff"
           >
             <el-carousel-item v-for="item in carouselImgList" :key="item.url">
-              <!-- <el-image
-                :title="newsize"
-                :src="item.url"
-                class="image"
-              ></el-image>-->
-
               <div v-if="item.hint">
                 <el-tooltip content="Bottom Center 提示文字" placement="bottom" effect="light">
                   <div
@@ -58,61 +53,8 @@
                   class="normal-image"
                 ></el-image>
               </div>
-
-              <!-- <div slot="default" class="text">{{ item.hint }}</div> -->
-
-              <!-- <el-popover
-                v-if="item.link"
-                placement="right"
-                :title="item.hint"
-                trigger="hover"
-                :style="{
-                  cursor: isActive(item) && item.link ? 'pointer' : 'auto',
-                }"
-                @click.native="linkTo"
-              >
-                <el-image
-                  slot="reference"
-                  :src="item.url"
-                  :alt="item.url"
-                  class="image"
-                  fit="contain"
-                ></el-image>
-                <el-image
-                  :src="item.url"
-                  class="preview-image"
-                  fit="contain"
-                ></el-image>
-              </el-popover>
-              <el-image
-                v-else
-                fit="contain"
-                :src="item.url"
-                :alt="item.url"
-                :style="{
-                  cursor: isActive(item) && item.link ? 'pointer' : 'auto',
-                }"
-                @click="linkTo"
-                class="normal-image"
-              ></el-image>-->
             </el-carousel-item>
           </el-carousel>
-          <!-- <el-carousel
-            :interval="interval"
-            :height="srcHight"
-            @click.native="linkTo"
-            class="img-carousel"
-            arrow="always"
-            indicator-position="outside"
-          >
-            <el-carousel-item v-for="item in carouselImgList" :key="item.url">
-              <el-image :src="item.url" fit="fill">
-                <div slot="error" class="image-slot">
-                  <i class="el-icon-picture-outline"></i>
-                </div>
-              </el-image>
-            </el-carousel-item>
-          </el-carousel>-->
         </el-card>
         <SubmissionStatistic class="card-top"></SubmissionStatistic>
         <el-card class="card-top">
@@ -371,11 +313,13 @@ import Avatar from "vue-avatar";
 import myMessage from "@/common/message";
 const SubmissionStatistic = () =>
   import("@/components/oj/home/SubmissionStatistic.vue");
+const Announcement = () => import("@/views/oj/about/Switch_Announcement.vue");
 export default {
   name: "home",
   components: {
     SubmissionStatistic,
     Avatar,
+    Announcement,
   },
   data() {
     return {

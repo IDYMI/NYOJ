@@ -3,7 +3,6 @@ import SetNewPassword from "@/views/oj/user/SetNewPassword.vue"
 import UserHome from "@/views/oj/user/UserHome.vue"
 import Setting from "@/views/oj/user/Setting.vue"
 import ProblemLIst from "@/views/oj/problem/ProblemList.vue"
-import Announcement from "@/views/oj/about/Home_Announcement.vue"
 import Logout from "@/views/oj/user/Logout.vue"
 import SubmissionList from "@/views/oj/status/SubmissionList.vue"
 import SubmissionDetails from "@/views/oj/status/SubmissionDetails.vue"
@@ -78,12 +77,12 @@ const ojRoutes = [{
     }
   },
   {
-    path: '/announcement',
-    name: 'Announcement',
-    component: Announcement,
+    path: '/announcement/:announcementID?',
+    name: 'Announcements',
+    component: Announcements,
     meta: {
-      title: 'Announcement'
-    }
+      title: 'Announcements'
+    },
   },
   {
     path: '/problem/:problemID',
@@ -244,7 +243,7 @@ const ojRoutes = [{
       },
       {
         name: 'ContestAnnouncementList',
-        path: 'announcements',
+        path: 'announcement/:announcementID?',
         component: Announcements,
         meta: {
           title: 'Contest Announcement'
@@ -367,10 +366,10 @@ const ojRoutes = [{
   },
   {
     path: '/acm-rank-static/:cids',
-    name: 'ACM Static',
+    name: 'ACM Static Rank',
     component: ACMStaticRank,
     meta: {
-      title: 'ACM Static'
+      title: 'ACM Static Rank'
     }
   },
   {
