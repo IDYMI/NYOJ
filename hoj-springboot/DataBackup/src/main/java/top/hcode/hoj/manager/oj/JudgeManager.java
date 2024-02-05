@@ -419,12 +419,12 @@ public class JudgeManager {
             }
         }
 
-        // 只允许用户查看ce错误,sf错误，se错误信息提示
-        if (judge.getStatus().intValue() != Constants.Judge.STATUS_COMPILE_ERROR.getStatus() &&
-                judge.getStatus().intValue() != Constants.Judge.STATUS_SYSTEM_ERROR.getStatus() &&
-                judge.getStatus().intValue() != Constants.Judge.STATUS_SUBMITTED_FAILED.getStatus()) {
-            judge.setErrorMessage("The error message does not support viewing.");
-        }
+        // // 只允许用户查看ce错误,sf错误，se错误信息提示
+        // if (judge.getStatus().intValue() != Constants.Judge.STATUS_COMPILE_ERROR.getStatus() &&
+        //         judge.getStatus().intValue() != Constants.Judge.STATUS_SYSTEM_ERROR.getStatus() &&
+        //         judge.getStatus().intValue() != Constants.Judge.STATUS_SUBMITTED_FAILED.getStatus()) {
+        //     judge.setErrorMessage("The error message does not support viewing.");
+        // }
         submissionInfoVo.setSubmission(judge);
         submissionInfoVo.setCodeShare(problem.getCodeShare());
 
@@ -604,7 +604,6 @@ public class JudgeManager {
      * @Description 获得指定提交id的测试样例结果，暂不支持查看测试数据，只可看测试点结果，时间，空间，或者IO得分
      * @Since 2020/10/29
      */
-    @GetMapping("/get-all-case-result")
     public JudgeCaseVO getALLCaseResult(Long submitId, Long cid)
             throws StatusNotFoundException, StatusForbiddenException {
 

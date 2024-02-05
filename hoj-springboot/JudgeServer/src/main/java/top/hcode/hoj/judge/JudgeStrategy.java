@@ -62,7 +62,8 @@ public class JudgeStrategy {
                         JudgeUtils.getProblemExtraFileMap(problem, "user"));
             }
             // 测试数据文件所在文件夹
-            String testCasesDir = Constants.JudgeDir.TEST_CASE_DIR.getContent() + File.separator + "problem_" + problem.getId();
+            String testCasesDir = Constants.JudgeDir.TEST_CASE_DIR.getContent() + File.separator + "problem_"
+                    + problem.getId();
             // 从文件中加载测试数据json
             JSONObject testCasesInfo = problemTestCaseUtils.loadTestCaseInfo(problem.getId(),
                     testCasesDir,
@@ -87,7 +88,8 @@ public class JudgeStrategy {
 
             // 获取题目数据的评测模式
             String infoJudgeCaseMode = testCasesInfo.getStr("judgeCaseMode", Constants.JudgeCaseMode.DEFAULT.getMode());
-            String judgeCaseMode = getFinalJudgeCaseMode(problem.getType(), problem.getJudgeCaseMode(), infoJudgeCaseMode);
+            String judgeCaseMode = getFinalJudgeCaseMode(problem.getType(), problem.getJudgeCaseMode(),
+                    infoJudgeCaseMode);
 
             // 开始测试每个测试点
             List<JSONObject> allCaseResultList = judgeRun.judgeAllCase(judge.getSubmitId(),
@@ -104,7 +106,8 @@ public class JudgeStrategy {
             return getJudgeInfo(allCaseResultList, problem, judge, judgeCaseMode);
         } catch (SystemError systemError) {
             result.put("code", Constants.Judge.STATUS_SYSTEM_ERROR.getStatus());
-            result.put("errMsg", "Oops, something has gone wrong with the judgeServer. Please report this to administrator.");
+            result.put("errMsg",
+                    "Oops, something has gone wrong with the judgeServer. Please report this to administrator.");
             result.put("time", 0);
             result.put("memory", 0);
             log.error("[Judge] [System Error] Submit Id:[{}] Problem Id:[{}], Error:[{}]",
@@ -113,7 +116,8 @@ public class JudgeStrategy {
                     systemError);
         } catch (SubmitError submitError) {
             result.put("code", Constants.Judge.STATUS_SUBMITTED_FAILED.getStatus());
-            result.put("errMsg", mergeNonEmptyStrings(submitError.getMessage(), submitError.getStdout(), submitError.getStderr()));
+            result.put("errMsg",
+                    mergeNonEmptyStrings(submitError.getMessage(), submitError.getStdout(), submitError.getStderr()));
             result.put("time", 0);
             result.put("memory", 0);
             log.error("[Judge] [Submit Error] Submit Id:[{}] Problem Id:[{}], Error:[{}]",
@@ -127,7 +131,8 @@ public class JudgeStrategy {
             result.put("memory", 0);
         } catch (Exception e) {
             result.put("code", Constants.Judge.STATUS_SYSTEM_ERROR.getStatus());
-            result.put("errMsg", "Oops, something has gone wrong with the judgeServer. Please report this to administrator.");
+            result.put("errMsg",
+                    "Oops, something has gone wrong with the judgeServer. Please report this to administrator.");
             result.put("time", 0);
             result.put("memory", 0);
             log.error("[Judge] [System Runtime Error] Submit Id:[{}] Problem Id:[{}], Error:[{}]",
@@ -172,7 +177,8 @@ public class JudgeStrategy {
                     .memory(0L)
                     .time(0L)
                     .status(Constants.Judge.STATUS_SUBMITTED_FAILED.getStatus())
-                    .stderr(mergeNonEmptyStrings(submitError.getMessage(), submitError.getStdout(), submitError.getStderr()))
+                    .stderr(mergeNonEmptyStrings(submitError.getMessage(), submitError.getStdout(),
+                            submitError.getStderr()))
                     .build();
         } catch (CompileError compileError) {
             return TestJudgeRes.builder()
@@ -223,7 +229,8 @@ public class JudgeStrategy {
 
                 // 如果不存在该已经编译好的程序，则需要再次进行编译
                 if (!FileUtil.exist(programFilePath) || !FileUtil.exist(programVersionPath)) {
-                    boolean isCompileSpjOk = Compiler.compileSpj(problem.getSpjCode(), problem.getId(), problem.getSpjLanguage(),
+                    boolean isCompileSpjOk = Compiler.compileSpj(problem.getSpjCode(), problem.getId(),
+                            problem.getSpjLanguage(),
                             JudgeUtils.getProblemExtraFileMap(problem, "judge"));
 
                     FileWriter fileWriter = new FileWriter(programVersionPath);
@@ -236,7 +243,8 @@ public class JudgeStrategy {
 
                 // 版本变动也需要重新编译
                 if (!currentVersion.equals(recordSpjVersion)) {
-                    boolean isCompileSpjOk = Compiler.compileSpj(problem.getSpjCode(), problem.getId(), problem.getSpjLanguage(),
+                    boolean isCompileSpjOk = Compiler.compileSpj(problem.getSpjCode(), problem.getId(),
+                            problem.getSpjLanguage(),
                             JudgeUtils.getProblemExtraFileMap(problem, "judge"));
                     FileWriter fileWriter = new FileWriter(programVersionPath);
                     fileWriter.write(currentVersion);
@@ -245,7 +253,8 @@ public class JudgeStrategy {
 
                 break;
             case INTERACTIVE:
-                languageConfig = languageConfigLoader.getLanguageConfigByName("INTERACTIVE-" + problem.getSpjLanguage());
+                languageConfig = languageConfigLoader
+                        .getLanguageConfigByName("INTERACTIVE-" + problem.getSpjLanguage());
                 programFilePath = Constants.JudgeDir.INTERACTIVE_WORKPLACE_DIR.getContent() + File.separator +
                         problem.getId() + File.separator + languageConfig.getExeName();
 
@@ -254,7 +263,8 @@ public class JudgeStrategy {
 
                 // 如果不存在该已经编译好的程序，则需要再次进行编译 版本变动也需要重新编译
                 if (!FileUtil.exist(programFilePath) || !FileUtil.exist(programVersionPath)) {
-                    boolean isCompileInteractive = Compiler.compileInteractive(problem.getSpjCode(), problem.getId(), problem.getSpjLanguage(),
+                    boolean isCompileInteractive = Compiler.compileInteractive(problem.getSpjCode(), problem.getId(),
+                            problem.getSpjLanguage(),
                             JudgeUtils.getProblemExtraFileMap(problem, "judge"));
                     FileWriter fileWriter = new FileWriter(programVersionPath);
                     fileWriter.write(currentVersion);
@@ -266,7 +276,8 @@ public class JudgeStrategy {
 
                 // 版本变动也需要重新编译
                 if (!currentVersion.equals(recordInteractiveVersion)) {
-                    boolean isCompileInteractive = Compiler.compileSpj(problem.getSpjCode(), problem.getId(), problem.getSpjLanguage(),
+                    boolean isCompileInteractive = Compiler.compileSpj(problem.getSpjCode(), problem.getId(),
+                            problem.getSpjLanguage(),
                             JudgeUtils.getProblemExtraFileMap(problem, "judge"));
 
                     FileWriter fileWriter = new FileWriter(programVersionPath);
@@ -285,11 +296,11 @@ public class JudgeStrategy {
 
     // 获取判题的运行时间，运行空间，OI得分
     public HashMap<String, Object> computeResultInfo(List<JudgeCase> allTestCaseResultList,
-                                                     Boolean isACM,
-                                                     Integer errorCaseNum,
-                                                     Integer totalScore,
-                                                     Integer problemDifficulty,
-                                                     String judgeCaseMode) {
+            Boolean isACM,
+            Integer errorCaseNum,
+            Integer totalScore,
+            Integer problemDifficulty,
+            String judgeCaseMode) {
         HashMap<String, Object> result = new HashMap<>();
         // 用时和内存占用保存为多个测试点中最长的
         allTestCaseResultList.stream().max(Comparator.comparing(JudgeCase::getTime))
@@ -321,7 +332,8 @@ public class JudgeStrategy {
                     for (JudgeCase testcaseResult : allTestCaseResultList) {
                         Pair_<Integer, Integer> pair = groupNumMapScore.get(testcaseResult.getGroupNum());
                         if (pair == null) {
-                            groupNumMapScore.put(testcaseResult.getGroupNum(), new Pair_<>(1, testcaseResult.getScore()));
+                            groupNumMapScore.put(testcaseResult.getGroupNum(),
+                                    new Pair_<>(1, testcaseResult.getScore()));
                         } else {
                             int count = pair.getKey() + 1;
                             int score = pair.getValue() + testcaseResult.getScore();
@@ -339,8 +351,9 @@ public class JudgeStrategy {
                 if (totalScore != 0 && sumScore > totalScore) {
                     sumScore = totalScore;
                 }
-                //测试点总得分*0.1+2*题目难度*（测试点总得分/题目总分）
-                int oiRankScore = (int) Math.round(sumScore * 0.1 + 2 * problemDifficulty * (sumScore * 1.0 / totalScore));
+                // 测试点总得分*0.1+2*题目难度*（测试点总得分/题目总分）
+                int oiRankScore = (int) Math
+                        .round(sumScore * 0.1 + 2 * problemDifficulty * (sumScore * 1.0 / totalScore));
                 result.put("score", sumScore);
                 result.put("oiRankScore", oiRankScore);
             }
@@ -350,9 +363,9 @@ public class JudgeStrategy {
 
     // 进行最终测试结果的判断（除编译失败外的评测状态码和时间，空间,OI题目的得分）
     public HashMap<String, Object> getJudgeInfo(List<JSONObject> testCaseResultList,
-                                                Problem problem,
-                                                Judge judge,
-                                                String judgeCaseMode) {
+            Problem problem,
+            Judge judge,
+            String judgeCaseMode) {
 
         boolean isACM = Objects.equals(problem.getType(), Constants.Contest.TYPE_ACM.getCode());
 
@@ -371,6 +384,8 @@ public class JudgeStrategy {
             Integer seq = jsonObject.getInt("seq", 0);
             String inputFileName = jsonObject.getStr("inputFileName");
             String outputFileName = jsonObject.getStr("outputFileName");
+            String inputContent = jsonObject.getStr("inputContent");
+            String outputContent = jsonObject.getStr("outputContent");
             String msg = jsonObject.getStr("errMsg");
             JudgeCase judgeCase = new JudgeCase();
             judgeCase.setTime(time)
@@ -378,6 +393,8 @@ public class JudgeStrategy {
                     .setStatus(status)
                     .setInputData(inputFileName)
                     .setOutputData(outputFileName)
+                    .setInputContent(inputContent)
+                    .setOutputContent(outputContent)
                     .setPid(problem.getId())
                     .setUid(judge.getUid())
                     .setCaseId(caseId)
@@ -386,7 +403,8 @@ public class JudgeStrategy {
                     .setMode(judgeCaseMode)
                     .setSubmitId(judge.getSubmitId());
 
-            if (!StringUtils.isEmpty(msg) && !Objects.equals(status, Constants.Judge.STATUS_COMPILE_ERROR.getStatus())) {
+            if (!StringUtils.isEmpty(msg)
+                    && !Objects.equals(status, Constants.Judge.STATUS_COMPILE_ERROR.getStatus())) {
                 judgeCase.setUserOutput(msg);
             }
 
@@ -440,10 +458,10 @@ public class JudgeStrategy {
             result.put("errMsg", errorTestCaseList.get(0).getStr("errMsg", ""));
         } else {
             result.put("code", Constants.Judge.STATUS_PARTIAL_ACCEPTED.getStatus());
+            result.put("errMsg", errorTestCaseList.get(0).getStr("errMsg", ""));
         }
         return result;
     }
-
 
     private String getUserFileName(String language) {
         switch (language) {

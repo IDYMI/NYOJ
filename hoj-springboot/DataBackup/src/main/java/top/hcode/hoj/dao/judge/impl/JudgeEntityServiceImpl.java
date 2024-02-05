@@ -48,20 +48,23 @@ public class JudgeEntityServiceImpl extends ServiceImpl<JudgeMapper, Judge> impl
     @Autowired
     private ProblemMapper problemMapper;
 
-
     @Override
     public IPage<JudgeVO> getCommonJudgeList(Integer limit,
-                                             Integer currentPage,
-                                             String searchPid,
-                                             Integer status,
-                                             String username,
-                                             String uid,
-                                             Boolean completeProblemID,
-                                             Long gid) {
-        //新建分页
+            Integer currentPage,
+            String searchPid,
+            Integer status,
+            String username,
+            String uid,
+            Boolean completeProblemID,
+            Long gid) {
+        // 新建分页
         Page<JudgeVO> page = new Page<>(currentPage, limit);
+        page.setSearchCount(false);
+        page.setOptimizeCountSql(false);
+        // 关闭count sql的优化，解决前端查询慢的效率问题。
 
-        IPage<JudgeVO> commonJudgeList = judgeMapper.getCommonJudgeList(page, searchPid, status, username, uid, completeProblemID, gid);
+        IPage<JudgeVO> commonJudgeList = judgeMapper.getCommonJudgeList(page, searchPid, status, username, uid,
+                completeProblemID, gid);
         List<JudgeVO> records = commonJudgeList.getRecords();
         if (!CollectionUtils.isEmpty(records)) {
             List<Long> pidList = records.stream().map(JudgeVO::getPid).collect(Collectors.toList());
@@ -93,31 +96,31 @@ public class JudgeEntityServiceImpl extends ServiceImpl<JudgeMapper, Judge> impl
 
     @Override
     public IPage<JudgeVO> getContestJudgeList(Integer limit,
-                                              Integer currentPage,
-                                              String displayId,
-                                              Long cid,
-                                              Integer status,
-                                              String username,
-                                              String uid,
-                                              Boolean beforeContestSubmit,
-                                              String rule,
-                                              Date startTime,
-                                              Date sealRankTime,
-                                              String sealTimeUid,
-                                              Boolean completeProblemID) {
-        //新建分页
+            Integer currentPage,
+            String displayId,
+            Long cid,
+            Integer status,
+            String username,
+            String uid,
+            Boolean beforeContestSubmit,
+            String rule,
+            Date startTime,
+            Date sealRankTime,
+            String sealTimeUid,
+            Boolean completeProblemID) {
+        // 新建分页
         Page<JudgeVO> page = new Page<>(currentPage, limit);
 
         return judgeMapper.getContestJudgeList(page, displayId, cid, status, username, uid, beforeContestSubmit,
                 rule, startTime, sealRankTime, sealTimeUid, completeProblemID);
     }
 
-
     @Override
     public void failToUseRedisPublishJudge(Long submitId, Long pid, Boolean isContest) {
         UpdateWrapper<Judge> judgeUpdateWrapper = new UpdateWrapper<>();
         judgeUpdateWrapper.eq("submit_id", submitId)
-                .set("error_message", "The something has gone wrong with the data Backup server. Please report this to administrator.")
+                .set("error_message",
+                        "The something has gone wrong with the data Backup server. Please report this to administrator.")
                 .set("status", Constants.Judge.STATUS_SYSTEM_ERROR.getStatus());
         judgeMapper.update(null, judgeUpdateWrapper);
         // 更新contest_record表
@@ -131,7 +134,8 @@ public class JudgeEntityServiceImpl extends ServiceImpl<JudgeMapper, Judge> impl
     }
 
     @Override
-    public ProblemCountVO getContestProblemCount(Long pid, Long cpid, Long cid, Date startTime, Date sealRankTime, List<String> adminList) {
+    public ProblemCountVO getContestProblemCount(Long pid, Long cpid, Long cid, Date startTime, Date sealRankTime,
+            List<String> adminList) {
         return judgeMapper.getContestProblemCount(pid, cpid, cid, startTime, sealRankTime, adminList);
     }
 
@@ -149,7 +153,6 @@ public class JudgeEntityServiceImpl extends ServiceImpl<JudgeMapper, Judge> impl
     public List<ProblemCountVO> getProblemListCount(List<Long> pidList) {
         return judgeMapper.getProblemListCount(pidList);
     }
-
 
     public List<ContestScrollBoardSubmissionVO> getContestScrollBoardSubmission(Long cid, List<String> removeUidList) {
         return judgeMapper.getContestScrollBoardSubmission(cid, removeUidList);

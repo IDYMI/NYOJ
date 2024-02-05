@@ -9,6 +9,7 @@ import myMessage from '@/common/message'
 import api from "@/common/api";
 import store from '@/store'
 import { PROBLEM_TYPE } from './constants';
+import JSZip from 'jszip';
 
 // function submissionMemoryFormat (memory) {
 //   if (memory === undefined || memory ===null || memory === '') return '--'
@@ -187,6 +188,56 @@ function downloadFileByText(fileName, fileContent) {
   })
 }
 
+async function readTestCase(problemID, name = null, fileListDir = null) {
+  let url = "/api/file/download-testcase";
+  if (problemID !== null || fileListDir !== null) {
+    url += `?${problemID !== null ? `pid=${problemID}` : ''}${problemID !== null && fileListDir !== null ? '&' : ''}${fileListDir !== null ? `fileListDir=${fileListDir}` : ''}`;
+  }
+  
+  let fileContents = {};
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch test case. Status: " + response.status);
+    }
+
+    const blob = await response.blob();
+
+    // 使用JSZip解压缩内容
+    const zip = new JSZip();
+    const zipContents = await zip.loadAsync(blob);
+
+    // 如果没有传入name值，则返回所有有文件格式的文件的读取的文本列表
+    if (name === null) {
+      const filePromises = Object.values(zipContents.files).map(async (file) => {
+        if (!file.dir) {
+          if (file.name.split('.').length > 1) {
+            const content = await file.async("text");
+            fileContents[String(file.name)] = content;
+          }
+        }
+      });
+
+      await Promise.all(filePromises);
+    } else {
+      // 从zip中读取特定文件（name）的内容
+      const file = zipContents.file(name);
+
+      if (!file) {
+        throw new Error("File not found in the zip archive.");
+      }
+
+      const content = await file.async("text");
+      fileContents[String(name)] = content;
+    }
+  } catch (error) {
+    fileContents = {}; // 设置默认值或根据需要进行处理
+    console.error("Error reading test case:", error.message);
+  }
+  return fileContents;
+}
+
 function getLanguages(all = true) {
   return new Promise((resolve, reject) => {
     let languages = storage.get(STORAGE_KEY.languages)
@@ -328,5 +379,6 @@ export default {
   isFocusModePage: isFocusModePage,
   getFocusModeOriPage: getFocusModeOriPage,
   supportFocusMode: supportFocusMode,
-  getSwitchFoceusModeRouteName: getSwitchFoceusModeRouteName
+  getSwitchFoceusModeRouteName: getSwitchFoceusModeRouteName,
+  readTestCase: readTestCase
 }

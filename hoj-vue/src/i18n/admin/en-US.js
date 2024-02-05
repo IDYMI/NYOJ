@@ -79,6 +79,7 @@ export const m = {
   Import_User_Tips4: 'If the gender is male, please use "male" or "0", if the gender is female, please use "female" or "1". If it is not filled in, it is assumed to be "secrecy".',
   Import_User_Tips5: 'Please import the file saved as UTF-8 code, otherwise Chinese may be garbled.',
   Choose_File: 'Choose File',
+  Show_All: 'Show All',
   Password: 'Password',
   Upload_All: 'Upload All',
   Clear_All: 'Clear All',

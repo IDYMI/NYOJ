@@ -129,6 +129,9 @@ public class InteractiveJudge extends AbstractJudge {
             result.set("errMsg", str.substring(0, Math.min(1024 * 1024, str.length())));
         }
 
+        result.set("inputContent", limitLinesAndCharacters(judgeDTO.getTestCaseInputContent()));
+        result.set("outputContent", limitLinesAndCharacters(judgeDTO.getTestCaseOutputContent()));
+
         return result;
     }
 

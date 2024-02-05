@@ -8,64 +8,120 @@
         <span class="panel-title home-title">{{$t('m.Test_point_details')}}</span>
       </div>
     </template>
+
     <el-row :gutter="10">
-      <el-col :xs="24" :sm="8" :md="6" :lg="3" v-for="(item, index) in judgeCaseList" :key="index">
-        <el-tooltip placement="top">
-          <div slot="content">
-            <template v-if="item.inputData">
-              {{ $t('m.Input_File') }}：{{ item.inputData }}
-              <br />
-            </template>
-
-            <template v-if="item.outputData">
-              {{ $t('m.Output_File') }}：{{ item.outputData }}
-              <br />
-            </template>
-            {{ $t('m.Case_tips') }}：{{
-            item.userOutput ? item.userOutput : $t('m.Nothing')
-            }}
-          </div>
-          <div
-            class="test-detail-item"
-            :style="getTestCaseResultColor(item.status)"
-            v-if="item.status == JUDGE_STATUS_RESERVE.ac"
+      <div class="test-case-scrollbar">
+        <el-col
+          :xs="24"
+          :sm="8"
+          :md="6"
+          :lg="3"
+          v-for="(item, index) in judgeCaseList"
+          :key="index"
+          class="test-case-box"
+        >
+          <el-tooltip
+            popper-class="tooltip-width"
+            placement="top"
+            :disabled="['', null, undefined].indexOf(item.inputData) !== -1"
           >
-            <span>Test #{{ index + 1 }}:</span>
-            <h2 v-if="item.status != -4">{{ JUDGE_STATUS[item.status]['short'] }}</h2>
-            <h2 v-else>Skipped</h2>
-            <div
-              style="text-align:center;"
-            >{{ submissionTimeFormat(item.time) }}/{{ submissionMemoryFormat(item.memory) }}</div>
-            <div class="test-run-static">
-              <span v-if="item.score != null">
-                {{ item.score }} pts
-                <i class="el-icon-success"></i>
-              </span>
-              <span v-else>
-                <i class="el-icon-success"></i>
-              </span>
+            <div slot="content" v-if="item.inputData">
+              <template v-if="item.inputData">
+                <div
+                  v-if="item.status == JUDGE_STATUS_RESERVE.ac"
+                >{{ $t('m.Input_File') }}：{{ item.inputData }}</div>
+                <div v-else class="overflow-hidden">
+                  {{ $t('m.Input_File') }}：
+                  <a
+                    class="copy"
+                    v-clipboard:copy="item.inputContent"
+                    v-clipboard:success="onCopy"
+                    v-clipboard:error="onCopyError"
+                  >
+                    <i class="el-icon-document-copy"></i>
+                  </a>
+                  <br />
+                  {{ item.inputContent }}
+                </div>
+              </template>
+              <template v-if="item.outputData">
+                <br />
+                <div
+                  v-if="item.status == JUDGE_STATUS_RESERVE.ac"
+                >{{ $t('m.Output_File') }}：{{ item.outputData }}</div>
+                <div v-else class="overflow-hidden">
+                  {{ $t('m.Output_File') }}：
+                  <a
+                    class="copy"
+                    v-clipboard:copy="item.outputContent"
+                    v-clipboard:success="onCopy"
+                    v-clipboard:error="onCopyError"
+                  >
+                    <i class="el-icon-document-copy"></i>
+                  </a>
+                  <br />
+                  {{ item.outputContent }}
+                </div>
+              </template>
+              <template v-if="item.userOutput">
+                <div class="overflow-hidden">
+                  <br />
+                  {{ $t('m.Case_tips') }}：
+                  <a
+                    class="copy"
+                    v-clipboard:copy="item.userOutput"
+                    v-clipboard:success="onCopy"
+                    v-clipboard:error="onCopyError"
+                  >
+                    <i class="el-icon-document-copy"></i>
+                  </a>
+                  <br />
+                  {{ item.userOutput ? item.userOutput : $t('m.Nothing') }}
+                </div>
+              </template>
             </div>
-          </div>
+            <div
+              class="test-detail-item"
+              :style="getTestCaseResultColor(item.status)"
+              v-if="item.status == JUDGE_STATUS_RESERVE.ac"
+            >
+              <span>Test #{{ index + 1 }}:</span>
+              <h2 v-if="item.status != -4">{{ JUDGE_STATUS[item.status]['short'] }}</h2>
+              <h2 v-else>Skipped</h2>
+              <div
+                style="text-align:center;"
+              >{{ submissionTimeFormat(item.time) }}/{{ submissionMemoryFormat(item.memory) }}</div>
+              <div class="test-run-static">
+                <span v-if="item.score != null">
+                  {{ item.score }} pts
+                  <i class="el-icon-success"></i>
+                </span>
+                <span v-else>
+                  <i class="el-icon-success"></i>
+                </span>
+              </div>
+            </div>
 
-          <div class="test-detail-item" :style="getTestCaseResultColor(item.status)" v-else>
-            <span>Test #{{ index + 1 }}:</span>
-            <h2 v-if="item.status != -4">{{ JUDGE_STATUS[item.status]['short'] }}</h2>
-            <h2 v-else>Skipped</h2>
-            <div
-              style="text-align:center;"
-            >{{ submissionTimeFormat(item.time) }}/{{ submissionMemoryFormat(item.memory) }}</div>
-            <div class="test-run-static">
-              <span v-if="item.score != null">
-                {{ item.score }} pts
-                <i class="el-icon-error"></i>
-              </span>
-              <span v-else>
-                <i class="el-icon-error"></i>
-              </span>
+            <div class="test-detail-item" :style="getTestCaseResultColor(item.status)" v-else>
+              <span>Test #{{ index + 1 }}:</span>
+              <h2 v-if="item.status != -4">{{ JUDGE_STATUS[item.status]['short'] }}</h2>
+              <h2 v-else>Skipped</h2>
+              <div
+                style="text-align:center;"
+              >{{ submissionTimeFormat(item.time) }}/{{ submissionMemoryFormat(item.memory) }}</div>
+              <div class="test-run-static">
+                <span v-if="item.score != null">
+                  {{ item.score }} pts
+                  <i class="el-icon-error"></i>
+                </span>
+                <span v-else>
+                  <i class="el-icon-error"></i>
+                </span>
+              </div>
             </div>
-          </div>
-        </el-tooltip>
-      </el-col>
+          </el-tooltip>
+        </el-col>
+      </div>
     </el-row>
   </el-card>
 </template>
@@ -73,6 +129,8 @@
 <script>
 import utils from "@/common/utils";
 import { JUDGE_STATUS, JUDGE_STATUS_RESERVE } from "@/common/constants";
+import myMessage from "@/common/message";
+
 export default {
   name: "judgeCase",
   props: {
@@ -111,6 +169,13 @@ export default {
         "!important"
       );
     },
+
+    onCopy(event) {
+      myMessage.success(this.$i18n.t("m.TestCase_Copied_successfully"));
+    },
+    onCopyError(e) {
+      myMessage.success(this.$i18n.t("m.Copied_failed"));
+    },
   },
 };
 </script>
@@ -123,7 +188,15 @@ export default {
   padding-left: 5px !important;
   padding-right: 5px !important;
 }
-
+.test-case-scrollbar {
+  overflow-x: auto;
+  display: -webkit-box;
+  -webkit-overflow-scrolling: touch;
+  margin: 0.5rem 0.5rem;
+}
+.test-case-box {
+  min-width: 150px;
+}
 .test-detail-item {
   width: 100%;
   padding: 5px;
@@ -159,5 +232,17 @@ export default {
 }
 .default-list-card {
   margin-top: 13px;
+}
+
+.overflow-hidden {
+  max-height: 85px;
+  overflow: hidden; /* 隐藏溢出内容 */
+  white-space: pre-line;
+}
+</style>
+
+<style >
+.tooltip-width {
+  max-width: 200px;
 }
 </style>

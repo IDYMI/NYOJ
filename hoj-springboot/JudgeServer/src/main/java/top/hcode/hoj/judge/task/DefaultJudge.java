@@ -62,11 +62,19 @@ public class DefaultJudge extends AbstractJudge {
                 // 与原测试数据输出的md5进行对比 AC或者是WA
                 JSONObject testcaseInfo = (JSONObject) ((JSONArray) judgeGlobalDTO.getTestCaseInfo().get("testCases"))
                         .get(judgeDTO.getTestCaseNum() - 1);
-                result.set("status",
-                        compareOutput(sandBoxRes.getStdout(), judgeGlobalDTO.getRemoveEOLBlank(), testcaseInfo));
+                Integer status = compareOutput(sandBoxRes.getStdout(), judgeGlobalDTO.getRemoveEOLBlank(),
+                        testcaseInfo);
+                result.set("status", status);
+                // 所有的WA
+                if (status.equals(Constants.Judge.STATUS_WRONG_ANSWER.getStatus())) {
+                    String testCaseOutputContent = judgeDTO.getTestCaseOutputContent();
+                    String stdout = sandBoxRes.getStdout();
+                    errMsg.append(getErrorMsg(testCaseOutputContent, stdout));
+                }
             }
         } else if (sandBoxRes.getStatus().equals(Constants.Judge.STATUS_TIME_LIMIT_EXCEEDED.getStatus())) {
             result.set("status", Constants.Judge.STATUS_TIME_LIMIT_EXCEEDED.getStatus());
+            errMsg.append(String.format("The program return exit status code: %s\n", sandBoxRes.getStatus()));
         } else if (sandBoxRes.getExitCode() != 0) {
             result.set("status", Constants.Judge.STATUS_RUNTIME_ERROR.getStatus());
             if (sandBoxRes.getExitCode() < 32) {
@@ -104,6 +112,9 @@ public class DefaultJudge extends AbstractJudge {
         if (judgeGlobalDTO.getNeedUserOutputFile()) { // 如果需要获取用户对于该题目的输出
             result.set("output", sandBoxRes.getStdout());
         }
+
+        result.set("inputContent", limitLinesAndCharacters(judgeDTO.getTestCaseInputContent()));
+        result.set("outputContent", limitLinesAndCharacters(judgeDTO.getTestCaseOutputContent()));
 
         return result;
     }

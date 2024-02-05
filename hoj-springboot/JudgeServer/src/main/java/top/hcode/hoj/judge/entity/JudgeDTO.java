@@ -51,7 +51,7 @@ public class JudgeDTO implements Serializable {
     private String testCaseOutputPath;
 
     /**
-     * 当前题目评测点的标准输出内容(目前只用于testJudge)
+     * 当前题目评测点的标准输出内容
      */
     private String testCaseOutputContent;
 

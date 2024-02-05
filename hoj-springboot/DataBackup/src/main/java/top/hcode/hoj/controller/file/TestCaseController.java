@@ -36,8 +36,12 @@ public class TestCaseController {
 
     @GetMapping("/download-testcase")
     @RequiresAuthentication
-    public void downloadTestcase(@RequestParam("pid") Long pid, HttpServletResponse response)
+    public void downloadTestcase(
+            @RequestParam(value = "pid", required = false) Long pid,
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "fileListDir", required = false) String fileListDir,
+            HttpServletResponse response)
             throws StatusFailException, StatusForbiddenException {
-        testCaseService.downloadTestcase(pid, response);
+        testCaseService.downloadTestcase(pid, name, fileListDir, response);
     }
 }

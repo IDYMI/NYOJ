@@ -98,7 +98,7 @@ export default {
       hint: "",
       handleEditLoading: false,
       HandleEditVisible: false,
-      floderImg: require("@/assets/文件夹.png"),
+      floderImg: require("@/assets/floder.png"),
     };
   },
   props: {

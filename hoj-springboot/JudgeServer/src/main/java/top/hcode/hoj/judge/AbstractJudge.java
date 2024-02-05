@@ -14,6 +14,7 @@ import top.hcode.hoj.util.Constants;
 import top.hcode.hoj.util.JudgeUtils;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -183,4 +184,101 @@ public abstract class AbstractJudge {
             return null;
         return EOL_PATTERN.matcher(StrUtil.trimEnd(value)).replaceAll("");
     }
+
+    public String getErrorMsg(String testCaseOutputContent, String output) {
+
+        StringBuilder errMsg = new StringBuilder();
+
+        List<String> testCaseOutputContent_list = Arrays.asList(testCaseOutputContent.split("\n"));
+
+        if (output == null) {
+            errMsg.append("wrong answer expected '" + limitLinesAndCharacters(testCaseOutputContent_list.get(0))
+                    + "', found ''");
+            return errMsg.toString();
+        }
+
+        List<String> output_list = Arrays.asList(output.split("\n"));
+
+        for (int i = 0; i < testCaseOutputContent_list.size(); i++) {
+            List<String> testCaseOutputContent1 = Arrays.asList(testCaseOutputContent_list.get(i).split(" "));
+
+            if (i > output_list.size() - 1) {
+                errMsg.append("wrong answer expected '" + limitLinesAndCharacters(testCaseOutputContent1.get(i))
+                        + "', found ''");
+                return errMsg.toString();
+            }
+
+            List<String> output1 = Arrays.asList(output_list.get(i).split(" "));
+
+            if (!testCaseOutputContent1.equals(output1)) {
+                if (testCaseOutputContent1.size() == 1) {
+                    errMsg.append("wrong answer expected '" + limitLinesAndCharacters(testCaseOutputContent1.get(i))
+                            + "', found '"
+                            + limitLinesAndCharacters(output_list.get(i)) + "'");
+                } else {
+                    errMsg.append("wrong answer Output is not a correct distribution of integers a[1..n]");
+                }
+                if (i != 0)
+                    errMsg.append(" [" + convertToEnglishSuffix(i + 1) + " token]");
+                break;
+            }
+        }
+
+        return errMsg.toString();
+    }
+
+    public static String limitLinesAndCharacters(String input) {
+        // 最大行数不超过50行
+        int maxLines = 50;
+        // 最多字符串不超过1000个
+        int maxCharactersPerLine = 1000;
+
+        StringBuilder result = new StringBuilder();
+        int lines = 0;
+        int characters = 0;
+
+        // 遍历字符串
+        for (char currentChar : input.toCharArray()) {
+            // 统计行数和字符数
+            if (currentChar == '\n') {
+                lines++;
+                characters = 0;
+            } else {
+                characters++;
+            }
+
+            // 添加字符到结果，同时检查是否超过限制
+            if (lines <= maxLines && characters <= maxCharactersPerLine) {
+                result.append(currentChar);
+            } else {
+                // 超过限制时跳出循环
+                break;
+            }
+        }
+
+        // 如果字符串被截断，添加 '...'
+        if (lines > maxLines || characters > maxCharactersPerLine) {
+            result.append("...");
+        }
+
+        return result.toString();
+    }
+
+    private static String convertToEnglishSuffix(int number) {
+        if (number >= 11 && number <= 13) {
+            return number + "th";
+        }
+
+        switch (number % 10) {
+            case 1:
+                return number + "st";
+            case 2:
+                return number + "nd";
+            case 3:
+                return number + "rd";
+            default:
+                return number + "th";
+        }
+    }
+
 }

@@ -2,8 +2,8 @@
   <div class="main">
     <interpolator :dark="getTheme()" :watch-system="true">
       <div id="app">
-        <el-backtop :right="10"></el-backtop>
-
+        <!-- 添加返回上下功能键 -->
+        <Back id="back"></Back>
         <div v-if="!isAdminView" class="full-height flex-column">
           <NavBar></NavBar>
           <div id="oj-content">
@@ -120,6 +120,7 @@ import { mapActions, mapState, mapGetters } from "vuex";
 import { LOGO, MOTTO } from "@/common/logo";
 import storage from "@/common/storage";
 import utils from "@/common/utils";
+import Back from "@/components/oj/common/Back";
 
 import interpolator from "vue-apply-darkmode/src/vue-apply-darkmode.vue";
 import {
@@ -132,6 +133,7 @@ export default {
   components: {
     NavBar,
     interpolator,
+    Back,
   },
   data() {
     return {
@@ -324,10 +326,15 @@ samp {
 
 #admin-content {
   background-color: #1e9fff;
-  position: absolute;
+  /* position: absolute; */
   top: 0;
   bottom: 0;
   width: 100%;
+}
+
+#back {
+  position: absolute;
+  z-index: 9999; /*防止被遮挡调到最大值*/
 }
 
 .mobile-menu-active {

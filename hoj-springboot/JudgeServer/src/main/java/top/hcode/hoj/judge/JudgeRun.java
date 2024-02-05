@@ -2,6 +2,7 @@ package top.hcode.hoj.judge;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+
 import org.springframework.stereotype.Component;
 import top.hcode.hoj.common.exception.SystemError;
 import top.hcode.hoj.judge.entity.JudgeDTO;
@@ -17,6 +18,7 @@ import top.hcode.hoj.util.ThreadPoolUtils;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -53,7 +55,7 @@ public class JudgeRun {
             String userFileContent,
             Boolean getUserOutput,
             String judgeCaseMode)
-            throws SystemError, ExecutionException, InterruptedException {
+            throws SystemError, ExecutionException, InterruptedException, IOException {
 
         if (testCasesInfo == null) {
             throw new SystemError("The evaluation data of the problem does not exist", null, null);
@@ -117,7 +119,7 @@ public class JudgeRun {
 
     /**
      * 默认会评测全部的测试点数据
-     * 
+     *
      * @param testcaseList
      * @param testCasesDir
      * @param judgeGlobalDTO
@@ -129,7 +131,7 @@ public class JudgeRun {
     private List<JSONObject> defaultJudgeAllCase(JSONArray testcaseList,
             String testCasesDir,
             JudgeGlobalDTO judgeGlobalDTO,
-            AbstractJudge abstractJudge) throws ExecutionException, InterruptedException {
+            AbstractJudge abstractJudge) throws ExecutionException, InterruptedException, IOException {
         List<FutureTask<JSONObject>> futureTasks = new ArrayList<>();
         for (int index = 0; index < testcaseList.size(); index++) {
             JSONObject testcase = (JSONObject) testcaseList.get(index);
@@ -152,6 +154,11 @@ public class JudgeRun {
 
             final Long maxOutputSize = Math.max(testcase.getLong("outputSize", 0L) * 2, 32 * 1024 * 1024L);
 
+            // 输入的数据
+            String testCaseInputContent = testcase.getStr("inputData");
+            // 输出的数据
+            String testCaseOutputContent = testcase.getStr("outputData");
+
             JudgeDTO judgeDTO = JudgeDTO.builder()
                     .testCaseNum(testCaseId)
                     .testCaseInputFileName(inputFileName)
@@ -160,6 +167,8 @@ public class JudgeRun {
                     .testCaseOutputPath(testCaseOutputPath)
                     .maxOutputSize(maxOutputSize)
                     .score(score)
+                    .testCaseInputContent(testCaseInputContent)
+                    .testCaseOutputContent(testCaseOutputContent)
                     .build();
 
             futureTasks.add(new FutureTask<>(() -> {
@@ -179,7 +188,7 @@ public class JudgeRun {
 
     /**
      * 顺序评测，遇到非AC就停止评测
-     * 
+     *
      * @param testcaseList
      * @param testCasesDir
      * @param judgeGlobalDTO
@@ -188,10 +197,10 @@ public class JudgeRun {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    private List<JSONObject> ergodicJudgeAllCase(JSONArray testcaseList,
+    public List<JSONObject> ergodicJudgeAllCase(JSONArray testcaseList,
             String testCasesDir,
             JudgeGlobalDTO judgeGlobalDTO,
-            AbstractJudge abstractJudge) throws ExecutionException, InterruptedException {
+            AbstractJudge abstractJudge) throws ExecutionException, InterruptedException, IOException {
         List<JSONObject> judgeResList = new ArrayList<>();
         for (int index = 0; index < testcaseList.size(); index++) {
             JSONObject testcase = (JSONObject) testcaseList.get(index);
@@ -214,6 +223,11 @@ public class JudgeRun {
 
             final Long maxOutputSize = Math.max(testcase.getLong("outputSize", 0L) * 2, 32 * 1024 * 1024L);
 
+            // 输入的数据
+            String testCaseInputContent = testcase.getStr("inputData");
+            // 输出的数据
+            String testCaseOutputContent = testcase.getStr("outputData");
+
             JudgeDTO judgeDTO = JudgeDTO.builder()
                     .testCaseNum(testCaseId)
                     .testCaseInputFileName(inputFileName)
@@ -222,6 +236,8 @@ public class JudgeRun {
                     .testCaseOutputPath(testCaseOutputPath)
                     .maxOutputSize(maxOutputSize)
                     .score(score)
+                    .testCaseInputContent(testCaseInputContent)
+                    .testCaseOutputContent(testCaseOutputContent)
                     .build();
 
             JSONObject judgeRes = SubmitTask2ThreadPool(new FutureTask<>(() -> {
@@ -245,7 +261,7 @@ public class JudgeRun {
 
     /**
      * 根据测试点的groupNum进行分组，每组按顺序评测，遇到非AC有评测点得分为0分，不再评测该组剩余的测试点
-     * 
+     *
      * @param testcaseList
      * @param testCasesDir
      * @param judgeGlobalDTO
@@ -257,7 +273,7 @@ public class JudgeRun {
     private List<JSONObject> subtaskJudgeAllCase(JSONArray testcaseList,
             String testCasesDir,
             JudgeGlobalDTO judgeGlobalDTO,
-            AbstractJudge abstractJudge) throws ExecutionException, InterruptedException {
+            AbstractJudge abstractJudge) throws ExecutionException, InterruptedException, IOException {
         Map<Integer, List<JudgeDTO>> judgeDTOMap = new LinkedHashMap<>();
         for (int index = 0; index < testcaseList.size(); index++) {
             JSONObject testcase = (JSONObject) testcaseList.get(index);
@@ -280,6 +296,11 @@ public class JudgeRun {
 
             final Long maxOutputSize = Math.max(testcase.getLong("outputSize", 0L) * 2, 32 * 1024 * 1024L);
 
+            // 输入的数据
+            String testCaseInputContent = testcase.getStr("inputData");
+            // 输出的数据
+            String testCaseOutputContent = testcase.getStr("outputData");
+
             JudgeDTO judgeDTO = JudgeDTO.builder()
                     .testCaseNum(testCaseId)
                     .testCaseInputFileName(inputFileName)
@@ -289,6 +310,8 @@ public class JudgeRun {
                     .maxOutputSize(maxOutputSize)
                     .score(score)
                     .problemCaseId(caseId)
+                    .testCaseInputContent(testCaseInputContent)
+                    .testCaseOutputContent(testCaseOutputContent)
                     .build();
             List<JudgeDTO> judgeDTOList = judgeDTOMap.get(groupNum);
             if (judgeDTOList == null) {
@@ -347,7 +370,7 @@ public class JudgeRun {
 
     /**
      * 运行自测评测单个测试点（由接口传入 输入与输出的数据）
-     * 
+     *
      * @param userFileId
      * @param testJudgeReq
      * @return

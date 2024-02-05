@@ -343,7 +343,9 @@ export const m = {
   OK: 'OK',
   Copied_successfully: 'Copied successfully',
   Copied_failed: 'Copied failed',
-
+  TestCase_Copied_failed: 'Copied failed, Has Too Much Memory, Please Download it !',
+  Upload_NotSupport: 'Not Support Such File',
+  TestCase_Copied_successfully: 'TestCase copied successfully (Only Views Parts!)',
 
   // /views/oj/status/SubmissionList.vue
   Mine: 'Mine',

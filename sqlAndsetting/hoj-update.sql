@@ -1599,10 +1599,42 @@ BEGIN
 	CREATE INDEX cid_gid_pid_status ON judge(`cid`,`gid`,`pid`,`status`);
 	CREATE INDEX cid_gid_pid_uid_oiRankScore ON judge(`cid`, `gid`, `pid`, `uid`, `oi_rank_score`);
 	CREATE INDEX sorted_id ON `hoj`.`judge` (`sorted_id` DESC);
+	CREATE INDEX display_pid ON `hoj`.`judge` (`display_pid`);
 END$$
 DELIMITER ;
 CALL add_Judge_Index ;
 
 DROP PROCEDURE add_Judge_Index;
 
+/*
+* 增加 judge_case 表的 input_content
+
+*/
+DROP PROCEDURE
+IF EXISTS add_JudgeCase_Content;
+DELIMITER $$
+
+CREATE PROCEDURE add_JudgeCase_Content ()
+BEGIN
+
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		information_schema.`COLUMNS`
+	WHERE
+		table_name = 'judge_case'
+	AND column_name = 'input_content'
+) THEN
+
+	ALTER TABLE `hoj`.`judge_case`  ADD COLUMN `input_content` longtext COMMENT '样例输入';
+	ALTER TABLE `hoj`.`judge_case`  ADD COLUMN `output_content` longtext COMMENT '样例输出';
+
+END
+IF ; END$$
+
+DELIMITER ;
+CALL add_JudgeCase_Content;
+
+DROP PROCEDURE add_JudgeCase_Content;
 

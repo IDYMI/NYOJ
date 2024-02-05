@@ -19,6 +19,7 @@ import top.hcode.hoj.pojo.entity.problem.ProblemCase;
 import top.hcode.hoj.util.Constants;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -109,6 +110,23 @@ public class ProblemTestCaseUtils {
         FileWriter infoFile = new FileWriter(testCasesDir + File.separator + "info", CharsetUtil.UTF_8);
         // 写入记录文件
         infoFile.write(JSONUtil.toJsonStr(result));
+
+        for (int index = 0; index < testCases.size(); index++) {
+            JSONObject jsonObject = (JSONObject) testCaseList.get(index);
+            // 生成对应文件
+            String inputData = (String) testCases.get(index).get("input");
+            String outputData = (String) testCases.get(index).get("output");
+
+            // spj或interactive是根据特判程序输出判断结果，所以无需初始化测试数据
+            if (Constants.JudgeMode.DEFAULT.getMode().equals(judgeMode)) {
+                // 输入文件
+                jsonObject.set("inputData", inputData);
+                // 输出文件
+                jsonObject.set("outputData", outputData);
+            }
+        }
+
+        result.set("testCases", testCaseList);
         return result;
     }
 
@@ -178,16 +196,62 @@ public class ProblemTestCaseUtils {
         // 写入记录文件
         infoFile.write(JSONUtil.toJsonStr(result));
 
+        JSONArray testCasesArray = result.getJSONArray("testCases");
+        for (int index = 0; index < problemCaseList.size(); index++) {
+            ProblemCase problemCase = problemCaseList.get(index);
+            JSONObject jsonObject = testCasesArray.getJSONObject(index);
+
+            // 读取输入文件
+            String input = "";
+            String inputFilePath = testCasesDir + File.separator + problemCase.getInput();
+            if (FileUtil.exist(inputFilePath)) {
+                FileReader inputFile = new FileReader(inputFilePath, CharsetUtil.UTF_8);
+                input = inputFile.readString()
+                        .replaceAll("\r\n", "\n") // 避免window系统的换行问题
+                        .replaceAll("\r", "\n"); // 避免mac系统的换行问题
+                FileWriter outFileWriter = new FileWriter(testCasesDir + File.separator + problemCase.getInput(),
+                        CharsetUtil.UTF_8);
+                outFileWriter.write(input);
+            } else {
+                FileWriter fileWriter = new FileWriter(inputFilePath);
+                fileWriter.write("");
+            }
+            // 读取输出文件
+            String output = "";
+            String outputFilePath = testCasesDir + File.separator + problemCase.getOutput();
+            if (FileUtil.exist(outputFilePath)) {
+                FileReader outputFile = new FileReader(outputFilePath, CharsetUtil.UTF_8);
+                output = outputFile.readString()
+                        .replaceAll("\r\n", "\n") // 避免window系统的换行问题
+                        .replaceAll("\r", "\n"); // 避免mac系统的换行问题
+                FileWriter outFileWriter = new FileWriter(testCasesDir + File.separator + problemCase.getOutput(),
+                        CharsetUtil.UTF_8);
+                outFileWriter.write(output);
+            } else {
+                FileWriter fileWriter = new FileWriter(outputFilePath);
+                fileWriter.write("");
+            }
+            // spj或interactive是根据特判程序输出判断结果，所以无需初始化测试数据
+            if (Constants.JudgeMode.DEFAULT.getMode().equals(judgeMode)) {
+                // 输入文件
+                jsonObject.set("inputData", input);
+                // 输出文件
+                jsonObject.set("outputData", output);
+            }
+        }
+
         return result;
     }
 
     // 获取指定题目的info数据
     public JSONObject loadTestCaseInfo(Long problemId, String testCasesDir, String version, String judgeMode,
-            String judgeCaseMode) throws SystemError {
+            String judgeCaseMode) throws SystemError, IOException {
         if (FileUtil.exist(testCasesDir + File.separator + "info")) {
             FileReader fileReader = new FileReader(testCasesDir + File.separator + "info", CharsetUtil.UTF_8);
             String infoStr = fileReader.readString();
             JSONObject testcaseInfo = JSONUtil.parseObj(infoStr);
+
+            testcaseInfo = dealTestCaseInfo(testCasesDir, testcaseInfo);
             // 测试样例被改动需要重新生成
             if (!testcaseInfo.getStr("version", null).equals(version)) {
                 return tryInitTestCaseInfo(testCasesDir, problemId, version, judgeMode, judgeCaseMode);
@@ -249,5 +313,29 @@ public class ProblemTestCaseUtils {
         if (value == null)
             return null;
         return EOL_PATTERN.matcher(StrUtil.trimEnd(value)).replaceAll("");
+    }
+
+    public static JSONObject dealTestCaseInfo(String testCasesDir, JSONObject testcaseInfo) throws IOException {
+        JSONArray testCasesArray = testcaseInfo.getJSONArray("testCases");
+        for (int i = 0; i < testCasesArray.size(); i++) {
+            JSONObject testCase = testCasesArray.getJSONObject(i);
+            String inputName = testCase.getStr("inputName");
+            String outputName = testCase.getStr("outputName");
+
+            // 读取输入内容
+            String inputData = readData(testCasesDir, inputName);
+            testCase.set("inputData", inputData);
+
+            // 读取输出内容
+            String outputData = readData(testCasesDir, outputName);
+            testCase.set("outputData", outputData);
+        }
+
+        return testcaseInfo;
+    }
+
+    private static String readData(String testCasesDir, String fileName) throws IOException {
+        FileReader fileReader = new FileReader(testCasesDir + File.separator + fileName, StandardCharsets.UTF_8);
+        return fileReader.readString();
     }
 }

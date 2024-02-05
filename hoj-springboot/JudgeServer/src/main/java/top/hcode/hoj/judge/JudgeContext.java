@@ -2,8 +2,12 @@ package top.hcode.hoj.judge;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
 import top.hcode.hoj.common.exception.SystemError;
 import top.hcode.hoj.dao.ContestRecordEntityService;
+import top.hcode.hoj.dao.JudgeEntityService;
 import top.hcode.hoj.dao.UserAcproblemEntityService;
 import top.hcode.hoj.judge.entity.LanguageConfig;
 import top.hcode.hoj.pojo.dto.TestJudgeReq;
@@ -33,6 +37,9 @@ public class JudgeContext {
     @Autowired
     private ContestRecordEntityService contestRecordEntityService;
 
+    @Autowired
+    private JudgeEntityService judgeEntityService;
+
     @Resource
     private LanguageConfigLoader languageConfigLoader;
 
@@ -51,13 +58,10 @@ public class JudgeContext {
 
         Judge finalJudgeRes = new Judge();
         finalJudgeRes.setSubmitId(judge.getSubmitId());
-        // 如果是编译失败、提交错误或者系统错误就有错误提醒
-        if (judgeResult.get("code") == Constants.Judge.STATUS_COMPILE_ERROR.getStatus() ||
-                judgeResult.get("code") == Constants.Judge.STATUS_SYSTEM_ERROR.getStatus() ||
-                judgeResult.get("code") == Constants.Judge.STATUS_RUNTIME_ERROR.getStatus() ||
-                judgeResult.get("code") == Constants.Judge.STATUS_SUBMITTED_FAILED.getStatus()) {
-            finalJudgeRes.setErrorMessage((String) judgeResult.getOrDefault("errMsg", ""));
-        }
+
+        // 所有评测结果都有错误提醒
+        finalJudgeRes.setErrorMessage((String) judgeResult.getOrDefault("errMsg", ""));
+
         // 设置最终结果状态码
         finalJudgeRes.setStatus((Integer) judgeResult.get("code"));
         // 设置最大时间和最大空间不超过题目限制时间和空间
@@ -71,6 +75,9 @@ public class JudgeContext {
         finalJudgeRes.setScore((Integer) judgeResult.getOrDefault("score", null));
         // oi_rank_score
         finalJudgeRes.setOiRankScore((Integer) judgeResult.getOrDefault("oiRankScore", null));
+
+        // 设置排序后的submit_id
+        finalJudgeRes = setSortedId(finalJudgeRes);
 
         return finalJudgeRes;
     }
@@ -118,4 +125,27 @@ public class JudgeContext {
             contestRecordEntityService.updateContestRecord(score, status, submitId, useTime);
         }
     }
+
+    public Judge setSortedId(Judge judge) {
+        QueryWrapper<Judge> judgeQueryWrapper = new QueryWrapper<>();
+        judgeQueryWrapper.select("sorted_id")
+                .eq("submit_id", judge.getSubmitId());
+        Judge search_judge = judgeEntityService.getOne(judgeQueryWrapper, false);
+
+        // 没有插入judge记录前
+        if (search_judge == null) {
+            judge.setSortedId(getMaxSortedId());
+        }
+        return judge;
+    }
+
+    public Long getMaxSortedId() {
+        QueryWrapper<Judge> judgeQueryWrapper = new QueryWrapper<>();
+        judgeQueryWrapper.select("sorted_id").orderByDesc("sorted_id").last("LIMIT 1");
+        Judge judge = judgeEntityService.getOne(judgeQueryWrapper, false);
+
+        return (judge != null && judge.getSortedId() != null) ? judge.getSortedId() + 1
+                : judgeEntityService.count() + 1;
+    }
+
 }

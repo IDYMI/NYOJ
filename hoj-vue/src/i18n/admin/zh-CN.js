@@ -79,6 +79,7 @@ export const m = {
   Import_User_Tips4: '性别为男请使用“male”或“0”，女请使用“female”或“1”，不填默认为“secrecy”。',
   Import_User_Tips5: '请导入保存为UTF-8编码的文件，否则中文可能会乱码。',
   Choose_File: '选择文件',
+  Show_All: '显示全部',
   Password: '密码',
   Upload_All: '上传全部',
   Clear_All: '清除全部',

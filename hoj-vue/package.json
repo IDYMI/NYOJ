@@ -20,6 +20,7 @@
     "install": "^0.13.0",
     "jquery": "^3.5.1",
     "js-beautify": "^1.14.8",
+    "jszip": "^3.10.1",
     "mavon-editor": "2.9.1",
     "moment": "^2.29.1",
     "muse-ui": "^3.0.2",

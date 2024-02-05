@@ -346,16 +346,6 @@ export default {
           link: "/developer",
           hint: "系统信息",
         },
-        // {
-        //   url: require("@/assets/招新.jpg"),
-        //   link: "http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=mSpJ4rr0ZIrn308IpPi8fszXKLr53_Oc&authKey=wi4nYdURUgOncLPzZtJDxb6oWXU5rTebZYCAXFlU40bz%2BUruk76ZRLnvAXd7MSY2&noverify=0&group_code=762817640",
-        //   hint: "南阳理工ACM招新群,点击跳转了解更多详情",
-        // },
-        // {
-        //   url: require("@/assets/海报.png"),
-        //   // link: "",
-        //   // hint: "",
-        // },
       ],
       srcHight: "340px",
       remoteJudgeList: [
