@@ -1,64 +1,65 @@
 // 引入 view 组件
-const Login = () => import('@/views/admin/Login')
-const Home = () => import('@/views/admin/Home')
-const Dashboard = () => import('@/views/admin/Dashboard')
-const User = () => import('@/views/admin/general/User')
-const Announcement = () => import('@/views/admin/general/Announcement')
-const SysNotice = () => import('@/views/admin/general/SysNotice')
-const SystemConfig = () => import('@/views/admin/general/SystemConfig')
-const SysSwitch = () => import('@/views/admin/general/SysSwitch')
-const AccountConfig = () => import('@/views/admin/general/AccountConfig')
-const File = () => import('@/views/admin/general/File')
-const ProblemList = () => import('@/views/admin/problem/ProblemList')
-const AdminGroupProblemList = () => import('@/views/admin/problem/GroupProblemList')
-const Problem = () => import('@/views/admin/problem/Problem')
-const Tag = () => import('@/views/admin/problem/Tag')
-const ProblemImportAndExport = () => import('@/views/admin/problem/ImportAndExport')
-const Contest = () => import('@/views/admin/contest/Contest')
-const ContestList = () => import('@/views/admin/contest/ContestList')
-const Training = () => import('@/views/admin/training/Training')
-const TrainingList = () => import('@/views/admin/training/TrainingList')
-const TrainingProblemList = () => import('@/views/admin/training/TrainingProblemList')
-const TrainingCategory = () => import('@/views/admin/training/Category')
-const DiscussionList = () => import('@/views/admin/discussion/Discussion')
-const adminRoutes = [{
+const Login = () => import('@/views/admin/Login');
+const Home = () => import('@/views/admin/Home');
+const Dashboard = () => import('@/views/admin/Dashboard');
+const User = () => import('@/views/admin/general/User');
+const Announcement = () => import('@/views/admin/general/Announcement');
+const SysNotice = () => import('@/views/admin/general/SysNotice');
+const SystemConfig = () => import('@/views/admin/general/SystemConfig');
+const SysSwitch = () => import('@/views/admin/general/SysSwitch');
+const AccountConfig = () => import('@/views/admin/general/AccountConfig');
+const File = () => import('@/views/admin/general/File');
+const ProblemList = () => import('@/views/admin/problem/ProblemList');
+const AdminGroupProblemList = () => import('@/views/admin/problem/GroupProblemList');
+const Problem = () => import('@/views/admin/problem/Problem');
+const Tag = () => import('@/views/admin/problem/Tag');
+const ProblemImportAndExport = () => import('@/views/admin/problem/ImportAndExport');
+const Contest = () => import('@/views/admin/contest/Contest');
+const ContestList = () => import('@/views/admin/contest/ContestList');
+const Training = () => import('@/views/admin/training/Training');
+const TrainingList = () => import('@/views/admin/training/TrainingList');
+const TrainingProblemList = () => import('@/views/admin/training/TrainingProblemList');
+const TrainingCategory = () => import('@/views/admin/training/Category');
+const DiscussionList = () => import('@/views/admin/discussion/Discussion');
+const adminRoutes = [
+  {
     path: '/admin/login',
     name: 'admin-login',
     component: Login,
     meta: {
-      title: 'Login'
-    }
+      title: 'Login',
+    },
   },
   {
     path: '/admin/',
     component: Home,
     meta: {
       requireAuth: true,
-      requireAdmin: true
+      requireAdmin: true,
     },
-    children: [{
+    children: [
+      {
         path: '',
         redirect: 'dashboard',
         component: Dashboard,
         meta: {
-          title: 'Dashboard'
-        }
+          title: 'Dashboard',
+        },
       },
       {
         path: 'dashboard',
         name: 'admin-dashboard',
         component: Dashboard,
         meta: {
-          title: 'Dashboard'
-        }
+          title: 'Dashboard',
+        },
       },
       {
         path: 'user',
         name: 'admin-user',
         component: User,
         meta: {
-          requireSuperAdmin: true,
-          title: 'User Admin'
+          title: 'User Admin',
         },
       },
       {
@@ -66,7 +67,7 @@ const adminRoutes = [{
         name: 'admin-announcement',
         component: Announcement,
         meta: {
-          title: 'Announcement Admin'
+          title: 'Announcement Admin',
         },
       },
       {
@@ -74,7 +75,7 @@ const adminRoutes = [{
         name: 'admin-notice',
         component: SysNotice,
         meta: {
-          title: 'Notice Admin'
+          title: 'Notice Admin',
         },
       },
       {
@@ -83,7 +84,7 @@ const adminRoutes = [{
         component: SystemConfig,
         meta: {
           requireSuperAdmin: true,
-          title: 'System Config'
+          title: 'System Config',
         },
       },
       {
@@ -92,16 +93,16 @@ const adminRoutes = [{
         component: SysSwitch,
         meta: {
           requireSuperAdmin: true,
-          title: 'System Switch'
+          title: 'System Switch',
         },
       },
       {
         path: 'account',
-        name: 'admin-switch',
+        name: 'admin-account',
         component: AccountConfig,
         meta: {
           requireSuperAdmin: true,
-          title: 'Account Config'
+          title: 'Account Config',
         },
       },
       {
@@ -109,7 +110,7 @@ const adminRoutes = [{
         name: 'admin-file',
         component: File,
         meta: {
-          title: 'File Admin'
+          title: 'File Admin',
         },
       },
       {
@@ -117,7 +118,7 @@ const adminRoutes = [{
         name: 'admin-problem-list',
         component: ProblemList,
         meta: {
-          title: 'Problem List'
+          title: 'Problem List',
         },
       },
       {
@@ -125,7 +126,7 @@ const adminRoutes = [{
         name: 'admin-create-problem',
         component: Problem,
         meta: {
-          title: 'Create Problem'
+          title: 'Create Problem',
         },
       },
       {
@@ -133,7 +134,7 @@ const adminRoutes = [{
         name: 'admin-edit-problem',
         component: Problem,
         meta: {
-          title: 'Edit Problem'
+          title: 'Edit Problem',
         },
       },
       {
@@ -141,7 +142,7 @@ const adminRoutes = [{
         name: 'admin-problem-tag',
         component: Tag,
         meta: {
-          title: 'Admin Tag'
+          title: 'Admin Tag',
         },
       },
       {
@@ -149,7 +150,7 @@ const adminRoutes = [{
         name: 'admin-group-apply-problem',
         component: AdminGroupProblemList,
         meta: {
-          title: 'Admin Group Apply Problem'
+          title: 'Admin Group Apply Problem',
         },
       },
       {
@@ -157,7 +158,7 @@ const adminRoutes = [{
         name: 'admin-problem_batch_operation',
         component: ProblemImportAndExport,
         meta: {
-          title: 'Export Import Problem'
+          title: 'Export Import Problem',
         },
       },
       {
@@ -165,7 +166,7 @@ const adminRoutes = [{
         name: 'admin-create-training',
         component: Training,
         meta: {
-          title: 'Create Training'
+          title: 'Create Training',
         },
       },
       {
@@ -173,39 +174,39 @@ const adminRoutes = [{
         name: 'admin-training-list',
         component: TrainingList,
         meta: {
-          title: 'Training List'
-        }
+          title: 'Training List',
+        },
       },
       {
         path: 'training/:trainingId/edit',
         name: 'admin-edit-training',
         component: Training,
         meta: {
-          title: 'Edit Training'
-        }
+          title: 'Edit Training',
+        },
       },
       {
         path: 'training/:trainingId/problems',
         name: 'admin-training-problem-list',
         component: TrainingProblemList,
         meta: {
-          title: 'Training Problem List'
-        }
+          title: 'Training Problem List',
+        },
       },
       {
         path: 'training/category',
         name: 'admin-training-category',
         component: TrainingCategory,
         meta: {
-          title: 'Admin Category'
-        }
+          title: 'Admin Category',
+        },
       },
       {
         path: 'contest/create',
         name: 'admin-create-contest',
         component: Contest,
         meta: {
-          title: 'Create Contest'
+          title: 'Create Contest',
         },
       },
       {
@@ -213,63 +214,63 @@ const adminRoutes = [{
         name: 'admin-contest-list',
         component: ContestList,
         meta: {
-          title: 'Contest List'
-        }
+          title: 'Contest List',
+        },
       },
       {
         path: 'contest/:contestId/edit',
         name: 'admin-edit-contest',
         component: Contest,
         meta: {
-          title: 'Edit Contest'
-        }
+          title: 'Edit Contest',
+        },
       },
       {
         path: 'contest/:contestId/announcement',
         name: 'admin-contest-announcement',
         component: Announcement,
         meta: {
-          title: 'Contest Announcement'
-        }
+          title: 'Contest Announcement',
+        },
       },
       {
         path: 'contest/:contestId/problems',
         name: 'admin-contest-problem-list',
         component: ProblemList,
         meta: {
-          title: 'Contest Problem List'
-        }
+          title: 'Contest Problem List',
+        },
       },
       {
         path: 'contest/:contestId/problem/create',
         name: 'admin-create-contest-problem',
         component: Problem,
         meta: {
-          title: 'Create Problem'
-        }
+          title: 'Create Problem',
+        },
       },
       {
         path: 'contest/:contestId/problem/:problemId/edit',
         name: 'admin-edit-contest-problem',
         component: Problem,
         meta: {
-          title: 'Edit Problem'
-        }
+          title: 'Edit Problem',
+        },
       },
       {
         path: 'discussion',
         name: 'admin-discussion-list',
         component: DiscussionList,
         meta: {
-          title: 'Discussion Admin'
-        }
+          title: 'Discussion Admin',
+        },
       },
-    ]
+    ],
   },
   {
     path: '/admin/*',
-    redirect: '/admin/login'
-  }
-]
+    redirect: '/admin/login',
+  },
+];
 
-export default adminRoutes
+export default adminRoutes;

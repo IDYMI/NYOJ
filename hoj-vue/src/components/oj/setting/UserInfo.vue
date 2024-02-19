@@ -103,11 +103,9 @@
     <el-form ref="formProfile" :model="formProfile">
       <el-row :gutter="30" justify="space-around">
         <el-col :md="10" :xs="24">
-
           <el-form-item :label="$t('m.Nickname')">
             <el-input v-model="formProfile.nickname" :maxlength="20" />
           </el-form-item>
-
         </el-col>
         <el-col :md="4" :lg="4">
           <div class="separator hidden-md-and-down"></div>
@@ -116,7 +114,7 @@
         <el-col :md="10" :xs="24">
           <!-- <el-form-item :label="$t('m.CF_Username')">
             <el-input v-model="formProfile.cfUsername" :maxlength="50" />
-          </el-form-item> -->
+          </el-form-item>-->
           <el-form-item :label="$t('m.Blog')">
             <el-input v-model="formProfile.blog" :maxlength="255" />
           </el-form-item>

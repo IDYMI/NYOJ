@@ -1,42 +1,40 @@
-import moment from 'moment'
-import utils from './utils'
-import time from './time'
-import {
-  PROBLEM_LEVEL
-} from './constants'
+import moment from 'moment';
+import utils from './utils';
+import time from './time';
+import { PROBLEM_LEVEL } from './constants';
 
 // 友好显示时间
 function fromNow(time) {
-  return moment(time).fromNow()
+  return moment(time).fromNow();
 }
 
 function parseRole(num) {
   if (num == 1000) {
-    return '超级管理员'
+    return '超级管理员';
   } else if (num == 1001) {
-    return '普通管理员'
+    return '普通管理员';
   } else if (num == 1002) {
-    return '用户(默认)'
+    return '用户(默认)';
   } else if (num == 1003) {
-    return '用户(禁止提交)'
+    return '用户(禁止提交)';
   } else if (num == 1004) {
-    return '用户(禁止发讨论)'
+    return '用户(禁止发讨论)';
   } else if (num == 1005) {
-    return '用户(禁言)'
+    return '用户(禁言)';
   } else if (num == 1006) {
-    return '用户(禁止提交&禁止发讨论)'
+    return '用户(禁止提交&禁止发讨论)';
   } else if (num == 1007) {
-    return '用户(禁止提交&禁言)'
+    return '用户(禁止提交&禁言)';
   } else if (num == 1008) {
-    return '题目管理员'
+    return '题目管理员';
   }
 }
 
 function parseContestType(num) {
   if (num == 0) {
-    return 'ACM'
+    return 'ACM';
   } else if (num == 1) {
-    return 'OI'
+    return 'OI';
   }
 }
 
@@ -52,4 +50,4 @@ export default {
   parseContestType: parseContestType,
   parseRole: parseRole,
   parseProblemLevel: parseProblemLevel,
-}
+};

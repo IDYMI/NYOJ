@@ -93,7 +93,7 @@
               <el-tag
                 :type="CONTEST_TYPE_REVERSE[row.auth].color"
                 effect="plain"
-              >{{ $t('m.' + CONTEST_TYPE_REVERSE[row.auth].name) }}</el-tag>
+              >{{ $t("m." + CONTEST_TYPE_REVERSE[row.auth].name) }}</el-tag>
             </el-tooltip>
           </template>
         </vxe-table-column>
@@ -214,11 +214,7 @@
         <el-radio label="problem">{{ $t("m.SplitType_Problem") }}</el-radio>
       </el-radio-group>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="downloadSubmissions">
-          {{
-          $t("m.OK")
-          }}
-        </el-button>
+        <el-button type="primary" @click="downloadSubmissions">{{ $t("m.OK") }}</el-button>
       </span>
     </el-dialog>
   </div>

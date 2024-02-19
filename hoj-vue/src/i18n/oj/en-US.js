@@ -1,7 +1,5 @@
 export const m = {
-
   // src/common/filters.js
-
 
   // /src/common/api.js
   Query_error_unable_to_find_the_resource_to_request: 'Query error! Unable to find the resource to request!',
@@ -80,7 +78,7 @@ export const m = {
   Code_Check_Required: 'The captcha is required.',
   Code_Check_Length: 'The captcha must be six digits.',
   The_system_is_processing: 'Please Waiting... The system is processing...',
-  Register_Send_Email_Msg: 'Verification code has been sent to the designated mailbox! If you haven\'t received the email for a long time, please check whether your email is accurate!',
+  Register_Send_Email_Msg: "Verification code has been sent to the designated mailbox! If you haven't received the email for a long time, please check whether your email is accurate!",
   Thanks_for_registering: 'Thanks for your registering, you can login now.',
 
   // /components/oj/common/ResetPassword.vue 重置密码弹窗
@@ -89,7 +87,7 @@ export const m = {
   Reset_Password_Captcha: 'Please Enter the captcha',
   Send_Password_Reset_Email: 'Send Password Reset Email',
   Waiting_Can_Resend_Email: 'resend the Reset Email...',
-  ResetPwd_Send_Email_Msg: 'Reset password email has been sent to the designated mailbox! If you haven\'t received the email for a long time, please check whether your email is accurate!',
+  ResetPwd_Send_Email_Msg: "Reset password email has been sent to the designated mailbox! If you haven't received the email for a long time, please check whether your email is accurate!",
   Remember_Passowrd_To_Login: 'Remember password? To login!',
   Set_New_Password: 'Set New Password',
   Set_New_Password_Msg: 'Please Enter New Password',
@@ -116,22 +114,21 @@ export const m = {
   Update_Email: 'Update Email',
   Update_Mobile: 'Update Mobile',
   Captcha: 'Captcha',
-  The_new_password_does_not_change: 'The new password doesn\'t change.',
-  The_new_email_does_not_change: 'The new email doesn\'t change.',
-  The_new_mobile_does_not_change: 'The new mobile doesn\'t change.',
+  The_new_password_does_not_change: "The new password doesn't change.",
+  The_new_email_does_not_change: "The new email doesn't change.",
+  The_new_mobile_does_not_change: "The new mobile doesn't change.",
   Mobile_Check_Required: 'The mobile is required.',
   Mobile_Check_Format: 'The mobile format is incorrect.',
   Change_Email_Captcha: 'Please enter the captcha from the email',
   Change_Mobile_Captcha: 'Please enter the captcha from the mobile',
-  Change_Send_Email_Msg: 'Verification code has been sent to the designated mailbox! If you haven\'t received the email for a long time, please check whether your email is accurate!',
-  Change_Send_Mobile_Msg: 'Verification code has been sent to the designated mobile! If you haven\'t received the message for a long time, please check whether your mobile is accurate!',
+  Change_Send_Email_Msg: "Verification code has been sent to the designated mailbox! If you haven't received the email for a long time, please check whether your email is accurate!",
+  Change_Send_Mobile_Msg: "Verification code has been sent to the designated mobile! If you haven't received the message for a long time, please check whether your mobile is accurate!",
   Update_Successfully: 'Update Successfully',
   Update_Failed: 'Update Failed',
   Guess_robot: 'Speed too fast, may be machine operation! Please verify again!',
   The_current_password_cannot_be_empty: 'The current password is required.',
   The_new_password_cannot_be_empty: 'The new password is required.',
   The_new_email_cannot_be_empty: 'The new email is required.',
-
 
   // /components/oj/setting/UserInfo.vue
   Avatar_Setting: 'Avatar Setting',
@@ -188,7 +185,7 @@ export const m = {
 
   // /views/oj/user/UserHome.vue
   Recent_login_time: 'Recently launched：',
-  Not_set_yet: 'This guy is lazy. He doesn\'t write anything.',
+  Not_set_yet: "This guy is lazy. He doesn't write anything.",
   UserHome_Solved: 'Solved',
   UserHome_Submissions: 'Submissions',
   UserHome_Contests: 'Contests',
@@ -328,7 +325,7 @@ export const m = {
   View_Contest: 'View Contest',
   Are_you_sure_you_want_to_reset_your_code: 'Are you sure you want to reset the original code? If the problem has a code template, it will be restored to the code of the original template, otherwise the code being edited will be cleared.',
   Are_you_sure_you_want_to_get_your_recent_accepted_code: 'Are you sure you want to get the recently passed code and fill it in the code box? Note: This operation will overwrite the code being edited!',
-  You_havenot_passed_the_problem_so_you_cannot_get_the_code_passed_recently: 'You haven\'t passed the problem, so you can\'t get the code passed recently',
+  You_havenot_passed_the_problem_so_you_cannot_get_the_code_passed_recently: "You haven't passed the problem, so you can't get the code passed recently",
   Code_can_not_be_empty: 'Code can not be empty',
   Code_Length_can_not_exceed_65535: 'The code should contain no more than 65535 characters!',
   Submit_code_successfully: 'Submit code successfully',
@@ -405,7 +402,7 @@ export const m = {
   OI_Ranklist: 'OI Ranklist',
 
   // /views/oj/discussion/discussionList.vue
-  Go_to_problem: "Go to Problem",
+  Go_to_problem: 'Go to Problem',
   Release_Time: 'Release Time',
   Likes: 'Likes',
   Like_Successfully: 'Like Successfully',
@@ -546,8 +543,8 @@ export const m = {
   Ename_Check_Required: 'The English name of the team is required.',
   Check_English: 'Please enter English',
   TeamName_Check_Length: 'The length is between 1 and 20 characters',
-  Please_check_your_Cname_or_Ename: "Please Check Your Chinese Or English TeamName",
-  Please_check_your_Team_Info: "Please check your Team Info",
+  Please_check_your_Cname_or_Ename: 'Please Check Your Chinese Or English TeamName',
+  Please_check_your_Team_Info: 'Please check your Team Info',
 
   // /views/oj/contest/children/ACMContestRank.vue
   Contest_Rank: 'Contest Rank',
@@ -565,7 +562,7 @@ export const m = {
   Star_User: 'Star User',
   Unfollow: 'Unfollow',
   Top_And_Follow: 'Top And Follow',
-  Contest_Rank_Search_Cids: 'Please enter the Cids: (\'+\'splited)',
+  Contest_Rank_Search_Cids: "Please enter the Cids: ('+'splited)",
   Contest_Rank_Search_Placeholder: 'Please enter the user rank name or school name',
   Contest_Rank_Setting: 'Rank Setting',
   Contest_Setting: 'Contest Setting',
@@ -609,7 +606,7 @@ export const m = {
   Plagiarism_Length: 'Plagiarism Length',
   Plagiarism_Language: 'Language',
   Plagiarism_Time: 'Time',
-  Plagiarism_LanguageList:'Language List',
+  Plagiarism_LanguageList: 'Language List',
   Add_Moss: 'Add Moss',
   Enter_Mosskeyword: 'Enter keyword (Username)',
   Moss_View: 'View',
@@ -656,10 +653,10 @@ export const m = {
   System_Error_Description: 'Oops, something has gone wrong with the judger. Please report this to administrator.',
   Cancelled_Description: 'Your submission has been cancelled!',
   Compile_Explanation: 'Compile Explanation',
-  Compile_Tips1: "`__int64` is not defined by ANSI standard and can only be used in `VC`. It should be written as `long long` type in `GNU C++`. For `scanf` and `printf`, please use `%lld` as the format.",
-  Compile_Tips2: "The return value of `main()` must be defined as `int`, not `void`",
-  Compile_Tips3: "`i` lost definition outside the loop,\"for(int i=0...){...}\"",
-  Compile_Tips4: "`itoa` is not an ANSI standard function (not available in standard `C/C++`)",
+  Compile_Tips1: '`__int64` is not defined by ANSI standard and can only be used in `VC`. It should be written as `long long` type in `GNU C++`. For `scanf` and `printf`, please use `%lld` as the format.',
+  Compile_Tips2: 'The return value of `main()` must be defined as `int`, not `void`',
+  Compile_Tips3: '`i` lost definition outside the loop,"for(int i=0...){...}"',
+  Compile_Tips4: '`itoa` is not an ANSI standard function (not available in standard `C/C++`)',
 
   // /views/oj/about/Developer.vue
   Leader_BackEnd_FrontEnd_Engineer: 'Leader & BackEnd | FrontEnd Engineer',
@@ -734,13 +731,12 @@ export const m = {
   Reply_Total: 'Total',
   Replies: 'replies',
   Click_Show_All: 'Click to Show All',
-  Pick_up: "Pick up",
+  Pick_up: 'Pick up',
   Load_More: 'Load More',
   Delete_Comment_Tips: 'This operation will delete the comment and all its replies. Do you want to continue?',
   Delete_Reply_Tips: 'This operation will delete the reply. Do you want to continue?',
   Reply_Content: 'The reply content',
   Comment_Content: 'The comment content',
-
 
   // /views/oj/message/message.vue
   Message_Center: 'Message Center',
@@ -885,7 +881,7 @@ export const m = {
   Group_Root: 'Root',
   View_Reason: 'View Reason',
   Delete_Member: 'Kick Member',
-  Delete_Member_Tips: 'Are you sure you want to kick the member out of the group? After kicking out, the member will no longer be able to view group resources! What\'s more, if the member is the owner, the group will be disbanded together!',
+  Delete_Member_Tips: "Are you sure you want to kick the member out of the group? After kicking out, the member will no longer be able to view group resources! What's more, if the member is the owner, the group will be disbanded together!",
 
   // /views/oj/group/GroupSetting.vue
   Add_From_Group_Problem: 'Add_From_Group_Problem',
@@ -913,5 +909,5 @@ export const m = {
 
   Dark: 'Dark',
   Light: 'Light',
-  Unknown: 'Unknown'
-}
+  Unknown: 'Unknown',
+};

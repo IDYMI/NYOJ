@@ -148,7 +148,7 @@
             icon="el-icon-download"
             @click="downloadSubmissions(row)"
             round
-          >{{ $t('m.Download') }}</el-button> -->
+          >{{ $t('m.Download') }}</el-button>-->
         </template>
       </vxe-table-column>
     </vxe-table>

@@ -1,4 +1,4 @@
-const localStorage = window.localStorage
+const localStorage = window.localStorage;
 
 export default {
   name: 'storage',
@@ -9,7 +9,7 @@ export default {
    * @param {Object} value 值
    */
   set(key, value) {
-    localStorage.setItem(key, JSON.stringify(value))
+    localStorage.setItem(key, JSON.stringify(value));
   },
 
   /**
@@ -18,7 +18,7 @@ export default {
    * @return {Object}
    */
   get(key) {
-    return JSON.parse(localStorage.getItem(key)) || null
+    return JSON.parse(localStorage.getItem(key)) || null;
   },
 
   /**
@@ -26,12 +26,12 @@ export default {
    * @param {string} key 键
    */
   remove(key) {
-    localStorage.removeItem(key)
+    localStorage.removeItem(key);
   },
   /**
    * clear all
    */
   clear() {
-    localStorage.clear()
+    localStorage.clear();
   },
-}
+};

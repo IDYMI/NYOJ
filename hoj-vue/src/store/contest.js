@@ -1,10 +1,7 @@
-import moment from 'moment'
-import api from '@/common/api'
-import {
-  CONTEST_STATUS,
-  CONTEST_TYPE
-} from '@/common/constants'
-import time from '@/common/time'
+import moment from 'moment';
+import api from '@/common/api';
+import { CONTEST_STATUS, CONTEST_TYPE } from '@/common/constants';
+import time from '@/common/time';
 const state = {
   now: moment(),
   intoAccess: false, // 比赛进入权限
@@ -19,7 +16,7 @@ const state = {
     openPrint: false,
     rankShowName: 'username',
     allowEndSubmit: false,
-    maxParticipants: 0
+    maxParticipants: 0,
   },
   contestProblems: [],
   itemVisible: {
@@ -28,7 +25,7 @@ const state = {
   },
   disPlayIdMapColor: {}, // 展示id对应的气球颜色
   groupContestAuth: 0,
-}
+};
 
 const getters = {
   contestStatus: (state, getters) => {
@@ -41,8 +38,7 @@ const getters = {
     return state.contest.type;
   },
   isContestAdmin: (state, getters, _, rootGetters) => {
-    return rootGetters.isAuthenticated &&
-      (state.contest.author === rootGetters.userInfo.username || rootGetters.isSuperAdmin || rootGetters.isNormalAdmin || state.groupContestAuth == 5)
+    return rootGetters.isAuthenticated && (state.contest.author === rootGetters.userInfo.username || rootGetters.isSuperAdmin || rootGetters.isNormalAdmin || state.groupContestAuth == 5);
   },
   isContainsAfterContestJudge: (state, getters) => {
     return state.isContainsAfterContestJudge;
@@ -51,105 +47,99 @@ const getters = {
     return state.selectedTime;
   },
   canSubmit: (state, getters) => {
-    return state.intoAccess || state.submitAccess || state.contest.auth === CONTEST_TYPE.PUBLIC || state.contest.auth === CONTEST_TYPE.PUBLIC_SYNCHRONOUS || getters.isContestAdmin
+    return state.intoAccess || state.submitAccess || state.contest.auth === CONTEST_TYPE.PUBLIC || state.contest.auth === CONTEST_TYPE.PUBLIC_SYNCHRONOUS || getters.isContestAdmin;
   },
   contestMenuDisabled: (state, getters) => {
     // 比赛创建者或者超级管理员可以直接查看
-    if (getters.isContestAdmin) return false
+    if (getters.isContestAdmin) return false;
     // 未开始不可查看
-    if (getters.contestStatus === CONTEST_STATUS.SCHEDULED) return true
+    if (getters.contestStatus === CONTEST_STATUS.SCHEDULED) return true;
 
     if (state.contest.auth === CONTEST_TYPE.PRIVATE || state.contest.auth === CONTEST_TYPE.OFFICIAL || state.contest.auth === CONTEST_TYPE.PRIVATE_SYNCHRONOUS) {
       // 公开赛需要报名，私有赛需要通过验证密码方可查看比赛
-      return !state.intoAccess
+      return !state.intoAccess;
     }
   },
   // 榜单是否实时刷新
   ContestRealTimePermission: (state, getters, _, rootGetters) => {
     // 比赛若是已结束，便是最后榜单
     if (getters.contestStatus === CONTEST_STATUS.ENDED) {
-      return true
+      return true;
     }
     // 比赛管理员直接可看到实时榜单
     if (getters.isContestAdmin) {
-      return true
+      return true;
     }
     // 比赛是否开启
     if (state.contest.sealRank === true) {
       // 当前时间在封榜时间之后，即不刷新榜单
-      return !state.now.isAfter(moment(state.contest.sealRankTime))
+      return !state.now.isAfter(moment(state.contest.sealRankTime));
     } else {
-      return true
+      return true;
     }
   },
   problemSubmitDisabled: (state, getters, _, rootGetters) => {
     // 比赛结束不可交题, 除非开启了允许
     if (getters.contestStatus === CONTEST_STATUS.ENDED) {
-      return !state.contest.allowEndSubmit
+      return !state.contest.allowEndSubmit;
     } else if (getters.contestStatus === CONTEST_STATUS.SCHEDULED) {
       // 比赛未开始不可交题，除非是比赛管理者
-      return !getters.isContestAdmin
+      return !getters.isContestAdmin;
     }
     // 未登录不可交题
-    return !rootGetters.isAuthenticated
+    return !rootGetters.isAuthenticated;
   },
   // 是否需要显示密码验证框
   passwordFormVisible: (state, getters) => {
     // 如果是公开赛，保护赛，同步公开赛，正式赛，或已注册过，管理员都不用再显示
-    return state.contest.auth !== CONTEST_TYPE.PUBLIC &&
-      state.contest.auth !== CONTEST_TYPE.PROTECTED &&
-      state.contest.auth !== CONTEST_TYPE.PUBLIC_SYNCHRONOUS &&
-      state.contest.auth !== CONTEST_TYPE.OFFICIAL &&
-      !state.intoAccess && !getters.isContestAdmin
+    return state.contest.auth !== CONTEST_TYPE.PUBLIC && state.contest.auth !== CONTEST_TYPE.PROTECTED && state.contest.auth !== CONTEST_TYPE.PUBLIC_SYNCHRONOUS && state.contest.auth !== CONTEST_TYPE.OFFICIAL && !state.intoAccess && !getters.isContestAdmin;
   },
   // 是否需要显示报名框
   signFormVisible: (state, getters) => {
     // 如果是比赛已经结束，不是正式赛，管理员都不用再显示
-    return state.contest.auth === CONTEST_TYPE.OFFICIAL && !getters.isContestAdmin && state.contest.status !== CONTEST_STATUS.ENDED
+    return state.contest.auth === CONTEST_TYPE.OFFICIAL && !getters.isContestAdmin && state.contest.status !== CONTEST_STATUS.ENDED;
   },
   contestStartTime: (state) => {
-    return moment(state.contest.startTime)
+    return moment(state.contest.startTime);
   },
   contestEndTime: (state) => {
-    return moment(state.contest.endTime)
+    return moment(state.contest.endTime);
   },
   // 比赛计时文本显示
   countdown: (state, getters) => {
     // 还未开始的显示
     if (getters.contestStatus === CONTEST_STATUS.SCHEDULED) {
+      let durationMs = getters.contestStartTime.diff(state.now, 'seconds');
 
-      let durationMs = getters.contestStartTime.diff(state.now, 'seconds')
-
-      let duration = moment.duration(durationMs, 'seconds')
+      let duration = moment.duration(durationMs, 'seconds');
       // time is too long
       if (duration.weeks() > 0) {
-        return 'Start At ' + duration.humanize()
+        return 'Start At ' + duration.humanize();
       }
 
       if (duration.asSeconds() <= 0) {
-        state.contest.status = CONTEST_STATUS.RUNNING
+        state.contest.status = CONTEST_STATUS.RUNNING;
       }
 
-      let texts = time.secondFormat(durationMs)
-      return '-' + texts
+      let texts = time.secondFormat(durationMs);
+      return '-' + texts;
       // 比赛进行中的显示
     } else if (getters.contestStatus === CONTEST_STATUS.RUNNING) {
       // 倒计时文本显示
       if (getters.contestEndTime.diff(state.now, 'seconds') > 0) {
-        let texts = time.secondFormat(getters.contestEndTime.diff(state.now, 'seconds'))
-        return '-' + texts
+        let texts = time.secondFormat(getters.contestEndTime.diff(state.now, 'seconds'));
+        return '-' + texts;
       } else {
-        state.contest.status = CONTEST_STATUS.ENDED
-        return "00:00:00"
+        state.contest.status = CONTEST_STATUS.ENDED;
+        return '00:00:00';
       }
-
     } else {
-      return 'Ended'
+      return 'Ended';
     }
   },
   // 比赛开始到现在经过的秒数
   BeginToNowDuration: (state, getters) => {
-    return moment.duration(state.now.diff(getters.contestStartTime, 'seconds'), 'seconds').asSeconds()
+    return moment.duration(state.now.diff(getters.contestStartTime, 'seconds'), 'seconds').asSeconds();
   },
 
   // 比赛进度条显示
@@ -160,43 +150,43 @@ const getters = {
       // 比赛进行中的显示
     } else if (getters.contestStatus === CONTEST_STATUS.RUNNING) {
       // 获取比赛开始到现在经过的秒数
-      let duration = getters.BeginToNowDuration
+      let duration = getters.BeginToNowDuration;
       // 消耗时间除以整体时间
-      return (duration / state.contest.duration) * 100
+      return (duration / state.contest.duration) * 100;
     } else {
       return 100;
     }
   },
 
   isShowContestSetting: (state, getters) => {
-    return getters.contestStatus === CONTEST_STATUS.ENDED && state.contest.allowEndSubmit
-  }
-}
+    return getters.contestStatus === CONTEST_STATUS.ENDED && state.contest.allowEndSubmit;
+  },
+};
 
 const mutations = {
   changeContest(state, payload) {
-    state.contest = payload.contest
+    state.contest = payload.contest;
   },
   changeContestItemVisible(state, payload) {
     state.itemVisible = {
       ...state.itemVisible,
-      ...payload
-    }
+      ...payload,
+    };
   },
   changeRankForceUpdate(state, payload) {
-    state.forceUpdate = payload.value
+    state.forceUpdate = payload.value;
   },
   changeRankRemoveStar(state, payload) {
-    state.removeStar = payload.value
+    state.removeStar = payload.value;
   },
   changeContainsAfterContestJudge(state, payload) {
-    state.isContainsAfterContestJudge = payload.value
+    state.isContainsAfterContestJudge = payload.value;
   },
   changeSelectedTime(state, payload) {
-    state.selectedTime = payload.value
+    state.selectedTime = payload.value;
   },
   changeConcernedList(state, payload) {
-    state.concernedList = payload.value
+    state.concernedList = payload.value;
   },
   changeContestProblems(state, payload) {
     state.contestProblems = payload.contestProblems;
@@ -207,174 +197,171 @@ const mutations = {
     state.disPlayIdMapColor = tmp;
   },
   changeContestRankLimit(state, payload) {
-    state.rankLimit = payload.rankLimit
+    state.rankLimit = payload.rankLimit;
   },
   contestIntoAccess(state, payload) {
-    state.intoAccess = payload.intoAccess
+    state.intoAccess = payload.intoAccess;
   },
   changeGroupContestAuth(state, payload) {
-    state.groupContestAuth = payload.groupContestAuth
+    state.groupContestAuth = payload.groupContestAuth;
   },
   contestSubmitAccess(state, payload) {
-    state.submitAccess = payload.submitAccess
+    state.submitAccess = payload.submitAccess;
   },
   clearContest(state) {
-    state.contest = {}
-    state.contestProblems = []
-    state.intoAccess = false
-    state.submitAccess = false
+    state.contest = {};
+    state.contestProblems = [];
+    state.intoAccess = false;
+    state.submitAccess = false;
     state.itemVisible = {
       table: true,
       chart: true,
-      realName: false
-    }
-    state.forceUpdate = false
-    state.removeStar = false
-    state.groupContestAuth = 0
-    state.isContainsAfterContestJudge = false
-    state.selectedTime = null
+      realName: false,
+    };
+    state.forceUpdate = false;
+    state.removeStar = false;
+    state.groupContestAuth = 0;
+    state.isContainsAfterContestJudge = false;
+    state.selectedTime = null;
   },
   now(state, payload) {
-    state.now = payload.now
+    state.now = payload.now;
   },
   nowAdd1s(state) {
-    state.now = moment(state.now.add(1, 's'))
+    state.now = moment(state.now.add(1, 's'));
   },
-}
+};
 
 const actions = {
-  getContest({
-    commit,
-    rootState,
-    dispatch
-  }) {
+  getContest({ commit, rootState, dispatch }) {
     return new Promise((resolve, reject) => {
-      api.getContest(rootState.route.params.contestID).then((res) => {
-        resolve(res)
-        let contest = res.data.data
-        commit('changeContest', {
-          contest: contest
-        })
-        if (contest.gid) {
-          dispatch('getGroupContestAuth', {
-            gid: contest.gid
-          })
+      api.getContest(rootState.route.params.contestID).then(
+        (res) => {
+          resolve(res);
+          let contest = res.data.data;
+          commit('changeContest', {
+            contest: contest,
+          });
+          if (contest.gid) {
+            dispatch('getGroupContestAuth', {
+              gid: contest.gid,
+            });
+          }
+          commit('now', {
+            now: moment(contest.now),
+          });
+          if (contest.auth == CONTEST_TYPE.PRIVATE) {
+            dispatch('getContestAccess', {
+              auth: CONTEST_TYPE.PRIVATE,
+            });
+          } else if (contest.auth == CONTEST_TYPE.PROTECTED) {
+            dispatch('getContestAccess', {
+              auth: CONTEST_TYPE.PROTECTED,
+            });
+          } else if (contest.auth == CONTEST_TYPE.OFFICIAL) {
+            dispatch('getContestAccess', {
+              auth: CONTEST_TYPE.OFFICIAL,
+            });
+          } else if (contest.auth == CONTEST_TYPE.PRIVATE_SYNCHRONOUS) {
+            dispatch('getContestAccess', {
+              auth: CONTEST_TYPE.PRIVATE_SYNCHRONOUS,
+            });
+          }
+        },
+        (err) => {
+          reject(err);
         }
-        commit('now', {
-          now: moment(contest.now)
-        })
-        if (contest.auth == CONTEST_TYPE.PRIVATE) {
-          dispatch('getContestAccess', {
-            auth: CONTEST_TYPE.PRIVATE
-          })
-        } else if (contest.auth == CONTEST_TYPE.PROTECTED) {
-          dispatch('getContestAccess', {
-            auth: CONTEST_TYPE.PROTECTED
-          })
-        } else if (contest.auth == CONTEST_TYPE.OFFICIAL) {
-          dispatch('getContestAccess', {
-            auth: CONTEST_TYPE.OFFICIAL
-          })
-        } else if (contest.auth == CONTEST_TYPE.PRIVATE_SYNCHRONOUS) {
-          dispatch('getContestAccess', {
-            auth: CONTEST_TYPE.PRIVATE_SYNCHRONOUS
-          })
-        }
-      }, err => {
-        reject(err)
-      })
-    })
+      );
+    });
   },
-  getScoreBoardContestInfo({
-    commit,
-    rootState,
-    dispatch
-  }) {
+  getScoreBoardContestInfo({ commit, rootState, dispatch }) {
     return new Promise((resolve, reject) => {
-      api.getScoreBoardContestInfo(rootState.route.params.contestID).then((res) => {
-        resolve(res)
-        let contest = res.data.data.contest;
-        commit('changeContest', {
-          contest: contest
-        })
-        commit('now', {
-          now: moment(contest.now)
-        })
-      }, err => {
-        reject(err)
-      })
-    })
+      api.getScoreBoardContestInfo(rootState.route.params.contestID).then(
+        (res) => {
+          resolve(res);
+          let contest = res.data.data.contest;
+          commit('changeContest', {
+            contest: contest,
+          });
+          commit('now', {
+            now: moment(contest.now),
+          });
+        },
+        (err) => {
+          reject(err);
+        }
+      );
+    });
   },
 
-  getContestProblems({
-    commit,
-    rootState
-  }) {
+  getContestProblems({ commit, rootState }) {
     return new Promise((resolve, reject) => {
-      api.getContest(rootState.route.params.contestID).then((res) => {
-        let contest = res.data.data
-        commit('changeContest', {
-          contest: contest
-        })
+      api.getContest(rootState.route.params.contestID).then(
+        (res) => {
+          let contest = res.data.data;
+          commit('changeContest', {
+            contest: contest,
+          });
 
-        let func =
-          contest.auth === CONTEST_TYPE.PUBLIC_SYNCHRONOUS || contest.auth === CONTEST_TYPE.PRIVATE_SYNCHRONOUS ?
-          "getSynchronousProblemList" :
-          "getContestProblemList";
-        api[func](rootState.route.params.contestID, rootState.contest.isContainsAfterContestJudge, rootState.contest.selectedTime).then(res => {
-          resolve(res)
-          commit('changeContestProblems', {
-            contestProblems: res.data.data
-          })
-        }, (err) => {
-          commit('changeContestProblems', {
-            contestProblems: []
-          })
-          reject(err)
-        })
-
-      }, err => {
-        reject(err)
-      })
-    })
-  },
-  getContestAccess({
-    commit,
-    rootState
-  }, contestType) {
-    return new Promise((resolve, reject) => {
-      api.getContestAccess(rootState.route.params.contestID).then(res => {
-        if (contestType.auth == CONTEST_TYPE.PRIVATE || contestType.auth == CONTEST_TYPE.OFFICIAL || contestType.auth == CONTEST_TYPE.PRIVATE_SYNCHRONOUS) {
-          commit('contestIntoAccess', {
-            intoAccess: res.data.data.access
-          })
-        } else {
-          commit('contestSubmitAccess', {
-            submitAccess: res.data.data.access
-          })
+          let func = contest.auth === CONTEST_TYPE.PUBLIC_SYNCHRONOUS || contest.auth === CONTEST_TYPE.PRIVATE_SYNCHRONOUS ? 'getSynchronousProblemList' : 'getContestProblemList';
+          api[func](rootState.route.params.contestID, rootState.contest.isContainsAfterContestJudge, rootState.contest.selectedTime).then(
+            (res) => {
+              resolve(res);
+              commit('changeContestProblems', {
+                contestProblems: res.data.data,
+              });
+            },
+            (err) => {
+              commit('changeContestProblems', {
+                contestProblems: [],
+              });
+              reject(err);
+            }
+          );
+        },
+        (err) => {
+          reject(err);
         }
-        resolve(res)
-      }).catch()
-    })
+      );
+    });
   },
-  getGroupContestAuth({
-    commit,
-    rootState
-  }, gid) {
+  getContestAccess({ commit, rootState }, contestType) {
     return new Promise((resolve, reject) => {
-      api.getGroupAuth(gid.gid).then(res => {
-        commit('changeGroupContestAuth', {
-          groupContestAuth: res.data.data
+      api
+        .getContestAccess(rootState.route.params.contestID)
+        .then((res) => {
+          if (contestType.auth == CONTEST_TYPE.PRIVATE || contestType.auth == CONTEST_TYPE.OFFICIAL || contestType.auth == CONTEST_TYPE.PRIVATE_SYNCHRONOUS) {
+            commit('contestIntoAccess', {
+              intoAccess: res.data.data.access,
+            });
+          } else {
+            commit('contestSubmitAccess', {
+              submitAccess: res.data.data.access,
+            });
+          }
+          resolve(res);
         })
-        resolve(res)
-      }).catch()
-    })
-  }
-}
+        .catch();
+    });
+  },
+  getGroupContestAuth({ commit, rootState }, gid) {
+    return new Promise((resolve, reject) => {
+      api
+        .getGroupAuth(gid.gid)
+        .then((res) => {
+          commit('changeGroupContestAuth', {
+            groupContestAuth: res.data.data,
+          });
+          resolve(res);
+        })
+        .catch();
+    });
+  },
+};
 
 export default {
   state,
   mutations,
   getters,
-  actions
-}
+  actions,
+};

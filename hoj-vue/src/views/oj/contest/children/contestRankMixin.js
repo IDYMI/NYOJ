@@ -1,13 +1,6 @@
-import api from '@/common/api'
-import {
-  mapGetters,
-  mapState
-} from 'vuex'
-import {
-  CONTEST_STATUS,
-  buildContestRankConcernedKey,
-  CONTEST_TYPE
-} from '@/common/constants'
+import api from '@/common/api';
+import { mapGetters, mapState } from 'vuex';
+import { CONTEST_STATUS, buildContestRankConcernedKey, CONTEST_TYPE } from '@/common/constants';
 import storage from '@/common/storage';
 export default {
   data() {
@@ -21,12 +14,11 @@ export default {
       this.concernedList = storage.get(key) || [];
     },
     getContestRankData(page = 1, refresh = false) {
-      if(this.$refs.chart)
-      {
+      if (this.$refs.chart) {
         if (this.showChart && !refresh) {
           this.$refs.chart.showLoading({
-            maskColor: 'rgba(250, 250, 250, 0.8)'
-          })
+            maskColor: 'rgba(250, 250, 250, 0.8)',
+          });
         }
         let data = {
           currentPage: page,
@@ -37,57 +29,45 @@ export default {
           concernedList: this.concernedList,
           keyword: this.keyword == null ? null : this.keyword.trim(),
           containsEnd: this.isContainsAfterContestJudge,
-          time: this.selectedTime
-        }
-        let func = this.contestAuth ?
-          "getSynchronousRank" :
-          "getContestRank";
+          time: this.selectedTime,
+        };
+        let func = this.contestAuth ? 'getSynchronousRank' : 'getContestRank';
         this.loadingTable = true;
 
-        api[func](data).then(res => {
+        api[func](data).then((res) => {
           if (this.showChart && !refresh) {
-            this.$refs.chart.hideLoading()
+            this.$refs.chart.hideLoading();
           }
-          this.total = res.data.data.total
+          this.total = res.data.data.total;
           if (page === 1) {
-            this.applyToChart(res.data.data.records)
+            this.applyToChart(res.data.data.records);
           }
-          this.applyToTable(res.data.data.records)
-        })
+          this.applyToTable(res.data.data.records);
+        });
       }
     },
     getContestProblems() {
-      this.$store.dispatch("getContestProblems").then((res) => {
+      this.$store.dispatch('getContestProblems').then((res) => {
         if (this.isAuthenticated) {
           let isContestProblemList = true;
           // 如果已登录，则需要查询对当前页面题目列表中各个题目的提交情况
           let pidList = [];
           if (this.contestProblems && this.contestProblems.length > 0) {
-            this.$store.commit("changeContestProblems", {
+            this.$store.commit('changeContestProblems', {
               contestProblems: this.contestProblems,
             });
             for (let index = 0; index < this.contestProblems.length; index++) {
               pidList.push(this.contestProblems[index].pid);
             }
             this.isGetStatusOk = false;
-            api
-              .getUserProblemStatus(
-                pidList,
-                isContestProblemList,
-                this.$route.params.contestID,
-                null,
-                this.isContainsAfterContestJudge
-              )
-              .then((res) => {
-                let result = res.data.data;
-                for (let index = 0; index < this.contestProblems.length; index++) {
-                  this.contestProblems[index]["myStatus"] =
-                    result[this.contestProblems[index].pid]["status"];
-                  this.contestProblems[index]["score"] =
-                    result[this.contestProblems[index].pid]["score"];
-                }
-                this.isGetStatusOk = true;
-              });
+            api.getUserProblemStatus(pidList, isContestProblemList, this.$route.params.contestID, null, this.isContainsAfterContestJudge).then((res) => {
+              let result = res.data.data;
+              for (let index = 0; index < this.contestProblems.length; index++) {
+                this.contestProblems[index]['myStatus'] = result[this.contestProblems[index].pid]['status'];
+                this.contestProblems[index]['score'] = result[this.contestProblems[index].pid]['score'];
+              }
+              this.isGetStatusOk = true;
+            });
           }
         }
       });
@@ -97,9 +77,9 @@ export default {
         this.refreshFunc = setInterval(() => {
           this.$store.dispatch('getContestProblems');
           this.getContestRankData(this.page, true);
-        }, 10000)
+        }, 10000);
       } else {
-        clearInterval(this.refreshFunc)
+        clearInterval(this.refreshFunc);
       }
     },
     updateConcernedList(uid, isConcerned) {
@@ -121,72 +101,72 @@ export default {
         finalShowName = username;
       }
       return finalShowName;
-    }
+    },
   },
   computed: {
-    ...mapGetters(['isContestAdmin', 'userInfo', "isContainsAfterContestJudge", "selectedTime"]),
+    ...mapGetters(['isContestAdmin', 'userInfo', 'isContainsAfterContestJudge', 'selectedTime']),
     ...mapState({
-      'contest': state => state.contest.contest,
-      'contestProblems': state => state.contest.contestProblems
+      contest: (state) => state.contest.contest,
+      contestProblems: (state) => state.contest.contestProblems,
     }),
     showChart: {
       get() {
-        return this.$store.state.contest.itemVisible.chart
+        return this.$store.state.contest.itemVisible.chart;
       },
       set(value) {
         this.$store.commit('changeContestItemVisible', {
-          chart: value
-        })
-      }
+          chart: value,
+        });
+      },
     },
     showStarUser: {
       get() {
-        return !this.$store.state.contest.removeStar
+        return !this.$store.state.contest.removeStar;
       },
       set(value) {
         this.$store.commit('changeRankRemoveStar', {
-          value: !value
-        })
-      }
+          value: !value,
+        });
+      },
     },
     showTable: {
       get() {
-        return this.$store.state.contest.itemVisible.table
+        return this.$store.state.contest.itemVisible.table;
       },
       set(value) {
         this.$store.commit('changeContestItemVisible', {
-          table: value
-        })
-      }
+          table: value,
+        });
+      },
     },
     forceUpdate: {
       get() {
-        return this.$store.state.contest.forceUpdate
+        return this.$store.state.contest.forceUpdate;
       },
       set(value) {
         this.$store.commit('changeRankForceUpdate', {
-          value: value
-        })
-      }
+          value: value,
+        });
+      },
     },
     concernedList: {
       get() {
-        return this.$store.state.contest.concernedList
+        return this.$store.state.contest.concernedList;
       },
       set(value) {
         this.$store.commit('changeConcernedList', {
-          value: value
-        })
-      }
+          value: value,
+        });
+      },
     },
     refreshDisabled() {
-      return this.contest.status == CONTEST_STATUS.ENDED
+      return this.contest.status == CONTEST_STATUS.ENDED;
     },
     contestAuth() {
       return this.contest.auth === CONTEST_TYPE.PUBLIC_SYNCHRONOUS || this.contest.auth === CONTEST_TYPE.PRIVATE_SYNCHRONOUS;
-    }
+    },
   },
   beforeDestroy() {
-    clearInterval(this.refreshFunc)
-  }
-}
+    clearInterval(this.refreshFunc);
+  },
+};

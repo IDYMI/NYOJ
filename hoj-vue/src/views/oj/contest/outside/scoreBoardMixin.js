@@ -1,17 +1,7 @@
-import api from '@/common/api'
+import api from '@/common/api';
 import time from '@/common/time';
-import {
-  CONTEST_STATUS,
-  CONTEST_STATUS_REVERSE,
-  CONTEST_TYPE_REVERSE,
-  RULE_TYPE,
-  buildContestRankConcernedKey
-} from '@/common/constants'
-import {
-  mapState,
-  mapGetters,
-  mapActions
-} from 'vuex';
+import { CONTEST_STATUS, CONTEST_STATUS_REVERSE, CONTEST_TYPE_REVERSE, RULE_TYPE, buildContestRankConcernedKey } from '@/common/constants';
+import { mapState, mapGetters, mapActions } from 'vuex';
 import moment from 'moment';
 import storage from '@/common/storage';
 export default {
@@ -25,28 +15,31 @@ export default {
       let key = buildContestRankConcernedKey(this.contestID);
       this.concernedList = storage.get(key) || [];
       this.loading.info = true;
-      this.$store.dispatch('getScoreBoardContestInfo').then((res) => {
-        this.getContestOutsideScoreboard();
-        if (!this.contestEnded) {
-          this.autoRefresh = true;
-          this.handleAutoRefresh(true);
+      this.$store.dispatch('getScoreBoardContestInfo').then(
+        (res) => {
+          this.getContestOutsideScoreboard();
+          if (!this.contestEnded) {
+            this.autoRefresh = true;
+            this.handleAutoRefresh(true);
+          }
+          this.changeDomTitle({
+            title: res.data.data.title,
+          });
+          let data = res.data.data.contest;
+          let endTime = moment(data.endTime);
+          this.loading.info = false;
+          // 如果当前时间还是在比赛结束前的时间，需要计算倒计时，同时开启获取比赛公告的定时器
+          if (endTime.isAfter(moment(data.now))) {
+            // 实时更新时间
+            this.timer = setInterval(() => {
+              this.$store.commit('nowAdd1s');
+            }, 1000);
+          }
+        },
+        (err) => {
+          this.loading.info = false;
         }
-        this.changeDomTitle({
-          title: res.data.data.title
-        });
-        let data = res.data.data.contest;
-        let endTime = moment(data.endTime);
-        this.loading.info = false;
-        // 如果当前时间还是在比赛结束前的时间，需要计算倒计时，同时开启获取比赛公告的定时器
-        if (endTime.isAfter(moment(data.now))) {
-          // 实时更新时间
-          this.timer = setInterval(() => {
-            this.$store.commit('nowAdd1s');
-          }, 1000);
-        }
-      }, (err) => {
-        this.loading.info = false;
-      });
+      );
     },
     getContestOutsideScoreboard() {
       this.$store.dispatch('getContestProblems');
@@ -58,28 +51,31 @@ export default {
         currentPage: this.page,
         limit: this.limit,
         keyword: this.keyword == null ? null : this.keyword.trim(),
-        containsEnd: this.isContainsAfterContestJudge
-      }
+        containsEnd: this.isContainsAfterContestJudge,
+      };
       this.loading.rank = true;
-      api.getContestOutsideScoreboard(data).then(res => {
-        this.applyToTable(res.data.data.records);
-        this.total = res.data.data.total
-        this.loading.rank = false;
-      }, (err) => {
-        this.loading.rank = false;
-        if (this.refreshFunc) {
-          this.autoRefresh = false;
-          clearInterval(this.refreshFunc)
+      api.getContestOutsideScoreboard(data).then(
+        (res) => {
+          this.applyToTable(res.data.data.records);
+          this.total = res.data.data.total;
+          this.loading.rank = false;
+        },
+        (err) => {
+          this.loading.rank = false;
+          if (this.refreshFunc) {
+            this.autoRefresh = false;
+            clearInterval(this.refreshFunc);
+          }
         }
-      })
+      );
     },
     handleAutoRefresh(status) {
       if (status == true) {
         this.refreshFunc = setInterval(() => {
-          this.getContestOutsideScoreboard()
-        }, 30000)
+          this.getContestOutsideScoreboard();
+        }, 30000);
       } else {
-        clearInterval(this.refreshFunc)
+        clearInterval(this.refreshFunc);
       }
     },
     ...mapActions(['changeDomTitle']),
@@ -112,7 +108,7 @@ export default {
         params: {
           groupID: gid,
         },
-      })
+      });
     },
     getRankShowName(rankShowName, username) {
       let finalShowName = rankShowName;
@@ -120,56 +116,50 @@ export default {
         finalShowName = username;
       }
       return finalShowName;
-    }
+    },
   },
   computed: {
     ...mapState({
       contest: (state) => state.contest.contest,
       now: (state) => state.contest.now,
-      contestProblems: state => state.contest.contestProblems
+      contestProblems: (state) => state.contest.contestProblems,
     }),
-    ...mapGetters([
-      'countdown',
-      'BeginToNowDuration',
-      'isContestAdmin',
-      'userInfo',
-      'isShowContestSetting'
-    ]),
+    ...mapGetters(['countdown', 'BeginToNowDuration', 'isContestAdmin', 'userInfo', 'isShowContestSetting']),
     forceUpdate: {
       get() {
-        return this.$store.state.contest.forceUpdate
+        return this.$store.state.contest.forceUpdate;
       },
       set(value) {
         this.$store.commit('changeRankForceUpdate', {
-          value: value
-        })
-      }
+          value: value,
+        });
+      },
     },
     showStarUser: {
       get() {
-        return !this.$store.state.contest.removeStar
+        return !this.$store.state.contest.removeStar;
       },
       set(value) {
         this.$store.commit('changeRankRemoveStar', {
-          value: !value
-        })
-      }
+          value: !value,
+        });
+      },
     },
     concernedList: {
       get() {
-        return this.$store.state.contest.concernedList
+        return this.$store.state.contest.concernedList;
       },
       set(value) {
         this.$store.commit('changeConcernedList', {
-          value: value
-        })
-      }
+          value: value,
+        });
+      },
     },
     progressValue: {
-      get: function () {
+      get: function() {
         return this.$store.getters.progressValue;
       },
-      set: function () {},
+      set: function() {},
     },
     timeStep() {
       // 时间段平分滑条长度
@@ -189,14 +179,14 @@ export default {
       },
       set(value) {
         this.$store.commit('changeContainsAfterContestJudge', {
-          value: value
-        })
-      }
+          value: value,
+        });
+      },
     },
   },
   beforeDestroy() {
-    clearInterval(this.refreshFunc)
+    clearInterval(this.refreshFunc);
     clearInterval(this.timer);
     this.$store.commit('clearContest');
-  }
-}
+  },
+};

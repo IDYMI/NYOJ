@@ -1,8 +1,6 @@
-import {
-  USER_TYPE
-} from '@/common/constants'
-import storage from '@/common/storage'
-import api from '@/common/api'
+import { USER_TYPE } from '@/common/constants';
+import storage from '@/common/storage';
+import api from '@/common/api';
 const state = {
   userInfo: storage.get('userInfo'),
   token: localStorage.getItem('token'),
@@ -12,24 +10,22 @@ const state = {
     reply: 0,
     like: 0,
     sys: 0,
-    mine: 0
-  }
-}
+    mine: 0,
+  },
+};
 
 const getters = {
-  userInfo: state => state.userInfo || {},
-  token: state => state.token || '',
-  unreadMessage: state => state.unreadMessage || {},
-  loginFailNum: state => state.loginFailNum || 0,
+  userInfo: (state) => state.userInfo || {},
+  token: (state) => state.token || '',
+  unreadMessage: (state) => state.unreadMessage || {},
+  loginFailNum: (state) => state.loginFailNum || 0,
   isAuthenticated: (state, getters) => {
-    return !!getters.token
+    return !!getters.token;
   },
   // 通用管理权限
   isAdminRole: (state, getters) => {
     if (getters.userInfo.roleList) {
-      return getters.userInfo.roleList.indexOf(USER_TYPE.ADMIN) != -1 ||
-        getters.userInfo.roleList.indexOf(USER_TYPE.PROBLEM_ADMIN) != -1 ||
-        getters.userInfo.roleList.indexOf(USER_TYPE.SUPER_ADMIN) != -1
+      return getters.userInfo.roleList.indexOf(USER_TYPE.ADMIN) != -1 || getters.userInfo.roleList.indexOf(USER_TYPE.PROBLEM_ADMIN) != -1 || getters.userInfo.roleList.indexOf(USER_TYPE.SUPER_ADMIN) != -1;
     } else {
       return false;
     }
@@ -37,8 +33,7 @@ const getters = {
   // 主要管理权限 (除了核心系统配置之外的)
   isMainAdminRole: (state, getters) => {
     if (getters.userInfo.roleList) {
-      return getters.userInfo.roleList.indexOf(USER_TYPE.ADMIN) != -1 ||
-        getters.userInfo.roleList.indexOf(USER_TYPE.SUPER_ADMIN) != -1
+      return getters.userInfo.roleList.indexOf(USER_TYPE.ADMIN) != -1 || getters.userInfo.roleList.indexOf(USER_TYPE.SUPER_ADMIN) != -1;
     } else {
       return false;
     }
@@ -46,7 +41,7 @@ const getters = {
   // 超管权限
   isSuperAdmin: (state, getters) => {
     if (getters.userInfo.roleList) {
-      return getters.userInfo.roleList.indexOf(USER_TYPE.SUPER_ADMIN) != -1
+      return getters.userInfo.roleList.indexOf(USER_TYPE.SUPER_ADMIN) != -1;
     } else {
       return false;
     }
@@ -54,7 +49,7 @@ const getters = {
   // 题目管理权限
   isProblemAdmin: (state, getters) => {
     if (getters.userInfo.roleList) {
-      return getters.userInfo.roleList.indexOf(USER_TYPE.PROBLEM_ADMIN) != -1
+      return getters.userInfo.roleList.indexOf(USER_TYPE.PROBLEM_ADMIN) != -1;
     } else {
       return false;
     }
@@ -62,119 +57,97 @@ const getters = {
   // 普通管理权限
   isNormalAdmin: (state, getters) => {
     if (getters.userInfo.roleList) {
-      return getters.userInfo.roleList.indexOf(USER_TYPE.ADMIN) != -1
+      return getters.userInfo.roleList.indexOf(USER_TYPE.ADMIN) != -1;
     } else {
       return false;
     }
-  }
-}
+  },
+};
 
 const mutations = {
-  changeUserInfo(state, {
-    userInfo
-  }) {
-    state.userInfo = userInfo
-    storage.set('userInfo', userInfo)
+  changeUserInfo(state, { userInfo }) {
+    state.userInfo = userInfo;
+    storage.set('userInfo', userInfo);
   },
-  changeUserPreferences(state, {
-    userInfo
-  }) {
-    state.userInfo = userInfo
-    storage.set('userInfo', userInfo)
+  changeUserPreferences(state, { userInfo }) {
+    state.userInfo = userInfo;
+    storage.set('userInfo', userInfo);
   },
   changeUserToken(state, token) {
-    state.token = token
-    localStorage.setItem("token", token)
+    state.token = token;
+    localStorage.setItem('token', token);
   },
-  incrLoginFailNum(state, {
-    success
-  }) {
+  incrLoginFailNum(state, { success }) {
     if (!success) {
-      state.loginFailNum += 1
+      state.loginFailNum += 1;
     } else {
-      state.loginFailNum = 0
+      state.loginFailNum = 0;
     }
   },
 
   clearUserInfoAndToken(state) {
-    state.token = ''
-    state.userInfo = {}
-    state.loginFailNum = 0
-    storage.clear()
+    state.token = '';
+    state.userInfo = {};
+    state.loginFailNum = 0;
+    storage.clear();
   },
-  updateUnreadMessageCount(state, {
-    unreadMessage
-  }) {
-    state.unreadMessage = unreadMessage
+  updateUnreadMessageCount(state, { unreadMessage }) {
+    state.unreadMessage = unreadMessage;
   },
-  substractUnreadMessageCount(state, {
-    needSubstractMsg
-  }) {
+  substractUnreadMessageCount(state, { needSubstractMsg }) {
     // 负数也没关系
     state.unreadMessage[needSubstractMsg.name] = state.unreadMessage[needSubstractMsg.name] - needSubstractMsg.num;
   },
-  changeUserAuthInfo(state, {
-    roles
-  }) {
+  changeUserAuthInfo(state, { roles }) {
     state.userInfo.roleList = roles;
     storage.set('userInfo', state.userInfo);
-  }
-}
+  },
+};
 
 const actions = {
-  setUserInfo({
-    commit
-  }, userInfo) {
+  setUserInfo({ commit }, userInfo) {
     commit('changeUserInfo', {
-      userInfo: userInfo
-    })
+      userInfo: userInfo,
+    });
   },
-  incrLoginFailNum({
-    commit
-  }, success) {
+  incrLoginFailNum({ commit }, success) {
     commit('incrLoginFailNum', {
-      success: success
-    })
+      success: success,
+    });
   },
-  clearUserInfoAndToken({
-    commit
-  }) {
-    commit('clearUserInfoAndToken')
+  clearUserInfoAndToken({ commit }) {
+    commit('clearUserInfoAndToken');
   },
-  updateUnreadMessageCount({
-    commit
-  }, unreadMessage) {
+  updateUnreadMessageCount({ commit }, unreadMessage) {
     commit('updateUnreadMessageCount', {
-      unreadMessage: unreadMessage
-    })
+      unreadMessage: unreadMessage,
+    });
   },
-  substractUnreadMessageCount({
-    commit
-  }, needSubstractMsg) {
+  substractUnreadMessageCount({ commit }, needSubstractMsg) {
     commit('substractUnreadMessageCount', {
-      needSubstractMsg: needSubstractMsg
-    })
+      needSubstractMsg: needSubstractMsg,
+    });
   },
-  refreshUserAuthInfo({
-    commit,
-    dispatch
-  }) {
-    return new Promise((resolve, reject) => {
-      api.getUserAuthInfo().then((res) => {
-        commit('changeUserAuthInfo', {
-          roles: res.data.data.roles
-        })
-        resolve(res)
-      })
-    }, err => {
-      reject(err)
-    })
-  }
-}
+  refreshUserAuthInfo({ commit, dispatch }) {
+    return new Promise(
+      (resolve, reject) => {
+        api.getUserAuthInfo().then((res) => {
+          commit('changeUserAuthInfo', {
+            roles: res.data.data.roles,
+          });
+          resolve(res);
+        });
+      },
+      (err) => {
+        reject(err);
+      }
+    );
+  },
+};
 
 export default {
   state,
   getters,
   actions,
-  mutations
-}
+  mutations,
+};

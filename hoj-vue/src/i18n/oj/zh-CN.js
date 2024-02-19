@@ -1,5 +1,4 @@
 export const m = {
-
   // src/common/filters.js
 
   // /src/common/api.js
@@ -131,7 +130,6 @@ export const m = {
   The_new_password_cannot_be_empty: '新密码不能为空',
   The_new_email_cannot_be_empty: '新邮箱不能为空',
 
-
   // /components/oj/setting/UserInfo.vue
   Avatar_Setting: '头像设置',
   Upload_avatar_hint: '将头像拖放到此处，或单击此处',
@@ -257,7 +255,6 @@ export const m = {
   Supported_Remote_Online_Judge: '支持的远程评测平台',
   Statistics_Submissions_In_The_Last_Week: '最近一周提交统计',
 
-
   // 表格通用列名,按钮，搜索框等
   Enter_keyword: '输入关键词',
   Reset: '重置',
@@ -378,7 +375,6 @@ export const m = {
   Cancel_Successfully: '取消成功',
   Click_to_Manually_Judge: '点击进行人工评测',
 
-
   // /views/oj/status/SubmissionDetails.vue
   Test_point_details: '测试点详情',
   Copy: '复制',
@@ -445,7 +441,7 @@ export const m = {
   The_report_label_and_reason_cannot_be_empty: '举报标签和理由不能都为空',
 
   // 404.vue
-  Page_Not_Found: "页面找不到啦",
+  Page_Not_Found: '页面找不到啦',
   Go_Home: '返回主页',
   Back: '返回',
 
@@ -547,9 +543,8 @@ export const m = {
   Ename_Check_Required: '队伍英文名称不能为空',
   Check_English: '请输入英语',
   TeamName_Check_Length: '长度在 1 到 20 个英文字符',
-  Please_check_your_Cname_or_Ename: "请检查你的队伍中文名称或者英文名称",
-  Please_check_your_Team_Info: "请检查你的队伍信息",
-
+  Please_check_your_Cname_or_Ename: '请检查你的队伍中文名称或者英文名称',
+  Please_check_your_Team_Info: '请检查你的队伍信息',
 
   // /views/oj/contest/children/ACMContestRank.vue
   Contest_Rank: '比赛排名',
@@ -567,7 +562,7 @@ export const m = {
   Star_User: '打星用户',
   Unfollow: '取消关注',
   Top_And_Follow: '置顶关注',
-  Contest_Rank_Search_Cids: '请输入比赛的 Cids：（\'+\'隔开）',
+  Contest_Rank_Search_Cids: "请输入比赛的 Cids：（'+'隔开）",
   Contest_Rank_Search_Placeholder: '请输入用户名称 / 学校名称',
   Contest_Rank_Setting: '榜单设置',
   Contest_Setting: '比赛设置',
@@ -611,7 +606,7 @@ export const m = {
   Plagiarism_Length: '相似代码的长度',
   Plagiarism_Language: '语言',
   Plagiarism_Time: '时间',
-  Plagiarism_LanguageList:'查重语言列表',
+  Plagiarism_LanguageList: '查重语言列表',
   Add_Moss: '提交查重',
   Enter_Mosskeyword: '输入关键词 （用户名）',
   Moss_View: '查看',
@@ -647,21 +642,21 @@ export const m = {
   Submitted_Faild_Description: '您的此次提交失败，请点击按钮重新提交...',
   Compiling_Description: '正在对您的源代码进行编译中，请等待结果...',
   Judging_Description: '正在使用测试数据运行您的程序中，请等待结果...',
-  Compile_Error_Description: "无法编译您的源代码，点击链接查看编译器的输出。",
+  Compile_Error_Description: '无法编译您的源代码，点击链接查看编译器的输出。',
   Persentation_Error_Description: '您提交的代码已经很接近正确答案，请检查代码格式输出是否有多余空格，换行等空白符。',
   Partial_Accepted_Description: '加油！您提交的代码通过了部分测试点，请考虑其他可能性。',
   Accepted_Description: '恭喜! 您的解题方法是正确的。',
-  Wrong_Answer_Description: "您的程序输出结果与判题程序的答案不符。",
+  Wrong_Answer_Description: '您的程序输出结果与判题程序的答案不符。',
   Runtime_Error_Description: '您的程序异常终止，可能的原因是：段错误，被零除或用非0的代码退出程序。',
   Time_Limit_Exceeded_Description: '您的程序运行时间已超出题目限制。',
   Memory_Limit_Exceeded_Description: '您的程序实际使用的内存已超出题目限制。',
   System_Error_Description: '糟糕，判题机系统出了问题。请报告给管理员。',
   Cancelled_Description: '您的此次提交被取消！',
   Compile_Explanation: '编译说明',
-  Compile_Tips1: "__int64不是ANSI标准定义，只能在VC使用，在 GNU C++ 中应写成 long long 类型， scanf和printf 请使用%lld作为格式",
-  Compile_Tips2: "main() 返回值必须定义为 int ，而不是 void",
-  Compile_Tips3: "i 在循环外失去定义 \"for(int i=0...){...}\"",
-  Compile_Tips4: "itoa 不是ansi标准函数（标准 C/C++ 中无此函数）",
+  Compile_Tips1: '__int64不是ANSI标准定义，只能在VC使用，在 GNU C++ 中应写成 long long 类型， scanf和printf 请使用%lld作为格式',
+  Compile_Tips2: 'main() 返回值必须定义为 int ，而不是 void',
+  Compile_Tips3: 'i 在循环外失去定义 "for(int i=0...){...}"',
+  Compile_Tips4: 'itoa 不是ansi标准函数（标准 C/C++ 中无此函数）',
 
   // /views/oj/about/Developer.vue
   Leader_BackEnd_FrontEnd_Engineer: '主导 & 后端 | 前端 开发者',
@@ -916,5 +911,5 @@ export const m = {
   Dark: '暗色',
   Light: '亮色',
 
-  Unknown: 'Unknown'
-}
+  Unknown: 'Unknown',
+};

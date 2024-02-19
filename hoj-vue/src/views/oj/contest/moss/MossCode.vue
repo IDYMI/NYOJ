@@ -1,14 +1,14 @@
 <template>
-  <div class="markdown-body submission-detail">
-    <body bgcolor="white">
-      <div class="code-container">
-        <pre>
+<div class="markdown-body submission-detail">
+  <body bgcolor="white">
+    <div class="code-container">
+      <pre>
           <!-- 添加末尾换行，使得引索在页面头部展示 -->
           <div v-highlight v-html="code + '\n'.repeat(50)"></div>
         </pre>
-      </div>
-    </body>
-  </div>
+    </div>
+  </body>
+</div>
 </template>
 
 <script>

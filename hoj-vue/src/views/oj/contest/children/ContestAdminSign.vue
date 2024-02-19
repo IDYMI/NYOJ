@@ -471,7 +471,6 @@ export default {
           this.signList = [];
           this.total = 0;
         });
-
     },
     // 改变选中的内容
     handleSelectionChange({ records }) {

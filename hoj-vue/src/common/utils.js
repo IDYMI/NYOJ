@@ -1,13 +1,9 @@
-import Vue from 'vue'
-import storage from '@/common/storage'
-import {
-  STORAGE_KEY,
-  PROBLEM_LEVEL,
-  FOCUS_MODE_ROUTE_NAME
-} from '@/common/constants'
-import myMessage from '@/common/message'
-import api from "@/common/api";
-import store from '@/store'
+import Vue from 'vue';
+import storage from '@/common/storage';
+import { STORAGE_KEY, PROBLEM_LEVEL, FOCUS_MODE_ROUTE_NAME } from '@/common/constants';
+import myMessage from '@/common/message';
+import api from '@/common/api';
+import store from '@/store';
 import { PROBLEM_TYPE } from './constants';
 import JSZip from 'jszip';
 
@@ -18,126 +14,133 @@ import JSZip from 'jszip';
 //   return String(t.toFixed(0)) + 'KB'
 // }
 function submissionMemoryFormat(a, b) {
-  if (a === null || a === '' || a === undefined) return "--";
-  if (a === 0) return "0 KB";
+  if (a === null || a === '' || a === undefined) return '--';
+  if (a === 0) return '0 KB';
   var c = 1024,
     d = b || 1,
-    e = ["KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+    e = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
     f = Math.floor(Math.log(a) / Math.log(c));
-  return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f]
+  return parseFloat((a / Math.pow(c, f)).toFixed(d)) + ' ' + e[f];
 }
 
 function submissionTimeFormat(time) {
-  if (time === undefined || time === null || time === '') return '--'
-  return time + 'ms'
+  if (time === undefined || time === null || time === '') return '--';
+  return time + 'ms';
 }
 
 function submissionLengthFormat(length) {
-  if (length === undefined || length === null || length === '') return '--'
-  return length + 'B'
+  if (length === undefined || length === null || length === '') return '--';
+  return length + 'B';
 }
 
 function getACRate(acCount, totalCount) {
-  let rate = totalCount === 0 ? 0.00 : (acCount / totalCount * 100).toFixed(2)
-  return String(rate) + '%'
+  let rate = totalCount === 0 ? 0.0 : ((acCount / totalCount) * 100).toFixed(2);
+  return String(rate) + '%';
 }
 
 // 去掉值为空的项，返回object
 function filterEmptyValue(object) {
-  let query = {}
-  Object.keys(object).forEach(key => {
+  let query = {};
+  Object.keys(object).forEach((key) => {
     if (object[key] || object[key] === 0 || object[key] === false) {
-      query[key] = object[key]
+      query[key] = object[key];
     }
-  })
-  return query
+  });
+  return query;
 }
 
 // 按指定字符数截断添加换行，非英文字符按指定字符的半数截断
 function breakLongWords(value, length = 16) {
-  let re
+  let re;
   if (escape(value).indexOf('%u') === -1) {
     // 没有中文
-    re = new RegExp('(.{' + length + '})', 'g')
+    re = new RegExp('(.{' + length + '})', 'g');
   } else {
     // 中文字符
-    re = new RegExp('(.{' + (parseInt(length / 2) + 1) + '})', 'g')
+    re = new RegExp('(.{' + (parseInt(length / 2) + 1) + '})', 'g');
   }
-  return value.replace(re, '$1\n')
+  return value.replace(re, '$1\n');
 }
 
 function downloadFile(url) {
   return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(url, {
-      responseType: 'blob',
-      timeout: 5 * 60 * 1000
-    }).then(resp => {
-      let headers = resp.headers
-      if (headers['content-type'].indexOf('json') !== -1) {
-        let fr = new window.FileReader()
-        if (resp.data.error) {
-          myMessage.error(resp.data.error)
-        }
-        fr.onload = (event) => {
-          let data = JSON.parse(event.target.result)
-          if (data.msg) {
-            myMessage.info(data.msg)
-          } else {
-            myMessage.error('Invalid file format')
+    Vue.prototype.$axios
+      .get(url, {
+        responseType: 'blob',
+        timeout: 5 * 60 * 1000,
+      })
+      .then((resp) => {
+        let headers = resp.headers;
+        if (headers['content-type'].indexOf('json') !== -1) {
+          let fr = new window.FileReader();
+          if (resp.data.error) {
+            myMessage.error(resp.data.error);
           }
+          fr.onload = (event) => {
+            let data = JSON.parse(event.target.result);
+            if (data.msg) {
+              myMessage.info(data.msg);
+            } else {
+              myMessage.error('Invalid file format');
+            }
+          };
+          let b = new window.Blob([resp.data], {
+            type: 'application/json',
+          });
+          fr.readAsText(b);
+          return;
         }
-        let b = new window.Blob([resp.data], {
-          type: 'application/json'
-        })
-        fr.readAsText(b)
-        return
-      }
-      let link = document.createElement('a')
-      link.href = window.URL.createObjectURL(new window.Blob([resp.data], {
-        type: headers['content-type']
-      }))
-      link.download = (headers['content-disposition'] || '').split('filename=')[1]
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      myMessage.success("Downloading...")
-      resolve()
-    }).catch((error) => {
-      reject(error)
-    })
-  })
+        let link = document.createElement('a');
+        link.href = window.URL.createObjectURL(
+          new window.Blob([resp.data], {
+            type: headers['content-type'],
+          })
+        );
+        link.download = (headers['content-disposition'] || '').split('filename=')[1];
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        myMessage.success('Downloading...');
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 function downloadBoxFile(url, fileName) {
   return new Promise((resolve, reject) => {
-    Vue.prototype.$axios.get(url, {
-      responseType: 'blob',
-      timeout: 5 * 60 * 1000
-    }).then(resp => {
-      let headers = resp.headers;
+    Vue.prototype.$axios
+      .get(url, {
+        responseType: 'blob',
+        timeout: 5 * 60 * 1000,
+      })
+      .then((resp) => {
+        let headers = resp.headers;
 
-      // 从URL中解析出文件类型
-      let fileNameWithExtension = url.split('/').pop();
-      let fileType = fileNameWithExtension.split('.').pop() || 'txt';
-      let filename = fileName.split('.')[0];
+        // 从URL中解析出文件类型
+        let fileNameWithExtension = url.split('/').pop();
+        let fileType = fileNameWithExtension.split('.').pop() || 'txt';
+        let filename = fileName.split('.')[0];
 
-      headers['content-disposition'] = `attachment; filename=${filename}.${fileType}`;
-      headers['content-type'] = getContentType(fileType); // 获取 MIME 类型
+        headers['content-disposition'] = `attachment; filename=${filename}.${fileType}`;
+        headers['content-type'] = getContentType(fileType); // 获取 MIME 类型
 
-      let link = document.createElement('a');
-      link.href = window.URL.createObjectURL(new window.Blob([resp.data], { type: headers['content-type'] }));
-      link.download = (headers['content-disposition'] || '').split('filename=')[1];
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      myMessage.success("Downloading...");
-      resolve();
-    }).catch((error) => {
-      reject(error);
-    });
+        let link = document.createElement('a');
+        link.href = window.URL.createObjectURL(new window.Blob([resp.data], { type: headers['content-type'] }));
+        link.download = (headers['content-disposition'] || '').split('filename=')[1];
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        myMessage.success('Downloading...');
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
   });
 }
-
 
 function getContentType(fileType) {
   switch (fileType.toLowerCase()) {
@@ -175,31 +178,33 @@ function getContentType(fileType) {
 
 function downloadFileByText(fileName, fileContent) {
   return new Promise((resolve, reject) => {
-    let link = document.createElement('a')
-    link.href = window.URL.createObjectURL(new window.Blob([fileContent], {
-      type: 'text/plain;charset=utf-8'
-    }))
-    link.download = fileName
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-    myMessage.success("Download Successfully!")
-    resolve()
-  })
+    let link = document.createElement('a');
+    link.href = window.URL.createObjectURL(
+      new window.Blob([fileContent], {
+        type: 'text/plain;charset=utf-8',
+      })
+    );
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    myMessage.success('Download Successfully!');
+    resolve();
+  });
 }
 
 async function readTestCase(problemID, name = null, fileListDir = null) {
-  let url = "/api/file/download-testcase";
+  let url = '/api/file/download-testcase';
   if (problemID !== null || fileListDir !== null) {
     url += `?${problemID !== null ? `pid=${problemID}` : ''}${problemID !== null && fileListDir !== null ? '&' : ''}${fileListDir !== null ? `fileListDir=${fileListDir}` : ''}`;
   }
-  
+
   let fileContents = {};
   try {
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error("Failed to fetch test case. Status: " + response.status);
+      throw new Error('Failed to fetch test case. Status: ' + response.status);
     }
 
     const blob = await response.blob();
@@ -213,7 +218,7 @@ async function readTestCase(problemID, name = null, fileListDir = null) {
       const filePromises = Object.values(zipContents.files).map(async (file) => {
         if (!file.dir) {
           if (file.name.split('.').length > 1) {
-            const content = await file.async("text");
+            const content = await file.async('text');
             fileContents[String(file.name)] = content;
           }
         }
@@ -225,69 +230,68 @@ async function readTestCase(problemID, name = null, fileListDir = null) {
       const file = zipContents.file(name);
 
       if (!file) {
-        throw new Error("File not found in the zip archive.");
+        throw new Error('File not found in the zip archive.');
       }
 
-      const content = await file.async("text");
+      const content = await file.async('text');
       fileContents[String(name)] = content;
     }
   } catch (error) {
     fileContents = {}; // 设置默认值或根据需要进行处理
-    console.error("Error reading test case:", error.message);
+    console.error('Error reading test case:', error.message);
   }
   return fileContents;
 }
 
 function getLanguages(all = true) {
   return new Promise((resolve, reject) => {
-    let languages = storage.get(STORAGE_KEY.languages)
+    let languages = storage.get(STORAGE_KEY.languages);
     if (languages) {
-      resolve(languages)
+      resolve(languages);
     } else {
-      api.getAllLanguages(all).then(res => {
-        let langs = res.data.data
-        storage.set(STORAGE_KEY.languages, langs);
-        resolve(langs);
-      }, err => {
-        reject(err)
-      })
+      api.getAllLanguages(all).then(
+        (res) => {
+          let langs = res.data.data;
+          storage.set(STORAGE_KEY.languages, langs);
+          resolve(langs);
+        },
+        (err) => {
+          reject(err);
+        }
+      );
     }
-  })
+  });
 }
 
 function stringToExamples(value) {
-  let reg = "<input>([\\s\\S]*?)</input><output>([\\s\\S]*?)</output>";
-  let re = RegExp(reg, "g");
-  let objList = []
+  let reg = '<input>([\\s\\S]*?)</input><output>([\\s\\S]*?)</output>';
+  let re = RegExp(reg, 'g');
+  let objList = [];
   let tmp;
-  while (tmp = re.exec(value)) {
+  while ((tmp = re.exec(value))) {
     objList.push({
       input: tmp[1],
-      output: tmp[2]
-    })
+      output: tmp[2],
+    });
   }
-  return objList
+  return objList;
 }
 
 function examplesToString(objList) {
   if (objList.length == 0) {
-    return "";
+    return '';
   }
-  let result = ""
+  let result = '';
   for (let obj of objList) {
-    result += "<input>" + obj.input + "</input><output>" + obj.output + "</output>"
+    result += '<input>' + obj.input + '</input><output>' + obj.output + '</output>';
   }
-  return result
+  return result;
 }
 
 function getLevelColor(difficulty) {
   if (difficulty != undefined && difficulty != null) {
     if (PROBLEM_LEVEL[difficulty]) {
-      return (
-        'color: #fff !important;background-color:' +
-        PROBLEM_LEVEL[difficulty]['color'] +
-        ' !important;'
-      );
+      return 'color: #fff !important;background-color:' + PROBLEM_LEVEL[difficulty]['color'] + ' !important;';
     } else {
       return 'color: #fff !important;background-color: rgb(255, 153, 0)!important;';
     }
@@ -295,11 +299,7 @@ function getLevelColor(difficulty) {
 }
 
 function getLevelName(difficulty) {
-  if (
-    difficulty != undefined &&
-    difficulty != null &&
-    PROBLEM_LEVEL[difficulty]
-  ) {
+  if (difficulty != undefined && difficulty != null && PROBLEM_LEVEL[difficulty]) {
     return PROBLEM_LEVEL[difficulty]['name'][store.getters.webLanguage];
   } else {
     return 'unknown [' + difficulty + ']';
@@ -307,11 +307,7 @@ function getLevelName(difficulty) {
 }
 
 function getTypeName(type) {
-  if (
-    type != undefined &&
-    type != null &&
-    PROBLEM_TYPE[type]
-  ) {
+  if (type != undefined && type != null && PROBLEM_TYPE[type]) {
     return PROBLEM_TYPE[type]['name'][store.getters.webLanguage];
   } else {
     return 'unknown [' + type + ']';
@@ -321,11 +317,7 @@ function getTypeName(type) {
 function getTypeColor(type) {
   if (type != undefined && type != null) {
     if (PROBLEM_TYPE[type]) {
-      return (
-        'color: #fff !important;background-color:' +
-        PROBLEM_TYPE[type]['color'] +
-        ' !important;'
-      );
+      return 'color: #fff !important;background-color:' + PROBLEM_TYPE[type]['color'] + ' !important;';
     } else {
       return 'color: #fff !important;background-color: rgb(255, 153, 0)!important;';
     }
@@ -342,7 +334,7 @@ function isFocusModePage(routeName) {
 }
 
 function getFocusModeOriPage(routeName) {
-  return FOCUS_MODE_ROUTE_NAME[routeName]
+  return FOCUS_MODE_ROUTE_NAME[routeName];
 }
 
 function supportFocusMode(routeName) {
@@ -380,5 +372,5 @@ export default {
   getFocusModeOriPage: getFocusModeOriPage,
   supportFocusMode: supportFocusMode,
   getSwitchFoceusModeRouteName: getSwitchFoceusModeRouteName,
-  readTestCase: readTestCase
-}
+  readTestCase: readTestCase,
+};
