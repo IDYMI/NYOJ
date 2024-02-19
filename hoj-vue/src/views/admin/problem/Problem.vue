@@ -973,8 +973,13 @@ export default {
         this.routeName === "admin-edit-contest-problem"
       ) {
         this.mode = "edit";
-      } else {
+      } else if (
+        this.routeName === "admin-create-problem" ||
+        this.routeName === "admin-create-contest-problem"
+      ) {
         this.mode = "add";
+      } else {
+        this.mode = "change";
       }
       // 清除表单
       // this.$refs.problem.resetFields();
@@ -1088,7 +1093,7 @@ export default {
         api.admin_getProblemTags(this.pid).then((res) => {
           this.problemTags = res.data.data;
         });
-      } else {
+      } else if (this.mode === "add") {
         this.addExample();
         this.testCaseUploaded = false;
         this.title = this.$i18n.t("m.Create_Problem");
@@ -1204,7 +1209,6 @@ export default {
     },
 
     beforeUpload(file) {
-      // console.log(file);
       const fileName = file.name;
       const fileType = fileName.substring(fileName.lastIndexOf("."));
       if (fileType === ".zip") {
@@ -1357,7 +1361,9 @@ export default {
 
     // 添加题目样例
     addExample() {
-      this.problem.examples.push({ input: "", output: "", isOpen: true });
+      if (this.problem.examples.length === 0) {
+        this.problem.examples.push({ input: "", output: "", isOpen: true });
+      }
     },
     changeExampleVisible(index, isOpen) {
       this.problem.examples[index]["isOpen"] = isOpen;

@@ -127,6 +127,7 @@ const adminRoutes = [
         component: Problem,
         meta: {
           title: 'Create Problem',
+          keepAlive: true, //需要缓存的路由
         },
       },
       {
@@ -167,6 +168,7 @@ const adminRoutes = [
         component: Training,
         meta: {
           title: 'Create Training',
+          keepAlive: true,
         },
       },
       {
@@ -207,6 +209,7 @@ const adminRoutes = [
         component: Contest,
         meta: {
           title: 'Create Contest',
+          keepAlive: true,
         },
       },
       {
@@ -247,6 +250,7 @@ const adminRoutes = [
         component: Problem,
         meta: {
           title: 'Create Problem',
+          keepAlive: true,
         },
       },
       {

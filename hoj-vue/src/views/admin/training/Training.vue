@@ -100,15 +100,8 @@ export default {
       if (this.$route.name === "admin-edit-training") {
         this.title = this.$i18n.t("m.Edit_Training");
         this.getTraining();
-      } else {
+      } else if (this.$route.name === "admin-create-training") {
         this.title = this.$i18n.t("m.Create_Training");
-        this.training = {
-          rank: 1000,
-          title: "",
-          description: "",
-          privatePwd: "",
-          auth: "Public",
-        };
       }
     },
   },
@@ -222,6 +215,15 @@ export default {
           });
         })
         .catch(() => {});
+    },
+    clear() {
+      this.training = {
+        rank: 1000,
+        title: "",
+        description: "",
+        privatePwd: "",
+        auth: "Public",
+      };
     },
   },
 };

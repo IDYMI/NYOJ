@@ -192,6 +192,7 @@
               class="filter-item"
             >{{ file.hint }}</el-tag>
             <el-tag
+              v-if="contest.fileConfigList"
               :key="contest.fileConfigList.length"
               :color="'#409eff'"
               effect="dark"
@@ -674,10 +675,9 @@ export default {
         this.title = this.$i18n.t("m.Edit_Contest");
         this.disableRuleType = true;
         this.getContestByCid();
-      } else {
+      } else if (this.$route.name === "admin-create-contest") {
         this.title = this.$i18n.t("m.Create_Contest");
         this.disableRuleType = false;
-        this.contest = {};
       }
     },
     // 如果未开启文件柜
@@ -709,40 +709,43 @@ export default {
       this.$router.push({ name: "admin-file" });
     },
     getContestByCid() {
-      api
-        .admin_getContest(this.$route.params.contestId)
-        .then((res) => {
-          let data = res.data.data;
-          this.contest = data;
-          this.changeDuration();
-          this.changeSignDuration();
-          // 封榜时间转换
-          let halfHour = moment(this.contest.endTime)
-            .subtract(1800, "seconds")
-            .toString();
-          let oneHour = moment(this.contest.endTime)
-            .subtract(3600, "seconds")
-            .toString();
-          let allHour = moment(this.contest.startTime).toString();
-          let sealRankTime = moment(this.contest.sealRankTime).toString();
-          switch (sealRankTime) {
-            case halfHour:
-              this.seal_rank_time = 0;
-              break;
-            case oneHour:
-              this.seal_rank_time = 1;
-              break;
-            case allHour:
-              this.seal_rank_time = 2;
-              break;
-          }
-          if (this.contest.accountLimitRule) {
-            this.formRule = this.changeStrToAccountRule(
-              this.contest.accountLimitRule
-            );
-          }
-        })
-        .catch(() => {});
+      let cid = this.$route.params.contestId;
+      if (cid) {
+        api
+          .admin_getContest(cid)
+          .then((res) => {
+            let data = res.data.data;
+            this.contest = data;
+            this.changeDuration();
+            this.changeSignDuration();
+            // 封榜时间转换
+            let halfHour = moment(this.contest.endTime)
+              .subtract(1800, "seconds")
+              .toString();
+            let oneHour = moment(this.contest.endTime)
+              .subtract(3600, "seconds")
+              .toString();
+            let allHour = moment(this.contest.startTime).toString();
+            let sealRankTime = moment(this.contest.sealRankTime).toString();
+            switch (sealRankTime) {
+              case halfHour:
+                this.seal_rank_time = 0;
+                break;
+              case oneHour:
+                this.seal_rank_time = 1;
+                break;
+              case allHour:
+                this.seal_rank_time = 2;
+                break;
+            }
+            if (this.contest.accountLimitRule) {
+              this.formRule = this.changeStrToAccountRule(
+                this.contest.accountLimitRule
+              );
+            }
+          })
+          .catch(() => {});
+      }
     },
 
     saveContest() {

@@ -556,7 +556,12 @@
     </div>
     <div class="content-app">
       <transition name="fadeInUp" mode="out-in">
-        <router-view></router-view>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
+      </transition>
+      <transition name="fadeInUp" mode="out-in">
+        <keep-alive>
+          <router-view v-if="$route.meta.keepAlive"></router-view>
+        </keep-alive>
       </transition>
       <div class="footer">
         Powered by
