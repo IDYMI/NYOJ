@@ -212,7 +212,7 @@
               effect="dark"
               :content="$t('m.Edit')"
               placement="top"
-              v-if="isAdminRole || row.author == userInfo.username"
+              v-if="isMainAdminRole || row.author == userInfo.username"
             >
               <el-button
                 icon="el-icon-edit-outline"
@@ -226,7 +226,7 @@
               effect="dark"
               :content="$t('m.Download_Testcase')"
               placement="top"
-              v-if="isAdminRole || row.author == userInfo.username"
+              v-if="isMainAdminRole || row.author == userInfo.username"
             >
               <el-button
                 icon="el-icon-download"

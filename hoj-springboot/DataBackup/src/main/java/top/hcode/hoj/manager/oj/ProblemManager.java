@@ -394,7 +394,7 @@ public class ProblemManager {
     private String buildCode(Judge judge) {
         if (judge.getCid() == 0) {
             // 比赛外的提交代码 如果不是超管或题目管理员，需要检查网站是否开启隐藏代码功能
-            // 是否为超级管理员或者题目管理或者普通管理
+
             boolean isRoot = SecurityUtils.getSubject().hasRole("root")
                     || SecurityUtils.getSubject().hasRole("problem_admin")
                     || SecurityUtils.getSubject().hasRole("admin");

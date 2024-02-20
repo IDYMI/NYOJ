@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.hcode.hoj.common.exception.StatusFailException;
+import top.hcode.hoj.common.exception.StatusForbiddenException;
 import top.hcode.hoj.common.result.CommonResult;
 import top.hcode.hoj.manager.admin.contest.AdminContestAnnouncementManager;
 import top.hcode.hoj.pojo.dto.AnnouncementDTO;
@@ -24,9 +25,13 @@ public class AdminContestAnnouncementServiceImpl implements AdminContestAnnounce
 
     @Override
     public CommonResult<IPage<AnnouncementVO>> getAnnouncementList(Integer limit, Integer currentPage, Long cid) {
-        IPage<AnnouncementVO> announcementList = adminContestAnnouncementManager.getAnnouncementList(limit, currentPage,
-                cid);
-        return CommonResult.successResponse(announcementList);
+        try {
+            IPage<AnnouncementVO> announcementList = adminContestAnnouncementManager.getAnnouncementList(limit,
+                    currentPage, cid);
+            return CommonResult.successResponse(announcementList);
+        } catch (StatusForbiddenException e) {
+            return CommonResult.errorResponse(e.getMessage());
+        }
     }
 
     @Override

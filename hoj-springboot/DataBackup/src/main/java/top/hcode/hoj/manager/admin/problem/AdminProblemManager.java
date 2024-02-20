@@ -118,9 +118,7 @@ public class AdminProblemManager {
             // 获取当前登录的用户
             AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-            // 是否为超级管理员或者题目管理或者普通管理
             boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                    || SecurityUtils.getSubject().hasRole("problem_admin")
                     || SecurityUtils.getSubject().hasRole("admin");
 
             // 只有超级管理员和题目管理员、题目创建者才能操作
@@ -134,16 +132,32 @@ public class AdminProblemManager {
         }
     }
 
-    public void deleteProblem(Long pid) throws StatusFailException {
-        boolean isOk = problemEntityService.removeById(pid);
-        /*
-         * problem的id为其他表的外键的表中的对应数据都会被一起删除！
-         */
-        if (isOk) { // 删除成功
-            FileUtil.del(Constants.File.TESTCASE_BASE_FOLDER.getPath() + File.separator + "problem_" + pid);
+    public void deleteProblem(Long pid) throws StatusFailException, StatusForbiddenException {
+        Problem problem = problemEntityService.getById(pid);
+
+        if (problem != null) { // 查询成功
+            // 获取当前登录的用户
             AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-            log.info("[{}],[{}],pid:[{}],operatorUid:[{}],operatorUsername:[{}]",
-                    "Admin_Problem", "Delete", pid, userRolesVo.getUid(), userRolesVo.getUsername());
+
+            boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                    || SecurityUtils.getSubject().hasRole("admin");
+
+            // 只有超级管理员和题目管理员、题目创建者才能操作
+            if (!isRoot && !userRolesVo.getUsername().equals(problem.getAuthor())) {
+                throw new StatusForbiddenException("对不起，你无权限删除题目！");
+            }
+
+            boolean isOk = problemEntityService.removeById(pid);
+            /*
+             * problem的id为其他表的外键的表中的对应数据都会被一起删除！
+             */
+            if (isOk) { // 删除成功
+                FileUtil.del(Constants.File.TESTCASE_BASE_FOLDER.getPath() + File.separator + "problem_" + pid);
+                log.info("[{}],[{}],pid:[{}],operatorUid:[{}],operatorUsername:[{}]",
+                        "Admin_Problem", "Delete", pid, userRolesVo.getUid(), userRolesVo.getUsername());
+            } else {
+                throw new StatusFailException("删除失败！");
+            }
         } else {
             throw new StatusFailException("删除失败！");
         }
@@ -174,9 +188,7 @@ public class AdminProblemManager {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         // 只有超级管理员和题目管理员、题目创建者才能操作
@@ -211,7 +223,20 @@ public class AdminProblemManager {
         }
     }
 
-    public List<ProblemCase> getProblemCases(Long pid, Boolean isUpload) {
+    public List<ProblemCase> getProblemCases(Long pid, Boolean isUpload) throws StatusForbiddenException {
+        Problem problem = problemEntityService.getById(pid);
+
+        // 获取当前登录的用户
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("admin");
+
+        // 只有超级管理员和题目管理员、题目创建者才能操作
+        if (!isRoot && !userRolesVo.getUsername().equals(problem.getAuthor())) {
+            throw new StatusForbiddenException("对不起，你无权限获取题目样例！");
+        }
+
         QueryWrapper<ProblemCase> problemCaseQueryWrapper = new QueryWrapper<>();
         problemCaseQueryWrapper.eq("pid", pid).eq("status", 0);
         if (isUpload) {
@@ -269,16 +294,14 @@ public class AdminProblemManager {
     public void changeProblemAuth(Problem problem) throws StatusFailException, StatusForbiddenException {
         // 普通管理员只能将题目变成隐藏题目和比赛题目
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
-        if (!isRoot && problem.getAuth() == 1) {
-            throw new StatusForbiddenException("修改失败！你无权限公开题目！");
-        }
-
+        // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+        if (!isRoot && !userRolesVo.getUsername().equals(problem.getAuthor())) {
+            throw new StatusForbiddenException("修改失败！你无权限修改此题目权限！");
+        }
 
         UpdateWrapper<Problem> problemUpdateWrapper = new UpdateWrapper<>();
         problemUpdateWrapper.eq("id", problem.getId())

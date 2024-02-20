@@ -12,6 +12,7 @@ export const m = {
 
   // /views/admin/Home.vue
   Dashboard: 'Dashboard',
+  Important: 'Important',
   General: 'General',
   User_Admin: 'Admin User',
   Auth_Admin: 'Auth Admin',
@@ -260,7 +261,7 @@ export const m = {
   Interactive_Judge: 'Interactive Judge',
   Special_Judge_Code: 'Special Judge Program Code',
   Interactive_Judge_Code: 'Interactive Judge Program Code',
-  General_Judge_Mode_Tips: 'General Judge: the contestant program reads the problem standard input file, executes the code logic to obtain the contestant\'s output, and compares the contents of the problem standard output file to obtain the problem judgment result',
+  General_Judge_Mode_Tips: "General Judge: the contestant program reads the problem standard input file, executes the code logic to obtain the contestant's output, and compares the contents of the problem standard output file to obtain the problem judgment result",
   Special_Judge_Mode_Tips: 'Special Judge: the output results required by the problem may not be unique, and different results are allowed. Therefore, a special program is needed to read standard output, player output and standard input, and compare them to obtain the final judgment result',
   Interactive_Judge_Mode_Tips: 'Interactive Judge: the standard output of the interactive program is written to the standard input of the player program through the interactive channel, and the standard output of the player program is written to the standard input of the interactive program through the interactive channel. Both need to flush the output buffer',
   SPJ_Language: 'SPJ Program Language',
@@ -346,7 +347,6 @@ export const m = {
   Enter_Group_ID: 'Enter Group ID',
   Agreed: 'Agreed',
   Examine: 'Examine',
-
 
   // /views/admin/training/TrainingList.vue
   All_Traning: 'All Traning',
@@ -490,5 +490,5 @@ export const m = {
   // components/admin/AddExtraFile.vue
   Delete_Extra_File_Tips: 'Are you sure you want to delete this extra file?',
   File_Name: 'File Name',
-  File_Content: 'File Content'
-}
+  File_Content: 'File Content',
+};

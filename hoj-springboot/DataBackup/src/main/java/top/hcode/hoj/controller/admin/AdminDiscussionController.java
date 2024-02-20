@@ -23,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/admin")
-@RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
+@RequiresRoles(value = { "root", "admin" }, logical = Logical.OR)
 public class AdminDiscussionController {
 
     @Autowired

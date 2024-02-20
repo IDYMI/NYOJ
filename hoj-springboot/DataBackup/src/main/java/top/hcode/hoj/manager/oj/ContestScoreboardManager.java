@@ -115,9 +115,8 @@ public class ContestScoreboardManager {
 
         if (userRolesVo != null) {
             currentUid = userRolesVo.getUid();
-            // 是否为超级管理员或者题目管理或者普通管理
+
             isRoot = SecurityUtils.getSubject().hasRole("root")
-                    || SecurityUtils.getSubject().hasRole("problem_admin")
                     || SecurityUtils.getSubject().hasRole("admin");
 
             // 不是比赛创建者或者超管无权限开启强制实时榜单

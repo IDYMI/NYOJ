@@ -96,9 +96,7 @@ public class BeforeDispatchInitManager {
             throw new StatusForbiddenException("错误！当前题目不可提交！");
         }
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (problem.getIsGroup()) {
@@ -136,9 +134,8 @@ public class BeforeDispatchInitManager {
         }
 
         // 是否为超级管理员或者该比赛的创建者，则为比赛管理者
-        // 是否为超级管理员或者题目管理或者普通管理
+
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot && !contest.getUid().equals(userRolesVo.getUid())

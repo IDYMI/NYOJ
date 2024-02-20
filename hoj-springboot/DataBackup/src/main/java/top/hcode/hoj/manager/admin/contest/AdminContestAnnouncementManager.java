@@ -1,15 +1,21 @@
 package top.hcode.hoj.manager.admin.contest;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import top.hcode.hoj.common.exception.StatusFailException;
+import top.hcode.hoj.common.exception.StatusForbiddenException;
 import top.hcode.hoj.pojo.dto.AnnouncementDTO;
+import top.hcode.hoj.pojo.entity.contest.Contest;
 import top.hcode.hoj.pojo.entity.contest.ContestAnnouncement;
 import top.hcode.hoj.pojo.vo.AnnouncementVO;
+import top.hcode.hoj.shiro.AccountProfile;
 import top.hcode.hoj.dao.common.AnnouncementEntityService;
 import top.hcode.hoj.dao.contest.ContestAnnouncementEntityService;
+import top.hcode.hoj.dao.contest.ContestEntityService;
 
 /**
  *
@@ -25,7 +31,24 @@ public class AdminContestAnnouncementManager {
     @Autowired
     private ContestAnnouncementEntityService contestAnnouncementEntityService;
 
-    public IPage<AnnouncementVO> getAnnouncementList(Integer limit, Integer currentPage, Long cid) {
+    @Autowired
+    private ContestEntityService contestEntityService;
+
+    public IPage<AnnouncementVO> getAnnouncementList(Integer limit, Integer currentPage, Long cid)
+            throws StatusForbiddenException {
+
+        // 获取当前登录的用户
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("admin");
+
+        // 获取本场比赛的信息
+        Contest contest = contestEntityService.getById(cid);
+        // 只有超级管理员和题目管理员、题目创建者才能操作
+        if (!isRoot && !userRolesVo.getUsername().equals(contest.getAuthor())) {
+            throw new StatusForbiddenException("对不起，你无权限查看公告！");
+        }
 
         if (currentPage == null || currentPage < 1)
             currentPage = 1;

@@ -209,9 +209,8 @@ public class ContestRankManager {
             }
 
             // 超级管理员或者该比赛的创建者，则为比赛管理者
-            // 是否为超级管理员或者题目管理或者普通管理
+
             boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                    || SecurityUtils.getSubject().hasRole("problem_admin")
                     || SecurityUtils.getSubject().hasRole("admin");
 
             // 需要对该比赛做判断，是否处于开始或结束状态才可以获取题目，同时若是私有赛需要判断是否已注册（比赛管理员包括超级管理员可以直接获取）

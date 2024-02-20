@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/api/admin/group-problem")
 @RequiresAuthentication
-@RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
+@RequiresRoles(value = { "root", "admin" }, logical = Logical.OR)
 public class AdminGroupProblemController {
 
     @Resource

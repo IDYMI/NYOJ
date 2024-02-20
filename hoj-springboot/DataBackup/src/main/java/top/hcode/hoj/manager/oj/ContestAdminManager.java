@@ -76,9 +76,8 @@ public class ContestAdminManager {
         Contest contest = contestEntityService.getById(cid);
 
         // 超级管理员或者该比赛的创建者，则为比赛管理者
-        // 是否为超级管理员或者题目管理或者普通管理
+
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot
@@ -110,9 +109,7 @@ public class ContestAdminManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(checkACDto.getCid());
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot
@@ -137,9 +134,7 @@ public class ContestAdminManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot
@@ -172,9 +167,7 @@ public class ContestAdminManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot && !contest.getUid().equals(userRolesVo.getUid())
@@ -197,9 +190,7 @@ public class ContestAdminManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot
@@ -247,9 +238,7 @@ public class ContestAdminManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot
@@ -292,9 +281,7 @@ public class ContestAdminManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot && !contest.getUid().equals(userRolesVo.getUid())
@@ -319,9 +306,7 @@ public class ContestAdminManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot && !contest.getUid().equals(userRolesVo.getUid())

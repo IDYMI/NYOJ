@@ -1,6 +1,8 @@
 package top.hcode.hoj.controller.msg;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/api/admin/msg")
-@RequiresRoles("root")
+@RequiresRoles(value = { "root", "admin" }, logical = Logical.OR)
 public class AdminNoticeController {
 
     @Resource

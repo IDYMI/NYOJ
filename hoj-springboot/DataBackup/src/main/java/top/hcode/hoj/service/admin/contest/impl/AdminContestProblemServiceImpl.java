@@ -31,9 +31,13 @@ public class AdminContestProblemServiceImpl implements AdminContestProblemServic
     @Override
     public CommonResult<HashMap<String, Object>> getProblemList(Integer limit, Integer currentPage, String keyword,
             Long cid, Integer problemType, String oj, Integer difficulty, Integer type) {
-        HashMap<String, Object> problemList = adminContestProblemManager.getProblemList(limit, currentPage, keyword,
-                cid, problemType, oj, difficulty, type);
-        return CommonResult.successResponse(problemList);
+        try {
+            HashMap<String, Object> problemList = adminContestProblemManager.getProblemList(limit, currentPage, keyword,
+                    cid, problemType, oj, difficulty, type);
+            return CommonResult.successResponse(problemList);
+        } catch (StatusForbiddenException e) {
+            return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
+        }
     }
 
     @Override
@@ -50,8 +54,12 @@ public class AdminContestProblemServiceImpl implements AdminContestProblemServic
 
     @Override
     public CommonResult<Void> deleteProblem(Long pid, Long cid) {
-        adminContestProblemManager.deleteProblem(pid, cid);
-        return CommonResult.successResponse();
+        try {
+            adminContestProblemManager.deleteProblem(pid, cid);
+            return CommonResult.successResponse();
+        } catch (StatusForbiddenException e) {
+            return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
+        }
     }
 
     @Override

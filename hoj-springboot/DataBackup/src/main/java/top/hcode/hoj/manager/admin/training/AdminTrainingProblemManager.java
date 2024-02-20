@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import top.hcode.hoj.common.exception.StatusFailException;
+import top.hcode.hoj.common.exception.StatusForbiddenException;
 import top.hcode.hoj.crawler.problem.ProblemStrategy;
 import top.hcode.hoj.dao.problem.ProblemEntityService;
 import top.hcode.hoj.dao.training.TrainingEntityService;
@@ -53,7 +54,25 @@ public class AdminTrainingProblemManager {
     private RemoteProblemManager remoteProblemManager;
 
     public HashMap<String, Object> getProblemList(Integer limit, Integer currentPage, String keyword,
-            Boolean queryExisted, Long tid) {
+            Boolean queryExisted, Long tid) throws StatusFailException, StatusForbiddenException {
+
+        // 获取本场训练的信息
+        Training training = trainingEntityService.getById(tid);
+        if (training == null) { // 查询不存在
+            throw new StatusFailException("查询失败：该训练不存在,请检查参数tid是否准确！");
+        }
+
+        // 获取当前登录的用户
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("admin");
+
+        // 只有超级管理员和题目管理和训练拥有者才能操作
+        if (!isRoot && !userRolesVo.getUsername().equals(training.getAuthor())) {
+            throw new StatusForbiddenException("对不起，你无权限操作！");
+        }
+
         if (currentPage == null || currentPage < 1)
             currentPage = 1;
         if (limit == null || limit < 1)
@@ -114,7 +133,27 @@ public class AdminTrainingProblemManager {
         return trainingProblem;
     }
 
-    public void updateProblem(TrainingProblem trainingProblem) throws StatusFailException {
+    public void updateProblem(TrainingProblem trainingProblem) throws StatusFailException, StatusForbiddenException {
+
+        Long tid = trainingProblem.getTid();
+
+        // 获取本场训练的信息
+        Training training = trainingEntityService.getById(tid);
+        if (training == null) { // 查询不存在
+            throw new StatusFailException("查询失败：该训练不存在,请检查参数tid是否准确！");
+        }
+
+        // 获取当前登录的用户
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("admin");
+
+        // 只有超级管理员和题目管理和训练拥有者才能操作
+        if (!isRoot && !userRolesVo.getUsername().equals(training.getAuthor())) {
+            throw new StatusForbiddenException("对不起，你无权限操作！");
+        }
+
         boolean isOk = trainingProblemEntityService.saveOrUpdate(trainingProblem);
 
         if (!isOk) {
@@ -122,7 +161,24 @@ public class AdminTrainingProblemManager {
         }
     }
 
-    public void deleteProblem(Long pid, Long tid) throws StatusFailException {
+    public void deleteProblem(Long pid, Long tid) throws StatusFailException, StatusForbiddenException {
+        // 获取本场训练的信息
+        Training training = trainingEntityService.getById(tid);
+        if (training == null) { // 查询不存在
+            throw new StatusFailException("查询失败：该训练不存在,请检查参数tid是否准确！");
+        }
+
+        // 获取当前登录的用户
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("admin");
+
+        // 只有超级管理员和题目管理和训练拥有者才能操作
+        if (!isRoot && !userRolesVo.getUsername().equals(training.getAuthor())) {
+            throw new StatusForbiddenException("对不起，你无权限操作！");
+        }
+
         boolean isOk = false;
         // 训练id不为null，表示就是从比赛列表移除而已
         if (tid != null) {
@@ -137,8 +193,6 @@ public class AdminTrainingProblemManager {
         }
 
         if (isOk) { // 删除成功
-            // 获取当前登录的用户
-            AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
             if (tid == null) {
                 FileUtil.del(Constants.File.TESTCASE_BASE_FOLDER.getPath() + File.separator + "problem_" + pid);
                 log.info("[{}],[{}],tid:[{}],pid:[{}],operatorUid:[{}],operatorUsername:[{}]",
@@ -162,11 +216,29 @@ public class AdminTrainingProblemManager {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void addProblemFromPublic(TrainingProblemDTO trainingProblemDto) throws StatusFailException {
+    public void addProblemFromPublic(TrainingProblemDTO trainingProblemDto)
+            throws StatusFailException, StatusForbiddenException {
 
         Long pid = trainingProblemDto.getPid();
         Long tid = trainingProblemDto.getTid();
         String displayId = trainingProblemDto.getDisplayId();
+
+        // 获取本场训练的信息
+        Training training = trainingEntityService.getById(tid);
+        if (training == null) { // 查询不存在
+            throw new StatusFailException("查询失败：该训练不存在,请检查参数tid是否准确！");
+        }
+
+        // 获取当前登录的用户
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("admin");
+
+        // 只有超级管理员和题目管理和训练拥有者才能操作
+        if (!isRoot && !userRolesVo.getUsername().equals(training.getAuthor())) {
+            throw new StatusForbiddenException("对不起，你无权限操作！");
+        }
 
         QueryWrapper<TrainingProblem> trainingProblemQueryWrapper = new QueryWrapper<>();
         trainingProblemQueryWrapper.eq("tid", tid)
@@ -189,8 +261,6 @@ public class AdminTrainingProblemManager {
                     .eq("id", tid);
             trainingEntityService.update(trainingUpdateWrapper);
 
-            // 获取当前登录的用户
-            AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
             log.info("[{}],[{}],tid:[{}],pid:[{}],operatorUid:[{}],operatorUsername:[{}]",
                     "Admin_Training", "Add_Public_Problem", tid, pid, userRolesVo.getUid(), userRolesVo.getUsername());
 
@@ -201,14 +271,32 @@ public class AdminTrainingProblemManager {
         }
     }
 
-    public void importTrainingRemoteOJProblem(String name, String problemId, Long tid) throws StatusFailException {
+    public void importTrainingRemoteOJProblem(String name, String problemId, Long tid)
+            throws StatusFailException, StatusForbiddenException {
+
+        // 获取本场训练的信息
+        Training training = trainingEntityService.getById(tid);
+        if (training == null) { // 查询不存在
+            throw new StatusFailException("查询失败：该训练不存在,请检查参数tid是否准确！");
+        }
+
+        // 获取当前登录的用户
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("admin");
+
+        // 只有超级管理员和题目管理和训练拥有者才能操作
+        if (!isRoot && !userRolesVo.getUsername().equals(training.getAuthor())) {
+            throw new StatusForbiddenException("对不起，你无权限操作！");
+        }
+
         QueryWrapper<Problem> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("problem_id", name.toUpperCase() + "-" + problemId);
         Problem problem = problemEntityService.getOne(queryWrapper, false);
 
         // 如果该题目不存在，需要先导入
         if (problem == null) {
-            AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
             try {
                 ProblemStrategy.RemoteProblemInfo otherOJProblemInfo = remoteProblemManager
                         .getOtherOJProblemInfo(name.toUpperCase(), problemId, userRolesVo.getUsername());
@@ -247,8 +335,6 @@ public class AdminTrainingProblemManager {
                     .eq("id", tid);
             trainingEntityService.update(trainingUpdateWrapper);
 
-            // 获取当前登录的用户
-            AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
             log.info("[{}],[{}],tid:[{}],pid:[{}],problemId:[{}],operatorUid:[{}],operatorUsername:[{}]",
                     "Admin_Training", "Add_Remote_Problem", tid, problem.getId(), problem.getProblemId(),
                     userRolesVo.getUid(), userRolesVo.getUsername());

@@ -119,9 +119,8 @@ public class InventManager {
 
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        // 是否为超级管理员或者题目管理或者普通管理
+
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         // 检查是否可以使用邀请功能
@@ -140,7 +139,7 @@ public class InventManager {
         List<String> roles = userRoleEntityService.getRolesByUid(getUserSign(toUsername).getUid()).stream()
                 .map(Role::getRole)
                 .collect(Collectors.toList()); // 获取该用户角色所有的权限
-        boolean containsRoot = roles.contains("root") || roles.contains("admin") || roles.contains("problem_admin");
+        boolean containsRoot = roles.contains("root") || roles.contains("admin");
         if (containsRoot) {
             throw new StatusFailException("发送邀请失败，用户名 : " + toUsername + "为管理员！");
         }
@@ -260,9 +259,7 @@ public class InventManager {
             throw new StatusFailException("获取邀请状态失败，该比赛已不存在！");
         }
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         // 检查是否可以使用邀请功能
@@ -286,9 +283,7 @@ public class InventManager {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (cid == null) {
@@ -396,9 +391,7 @@ public class InventManager {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         Long cid = UserMsgvo.getSourceId().longValue();
@@ -551,9 +544,7 @@ public class InventManager {
             throw new StatusFailException("报名失败，该比赛已不存在！");
         }
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         // 检查是否可以使用邀请功能
@@ -647,9 +638,7 @@ public class InventManager {
             throw new StatusFailException("获取报名失败，该比赛已不存在！");
         }
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         // 检查是否可以使用邀请功能
@@ -774,9 +763,10 @@ public class InventManager {
             throws StatusFailException {
 
         // // 判断用户是否重复
-        // List<String> uniqueList = team_names.stream().distinct().collect(Collectors.toList());
+        // List<String> uniqueList =
+        // team_names.stream().distinct().collect(Collectors.toList());
         // if (team_names.size() != uniqueList.size()) {
-        //     throw new StatusFailException("报名失败，队伍中有用户名重复的队员！");
+        // throw new StatusFailException("报名失败，队伍中有用户名重复的队员！");
         // }
 
         // 判断用户是否存在

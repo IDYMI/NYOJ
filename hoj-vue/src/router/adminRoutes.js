@@ -66,7 +66,6 @@ const adminRoutes = [{
         name: 'admin-announcement',
         component: Announcement,
         meta: {
-          requireSuperAdmin: true,
           title: 'Announcement Admin'
         },
       },
@@ -75,7 +74,6 @@ const adminRoutes = [{
         name: 'admin-notice',
         component: SysNotice,
         meta: {
-          requireSuperAdmin: true,
           title: 'Notice Admin'
         },
       },
@@ -111,7 +109,6 @@ const adminRoutes = [{
         name: 'admin-file',
         component: File,
         meta: {
-          requireSuperAdmin: true,
           title: 'File Admin'
         },
       },

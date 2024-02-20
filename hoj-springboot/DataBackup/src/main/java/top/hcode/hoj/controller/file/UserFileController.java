@@ -26,7 +26,7 @@ public class UserFileController {
 
     @RequestMapping("/generate-user-excel")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
+    @RequiresRoles(value = "root")
     public void generateUserExcel(@RequestParam("key") String key, HttpServletResponse response) throws IOException {
         userFileService.generateUserExcel(key, response);
     }

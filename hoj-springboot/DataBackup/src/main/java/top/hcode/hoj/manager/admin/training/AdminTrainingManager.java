@@ -82,31 +82,6 @@ public class AdminTrainingManager {
 
         return page;
 
-        // IPage<Training> iPage = new Page<>(currentPage, limit);
-        // QueryWrapper<Training> queryWrapper = new QueryWrapper<>();
-        // // 过滤密码
-        // queryWrapper.select(Training.class, info ->
-        // !info.getColumn().equals("private_pwd"));
-
-        // if (auth != null && auth != "All") {
-        // queryWrapper.eq("auth", auth);
-        // }
-
-        // if (categoryId != null && categoryId != 0) {
-        // queryWrapper.eq("auth", auth);
-        // }
-
-        // if (!StringUtils.isEmpty(keyword)) {
-        // keyword = keyword.trim();
-        // queryWrapper
-        // .like("title", keyword).or()
-        // .like("id", keyword).or()
-        // .like("`rank`", keyword);
-        // }
-
-        // queryWrapper.eq("is_group", false).orderByAsc("`rank`");
-
-        // return trainingEntityService.page(iPage, queryWrapper);
     }
 
     public TrainingDTO getTraining(Long tid) throws StatusFailException, StatusForbiddenException {
@@ -119,9 +94,7 @@ public class AdminTrainingManager {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         // 只有超级管理员和题目管理和训练拥有者才能操作
@@ -144,7 +117,23 @@ public class AdminTrainingManager {
         return trainingDto;
     }
 
-    public void deleteTraining(Long tid) throws StatusFailException {
+    public void deleteTraining(Long tid) throws StatusFailException, StatusForbiddenException {
+        // 获取本场训练的信息
+        Training training = trainingEntityService.getById(tid);
+        if (training == null) { // 查询不存在
+            throw new StatusFailException("查询失败：该训练不存在,请检查参数tid是否准确！");
+        }
+
+        // 获取当前登录的用户
+        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
+
+        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
+                || SecurityUtils.getSubject().hasRole("admin");
+
+        // 只有超级管理员和题目管理和训练拥有者才能操作
+        if (!isRoot && !userRolesVo.getUsername().equals(training.getAuthor())) {
+            throw new StatusForbiddenException("对不起，你无权限操作！");
+        }
 
         boolean isOk = trainingEntityService.removeById(tid);
         /*
@@ -154,7 +143,6 @@ public class AdminTrainingManager {
             throw new StatusFailException("删除失败！");
         }
         // 获取当前登录的用户
-        AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
         log.info("[{}],[{}],tid:[{}],operatorUid:[{}],operatorUsername:[{}]",
                 "Admin_Training", "Delete", tid, userRolesVo.getUid(), userRolesVo.getUsername());
     }
@@ -191,9 +179,7 @@ public class AdminTrainingManager {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         // 只有超级管理员和题目管理和训练拥有者才能操作
@@ -251,9 +237,7 @@ public class AdminTrainingManager {
         // 获取当前登录的用户
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         // 只有超级管理员和题目管理和训练拥有者才能操作

@@ -337,9 +337,7 @@ public class JudgeManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         // 清空vj信息
@@ -420,10 +418,13 @@ public class JudgeManager {
         }
 
         // // 只允许用户查看ce错误,sf错误，se错误信息提示
-        // if (judge.getStatus().intValue() != Constants.Judge.STATUS_COMPILE_ERROR.getStatus() &&
-        //         judge.getStatus().intValue() != Constants.Judge.STATUS_SYSTEM_ERROR.getStatus() &&
-        //         judge.getStatus().intValue() != Constants.Judge.STATUS_SUBMITTED_FAILED.getStatus()) {
-        //     judge.setErrorMessage("The error message does not support viewing.");
+        // if (judge.getStatus().intValue() !=
+        // Constants.Judge.STATUS_COMPILE_ERROR.getStatus() &&
+        // judge.getStatus().intValue() !=
+        // Constants.Judge.STATUS_SYSTEM_ERROR.getStatus() &&
+        // judge.getStatus().intValue() !=
+        // Constants.Judge.STATUS_SUBMITTED_FAILED.getStatus()) {
+        // judge.setErrorMessage("The error message does not support viewing.");
         // }
         submissionInfoVo.setSubmission(judge);
         submissionInfoVo.setCodeShare(problem.getCodeShare());
@@ -561,9 +562,8 @@ public class JudgeManager {
         }
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        // 是否为超级管理员或者题目管理或者普通管理
+
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         Contest contest = contestEntityService.getById(submitIdListDto.getCid());
@@ -628,9 +628,8 @@ public class JudgeManager {
         }
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-        // 是否为超级管理员或者题目管理或者普通管理
+
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         QueryWrapper<JudgeCase> wrapper = new QueryWrapper<>();
@@ -639,9 +638,7 @@ public class JudgeManager {
             if (userRolesVo == null) { // 没有登录
                 wrapper.select("time", "memory", "score", "status", "user_output", "group_num", "seq", "mode");
             } else {
-                if (!isRoot
-                        && !SecurityUtils.getSubject().hasRole("admin")
-                        && !SecurityUtils.getSubject().hasRole("problem_admin")) { // 不是管理员
+                if (!isRoot) { // 不是管理员
                     wrapper.select("time", "memory", "score", "status", "user_output", "group_num", "seq", "mode");
                 }
             }

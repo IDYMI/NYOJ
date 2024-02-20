@@ -3,6 +3,7 @@ package top.hcode.hoj.manager.group;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.shiro.SecurityUtils;
+import org.checkerframework.checker.units.qual.g;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,9 +74,8 @@ public class GroupManager {
         boolean isRoot = false;
         if (userRolesVo != null) {
             uid = userRolesVo.getUid();
-            // 是否为超级管理员或者题目管理或者普通管理
+
             isRoot = SecurityUtils.getSubject().hasRole("root")
-                    || SecurityUtils.getSubject().hasRole("problem_admin")
                     || SecurityUtils.getSubject().hasRole("admin");
         }
         return groupEntityService.getGroupList(limit, currentPage, keyword, auth, uid, onlyMine, isRoot);
@@ -84,9 +84,7 @@ public class GroupManager {
     public Group getGroup(Long gid) throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         Group group = groupEntityService.getById(gid);
@@ -150,9 +148,7 @@ public class GroupManager {
     public void addGroup(Group group) throws StatusFailException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (!isRoot) {
@@ -246,9 +242,7 @@ public class GroupManager {
     public void updateGroup(Group group) throws StatusFailException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         if (!groupValidator.isGroupRoot(userRolesVo.getUid(), group.getId()) && !isRoot) {
@@ -303,9 +297,7 @@ public class GroupManager {
     public void deleteGroup(Long gid) throws StatusFailException, StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         Group group = groupEntityService.getById(gid);

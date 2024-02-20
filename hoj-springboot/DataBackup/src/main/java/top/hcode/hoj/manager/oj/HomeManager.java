@@ -221,9 +221,7 @@ public class HomeManager {
         SubmissionStatisticsVO submissionStatisticsVO = (SubmissionStatisticsVO) redisUtils
                 .get(SUBMISSION_STATISTICS_KEY);
 
-        // 是否为超级管理员或者题目管理或者普通管理
         boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("problem_admin")
                 || SecurityUtils.getSubject().hasRole("admin");
 
         forceRefresh = forceRefresh && isRoot;

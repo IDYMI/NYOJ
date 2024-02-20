@@ -3,7 +3,9 @@ package top.hcode.hoj.service.admin.training.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.hcode.hoj.common.exception.StatusFailException;
+import top.hcode.hoj.common.exception.StatusForbiddenException;
 import top.hcode.hoj.common.result.CommonResult;
+import top.hcode.hoj.common.result.ResultStatus;
 import top.hcode.hoj.manager.admin.training.AdminTrainingProblemManager;
 import top.hcode.hoj.pojo.dto.TrainingProblemDTO;
 import top.hcode.hoj.pojo.entity.training.TrainingProblem;
@@ -25,9 +27,15 @@ public class AdminTrainingProblemServiceImpl implements AdminTrainingProblemServ
     @Override
     public CommonResult<HashMap<String, Object>> getProblemList(Integer limit, Integer currentPage, String keyword,
             Boolean queryExisted, Long tid) {
-        HashMap<String, Object> problemMap = adminTrainingProblemManager.getProblemList(limit, currentPage, keyword,
-                queryExisted, tid);
-        return CommonResult.successResponse(problemMap);
+        try {
+            HashMap<String, Object> problemMap = adminTrainingProblemManager.getProblemList(limit, currentPage, keyword,
+                    queryExisted, tid);
+            return CommonResult.successResponse(problemMap);
+        } catch (StatusFailException e) {
+            return CommonResult.errorResponse(e.getMessage());
+        } catch (StatusForbiddenException e) {
+            return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
+        }
     }
 
     @Override
@@ -37,6 +45,8 @@ public class AdminTrainingProblemServiceImpl implements AdminTrainingProblemServ
             return CommonResult.successResponse();
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
+        } catch (StatusForbiddenException e) {
+            return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         }
     }
 
@@ -47,6 +57,8 @@ public class AdminTrainingProblemServiceImpl implements AdminTrainingProblemServ
             return CommonResult.successResponse();
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
+        } catch (StatusForbiddenException e) {
+            return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         }
     }
 
@@ -57,6 +69,8 @@ public class AdminTrainingProblemServiceImpl implements AdminTrainingProblemServ
             return CommonResult.successResponse();
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
+        } catch (StatusForbiddenException e) {
+            return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         }
     }
 
@@ -67,6 +81,8 @@ public class AdminTrainingProblemServiceImpl implements AdminTrainingProblemServ
             return CommonResult.successResponse();
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
+        } catch (StatusForbiddenException e) {
+            return CommonResult.errorResponse(e.getMessage(), ResultStatus.FORBIDDEN);
         }
     }
 }

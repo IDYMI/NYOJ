@@ -11,7 +11,6 @@ import top.hcode.hoj.manager.file.BoxFileManager;
 import top.hcode.hoj.service.file.BoxFileService;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 
 import java.util.Map;
 

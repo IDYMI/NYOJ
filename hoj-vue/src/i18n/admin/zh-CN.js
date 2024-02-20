@@ -12,6 +12,7 @@ export const m = {
 
   // /views/admin/Home.vue
   Dashboard: '仪表盘',
+  Important: '核心设置',
   General: '常用设置',
   User_Admin: '用户管理',
   Auth_Admin: '权限管理',
@@ -488,5 +489,5 @@ export const m = {
   // components/admin/AddExtraFile.vue
   Delete_Extra_File_Tips: '你是否确定要删除该额外文件?',
   File_Name: '文件名字',
-  File_Content: '文件内容'
-}
+  File_Content: '文件内容',
+};

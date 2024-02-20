@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card>
+    <el-card v-if="isMainAdminRole">
       <div slot="header">
         <span class="panel-title home-title">{{ $t('m.Export_Problem') }}</span>
         <div class="filter-row">
@@ -218,6 +218,8 @@
 import api from "@/common/api";
 import utils from "@/common/utils";
 import myMessage from "@/common/message";
+import { mapGetters } from "vuex";
+
 export default {
   name: "import_and_export",
   data() {
@@ -331,6 +333,9 @@ export default {
     filterByKeyword() {
       this.getProblems();
     },
+  },
+  computed: {
+    ...mapGetters(["isMainAdminRole"]),
   },
 };
 </script>

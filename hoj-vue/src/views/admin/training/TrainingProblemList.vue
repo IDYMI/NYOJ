@@ -69,7 +69,7 @@
             >
               <el-option :label="$t('m.Public_Problem')" :value="1" :disabled="!isAdminRole"></el-option>
               <el-option :label="$t('m.Private_Problem')" :value="2"></el-option>
-              <el-option :label="$t('m.Contest_Problem')" :value="3" :disabled="true"></el-option>
+              <el-option :label="$t('m.Contest_Problem')" :value="3"></el-option>
             </el-select>
           </template>
         </vxe-table-column>
@@ -79,7 +79,7 @@
               effect="dark"
               :content="$t('m.Edit')"
               placement="top"
-              v-if="isAdminRole || row.author == userInfo.username"
+              v-if="isMainAdminRole || row.author == userInfo.username"
             >
               <el-button
                 icon="el-icon-edit-outline"
@@ -93,7 +93,7 @@
               effect="dark"
               :content="$t('m.Download_Testcase')"
               placement="top"
-              v-if="isAdminRole"
+              v-if="isMainAdminRole || row.author == userInfo.username"
             >
               <el-button
                 icon="el-icon-download"
@@ -227,7 +227,12 @@ export default {
     this.init();
   },
   computed: {
-    ...mapGetters(["userInfo", "isSuperAdmin", "isNormalAdmin", "isAdminRole"]),
+    ...mapGetters([
+      "userInfo",
+      "isSuperAdmin",
+      "isMainAdminRole",
+      "isAdminRole",
+    ]),
   },
   methods: {
     init() {

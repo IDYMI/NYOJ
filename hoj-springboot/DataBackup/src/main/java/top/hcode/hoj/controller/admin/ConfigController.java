@@ -52,14 +52,14 @@ public class ConfigController {
         return configService.getWebConfig();
     }
 
-    @RequiresPermissions("system_info_admin")
+    @RequiresRoles(value = { "root", "admin" }, logical = Logical.OR)
     @RequestMapping(value = "/home-carousel", method = RequestMethod.DELETE)
     public CommonResult<Void> deleteHomeCarousel(@RequestParam("id") Long id) {
 
         return configService.deleteHomeCarousel(id);
     }
 
-    @RequiresPermissions("system_info_admin")
+    @RequiresRoles(value = { "root", "admin" }, logical = Logical.OR)
     @RequestMapping(value = "/home-carousel", method = RequestMethod.POST)
     public CommonResult<Void> editHomeCarousel(
             @RequestParam("id") Long id,
@@ -69,7 +69,7 @@ public class ConfigController {
         return configService.editHomeCarousel(id, addLink, addHint);
     }
 
-    @RequiresPermissions("system_info_admin")
+    @RequiresRoles(value = { "root", "admin" }, logical = Logical.OR)
     @RequestMapping(value = "/update-file-hint", method = RequestMethod.POST)
     public CommonResult<Void> editFileHint(
             @RequestParam("id") Long id,

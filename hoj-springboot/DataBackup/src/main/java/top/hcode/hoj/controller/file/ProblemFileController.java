@@ -49,7 +49,7 @@ public class ProblemFileController {
      */
     @GetMapping("/export-problem")
     @RequiresAuthentication
-    @RequiresRoles(value = { "root", "problem_admin", "admin" }, logical = Logical.OR)
+    @RequiresRoles(value = { "root", "admin" }, logical = Logical.OR)
     public void exportProblem(@RequestParam("pid") List<Long> pidList, HttpServletResponse response) {
         problemFileService.exportProblem(pidList, response);
     }

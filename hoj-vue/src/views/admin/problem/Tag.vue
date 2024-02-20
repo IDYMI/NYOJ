@@ -70,6 +70,7 @@
                   </span>
                   <span style="margin-left:10px;" v-if="tagsAndClassification.classification!=null">
                     <el-button
+                      v-if="isSuperAdmin"
                       type="danger"
                       icon="el-icon-delete"
                       circle
@@ -195,6 +196,8 @@
 import myMessage from "@/common/message";
 import api from "@/common/api";
 import { REMOTE_OJ } from "@/common/constants";
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -399,6 +402,9 @@ export default {
       );
       this.tag.tcid = null;
     },
+  },
+  computed: {
+    ...mapGetters(["isSuperAdmin"]),
   },
 };
 </script>
