@@ -14,7 +14,9 @@
           :style="{ height: isAdmin ? '146px' : '100px', width: isAdmin ? '146px' : '100px' }"
         >
           <div class="el-upload-list__item-inner">
-            <img :src="floderImg" class="el-upload-list__item-thumbnail" />
+            <div class="el-upload-list__item-thumbnail">
+              <img :src="img.suffix" alt="File Image" class="centered-image" />
+            </div>
             <span class="el-upload-list__item-actions">
               <div
                 class="el-upload-list__item-text"
@@ -22,7 +24,7 @@
               >{{ img.hint }}</div>
               <span class="el-upload-list__item-buttons">
                 <span
-                  v-if="!disabled &&  isMainAdminRole"
+                  v-if="!disabled && isAdmin && isMainAdminRole"
                   class="el-upload-list__item-edit"
                   @click="handleEditInfo(img)"
                 >
@@ -52,9 +54,10 @@
         v-if="isAdmin && isMainAdminRole"
         action="/api/file/upload-file"
         list-type="picture-card"
-        :on-edit="handleEdit"
-        :on-remove="handleRemove"
         style="display: inline"
+        :on-error="init"
+        :on-success="init"
+        :show-file-list="false"
       >
         <i class="el-icon-plus"></i>
       </el-upload>
@@ -98,13 +101,13 @@ export default {
       hint: "",
       handleEditLoading: false,
       HandleEditVisible: false,
-      floderImg: require("@/assets/floder.png"),
+      floderImg: require("@/assets/svg/file.svg"),
     };
   },
   props: {
-    boxFileList: {
-      default: [],
-      type: Array,
+    cid: {
+      default: null,
+      type: Number,
     },
     isAdmin: {
       default: true,
@@ -119,12 +122,41 @@ export default {
       this.getBoxFileList();
     },
     getBoxFileList() {
-      api.getBoxFileList().then((res) => {
-        if (this.boxFileList.length === 0) {
+      const func = this.cid ? "getContestFile" : "getBoxFileList";
+      api[func](this.cid)
+        .then((res) => {
           this.boxFileList = res.data.data;
-        }
+          this.updateFileSuffix();
+          // 强制重新渲染组件
+          this.$forceUpdate();
+        })
+        .catch(() => {
+          this.boxFileList = [];
+        });
+    },
+
+    updateFileSuffix() {
+      this.boxFileList.forEach((item) => {
+        const filename = item.hint.split(".");
+        // 使用Vue.set强制更新img.suffix
+        Vue.set(
+          item,
+          "suffix",
+          filename.length === 2
+            ? this.getFileSuffix(filename[1])
+            : this.floderImg
+        );
       });
     },
+
+    getFileSuffix(extension) {
+      try {
+        return require(`@/assets/svg/filetype-${extension}.svg`);
+      } catch (error) {
+        return this.floderImg;
+      }
+    },
+
     handleRemove(file, index = undefined) {
       let id = file.id;
       if (file.response != null) {
@@ -143,6 +175,7 @@ export default {
           myMessage.success(this.$i18n.t("m.Delete_successfully"));
           if (index != undefined) {
             this.boxFileList.splice(index, 1);
+            this.init();
           }
         }
       });
@@ -165,9 +198,11 @@ export default {
           myMessage.success(this.$i18n.t("m.Update_Successfully"));
           this.HandleEditVisible = false;
           this.handleEditLoading = false;
+          this.init();
         },
         (err) => {
           this.handleEditLoading = false;
+          this.init();
         }
       );
 
@@ -194,11 +229,15 @@ export default {
 }
 
 .el-upload-list__item-thumbnail {
-  height: 146px;
-  width: 146px;
-  margin-bottom: 10px; /* 调整文字和缩略图之间的间距 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
-
+.centered-image {
+  width: 80%;
+  height: auto;
+}
 .el-upload-list__item-text {
   margin: 0;
   padding: 0;

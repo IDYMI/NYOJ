@@ -32,6 +32,7 @@ const cdn = {
     "https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/github-markdown-css/4.0.0/github-markdown.min.css",
     "https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.12.0/katex.min.css",
     'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/muse-ui/3.0.2/muse-ui.min.css',
+    "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css",
     // "https://unpkg.com/vxe-table@2.9.26/lib/style.min.css",
     // "https://cdn.jsdelivr.net/npm/vxe-table@2.9.26/lib/style.min.css",
   ],

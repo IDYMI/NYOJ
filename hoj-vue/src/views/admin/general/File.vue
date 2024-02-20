@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import HomeCarousel from "@/components/admin/HomeCarousel";
 import BoxFile from "@/components/oj/common/BoxFile";
 
@@ -15,9 +14,6 @@ export default {
   components: {
     HomeCarousel,
     BoxFile,
-  },
-  computed: {
-    ...mapGetters(["isSuperAdmin"]),
   },
 };
 </script>

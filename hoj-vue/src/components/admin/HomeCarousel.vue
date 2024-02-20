@@ -48,10 +48,10 @@
       <el-upload
         action="/api/file/upload-carouse-img"
         list-type="picture-card"
-        :on-preview="handlePictureCardPreview"
-        :on-edit="handleEdit"
-        :on-remove="handleRemove"
         style="display: inline"
+        :on-error="init"
+        :on-success="init"
+        :show-file-list="false"
       >
         <i class="el-icon-plus"></i>
       </el-upload>
@@ -130,6 +130,7 @@ export default {
         myMessage.success(this.$i18n.t("m.Delete_successfully"));
         if (index != undefined) {
           this.carouselImgList.splice(index, 1);
+          this.init();
         }
       });
     },
@@ -152,9 +153,11 @@ export default {
           myMessage.success(this.$i18n.t("m.Update_Successfully"));
           this.HandleEditVisible = false;
           this.handleEditLoading = false;
+          this.init();
         },
         (err) => {
           this.handleEditLoading = false;
+          this.init();
         }
       );
       this.EditImgId = "";

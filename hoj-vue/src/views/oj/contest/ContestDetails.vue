@@ -447,7 +447,7 @@
           </el-card>
 
           <div v-if="contest.openFile">
-            <box-file :isAdmin="false" :boxFileList="fileList"></box-file>
+            <box-file :isAdmin="false" :cid="contest.id"></box-file>
           </div>
         </el-tab-pane>
 
@@ -735,11 +735,7 @@ export default {
           },
         ],
       },
-      fileList: [],
     };
-  },
-  mounted() {
-    this.getContestFile();
   },
   created() {
     this.SIGN_TYPE_REVERSE = Object.assign({}, SIGN_TYPE_REVERSE);
@@ -812,18 +808,6 @@ export default {
     ...mapActions(["changeDomTitle"]),
     getStopFlag(percentage) {
       this.percentage = percentage;
-    },
-    getContestFile() {
-      let cid = this.$route.params.contestID;
-      api.getContestFile(cid).then(
-        (res) => {
-          let data = res.data.data;
-          this.fileList = data;
-        },
-        (_) => {
-          this.fileList = [];
-        }
-      );
     },
     getSign() {
       if (this.contest.auth === 3) {
