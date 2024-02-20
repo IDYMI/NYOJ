@@ -1,115 +1,116 @@
 <template>
   <div class="main">
-    <interpolator :dark="getTheme()" :watch-system="true" />
-    <div id="app">
-      <el-backtop :right="10"></el-backtop>
+    <interpolator :dark="getTheme()" :watch-system="true">
+      <div id="app">
+        <el-backtop :right="10"></el-backtop>
 
-      <div v-if="!isAdminView" class="full-height flex-column">
-        <NavBar></NavBar>
-        <div id="oj-content">
-          <transition name="el-zoom-in-bottom">
-            <router-view></router-view>
-          </transition>
-        </div>
-        <footer v-if="showFooter" class="fix-to-bottom">
-          <div class="mundb-footer">
-            <el-row>
-              <el-col :md="6" :xs="24">
-                <h1>{{ websiteConfig.name }}</h1>
-                <span
-                  style="line-height: 25px"
-                  v-html="websiteConfig.description"
-                  v-katex
-                  v-highlight
-                ></span>
-              </el-col>
-              <el-col class="hr-none">
-                <el-divider></el-divider>
-              </el-col>
-              <el-col :md="6" :xs="24">
-                <h1>{{ $t("m.Service") }}</h1>
-                <p>
-                  <a @click="goRoute('/status')">{{ $t("m.Judging_Queue") }}</a>
-                </p>
-                <p>
-                  <a @click="goRoute('/developer')">
-                    {{
-                    $t("m.System_Info")
-                    }}
-                  </a>
-                </p>
-              </el-col>
-              <el-col class="hr-none">
-                <el-divider></el-divider>
-              </el-col>
-              <el-col :md="6" :xs="24">
-                <h1>{{ $t("m.Support") }}</h1>
-                <p>
-                  <i class="fa fa-info-circle" aria-hidden="true"></i>
-                  <a href="/discussion-detail/28" target="_blank">{{ $t("m.Help") }}</a>
-                </p>
-                <p>
-                  <i class="el-icon-document"></i>
-                  <a @click="goRoute('/introduction')">{{ $t("m.NavBar_About") }}</a>
-                </p>
-              </el-col>
-              <!-- <el-col :md="6" :xs="24"></el-col> -->
-            </el-row>
+        <div v-if="!isAdminView" class="full-height flex-column">
+          <NavBar></NavBar>
+          <div id="oj-content">
+            <transition name="el-zoom-in-bottom">
+              <router-view></router-view>
+            </transition>
           </div>
-          <div class="mundb-footer">
-            <a
-              style="color: #1e9fff"
-              :href="websiteConfig.recordUrl"
-              target="_blank"
-            >{{ websiteConfig.recordName }}</a>
-            Powered by
-            <a
-              :href="websiteConfig.projectUrl"
-              style="color: #1e9fff"
-              target="_blank"
-            >{{ websiteConfig.projectName }}</a>
-            <span style="margin-left: 10px">
-              <el-dropdown @command="changeWebLanguage" placement="top">
-                <span class="el-dropdown-link">
-                  <i class="fa fa-globe" aria-hidden="true">
-                    {{
-                    this.webLanguage == "zh-CN" ? "简体中文" : "English"
-                    }}
-                  </i>
-                  <i class="el-icon-arrow-up el-icon--right"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="zh-CN">简体中文</el-dropdown-item>
-                  <el-dropdown-item command="en-US">English</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </span>
-            <span style="margin-left: 10px">
-              <el-dropdown @command="changeWebTheme" placement="top">
-                <span class="el-dropdown-link">
-                  <i
-                    class="fa fa-globe"
-                    aria-hidden="true"
-                  >{{ this.webTheme == "Light" ? "亮色" : "暗色" }}</i>
-                  <i class="el-icon-arrow-up el-icon--right"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="Light">亮色</el-dropdown-item>
-                  <el-dropdown-item command="Dark">暗色</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </span>
+          <footer v-if="showFooter" class="fix-to-bottom">
+            <div class="mundb-footer">
+              <el-row>
+                <el-col :md="6" :xs="24">
+                  <h1>{{ websiteConfig.name }}</h1>
+                  <span
+                    style="line-height: 25px"
+                    v-html="websiteConfig.description"
+                    v-katex
+                    v-highlight
+                  ></span>
+                </el-col>
+                <el-col class="hr-none">
+                  <el-divider></el-divider>
+                </el-col>
+                <el-col :md="6" :xs="24">
+                  <h1>{{ $t("m.Service") }}</h1>
+                  <p>
+                    <a @click="goRoute('/status')">{{ $t("m.Judging_Queue") }}</a>
+                  </p>
+                  <p>
+                    <a @click="goRoute('/developer')">
+                      {{
+                      $t("m.System_Info")
+                      }}
+                    </a>
+                  </p>
+                </el-col>
+                <el-col class="hr-none">
+                  <el-divider></el-divider>
+                </el-col>
+                <el-col :md="6" :xs="24">
+                  <h1>{{ $t("m.Support") }}</h1>
+                  <p>
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    <a href="/discussion-detail/28" target="_blank">{{ $t("m.Help") }}</a>
+                  </p>
+                  <p>
+                    <i class="el-icon-document"></i>
+                    <a @click="goRoute('/introduction')">{{ $t("m.NavBar_About") }}</a>
+                  </p>
+                </el-col>
+                <!-- <el-col :md="6" :xs="24"></el-col> -->
+              </el-row>
+            </div>
+            <div class="mundb-footer">
+              <a
+                style="color: #1e9fff"
+                :href="websiteConfig.recordUrl"
+                target="_blank"
+              >{{ websiteConfig.recordName }}</a>
+              Powered by
+              <a
+                :href="websiteConfig.projectUrl"
+                style="color: #1e9fff"
+                target="_blank"
+              >{{ websiteConfig.projectName }}</a>
+              <span style="margin-left: 10px">
+                <el-dropdown @command="changeWebLanguage" placement="top">
+                  <span class="el-dropdown-link">
+                    <i class="fa fa-globe" aria-hidden="true">
+                      {{
+                      this.webLanguage == "zh-CN" ? "简体中文" : "English"
+                      }}
+                    </i>
+                    <i class="el-icon-arrow-up el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="zh-CN">简体中文</el-dropdown-item>
+                    <el-dropdown-item command="en-US">English</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </span>
+              <span style="margin-left: 10px">
+                <el-dropdown @command="changeWebTheme" placement="top">
+                  <span class="el-dropdown-link">
+                    <i
+                      class="fa fa-globe"
+                      aria-hidden="true"
+                    >{{ this.webTheme == "Light" ? $t("m.Light") : $t("m.Dark") }}</i>
+                    <i class="el-icon-arrow-up el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="Light">{{ $t("m.Light") }}</el-dropdown-item>
+                    <el-dropdown-item command="Dark">{{ $t("m.Dark") }}</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </span>
+            </div>
+          </footer>
+        </div>
+        <div v-else>
+          <div id="admin-content">
+            <transition name="el-zoom-in-bottom">
+              <router-view></router-view>
+            </transition>
           </div>
-        </footer>
-      </div>
-      <div v-else>
-        <div id="admin-content">
-          <transition name="el-zoom-in-bottom">
-            <router-view></router-view>
-          </transition>
         </div>
       </div>
-    </div>
+    </interpolator>
   </div>
 </template>
 
@@ -121,6 +122,10 @@ import storage from "@/common/storage";
 import utils from "@/common/utils";
 
 import interpolator from "vue-apply-darkmode/src/vue-apply-darkmode.vue";
+import {
+  enable as enableDarkMode,
+  setFetchMethod as setFetch,
+} from "darkreader";
 
 export default {
   name: "app-content",
@@ -259,6 +264,9 @@ export default {
       this.$route.name == "ProblemDetails" ||
       utils.isFocusModePage(this.$route.name)
     );
+    //解决跨域报错
+    setFetch(window.fetch);
+    enableDarkMode();
     window.addEventListener("visibilitychange", this.autoRefreshUserInfo);
   },
   mounted() {

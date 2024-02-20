@@ -287,7 +287,7 @@ export default {
       api.submitContestMoss(this.addMossContains).then(
         (res) => {
           this.mossResultList = res.data.data;
-          console.log(this.mossResultList);
+          // console.log(this.mossResultList);
           myMessage.success(this.$i18n.t("m.Update_Successfully"));
           this.getMossLoading = false;
           this.getContestMoss(1);

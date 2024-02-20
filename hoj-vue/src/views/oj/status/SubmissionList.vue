@@ -103,7 +103,7 @@
           :data="submissions"
           :loading="loadingTable"
         >
-          <vxe-table-column field="submitId" :title="$t('m.Run_ID')" width="80"></vxe-table-column>
+          <vxe-table-column field="sortedId" :title="$t('m.Run_ID')" width="80"></vxe-table-column>
           <vxe-table-column field="pid" :title="$t('m.Problem')" min-width="150" show-overflow>
             <template v-slot="{ row }">
               <span
@@ -342,12 +342,11 @@
         </vxe-table>
       </el-card>
       <Pagination
-        :total="total"
         :page-size="limit"
         @on-change="changeRoute"
         :current.sync="currentPage"
         @on-page-size-change="onPageSizeChange"
-        :layout="'prev, pager, next, sizes'"
+        :layout="'jumper, prev, pager, next, sizes'"
       ></Pagination>
     </div>
     <el-dialog
@@ -424,7 +423,6 @@ export default {
       loadingTable: false,
       submissions: [],
       needCheckSubmitIds: {}, // 当前状态为6和7的提交记录Id 需要重新检查更新
-      total: 30,
       limit: 15,
       currentPage: 1,
       contestID: null,
@@ -593,7 +591,6 @@ export default {
 
         this.loadingTable = false;
         this.submissions = data.records;
-        this.total = data.total;
 
         if (Object.keys(this.needCheckSubmitIds).length > 0) {
           this.checkSubmissionsStatus();
@@ -877,7 +874,7 @@ export default {
       this.changeJudgeStatusDialogVisible = true;
     },
     cancelJudge(row) {
-      this.$confirm(   
+      this.$confirm(
         this.$i18n.t("m.Cancel_Judge_Tips"),
         "Run ID：" + row.submitId,
         {

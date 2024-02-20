@@ -188,7 +188,7 @@ export default {
     goEditAnnouncement() {
       let contestId = this.$route.params.contestID;
       const params = this.isContest ? { contestId } : {};
-      console.log(params);
+      // console.log(params);
       this.$router.push({
         name: this.edit_route_name,
         params: params,

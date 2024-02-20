@@ -73,7 +73,7 @@
             </el-select>
           </template>
         </vxe-table-column>
-        <vxe-table-column title="Option" min-width="200">
+        <vxe-table-column :title="$t('m.Option')" min-width="200">
           <template v-slot="{ row }">
             <el-tooltip
               effect="dark"

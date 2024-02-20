@@ -115,6 +115,8 @@ public class RankManager {
         IPage<ACMRankVO> data = null;
         if (uidList != null) {
             Page<ACMRankVO> page = new Page<>(currentPage, limit);
+            page.setSearchCount(false);
+            page.setOptimizeCountSql(false);
             if (uidList.size() > 0) {
                 data = userRecordEntityService.getACMRankList(page, uidList);
             } else {
@@ -125,6 +127,8 @@ public class RankManager {
             data = (IPage<ACMRankVO>) redisUtils.get(key);
             if (data == null) {
                 Page<ACMRankVO> page = new Page<>(currentPage, limit);
+                page.setSearchCount(false);
+                page.setOptimizeCountSql(false);
                 data = userRecordEntityService.getACMRankList(page, null);
                 redisUtils.set(key, data, cacheRankSecond);
             }
@@ -138,6 +142,8 @@ public class RankManager {
         IPage<ACMRankVO> data = null;
         if (uidList != null) {
             Page<ACMRankVO> page = new Page<>(currentPage, limit);
+            page.setSearchCount(false);
+            page.setOptimizeCountSql(false);
             if (uidList.size() > 0) {
                 data = userRecordEntityService.getNewACMRankList(page, uidList);
             } else {
@@ -148,6 +154,8 @@ public class RankManager {
             data = (IPage<ACMRankVO>) redisUtils.get(key);
             if (data == null) {
                 Page<ACMRankVO> page = new Page<>(currentPage, limit);
+                page.setSearchCount(false);
+                page.setOptimizeCountSql(false);
                 data = userRecordEntityService.getNewACMRankList(page, null);
                 redisUtils.set(key, data, cacheRankSecond);
             }
@@ -161,6 +169,8 @@ public class RankManager {
         IPage<OIRankVO> data = null;
         if (uidList != null) {
             Page<OIRankVO> page = new Page<>(currentPage, limit);
+            page.setSearchCount(false);
+            page.setOptimizeCountSql(false);
             if (uidList.size() > 0) {
                 data = userRecordEntityService.getOIRankList(page, uidList);
             } else {
@@ -171,6 +181,8 @@ public class RankManager {
             data = (IPage<OIRankVO>) redisUtils.get(key);
             if (data == null) {
                 Page<OIRankVO> page = new Page<>(currentPage, limit);
+                page.setSearchCount(false);
+                page.setOptimizeCountSql(false);
                 data = userRecordEntityService.getOIRankList(page, null);
                 redisUtils.set(key, data, cacheRankSecond);
             }
@@ -184,6 +196,8 @@ public class RankManager {
         IPage<OIRankVO> data = null;
         if (uidList != null) {
             Page<OIRankVO> page = new Page<>(currentPage, limit);
+            page.setSearchCount(false);
+            page.setOptimizeCountSql(false);
             if (uidList.size() > 0) {
                 data = userRecordEntityService.getNewOIRankList(page, uidList);
             } else {
@@ -194,6 +208,8 @@ public class RankManager {
             data = (IPage<OIRankVO>) redisUtils.get(key);
             if (data == null) {
                 Page<OIRankVO> page = new Page<>(currentPage, limit);
+                page.setSearchCount(false);
+                page.setOptimizeCountSql(false);
                 data = userRecordEntityService.getNewOIRankList(page, null);
                 redisUtils.set(key, data, cacheRankSecond);
             }

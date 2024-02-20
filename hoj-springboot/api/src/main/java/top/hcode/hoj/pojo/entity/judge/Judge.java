@@ -29,6 +29,9 @@ public class Judge implements Serializable {
     @TableId(value = "submit_id", type = IdType.AUTO)
     private Long submitId;
 
+    @ApiModelProperty(value = "排序后的 Id")
+    private Long sortedId;
+
     @ApiModelProperty(value = "题目id")
     private Long pid;
 
@@ -112,7 +115,7 @@ public class Judge implements Serializable {
 
     @ApiModelProperty(value = "是否为同步赛数据")
     private Boolean synchronous;
-    
+
     @TableField(fill = FieldFill.INSERT)
     private Date gmtCreate;
 

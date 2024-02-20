@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.hcode.hoj.mapper.JudgeMapper">
     <select id="getCommonJudgeList" resultType="top.hcode.hoj.pojo.vo.JudgeVO" useCache="true">
-        select j.submit_id,j.submit_time,j.display_pid,j.username,j.uid,j.pid,j.status,j.share,
+        select j.submit_id,j.sorted_id,j.submit_time,j.display_pid,j.username,j.uid,j.pid,j.status,j.share,
             j.time,j.memory,j.score,j.oi_rank_score,j.length,j.language,j.cid,j.cpid,j.judger,j.is_manual
             from judge j
             <where>
@@ -31,12 +31,11 @@
                     </if>
                 </if>
             </where>
-        order by j.submit_time DESC,j.submit_id DESC
+        order by j.sorted_id DESC
     </select>
 
-
     <select id="getContestJudgeList" resultType="top.hcode.hoj.pojo.vo.JudgeVO" useCache="true">
-        select j.submit_id,j.submit_time,j.uid,j.username,cp.display_id,cp.display_title as title,
+        select j.submit_id,j.sorted_id,j.submit_time,j.uid,j.username,cp.display_id,cp.display_title as title,
         j.status,j.share,j.time,j.memory,j.score,j.length,j.language,j.cid,j.cpid,j.judger,j.is_manual
         from judge j right join
         (
@@ -82,7 +81,7 @@
                 </when>
             </choose>
         </where>
-        order by j.submit_time DESC,j.submit_id DESC
+        order by j.sorted_id DESC
     </select>
 
     <select id="getTodayJudgeNum" resultType="int">

@@ -584,6 +584,21 @@
             </el-dropdown-menu>
           </el-dropdown>
         </span>
+        <span style="margin-left: 10px">
+          <el-dropdown @command="changeWebTheme" placement="top">
+            <span class="el-dropdown-link">
+              <i
+                class="fa fa-globe"
+                aria-hidden="true"
+              >{{ this.webTheme == "Light" ? $t("m.Light") : $t("m.Dark") }}</i>
+              <i class="el-icon-arrow-up el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="Light">{{ $t("m.Light") }}</el-dropdown-item>
+              <el-dropdown-item command="Dark">{{ $t("m.Dark") }}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </span>
       </div>
     </div>
 
@@ -650,6 +665,9 @@ export default {
     changeWebLanguage(language) {
       this.$store.commit("changeWebLanguage", { language: language });
     },
+    changeWebTheme(theme) {
+      this.$store.commit("changeWebTheme", { theme: theme });
+    },
   },
   computed: {
     ...mapGetters([
@@ -659,6 +677,7 @@ export default {
       "isAuthenticated",
       "websiteConfig",
       "webLanguage",
+      "webTheme",
     ]),
     "window.screen.width"(newVal, oldVal) {
       if (newVal < 992) {

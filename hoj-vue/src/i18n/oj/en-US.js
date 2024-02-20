@@ -192,15 +192,18 @@ export const m = {
   UserHome_Solved: 'Solved',
   UserHome_Submissions: 'Submissions',
   UserHome_Contests: 'Contests',
-  UserHome_Score: 'Score',
+  UserHome_Failed: 'Failed',
   UserHome_Rating: 'Rating',
   List_Solved_Problems: 'List of solved problems',
   List_Participated_Contests: 'List of participated contests',
+  List_Overcoming_Problems: 'List of Failed problems',
   UserHome_Not_Data: 'The guy is so lazy that has not solved any problem yet.',
   UserHome_Not_Contest: 'The guy is so lazy that has not participated contests yet.',
+  UserHome_Not_Overcoming: 'Has not overcoming any problem yet.',
   Personal_Profile: 'Persion Profile',
   UserHome_Solved_Problems: 'Solved Problems',
   UserHome_Participated_Contests: 'Participated Contests',
+  UserHome_Overcoming_Problems: 'Failed Problems',
   Thermal_energy_table_submitted_in_the_last_year: 'Thermal energy table submitted in the last year',
   Ended_contests_ranking_changes: 'Ended ACM Contests ranking changes',
   Difficulty_Statistics: 'Difficulty Statistics',
@@ -284,7 +287,7 @@ export const m = {
   Touch_Get_Status: 'Please touch or hover the mouse to the designated problem line to view the submission status',
   Good_luck_to_you: 'Good luck to you!',
   Problem_Type: 'Type',
-  
+
   // /views/oj/problem/Problem.vue
   Problem_Description: 'Problem Description',
   My_Submission: 'My Submission',
@@ -904,5 +907,9 @@ export const m = {
   Url: 'Add Url',
   Hint: 'Add Hint',
   Edit_Home_Rotation_Chart: 'Edit Home Rotation Chart',
-  Edit_Box_File: 'Edit Box FileName'
+  Edit_Box_File: 'Edit Box FileName',
+
+  Dark: 'Dark',
+  Light: 'Light',
+  Unknown: 'Unknown'
 }

@@ -44,7 +44,7 @@
               ></el-switch>
             </template>
           </vxe-table-column>
-          <vxe-table-column title="Option" min-width="150">
+          <vxe-table-column :title="$t('m.Option')" min-width="150">
             <template v-slot="row">
               <el-tooltip
                 class="item"

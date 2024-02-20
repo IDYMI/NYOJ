@@ -38,10 +38,4 @@ public class OIRankVO implements Serializable {
     @ApiModelProperty(value = "OI得分列表")
     private Integer score;
 
-    @ApiModelProperty(value = "总提交数")
-    private Integer total;
-
-    @ApiModelProperty(value = "总通过数")
-    private Integer ac;
-
 }

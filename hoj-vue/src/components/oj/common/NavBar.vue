@@ -52,8 +52,10 @@
             </el-menu-item>
             <el-submenu index="rank">
               <template slot="title">
-                <i class="el-icon-s-data"></i>
-                {{ $t("m.NavBar_Rank") }}
+                <span @click="goRank()">
+                  <i class="el-icon-s-data"></i>
+                  {{ $t("m.NavBar_Rank") }}
+                </span>
               </template>
               <el-menu-item index="/acm-rank">
                 {{
@@ -157,7 +159,7 @@
                 placement="bottom"
                 trigger="hover"
               >
-                <span class="el-dropdown-link">
+                <span class="el-dropdown-link" @click="goUserHome()">
                   {{ userInfo.username }}
                   <i class="el-icon-caret-bottom"></i>
                 </span>
@@ -838,6 +840,16 @@ export default {
       } else {
         return `/training/${tid}/problems`;
       }
+    },
+    goUserHome() {
+      this.$router.push({
+        path: "/user-home",
+      });
+    },
+    goRank() {
+      this.$router.push({
+        name: "ACM Rank",
+      });
     },
   },
   computed: {

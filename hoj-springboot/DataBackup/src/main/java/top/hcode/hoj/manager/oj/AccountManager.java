@@ -191,14 +191,11 @@ public class AccountManager {
         }
         userHomeInfo.setSolvedList(disPlayIdList);
 
-        // 获取用户最近一年参加的比赛
-        List<Long> contestsPidList = (List<Long>) getUserContestsRanking(uid, username).getSolvedList();
-        userHomeInfo.setContestPidList(contestsPidList);
-
-        // 获取用户最近一年参加比赛的榜单
-        List<HashMap<String, Object>> dataList = (List<HashMap<String, Object>>) getUserContestsRanking(uid, username)
-                .getDataList();
-        userHomeInfo.setDataList(dataList);
+        UserContestsRankingVO userContestsRankingVo = getUserContestsRanking(uid, username);
+        // 获取用户参加的比赛
+        userHomeInfo.setContestPidList((List<Long>) userContestsRankingVo.getSolvedList());
+        // 获取用户参加比赛的榜单
+        userHomeInfo.setDataList((List<HashMap<String, Object>>) userContestsRankingVo.getDataList());
 
         QueryWrapper<Session> sessionQueryWrapper = new QueryWrapper<>();
         sessionQueryWrapper.eq("uid", userHomeInfo.getUid())
@@ -264,63 +261,50 @@ public class AccountManager {
      * @return
      * @Description 获取用户最近一年参加的比赛
      */
-    public List<Long> getUserContests(String uid) throws StatusFailException {
+    public List<Contest> getUserContests(String uid) throws StatusFailException {
+
+        // 获取已经结束, 不包含赛后提交，可见的ACM比赛的状态, 比赛结束后开榜的比赛
+        QueryWrapper<Contest> contestQueryWrapper = new QueryWrapper<>();
+        contestQueryWrapper
+                .select("id")
+                .eq("status", 1) // 获取已经结束
+                .eq("visible", 1) // 可见
+                .eq("auto_real_rank", 1) // 比赛结束后开榜的比赛
+                .eq("type", 0) // ACM比赛
+                .isNull("gid") // 不为组队的
+                .orderByAsc("end_time"); // 参加的比赛按照结束时间升序排序
+
+        List<Long> pidList = contestEntityService.list(contestQueryWrapper).stream().map(Contest::getId)
+                .collect(Collectors.toList());
         QueryWrapper<ContestRecord> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("uid", uid)
-                .select("distinct cid");
+        queryWrapper.select("distinct cid")
+                .eq("uid", uid)
+                .in("cid", pidList);
+        List<ContestRecord> userContestList = userContestEntityService.list(queryWrapper);
 
-        List<ContestRecord> contestList = userContestEntityService.list(queryWrapper);
-        List<ContestRecord> userContestList = new ArrayList<>();
-
-        for (ContestRecord contestRecord : contestList) {
-
-            Long contestPid = contestRecord.getCid();
-            Contest contest = contestEntityService.getById(contestPid);
-
-            // 判断比赛是否存在
-            if (contest == null) {
-                continue;
-            }
-
-            // 获取已经结束, 不包含赛后提交，可见的ACM比赛的状态, 比赛结束后开榜的比赛
-            if (contest.getType().intValue() == Constants.Contest.TYPE_ACM.getCode()// ACM比赛
-                    && contest.getStatus().intValue() == 1 // 获取已经结束
-                    && contest.getVisible() // 可见
-                    && contest.getAutoRealRank() // 比赛结束后开榜的比赛
-            ) {
-                userContestList.add(contestRecord);
-            }
-        }
-
-        List<Long> contestsPidList = new LinkedList<>();
+        List<Contest> contestList = new ArrayList<>();
         if (CollectionUtils.isEmpty(userContestList)) {
-            return contestsPidList;
+            return contestList;
         }
 
-        List<Long> pidList = userContestList.stream().map(ContestRecord::getCid).collect(Collectors.toList());
-        if (pidList.size() > 0) {
-            QueryWrapper<Contest> contestQueryWrapper = new QueryWrapper<>();
-            contestQueryWrapper.select("id", "title")
-                    .orderByAsc("end_time"); // 参加的比赛按照结束时间升序排序
-            contestQueryWrapper.in("id", pidList);
-            List<Contest> contests = contestEntityService.list(contestQueryWrapper);
-            contestsPidList = contests.stream().map(Contest::getId).collect(Collectors.toList());
-        }
+        contestList = userContestList.stream()
+                .map(contestRecord -> contestEntityService.getById(contestRecord.getCid()))
+                .collect(Collectors.toList());
 
-        return contestsPidList;
+        return contestList;
     }
 
     /**
      * @param uid
      * @param username
      * @return
-     * @Description 获取用户最近一年的比赛名次变化图
+     * @Description 获取用户的比赛名次变化图
      */
     public UserContestsRankingVO getUserContestsRanking(String uid, String username) throws StatusFailException {
 
-        List<Long> contestsPidList = getUserContests(uid);
+        List<Contest> contestList = getUserContests(uid);
 
-        return contestRankManager.getRecentYearContestsRanking(contestsPidList, uid, username);
+        return contestRankManager.getRecentYearContestsRanking(contestList, uid, username);
     }
 
     /**

@@ -192,15 +192,18 @@ export const m = {
   UserHome_Solved: '已解决',
   UserHome_Submissions: '总交题数',
   UserHome_Contests: '参与比赛',
-  UserHome_Score: 'OI分数',
+  UserHome_Failed: '正攻克',
   UserHome_Rating: 'CF分数',
   List_Solved_Problems: '全部已解决问题列表',
   List_Participated_Contests: '全部已参加比赛',
+  List_Overcoming_Problems: '正攻克问题列表',
   UserHome_Not_Data: '这家伙太懒了，还没有做过题目...',
   UserHome_Not_Contest: '这家伙太懒了，还没有参加过比赛...',
+  UserHome_Not_Overcoming: '还没有正攻克的题目...',
   Personal_Profile: '个人简介',
   UserHome_Solved_Problems: '做题情况',
   UserHome_Participated_Contests: '参与比赛',
+  UserHome_Overcoming_Problems: '攻克情况',
   Thermal_energy_table_submitted_in_the_last_year: '最近一年提交热力表',
   Ended_contests_ranking_changes: 'ACM比赛名次变化图',
   Difficulty_Statistics: '难度统计',
@@ -906,5 +909,10 @@ export const m = {
   Url: '链接',
   Hint2: '描述',
   Edit_Home_Rotation_Chart: '编辑首页轮播图',
-  Edit_Box_File: '编辑文件名称'
+  Edit_Box_File: '编辑文件名称',
+
+  Dark: '暗色',
+  Light: '亮色',
+
+  Unknown: 'Unknown'
 }

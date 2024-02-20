@@ -27,7 +27,10 @@
         FROM user_info u
         <where>
             u.status = 0
-            AND u.gmt_create >= CONCAT(YEAR(NOW()), '-06-01')
+            AND (
+                (MONTH(NOW()) <![CDATA[<]]> 6 AND u.gmt_create >= CONCAT(YEAR(NOW()) - 1, '-06-01'))
+                OR (MONTH(NOW()) >= 6 AND u.gmt_create >= CONCAT(YEAR(NOW()), '-06-01'))
+            )
             <if test="uidList!=null">
                 AND u.uuid in
                 <foreach collection="uidList" item="uid" open="(" separator="," close=")">
@@ -47,78 +50,54 @@
     </select>
 
     <select id="getOIRankList" resultType="top.hcode.hoj.pojo.vo.OIRankVO" useCache="true">
-        SELECT ui.uuid AS uid, ui.nickname, ui.username, left(ui.signature,100) as signature, ui.avatar,
-            ui.title_name,ui.title_color
-            , (
-                SELECT COUNT(DISTINCT pid)
-                FROM user_acproblem
-                WHERE uid = ui.uuid
-            ) AS ac
-            , (
-                SELECT COUNT(uid)
-                FROM judge
-                WHERE uid = ui.uuid
-            ) AS total, ss.score AS score
-        FROM user_info ui, (
-                SELECT u.uuid AS uid, COALESCE(SUM(s.score),0) AS score
-                FROM user_info u left join (
-                        SELECT MAX(oi_rank_score) AS score, uid, pid
-                        FROM judge
-                        WHERE gid is null
-                        GROUP BY pid, uid
-                    ) s
-                ON s.uid = u.uuid
-                WHERE u.status = 0
-                GROUP BY u.uuid
-            ) ss
+        SELECT u.uuid AS uid, u.nickname, u.username, LEFT(u.signature, 100) AS signature, u.avatar,
+            u.title_name, u.title_color, COALESCE(SUM(s.score), 0) AS score
+        FROM user_info u
+        LEFT JOIN (
+            SELECT MAX(oi_rank_score) AS score, uid, pid
+            FROM judge
+            WHERE cid = 0 AND gid IS NULL
+            GROUP BY pid, uid
+        ) s ON s.uid = u.uuid
         <where>
-            ss.uid = ui.uuid
-            <if test="uidList!=null">
-                AND ui.uuid in
+            u.status = 0
+            <if test="uidList != null and uidList.size() > 0">
+                AND u.uuid IN
                 <foreach collection="uidList" item="uid" open="(" separator="," close=")">
                     #{uid}
                 </foreach>
             </if>
         </where>
-        ORDER BY score DESC, ac DESC
+        GROUP BY u.uuid
+        ORDER BY score DESC
     </select>
 
+
     <select id="getNewOIRankList" resultType="top.hcode.hoj.pojo.vo.OIRankVO" useCache="true">
-        SELECT ui.uuid AS uid, ui.nickname, ui.username, left(ui.signature,100) as signature, ui.avatar,
-            ui.title_name,ui.title_color
-            , (
-                SELECT COUNT(DISTINCT pid)
-                FROM user_acproblem
-                WHERE uid = ui.uuid
-            ) AS ac
-            , (
-                SELECT COUNT(uid)
-                FROM judge
-                WHERE uid = ui.uuid
-            ) AS total, ss.score AS score
-        FROM user_info ui, (
-                SELECT u.uuid AS uid, COALESCE(SUM(s.score),0) AS score
-                FROM user_info u left join (
-                        SELECT MAX(oi_rank_score) AS score, uid, pid
-                        FROM judge
-                        WHERE gid is null
-                        GROUP BY pid, uid
-                    ) s
-                ON s.uid = u.uuid
-                WHERE u.status = 0
-                GROUP BY u.uuid
-            ) ss
+        SELECT u.uuid AS uid, u.nickname, u.username, LEFT(u.signature, 100) AS signature, u.avatar,
+            u.title_name, u.title_color, COALESCE(SUM(s.score), 0) AS score
+        FROM user_info u
+        LEFT JOIN (
+            SELECT MAX(oi_rank_score) AS score, uid, pid
+            FROM judge
+            WHERE cid = 0 AND gid IS NULL
+            GROUP BY pid, uid
+        ) s ON s.uid = u.uuid
         <where>
-            ss.uid = ui.uuid
-            AND ui.gmt_create >= CONCAT(YEAR(NOW()), '-06-01')
+            u.status = 0
+            AND (
+                (MONTH(NOW()) <![CDATA[<]]> 6 AND u.gmt_create >= CONCAT(YEAR(NOW()) - 1, '-06-01'))
+                OR (MONTH(NOW()) >= 6 AND u.gmt_create >= CONCAT(YEAR(NOW()), '-06-01'))
+            )
             <if test="uidList!=null">
-                AND ui.uuid in
+                AND u.uuid in
                 <foreach collection="uidList" item="uid" open="(" separator="," close=")">
                     #{uid}
                 </foreach>
             </if>
         </where>
-        ORDER BY score DESC, ac DESC
+        GROUP BY u.uuid
+        ORDER BY score DESC
     </select>
 
     <resultMap id="map_UserHomeVo" type="top.hcode.hoj.pojo.vo.UserHomeVO">
@@ -134,7 +113,7 @@
         <result column="title_color" property="titleColor"></result>
         <result column="rating" property="rating"></result>
         <result column="total" property="total"></result>
-        <collection property="scoreList" ofType="java.lang.Integer" select="getProblemScore" column="uid">
+        <collection property="overcomingList" ofType="java.lang.String" select="getOvercomingProblem" column="uid">
         </collection>
     </resultMap>
 
@@ -155,9 +134,12 @@
     </select>
 
     <!-- 子查询-->
-    <select id="getProblemScore" resultType="java.lang.Integer">
-        SELECT MAX(oi_rank_score) AS sum_score FROM judge
-        WHERE uid=#{uid} AND cid=0 AND gid is null AND score IS NOT NULL GROUP BY pid
+    <select id="getOvercomingProblem" resultType="java.lang.String">
+        SELECT DISTINCT j1.display_pid
+        FROM judge j1
+        LEFT JOIN judge j2 ON j1.pid = j2.pid AND j2.username = j1.username AND j2.status = 0
+        LEFT JOIN problem p ON j1.pid = p.id
+        WHERE j2.pid IS NULL AND j1.cid = 0 AND j1.gid IS NULL AND j1.uid=#{uid} AND p.auth = 1
     </select>
 
 

@@ -52,10 +52,10 @@
           {{ profile.school }}
         </span>
         <span id="icons">
-          <a :href="profile.github" v-if="profile.github" class="icon" target="_blank">
+          <a :href="formatUrl(profile.github)" v-if="profile.github" class="icon" target="_blank">
             <i class="fa fa-github">{{ $t("m.Github") }}</i>
           </a>
-          <a :href="profile.blog" v-if="profile.blog" class="icon" target="_blank">
+          <a :href="formatUrl(profile.blog)" v-if="profile.blog" class="icon" target="_blank">
             <i class="fa fa-share-alt-square">{{ $t("m.Blog") }}</i>
           </a>
         </span>
@@ -92,9 +92,9 @@
             <el-card shadow="always" class="rating">
               <p>
                 <i class="fa fa-user-secret" aria-hidden="true"></i>
-                {{ $t("m.UserHome_Score") }}
+                {{ $t("m.UserHome_Failed") }}
               </p>
-              <p class="data-number">{{ getSumScore(profile.scoreList) }}</p>
+              <p class="data-number">{{ profile.overcomingList.length }}</p>
             </el-card>
           </el-col>
         </el-row>
@@ -117,7 +117,7 @@
             ]"
           ></calendar-heatmap>
         </el-card>
-        <el-card style="margin-top: 1rem" v-if="this.options.series.length">
+        <el-card style="margin-top: 1rem;" v-if="this.options.series.length">
           <div class="card-title">
             <i class="el-icon-data-line" style="color: #409eff"></i>
             {{ $t("m.Ended_contests_ranking_changes") }}
@@ -234,13 +234,42 @@
               </template>
             </div>
           </el-tab-pane>
+          <el-tab-pane :label="$t('m.UserHome_Overcoming_Problems')">
+            <div id="problems">
+              <template v-if="profile.overcomingList.length">
+                <!-- <el-divider><i class="el-icon-circle-check"></i></el-divider> -->
+                <div>
+                  {{ $t("m.List_Overcoming_Problems") }}
+                  <el-button
+                    type="primary"
+                    icon="el-icon-refresh"
+                    circle
+                    size="mini"
+                    @click="freshContestDisplayID"
+                  ></el-button>
+                </div>
+                <div class="btns">
+                  <div
+                    class="problem-btn"
+                    v-for="problemID of profile.overcomingList"
+                    :key="problemID"
+                  >
+                    <el-button round @click="goProblem(problemID)" size="small">{{ problemID }}</el-button>
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <p>{{ $t("m.UserHome_Not_Overcoming") }}</p>
+              </template>
+            </div>
+          </el-tab-pane>
         </el-tabs>
       </div>
     </el-card>
   </div>
 </template>
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import api from "@/common/api";
 import myMessage from "@/common/message";
 import { addCodeBtn } from "@/common/codeblock";
@@ -270,6 +299,7 @@ export default {
         rating: 0,
         score: 0,
         solvedList: [],
+        overcomingList: [],
         contestPidList: [],
         dataList: [], // 日期对应的比赛名次数据列表
         solvedGroupByDifficulty: null,
@@ -326,6 +356,11 @@ export default {
           axisLine: {
             show: false, // 不显示坐标轴线
           },
+          axisLabel: {
+            textStyle: {
+              color: this.getAxisLabelColor(),
+            },
+          },
         },
         yAxis: {
           type: "value",
@@ -336,6 +371,11 @@ export default {
           },
           axisLine: {
             show: false, // 不显示坐标轴线
+          },
+          axisLabel: {
+            textStyle: {
+              color: this.getAxisLabelColor(), // 根据主题获取初始 yAxis axisLabel 文字颜色
+            },
           },
         },
         series: [],
@@ -400,7 +440,7 @@ export default {
 
           for (let i = 0; i < len; i++) {
             let contest = dataList[i];
-            let time = moment(contest["date"]).format("hh:mm MM-DD");
+            let time = moment(contest["date"]).format("yyyy-MM-DD HH:mm");
             let title = contest["title"];
             let rank = contest["rank"];
             let cid = contest["cid"];
@@ -460,15 +500,6 @@ export default {
       this.init();
       myMessage.success(this.$i18n.t("m.Update_Successfully"));
     },
-    getSumScore(scoreList) {
-      if (scoreList) {
-        var sum = 0;
-        for (let i = 0; i < scoreList.length; i++) {
-          sum += scoreList[i];
-        }
-        return sum;
-      }
-    },
     nicknameColor(nickname) {
       let typeArr = ["", "success", "info", "danger", "warning"];
       let index = nickname.length % 5;
@@ -487,6 +518,20 @@ export default {
         return list.length;
       }
     },
+    formatUrl(url) {
+      // 在这里添加逻辑以确保URL以合适的格式存在
+      // 例如，如果缺少协议部分，可以添加默认协议（例如：https://）
+      if (url && !url.startsWith("http")) {
+        return "https://" + url;
+      }
+      return url;
+    },
+    getAxisLabelColor() {
+      return this.webTheme === "Light" ? "black" : "white";
+    },
+  },
+  computed: {
+    ...mapGetters(["webTheme"]),
   },
   watch: {
     $route(newVal, oldVal) {
@@ -524,6 +569,18 @@ export default {
         less: this.$i18n.t("m.Less"),
         more: this.$i18n.t("m.More"),
       };
+    },
+    webTheme: {
+      handler() {
+        // 监听 webTheme 变化，并更新文字颜色
+        if (this.options.xAxis && this.options.yAxis) {
+          this.options.xAxis.axisLabel.textStyle.color =
+            this.getAxisLabelColor();
+          this.options.yAxis.axisLabel.textStyle.color =
+            this.getAxisLabelColor();
+        }
+      },
+      immediate: true,
     },
   },
 };

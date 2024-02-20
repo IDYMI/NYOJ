@@ -37,7 +37,7 @@
           </el-select>
         </template>
       </vxe-table-column>
-      <vxe-table-column title="Option" min-width="250">
+      <vxe-table-column :title="$t('m.Option')" min-width="250">
         <template v-slot="{ row }">
           <el-tooltip effect="dark" :content="$t('m.Edit')" placement="top" v-if="row.gid == gid">
             <el-button

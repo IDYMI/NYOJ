@@ -1473,3 +1473,136 @@ DELIMITER ;
 CALL add_BoxFile ;
 
 DROP PROCEDURE add_BoxFile;
+
+
+/*
+* 用户名, 邮箱区分大小写
+
+*/
+ALTER TABLE contest_print
+DROP FOREIGN KEY contest_print_ibfk_2;
+ALTER TABLE discussion_report
+DROP FOREIGN KEY discussion_report_ibfk_2;
+ALTER TABLE judge
+DROP FOREIGN KEY judge_ibfk_3;
+ALTER TABLE problem
+DROP FOREIGN KEY problem_ibfk_1;
+
+ALTER TABLE user_info
+MODIFY COLUMN username VARCHAR(100) COLLATE utf8mb4_bin NOT NULL COMMENT '用户名';
+
+ALTER TABLE user_info
+MODIFY COLUMN email varchar(320) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '邮箱';
+
+-- 示例：调整 contest_print 表的字符集
+ALTER TABLE contest_print
+MODIFY COLUMN username VARCHAR(100) COLLATE utf8mb4_bin NOT NULL;
+-- 添加外键约束，确保排序规则一致
+ALTER TABLE contest_print
+ADD CONSTRAINT contest_print_ibfk_2
+FOREIGN KEY (`username`)
+REFERENCES `user_info` (username) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE discussion_report
+MODIFY COLUMN reporter VARCHAR(100) COLLATE utf8mb4_bin NOT NULL;
+ALTER TABLE discussion_report
+ADD CONSTRAINT discussion_report_ibfk_2
+FOREIGN KEY (`reporter`)
+REFERENCES `user_info` (username) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE judge
+MODIFY COLUMN username VARCHAR(100) COLLATE utf8mb4_bin NOT NULL;
+ALTER TABLE judge
+ADD CONSTRAINT judge_ibfk_3
+FOREIGN KEY (`username`)
+REFERENCES `user_info` (username) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE problem
+MODIFY COLUMN author VARCHAR(100) COLLATE utf8mb4_bin NOT NULL;
+ALTER TABLE problem
+ADD CONSTRAINT problem_ibfk_1
+FOREIGN KEY (`author`)
+REFERENCES `user_info` (username) ON DELETE CASCADE ON UPDATE CASCADE;
+
+/*
+* 增加 user_acproblem 表的 uid,pid,gmt_create 索引
+
+*/
+DROP PROCEDURE
+IF EXISTS add_UserAcproblem_uid_pid_gmtCreateIndex;
+DELIMITER $$
+CREATE PROCEDURE add_UserAcproblem_uid_pid_gmtCreateIndex ()
+BEGIN
+	CREATE INDEX uid_pid_gmtCreate ON `hoj`.`user_acproblem` (`uid`, `pid`, `gmt_create` DESC);
+END$$
+DELIMITER ;
+CALL add_UserAcproblem_uid_pid_gmtCreateIndex ;
+
+DROP PROCEDURE add_UserAcproblem_uid_pid_gmtCreateIndex;
+
+
+/*
+* 增加 judge 表的 sorted_id
+
+*/
+DROP PROCEDURE
+IF EXISTS add_Judge_SortedId;
+DELIMITER $$
+
+CREATE PROCEDURE add_Judge_SortedId ()
+BEGIN
+
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		information_schema.`COLUMNS`
+	WHERE
+		table_name = 'judge'
+	AND column_name = 'sorted_id'
+) THEN
+
+	ALTER TABLE `hoj`.`judge`  ADD COLUMN `sorted_id` bigint unsigned COMMENT '排序后的submit_id';
+
+END
+IF ; END$$
+
+DELIMITER ;
+CALL add_Judge_SortedId ;
+
+DROP PROCEDURE add_Judge_SortedId;
+
+/*
+* 增加 judge 表的 sorted_id 列数据
+
+*/
+	UPDATE judge
+JOIN (
+    SELECT submit_id, ROW_NUMBER() OVER (ORDER BY submit_time) AS row_num
+    FROM judge
+) AS subquery
+ON judge.submit_id = subquery.submit_id
+SET judge.sorted_id = subquery.row_num
+WHERE judge.submit_id = subquery.submit_id;
+
+/*
+* 增加 judge 表的 索引
+
+*/
+
+DROP PROCEDURE
+IF EXISTS add_Judge_Index;
+DELIMITER $$
+
+CREATE PROCEDURE add_Judge_Index ()
+BEGIN
+	CREATE INDEX cid_gid_pid_status ON judge(`cid`,`gid`,`pid`,`status`);
+	CREATE INDEX cid_gid_pid_uid_oiRankScore ON judge(`cid`, `gid`, `pid`, `uid`, `oi_rank_score`);
+	CREATE INDEX sorted_id ON `hoj`.`judge` (`sorted_id` DESC);
+END$$
+DELIMITER ;
+CALL add_Judge_Index ;
+
+DROP PROCEDURE add_Judge_Index;
+
+
