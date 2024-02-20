@@ -152,7 +152,7 @@ public class SynchronousManager {
     }
 
     public List<ACMContestRankVO> getSynchronousRankList(Contest contest, boolean isContainsAfterContestJudge,
-            boolean removeStar, Long nowtime) {
+            boolean removeStar, Long selectedTime) {
         List<ACMContestRankVO> synchronousRankList = new ArrayList();
 
         List<JSONObject> synchronousConfigList = getSynchronousConfigList(contest);
@@ -178,8 +178,8 @@ public class SynchronousManager {
                         .put("containsEnd", "false")
                         .map();
 
-                if (nowtime != null) {
-                    payload.put("time", nowtime.toString());
+                if (selectedTime != null) {
+                    payload.put("time", selectedTime.toString());
                 }
 
                 JSONObject JsonObject = getHttpRequestJson(synchronousConfig, api, "post", null, payload);
@@ -449,7 +449,7 @@ public class SynchronousManager {
         return problem;
     }
 
-    public static JudgeVO parseSynchronousSubmission(JSONObject record) {
+    public JudgeVO parseSynchronousSubmission(JSONObject record) {
         JudgeVO judgeVO = new JudgeVO();
         judgeVO.setUid(record.getStr("uid"))
                 .setSubmitId(record.getLong("submitId"))

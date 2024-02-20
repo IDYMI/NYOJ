@@ -24,7 +24,8 @@ public interface ContestProblemEntityService extends IService<ContestProblem> {
                                                  Boolean isAdmin,
                                                  String contestAuthorUid,
                                                  List<String> groupRootUidList,
-                                                 Boolean isContainsContestEndJudge);
+                                                 Boolean isContainsContestEndJudge,
+                                                 Date selectedTime);
 
     List<ProblemFullScreenListVO> getContestFullScreenProblemList(Long cid);
 

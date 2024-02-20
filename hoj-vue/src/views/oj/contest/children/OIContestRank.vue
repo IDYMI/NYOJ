@@ -232,7 +232,7 @@
         </vxe-table-column>
         <vxe-table-column
           min-width="80"
-          v-for="problem in contestProblems"
+          v-for="(problem, index) in contestProblems"
           :key="problem.displayId"
           :field="problem.displayId"
         >
@@ -268,11 +268,11 @@
                 <div slot="content">
                   {{ problem.displayId + ". " + problem.displayTitle }}
                   <br />
-                  {{ "Accepted: " + problem.ac }}
+                  {{ "Accepted: " + getAc(index) }}
                   <br />
-                  {{ "Rejected: " + (problem.total - problem.ac) }}
+                  {{ "Rejected: " + (getTotal(index) - getAc(index)) }}
                 </div>
-                <span>({{ problem.ac }}/{{ problem.total }})</span>
+                <span>({{ getAc(index) }}/{{ getTotal(index) }})</span>
               </el-tooltip>
             </span>
           </template>
@@ -302,12 +302,11 @@
 </template>
 <script>
 import Avatar from "vue-avatar";
-import { mapActions } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import ContestRankMixin from "./contestRankMixin";
 import utils from "@/common/utils";
 const Pagination = () => import("@/components/oj/common/Pagination");
 const RankBox = () => import("@/components/oj/common/RankBox");
-import ClickRank from "@/views/oj/contest/ClickRank";
 
 export default {
   name: "OIContestRank",
@@ -356,6 +355,9 @@ export default {
               showMinLabel: true,
               showMaxLabel: true,
               align: "center",
+              textStyle: {
+                color: this.getAxisLabelColor(),
+              },
               formatter: (value, index) => {
                 return utils.breakLongWords(value, 14);
               },
@@ -368,6 +370,11 @@ export default {
         yAxis: [
           {
             type: "value",
+            axisLabel: {
+              textStyle: {
+                color: this.getAxisLabelColor(),
+              },
+            },
           },
         ],
         grid: {
@@ -389,8 +396,6 @@ export default {
   },
   created() {
     this.initConcernedList();
-    // 开始对clickGetContestRank事件的监听
-    ClickRank.$on("clickGetContestRank", this.clickGetContestRankData);
   },
   mounted() {
     this.contestID = this.$route.params.contestID;
@@ -401,27 +406,39 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      contestProblems: (state) => state.contest.contestProblems,
+    }),
     contest() {
       return this.$store.state.contest.contest;
     },
     isMobileView() {
       return window.screen.width < 768;
     },
+    ...mapGetters(["webTheme", "isContainsAfterContestJudge", "selectedTime"]),
   },
   watch: {
     isContainsAfterContestJudge(newVal, OldVal) {
       this.getContestRankData(this.page);
+      this.getContestProblems();
+    },
+    selectedTime(newVal, OldVal) {
+      this.getContestRankData(this.page);
+      this.getContestProblems();
+    },
+    webTheme: {
+      handler() {
+        if (this.options.xAxis && this.options.yAxis) {
+          this.options.xAxis[0].axisLabel.textStyle.color =
+            this.getAxisLabelColor();
+          this.options.yAxis[0].axisLabel.textStyle.color =
+            this.getAxisLabelColor();
+        }
+      },
+      immediate: true,
     },
   },
   methods: {
-    ...mapActions(["getContestProblems"]),
-    clickGetContestRankData(page, refresh, nowTime) {
-      // 停止自动更新
-      this.autoRefresh = false;
-      this.handleAutoRefresh(false);
-      // 查询对应的榜单
-      this.getContestRankData(page, refresh, nowTime);
-    },
     cellClassName({ row, rowIndex, column, columnIndex }) {
       if (row.username == this.userInfo.username) {
         if (
@@ -559,9 +576,16 @@ export default {
         }`
       );
     },
-    beforeDestroy() {
-      // 取消对clickGetContestRank事件的监听，以避免内存泄漏
-      ClickRank.$off("clickGetContestRank", this.executeFunction);
+
+    getAxisLabelColor() {
+      return this.webTheme === "Light" ? "black" : "white";
+    },
+
+    getAc(index) {
+      return this.contestProblems[index]["ac"];
+    },
+    getTotal(index) {
+      return this.contestProblems[index]["total"];
     },
   },
 };

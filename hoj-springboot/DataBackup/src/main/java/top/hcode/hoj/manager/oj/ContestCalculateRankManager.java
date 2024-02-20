@@ -29,6 +29,8 @@ import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.utils.RedisUtils;
 
 import javax.annotation.Resource;
+
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -62,7 +64,7 @@ public class ContestCalculateRankManager {
             List<String> concernedList,
             List<Integer> externalCidList,
             boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
         return calcACMRank(isOpenSealRank,
                 removeStar,
                 contest,
@@ -72,7 +74,7 @@ public class ContestCalculateRankManager {
                 false,
                 null,
                 isContainsAfterContestJudge,
-                nowtime);
+                selectedTime);
     }
 
     public List<ACMContestRankVO> calcSynchronousACMRank(boolean isOpenSealRank,
@@ -82,7 +84,7 @@ public class ContestCalculateRankManager {
             List<String> concernedList,
             List<Integer> externalCidList,
             boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
         return calcSynchronousACMRank(isOpenSealRank,
                 removeStar,
                 contest,
@@ -92,7 +94,7 @@ public class ContestCalculateRankManager {
                 false,
                 null,
                 isContainsAfterContestJudge,
-                nowtime);
+                selectedTime);
     }
 
     public List<OIContestRankVO> calcOIRank(Boolean isOpenSealRank,
@@ -102,7 +104,7 @@ public class ContestCalculateRankManager {
             List<String> concernedList,
             List<Integer> externalCidList,
             Boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
 
         return calcOIRank(isOpenSealRank,
                 removeStar,
@@ -113,7 +115,7 @@ public class ContestCalculateRankManager {
                 false,
                 null,
                 isContainsAfterContestJudge,
-                nowtime);
+                selectedTime);
     }
 
     /**
@@ -126,7 +128,7 @@ public class ContestCalculateRankManager {
      * @param useCache                    是否对初始排序计算的结果进行缓存
      * @param cacheTime                   缓存的时间 单位秒
      * @param isContainsAfterContestJudge 是否包含比赛结束后的提交
-     * @param nowtime                     比赛的现在时间
+     * @param selectedTime                比赛跳转榜单的时间
      * @MethodName calcACMRank
      * @Description TODO
      * @Return
@@ -141,7 +143,7 @@ public class ContestCalculateRankManager {
             boolean useCache,
             Long cacheTime,
             boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
         List<ACMContestRankVO> orderResultList;
         Long minSealRankTime = null;
         Long maxSealRankTime = null;
@@ -160,7 +162,7 @@ public class ContestCalculateRankManager {
                     maxSealRankTime = contest.getDuration();
                 }
                 orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime,
-                        externalCidList, isContainsAfterContestJudge, nowtime);
+                        externalCidList, isContainsAfterContestJudge, selectedTime);
                 redisUtils.set(key, orderResultList, cacheTime);
             }
         } else {
@@ -169,7 +171,7 @@ public class ContestCalculateRankManager {
                 maxSealRankTime = contest.getDuration();
             }
             orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime,
-                    externalCidList, isContainsAfterContestJudge, nowtime);
+                    externalCidList, isContainsAfterContestJudge, selectedTime);
         }
 
         // 需要打星的用户名列表
@@ -229,7 +231,7 @@ public class ContestCalculateRankManager {
      * @param useCache                    是否对初始排序计算的结果进行缓存
      * @param cacheTime                   缓存的时间 单位秒
      * @param isContainsAfterContestJudge 是否包含比赛结束后的提交
-     * @param nowtime                     比赛的现在时间
+     * @param selectedTime                比赛跳转榜单的时间
      * @MethodName calcSynchronousACMRank
      * @Description TODO
      * @Return
@@ -244,7 +246,7 @@ public class ContestCalculateRankManager {
             boolean useCache,
             Long cacheTime,
             boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
         List<ACMContestRankVO> orderResultList;
         Long minSealRankTime = null;
         Long maxSealRankTime = null;
@@ -263,7 +265,7 @@ public class ContestCalculateRankManager {
                     maxSealRankTime = contest.getDuration();
                 }
                 orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime,
-                        externalCidList, isContainsAfterContestJudge, nowtime);
+                        externalCidList, isContainsAfterContestJudge, selectedTime);
                 redisUtils.set(key, orderResultList, cacheTime);
             }
         } else {
@@ -272,7 +274,7 @@ public class ContestCalculateRankManager {
                 maxSealRankTime = contest.getDuration();
             }
             orderResultList = getACMOrderRank(contest, isOpenSealRank, minSealRankTime, maxSealRankTime,
-                    externalCidList, isContainsAfterContestJudge, nowtime);
+                    externalCidList, isContainsAfterContestJudge, selectedTime);
         }
 
         // 需要打星的用户名列表
@@ -314,7 +316,7 @@ public class ContestCalculateRankManager {
         // 是否开启同步赛
         if (contest.getAuth() == 4 || contest.getAuth() == 5) {
             List<ACMContestRankVO> synchronousResultList = synchronousManager.getSynchronousRankList(contest,
-                    isContainsAfterContestJudge, removeStar, nowtime);
+                    isContainsAfterContestJudge, removeStar, selectedTime);
             if (!CollectionUtils.isEmpty(synchronousResultList)) {
                 // 将两个列表合并
                 orderResultList.addAll(synchronousResultList);
@@ -474,7 +476,7 @@ public class ContestCalculateRankManager {
             Long maxSealRankTime,
             List<Integer> externalCidList,
             Boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
 
         List<ContestRecordVO> contestRecordList = contestRecordEntityService.getACMContestRecord(contest.getUid(),
                 contest.getId(),
@@ -493,8 +495,10 @@ public class ContestCalculateRankManager {
 
         for (ContestRecordVO contestRecord : contestRecordList) {
 
-            if (nowtime != null) {
-                if (contestRecord.getTime() > nowtime) {
+            Date thisTime = addSeconds(contest.getStartTime(), selectedTime);
+            if (selectedTime != null) {
+                // 提交时间大于查询的时间
+                if (contestRecord.getSubmitTime().compareTo(thisTime) > 0) {
                     // 将超过查询时间的数据排除
                     continue;
                 }
@@ -645,7 +649,7 @@ public class ContestCalculateRankManager {
             boolean useCache,
             Long cacheTime,
             boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
 
         List<OIContestRankVO> orderResultList;
         if (useCache) {
@@ -658,12 +662,12 @@ public class ContestCalculateRankManager {
             orderResultList = (List<OIContestRankVO>) redisUtils.get(key);
             if (orderResultList == null) {
                 orderResultList = getOIOrderRank(contest, externalCidList, isOpenSealRank, isContainsAfterContestJudge,
-                        nowtime);
+                        selectedTime);
                 redisUtils.set(key, orderResultList, cacheTime);
             }
         } else {
             orderResultList = getOIOrderRank(contest, externalCidList, isOpenSealRank, isContainsAfterContestJudge,
-                    nowtime);
+                    selectedTime);
         }
 
         // 需要打星的用户名列表
@@ -773,7 +777,7 @@ public class ContestCalculateRankManager {
             List<Integer> externalCidList,
             Boolean isOpenSealRank,
             Boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
 
         List<ContestRecordVO> oiContestRecord = contestRecordEntityService.getOIContestRecord(contest,
                 externalCidList, isOpenSealRank, isContainsAfterContestJudge);
@@ -793,8 +797,10 @@ public class ContestCalculateRankManager {
 
         for (ContestRecordVO contestRecord : oiContestRecord) {
 
-            if (nowtime != null) {
-                if (contestRecord.getTime() > nowtime) {
+            Date thisTime = addSeconds(contest.getStartTime(), selectedTime);
+            if (selectedTime != null) {
+                // 提交时间大于查询的时间
+                if (contestRecord.getSubmitTime().compareTo(thisTime) > 0) {
                     // 将超过查询时间的数据排除
                     continue;
                 }
@@ -1173,5 +1179,14 @@ public class ContestCalculateRankManager {
             submissions.add(submissionData);
         }
         return submissions;
+    }
+
+    private static Date addSeconds(Date date, Long seconds) {
+        if (seconds != null) {
+            Instant instant = date.toInstant().plusSeconds(seconds);
+            return Date.from(instant);
+        } else {
+            return null;
+        }
     }
 }

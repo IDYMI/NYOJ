@@ -48,7 +48,7 @@ public class ContestServiceImpl implements ContestService {
         }
     }
 
-      @Override
+    @Override
     public CommonResult<List<ContestFileConfigVO>> getContestFileList(Long cid) {
         try {
             return CommonResult.successResponse(contestManager.getContestFileList(cid));
@@ -81,9 +81,10 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public CommonResult<List<ContestProblemVO>> getContestProblem(Long cid, Boolean isContainsContestEndJudge) {
+    public CommonResult<List<ContestProblemVO>> getContestProblem(Long cid, Boolean isContainsContestEndJudge,
+            Long time) {
         try {
-            return CommonResult.successResponse(contestManager.getContestProblem(cid, isContainsContestEndJudge));
+            return CommonResult.successResponse(contestManager.getContestProblem(cid, isContainsContestEndJudge, time));
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         } catch (StatusForbiddenException e) {
@@ -92,9 +93,11 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public CommonResult<List<ContestProblemVO>> getSynchronousProblem(Long cid, Boolean isContainsContestEndJudge) {
+    public CommonResult<List<ContestProblemVO>> getSynchronousProblem(Long cid, Boolean isContainsContestEndJudge,
+            Long time) {
         try {
-            return CommonResult.successResponse(contestManager.getSynchronousProblem(cid, isContainsContestEndJudge));
+            return CommonResult
+                    .successResponse(contestManager.getSynchronousProblem(cid, isContainsContestEndJudge, time));
         } catch (StatusFailException e) {
             return CommonResult.errorResponse(e.getMessage());
         } catch (StatusForbiddenException e) {
@@ -209,7 +212,8 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
-    public CommonResult<IPage<AnnouncementVO>> getContestAnnouncement(Long cid, Integer limit, Integer currentPage, Long id) {
+    public CommonResult<IPage<AnnouncementVO>> getContestAnnouncement(Long cid, Integer limit, Integer currentPage,
+            Long id) {
         try {
             return CommonResult.successResponse(contestManager.getContestAnnouncement(cid, limit, currentPage, id));
         } catch (StatusFailException e) {

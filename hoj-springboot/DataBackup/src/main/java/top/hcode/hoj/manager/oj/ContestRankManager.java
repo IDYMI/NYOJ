@@ -57,7 +57,7 @@ public class ContestRankManager {
      * @param limit                       分页大小
      * @param keyword                     搜索关键词：匹配学校或榜单显示名称
      * @param isContainsAfterContestJudge 是否包含比赛结束后的提交
-     * @param nowtime                     比赛跳转榜单的时间
+     * @param selectedTime                比赛跳转榜单的时间
      * @desc 获取ACM比赛排行榜
      */
     public IPage<ACMContestRankVO> getContestACMRankPage(Boolean isOpenSealRank,
@@ -70,7 +70,7 @@ public class ContestRankManager {
             int limit,
             String keyword,
             Boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
 
         List<ACMContestRankVO> orderResultList = getContestACMRankList(
                 isOpenSealRank,
@@ -80,7 +80,7 @@ public class ContestRankManager {
                 externalCidList,
                 contest,
                 isContainsAfterContestJudge,
-                nowtime);
+                selectedTime);
 
         if (StrUtil.isNotBlank(keyword)) {
             String finalKeyword = keyword.trim().toLowerCase();
@@ -107,7 +107,7 @@ public class ContestRankManager {
             int limit,
             String keyword,
             Boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
 
         // 进行排序计算
         List<ACMContestRankVO> orderResultList = contestCalculateRankManager.calcSynchronousACMRank(isOpenSealRank,
@@ -117,7 +117,7 @@ public class ContestRankManager {
                 concernedList,
                 externalCidList,
                 isContainsAfterContestJudge,
-                nowtime);
+                selectedTime);
 
         if (StrUtil.isNotBlank(keyword)) {
             String finalKeyword = keyword.trim().toLowerCase();
@@ -142,7 +142,7 @@ public class ContestRankManager {
      * @param concernedList               关联比赛的id列表
      * @param contest                     比赛信息
      * @param isContainsAfterContestJudge 是否包含比赛结束后的提交
-     * @param nowtime                     比赛跳转榜单的时间
+     * @param selectedTime                比赛跳转榜单的时间
      * @desc 获取ACM比赛排行榜
      */
     public List<ACMContestRankVO> getContestACMRankList(
@@ -153,7 +153,7 @@ public class ContestRankManager {
             List<Integer> externalCidList,
             Contest contest,
             Boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
 
         // 进行排序计算
         List<ACMContestRankVO> orderResultList = contestCalculateRankManager.calcACMRank(
@@ -164,7 +164,7 @@ public class ContestRankManager {
                 concernedList,
                 externalCidList,
                 isContainsAfterContestJudge,
-                nowtime);
+                selectedTime);
 
         return orderResultList;
     }
@@ -253,10 +253,10 @@ public class ContestRankManager {
      * @param uid
      * @param username
      * @return
-     * @Description 获取用户最近一年的比赛名次变化图
+     * @Description 获取用户的比赛名次变化图
      */
     public UserContestsRankingVO getRecentYearContestsRanking(
-            List<Long> contestsPidList,
+            List<Contest> contestList,
             String uid,
             String username) throws StatusFailException {
 
@@ -272,7 +272,7 @@ public class ContestRankManager {
         UserContestsRankingVO userContestsRankingVO = new UserContestsRankingVO();
         userContestsRankingVO.setEndDate(DateUtil.format(new Date(), "yyyy-MM-dd"));
 
-        if (CollectionUtils.isEmpty(contestsPidList)) {
+        if (CollectionUtils.isEmpty(contestList)) {
             userContestsRankingVO.setDataList(new ArrayList<>());
             userContestsRankingVO.setSolvedList(new ArrayList<>());
             return userContestsRankingVO;
@@ -280,8 +280,7 @@ public class ContestRankManager {
 
         List<HashMap<String, Object>> dataList = new ArrayList<>();
         List<Long> contestPids = new ArrayList<>();
-        for (Long contestPid : contestsPidList) {
-            Contest contest = contestEntityService.getById(contestPid);
+        for (Contest contest : contestList) {
 
             List<ACMContestRankVO> orderResultList = getContestACMRankList(
                     false,
@@ -312,7 +311,7 @@ public class ContestRankManager {
                     contestPids.add(contest.getId());
                     Integer rank = orderResultList.get(0).getRank();
                     Date startTime = contest.getStartTime();
-                    String dateStr = DateUtil.format(startTime, "yyyy-MM-dd");
+                    String dateStr = DateUtil.format(startTime, "yyyy-MM-dd HH:mm");
                     HashMap<String, Object> tmp = new HashMap<>(4);
                     tmp.put("date", dateStr);
                     tmp.put("rank", rank);
@@ -370,7 +369,7 @@ public class ContestRankManager {
             int limit,
             String keyword,
             Boolean isContainsAfterContestJudge,
-            Long nowtime) {
+            Long selectedTime) {
 
         List<OIContestRankVO> orderResultList = contestCalculateRankManager.calcOIRank(isOpenSealRank,
                 removeStar,
@@ -379,7 +378,7 @@ public class ContestRankManager {
                 concernedList,
                 externalCidList,
                 isContainsAfterContestJudge,
-                nowtime);
+                selectedTime);
 
         if (StrUtil.isNotBlank(keyword)) {
             String finalKeyword = keyword.trim().toLowerCase();

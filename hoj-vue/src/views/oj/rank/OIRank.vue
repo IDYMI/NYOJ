@@ -5,18 +5,7 @@
         <div slot="header">
           <ul class="nav-list">
             <li>
-              <router-link to="/oi-rank" exact-active-class="selected">
-                <span class="panel-title-oi">{{ $t("m.OI_Ranklist") }}</span>
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/new-oi-rank" exact-active-class="selected">
-                <span class="panel-title-oi">
-                  {{
-                  $t("m.NEW_OI_Ranklist")
-                  }}
-                </span>
-              </router-link>
+              <span class="panel-title-oi">{{ $t("m.OI_Ranklist") }}</span>
             </li>
           </ul>
         </div>
@@ -27,11 +16,24 @@
       <el-card :padding="10" style="text-align: center;">
         <el-input
           :placeholder="$t('m.Rank_Search_Placeholder')"
-          v-model="searchUser"
-          @keyup.enter.native="getRankData(1)"
+          v-model="query.searchUser"
+          @keyup.enter.native="getRankData(currentPage)"
         >
-          <el-button slot="append" icon="el-icon-search" class="search-btn" @click="getRankData(1)"></el-button>
+          <el-button
+            slot="append"
+            icon="el-icon-search"
+            class="search-btn"
+            @click="getRankData(currentPage)"
+          ></el-button>
         </el-input>
+        <div class="filter-right">
+          <el-switch
+            v-model="query.new"
+            @change="handleOnlyNew"
+            :active-text="$t('m.NewAcmer')"
+            :inactive-text="$t('m.All')"
+          ></el-switch>
+        </div>
       </el-card>
       <vxe-table
         :data="dataRank"
@@ -83,19 +85,6 @@
             <span>{{ row.score }}</span>
           </template>
         </vxe-table-column>
-        <vxe-table-column :title="$t('m.AC') + '/' + $t('m.Total')" min-width="100">
-          <template v-slot="{ row }">
-            <span>
-              <a @click="goUserACStatus(row.username)" style="color:rgb(87, 163, 243);">{{ row.ac }}</a>
-              <span>/{{ row.total }}</span>
-            </span>
-          </template>
-        </vxe-table-column>
-        <vxe-table-column :title="$t('m.Rating')" min-width="80">
-          <template v-slot="{ row }">
-            <span>{{ getACRate(row.ac, row.total) }}</span>
-          </template>
-        </vxe-table-column>
         <vxe-table-column
           :title="$t('m.Signature')"
           min-width="300"
@@ -112,13 +101,12 @@
         </vxe-table-column>
       </vxe-table>
       <Pagination
-        :total="total"
         :page-size.sync="limit"
-        :current.sync="page"
+        :current.sync="currentPage"
         @on-change="getRankData"
         show-sizer
-        @on-page-size-change="getRankData(1)"
-        :layout="'prev, pager, next, sizes'"
+        @on-page-size-change="getRankData(currentPage)"
+        :layout="'jumper, prev, pager, next, sizes'"
       ></Pagination>
     </el-col>
   </el-row>
@@ -141,8 +129,6 @@ export default {
     return {
       page: 1,
       limit: 30,
-      total: 0,
-      searchUser: null,
       dataRank: [],
       loadingTable: false,
       screenWidth: 768,
@@ -191,6 +177,9 @@ export default {
                   return utils.breakLongWords(value, 14);
                 }
               },
+              textStyle: {
+                color: this.getAxisLabelColor(),
+              },
             },
             axisTick: {
               alignWithLabel: true,
@@ -204,6 +193,7 @@ export default {
               rotate: 50,
               textStyle: {
                 fontSize: "12em",
+                color: this.getAxisLabelColor(),
               },
             },
           },
@@ -220,9 +210,22 @@ export default {
           },
         ],
       },
+      query: {
+        new: false,
+        searchUser: null,
+        currentPage: 1,
+      },
     };
   },
   created() {
+    let route = this.$route.query;
+    let page = route.currentPage;
+    this.currentPage = parseInt(page) || 1;
+    if (page !== 1) {
+      this.query.currentPage = parseInt(page);
+    }
+    this.query.new = route.new === "true" || false;
+    this.query.searchUser = route.searchUser || null;
     this.screenWidth = window.screen.width;
     const that = this;
     window.onresize = () => {
@@ -232,19 +235,23 @@ export default {
     };
   },
   mounted() {
-    this.getRankData(1);
+    this.getRankData(this.currentPage);
   },
   methods: {
+    handleOnlyNew() {
+      this.getRankData(this.currentPage);
+    },
     getRankData(page) {
+      this.filterByChange(page);
       let bar = this.$refs.chart;
       bar.showLoading({ maskColor: "rgba(250, 250, 250, 0.8)" });
       this.loadingTable = true;
-      api.getUserRank(page, this.limit, RULE_TYPE.OI, this.searchUser).then(
+      const type = this.query.new ? RULE_TYPE.NewOI : RULE_TYPE.OI;
+      api.getUserRank(page, this.limit, type, this.searchUser).then(
         (res) => {
           if (page === 1) {
             this.changeCharts(res.data.data.records.slice(0, 10));
           }
-          this.total = res.data.data.total;
           this.dataRank = res.data.data.records;
           this.loadingTable = false;
           bar.hideLoading();
@@ -279,6 +286,16 @@ export default {
         query: { username, status: 0 },
       });
     },
+    filterByChange(page) {
+      let query = Object.assign({}, this.query);
+      if (page !== 1) {
+        query.currentPage = this.currentPage;
+      }
+      this.$router.push({
+        name: "OI Rank",
+        query: utils.filterEmptyValue(query),
+      });
+    },
     getACRate(ac, total) {
       return utils.getACRate(ac, total);
     },
@@ -287,9 +304,26 @@ export default {
       let index = nickname.length % 5;
       return typeArr[index];
     },
+    getAxisLabelColor() {
+      return this.webTheme === "Light" ? "black" : "white";
+    },
   },
   computed: {
-    ...mapGetters(["isAuthenticated", "userInfo"]),
+    ...mapGetters(["isAuthenticated", "userInfo", "webTheme"]),
+  },
+  watch: {
+    webTheme: {
+      handler() {
+        // 监听 webTheme 变化，并更新文字颜色
+        if (this.options.xAxis && this.options.yAxis) {
+          this.options.xAxis[0].axisLabel.textStyle.color =
+            this.getAxisLabelColor();
+          this.options.yAxis[0].axisLabel.textStyle.color =
+            this.getAxisLabelColor();
+        }
+      },
+      immediate: true,
+    },
   },
 };
 </script>
@@ -340,5 +374,9 @@ export default {
   .el-input-group {
     width: 30%;
   }
+}
+.filter-right {
+  float: right;
+  margin-top: 15px;
 }
 </style>

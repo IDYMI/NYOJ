@@ -66,7 +66,8 @@ public class ContestController {
      */
     @GetMapping("/get-contest-file")
     @RequiresAuthentication
-    public CommonResult<List<ContestFileConfigVO>> getContestFileList(@RequestParam(value = "cid", required = true) Long cid) {
+    public CommonResult<List<ContestFileConfigVO>> getContestFileList(
+            @RequestParam(value = "cid", required = true) Long cid) {
 
         return contestService.getContestFileList(cid);
     }
@@ -106,9 +107,10 @@ public class ContestController {
     @RequiresAuthentication
     public CommonResult<List<ContestProblemVO>> getContestProblem(
             @RequestParam(value = "cid", required = true) Long cid,
-            @RequestParam(value = "containsEnd", defaultValue = "false") Boolean containsEnd) {
+            @RequestParam(value = "containsEnd", defaultValue = "false") Boolean containsEnd,
+            @RequestParam(value = "time", required = false) Long time) {
 
-        return contestService.getContestProblem(cid, containsEnd);
+        return contestService.getContestProblem(cid, containsEnd, time);
     }
 
     /**
@@ -120,9 +122,10 @@ public class ContestController {
     @RequiresAuthentication
     public CommonResult<List<ContestProblemVO>> getSynchronousProblem(
             @RequestParam(value = "cid", required = true) Long cid,
-            @RequestParam(value = "containsEnd", defaultValue = "false") Boolean containsEnd) {
+            @RequestParam(value = "containsEnd", defaultValue = "false") Boolean containsEnd,
+            @RequestParam(value = "time", required = false) Long time) {
 
-        return contestService.getSynchronousProblem(cid, containsEnd);
+        return contestService.getSynchronousProblem(cid, containsEnd, time);
     }
 
     @GetMapping("/get-contest-problem-details")
@@ -236,8 +239,7 @@ public class ContestController {
             @RequestParam(value = "cid", required = true) Long cid,
             @RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "currentPage", required = false) Integer currentPage,
-            @RequestParam(value = "id", required = false) Long id
-            ) {
+            @RequestParam(value = "id", required = false) Long id) {
 
         return contestService.getContestAnnouncement(cid, limit, currentPage, id);
     }

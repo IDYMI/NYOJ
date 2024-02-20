@@ -10,9 +10,7 @@ import ContestList from "@/views/oj/contest/ContestList.vue"
 import Problem from "@/views/oj/problem/Problem.vue"
 import ACMRank from "@/views/oj/rank/ACMRank.vue"
 import OIRank from "@/views/oj/rank/OIRank.vue"
-import NEWACMRank from "@/views/oj/rank/NEWACMRank.vue"
 import ACMStaticRank from "@/views/oj/rank/ACMContestStatistic.vue"
-import NEWOIRank from "@/views/oj/rank/NEWOIRank.vue"
 import ContestDetails from "@/views/oj/contest/ContestDetails.vue"
 import ACMScoreBoard from "@/views/oj/contest/outside/ACMScoreBoard.vue"
 import OIScoreBoard from "@/views/oj/contest/outside/OIScoreBoard.vue"
@@ -357,27 +355,11 @@ const ojRoutes = [{
     }
   },
   {
-    path: '/new-acm-rank',
-    name: 'ACM Rank',
-    component: NEWACMRank,
-    meta: {
-      title: 'New ACM Rank'
-    }
-  },
-  {
     path: '/acm-rank-static/:cids',
     name: 'ACM Static Rank',
     component: ACMStaticRank,
     meta: {
       title: 'ACM Static Rank'
-    }
-  },
-  {
-    path: '/new-oi-rank',
-    name: 'OI Rank',
-    component: NEWOIRank,
-    meta: {
-      title: 'New OI Rank'
     }
   },
 

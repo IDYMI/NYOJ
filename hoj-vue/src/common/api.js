@@ -606,20 +606,22 @@ const ojApi = {
     })
   },
   // 获取比赛题目列表
-  getContestProblemList(cid, containsEnd = false) {
+  getContestProblemList(cid, containsEnd = false, time = null) {
     return ajax('/api/get-contest-problem', 'get', {
       params: {
         cid,
-        containsEnd
+        containsEnd,
+        time
       }
     })
   },
   // 获取同步赛题目列表
-  getSynchronousProblemList(cid, containsEnd = false) {
+  getSynchronousProblemList(cid, containsEnd = false, time = null) {
     return ajax('/api/get-synchronous-problem', 'get', {
       params: {
         cid,
-        containsEnd
+        containsEnd,
+        time
       }
     })
   },

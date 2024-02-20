@@ -644,7 +644,6 @@ import {
 import myMessage from "@/common/message";
 import storage from "@/common/storage";
 import Markdown from "@/components/oj/common/Markdown";
-import ClickRank from "@/views/oj/contest/ClickRank";
 import { SIGN_TYPE_REVERSE } from "@/common/constants";
 const Announcement = () => import("@/views/oj/about/Switch_Announcement.vue");
 
@@ -873,11 +872,9 @@ export default {
     },
     formatTooltip(val) {
       if (this.percentage !== -1) {
-        const nowTime = this.contest.duration * this.percentage;
-
-        // 查询对应的榜单
-        ClickRank.$emit("clickGetContestRank", 1, false, parseInt(nowTime));
-        return time.secondFormat(nowTime); // 格式化时间
+        const selectedTime = this.contest.duration * this.percentage;
+        this.selectedTime = parseInt(selectedTime);
+        return time.secondFormat(selectedTime); // 格式化时间
       } else {
         if (this.contest.status == -1) {
           // 还未开始
@@ -1074,6 +1071,16 @@ export default {
       },
       set(value) {
         this.$store.commit("changeContainsAfterContestJudge", { value: value });
+      },
+    },
+    selectedTime: {
+      get() {
+        return this.$store.state.contest.selectedTime;
+      },
+      set(value) {
+        this.$store.commit("changeSelectedTime", {
+          value: value,
+        });
       },
     },
   },

@@ -14,6 +14,9 @@
                 </foreach>
             </if>
             AND submit_time >= #{startTime}
+            <if test="selectedTime!=null">
+                AND #{selectedTime} >= submit_time
+            </if>
             <choose>
                 <when test="isAdmin">
                     <if test="isHideContestEndJudge">
@@ -42,6 +45,9 @@
                 </foreach>
             </if>
             AND submit_time >= #{startTime}
+            <if test="selectedTime!=null">
+                AND #{selectedTime} >= submit_time
+            </if>
             <choose>
                 <when test="isAdmin">
                     <if test="isHideContestEndJudge">

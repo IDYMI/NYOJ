@@ -62,11 +62,21 @@ export default {
             type: "category",
             boundaryGap: false,
             data: [],
+            axisLabel: {
+              textStyle: {
+                color: this.getAxisLabelColor(),
+              },
+            },
           },
         ],
         yAxis: [
           {
             type: "value",
+            axisLabel: {
+              textStyle: {
+                color: this.getAxisLabelColor(),
+              },
+            },
           },
         ],
         series: [
@@ -118,9 +128,12 @@ export default {
         }
       );
     },
+    getAxisLabelColor() {
+      return this.webTheme === "Light" ? "black" : "white";
+    },
   },
   computed: {
-    ...mapGetters(["isMainAdminRole", "webLanguage"]),
+    ...mapGetters(["isMainAdminRole", "webLanguage", "webTheme"]),
   },
   watch: {
     webLanguage(newVal, oldVal) {
@@ -132,6 +145,18 @@ export default {
         this.options.series[0].name = this.$i18n.t("m.AC");
         this.options.series[1].name = this.$i18n.t("m.Total");
       }
+    },
+    webTheme: {
+      handler() {
+        if (this.options.xAxis && this.options.yAxis) {
+          this.options.xAxis[0].axisLabel.textStyle.color =
+            this.getAxisLabelColor();
+          this.options.yAxis[0].axisLabel.textStyle.color =
+            this.getAxisLabelColor();
+        }
+      },
+
+      immediate: true,
     },
   },
 };

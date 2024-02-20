@@ -20,7 +20,7 @@ export const m = {
   NavBar_Contest: '比赛',
   NavBar_Status: '评测',
   NavBar_Rank: '排名',
-  NEWNavBar_Rank: '新生排名',
+
   NavBar_ACM_Rank: 'ACM 排名',
   NavBar_OI_Rank: 'OI 排名',
   NavBar_Discussion: '讨论',
@@ -196,7 +196,7 @@ export const m = {
   UserHome_Rating: 'CF分数',
   List_Solved_Problems: '全部已解决问题列表',
   List_Participated_Contests: '全部已参加比赛',
-  UserHome_Not_Data: '这家伙太懒了，还没有做过题...',
+  UserHome_Not_Data: '这家伙太懒了，还没有做过题目...',
   UserHome_Not_Contest: '这家伙太懒了，还没有参加过比赛...',
   Personal_Profile: '个人简介',
   UserHome_Solved_Problems: '做题情况',
@@ -387,7 +387,7 @@ export const m = {
   Subtask: '子任务',
 
   // /views/oj/rank/ACMRank.vue
-  NEW_ACM_Ranklist: '新生 ACM 排行榜',
+  NewAcmer: '新生',
   ACM_Ranklist: 'ACM 排行榜',
   ACM_StatisticRank: 'ACM 系列比赛排行榜',
   User: '用户',

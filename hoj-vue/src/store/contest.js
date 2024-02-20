@@ -13,6 +13,7 @@ const state = {
   removeStar: false, // 榜单去除打星队伍
   concernedList: [], // 关注队伍
   isContainsAfterContestJudge: false, // 是否包含比赛结束后的提交
+  selectedTime: null, // 选择的时间点
   contest: {
     auth: CONTEST_TYPE.PUBLIC,
     openPrint: false,
@@ -45,6 +46,9 @@ const getters = {
   },
   isContainsAfterContestJudge: (state, getters) => {
     return state.isContainsAfterContestJudge;
+  },
+  selectedTime: (state, getters) => {
+    return state.selectedTime;
   },
   canSubmit: (state, getters) => {
     return state.intoAccess || state.submitAccess || state.contest.auth === CONTEST_TYPE.PUBLIC || state.contest.auth === CONTEST_TYPE.PUBLIC_SYNCHRONOUS || getters.isContestAdmin
@@ -188,6 +192,9 @@ const mutations = {
   changeContainsAfterContestJudge(state, payload) {
     state.isContainsAfterContestJudge = payload.value
   },
+  changeSelectedTime(state, payload) {
+    state.selectedTime = payload.value
+  },
   changeConcernedList(state, payload) {
     state.concernedList = payload.value
   },
@@ -225,6 +232,7 @@ const mutations = {
     state.removeStar = false
     state.groupContestAuth = 0
     state.isContainsAfterContestJudge = false
+    state.selectedTime = null
   },
   now(state, payload) {
     state.now = payload.now
@@ -313,7 +321,7 @@ const actions = {
           contest.auth === CONTEST_TYPE.PUBLIC_SYNCHRONOUS || contest.auth === CONTEST_TYPE.PRIVATE_SYNCHRONOUS ?
           "getSynchronousProblemList" :
           "getContestProblemList";
-        api[func](rootState.route.params.contestID, rootState.contest.isContainsAfterContestJudge).then(res => {
+        api[func](rootState.route.params.contestID, rootState.contest.isContainsAfterContestJudge, rootState.contest.selectedTime).then(res => {
           resolve(res)
           commit('changeContestProblems', {
             contestProblems: res.data.data

@@ -10,44 +10,87 @@ import {
 } from '@/common/constants'
 import storage from '@/common/storage';
 export default {
+  data() {
+    return {
+      isGetStatusOk: false,
+    };
+  },
   methods: {
     initConcernedList() {
       let key = buildContestRankConcernedKey(this.$route.params.contestID);
       this.concernedList = storage.get(key) || [];
     },
-    getContestRankData(page = 1, refresh = false, nowTime = null) {
-      if (this.showChart && !refresh) {
-        this.$refs.chart.showLoading({
-          maskColor: 'rgba(250, 250, 250, 0.8)'
+    getContestRankData(page = 1, refresh = false) {
+      if(this.$refs.chart)
+      {
+        if (this.showChart && !refresh) {
+          this.$refs.chart.showLoading({
+            maskColor: 'rgba(250, 250, 250, 0.8)'
+          })
+        }
+        let data = {
+          currentPage: page,
+          limit: this.limit,
+          cid: this.$route.params.contestID,
+          forceRefresh: this.forceUpdate ? true : false,
+          removeStar: !this.showStarUser,
+          concernedList: this.concernedList,
+          keyword: this.keyword == null ? null : this.keyword.trim(),
+          containsEnd: this.isContainsAfterContestJudge,
+          time: this.selectedTime
+        }
+        let func = this.contestAuth ?
+          "getSynchronousRank" :
+          "getContestRank";
+        this.loadingTable = true;
+
+        api[func](data).then(res => {
+          if (this.showChart && !refresh) {
+            this.$refs.chart.hideLoading()
+          }
+          this.total = res.data.data.total
+          if (page === 1) {
+            this.applyToChart(res.data.data.records)
+          }
+          this.applyToTable(res.data.data.records)
         })
       }
-      let data = {
-        currentPage: page,
-        limit: this.limit,
-        cid: this.$route.params.contestID,
-        forceRefresh: this.forceUpdate ? true : false,
-        removeStar: !this.showStarUser,
-        concernedList: this.concernedList,
-        keyword: this.keyword == null ? null : this.keyword.trim(),
-        containsEnd: this.isContainsAfterContestJudge,
-        time: nowTime
-      }
-      let func = this.contestAuth ?
-        "getSynchronousRank" :
-        "getContestRank";
-      this.loadingTable = true;
-
-      api[func](data).then(res => {
-        if (this.showChart && !refresh) {
-          this.$refs.chart.hideLoading()
+    },
+    getContestProblems() {
+      this.$store.dispatch("getContestProblems").then((res) => {
+        if (this.isAuthenticated) {
+          let isContestProblemList = true;
+          // 如果已登录，则需要查询对当前页面题目列表中各个题目的提交情况
+          let pidList = [];
+          if (this.contestProblems && this.contestProblems.length > 0) {
+            this.$store.commit("changeContestProblems", {
+              contestProblems: this.contestProblems,
+            });
+            for (let index = 0; index < this.contestProblems.length; index++) {
+              pidList.push(this.contestProblems[index].pid);
+            }
+            this.isGetStatusOk = false;
+            api
+              .getUserProblemStatus(
+                pidList,
+                isContestProblemList,
+                this.$route.params.contestID,
+                null,
+                this.isContainsAfterContestJudge
+              )
+              .then((res) => {
+                let result = res.data.data;
+                for (let index = 0; index < this.contestProblems.length; index++) {
+                  this.contestProblems[index]["myStatus"] =
+                    result[this.contestProblems[index].pid]["status"];
+                  this.contestProblems[index]["score"] =
+                    result[this.contestProblems[index].pid]["score"];
+                }
+                this.isGetStatusOk = true;
+              });
+          }
         }
-        this.total = res.data.data.total
-        if (page === 1) {
-          this.applyToChart(res.data.data.records)
-        }
-        this.applyToTable(res.data.data.records)
-      })
-
+      });
     },
     handleAutoRefresh(status) {
       if (status == true) {
@@ -81,7 +124,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isContestAdmin', 'userInfo', "isContainsAfterContestJudge"]),
+    ...mapGetters(['isContestAdmin', 'userInfo', "isContainsAfterContestJudge", "selectedTime"]),
     ...mapState({
       'contest': state => state.contest.contest,
       'contestProblems': state => state.contest.contestProblems

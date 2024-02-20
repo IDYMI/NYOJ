@@ -39,6 +39,7 @@ import top.hcode.hoj.utils.RedisUtils;
 import top.hcode.hoj.validator.ContestValidator;
 import top.hcode.hoj.validator.GroupValidator;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -267,7 +268,7 @@ public class ContestManager {
         return accessVo;
     }
 
-    public List<ContestProblemVO> getContestProblem(Long cid, Boolean isContainsContestEndJudge)
+    public List<ContestProblemVO> getContestProblem(Long cid, Boolean isContainsContestEndJudge, Long time)
             throws StatusFailException, StatusForbiddenException {
 
         // 获取当前登录的用户
@@ -298,6 +299,12 @@ public class ContestManager {
 
         isContainsContestEndJudge = Objects.equals(contest.getAllowEndSubmit(), true) && isContainsContestEndJudge;
 
+        Date selectedTime = null;
+        if (!isContainsContestEndJudge) { // 不包含赛后提交
+            // 将Long time 转化为 Date time
+            selectedTime = addSeconds(contest.getStartTime(), time);
+        }
+
         // 如果比赛开启封榜
         if (contestValidator.isSealRank(userRolesVo.getUid(), contest, true, isRoot)) {
             contestProblemList = contestProblemEntityService.getContestProblemList(cid,
@@ -307,7 +314,8 @@ public class ContestManager {
                     isAdmin,
                     contest.getAuthor(),
                     groupRootUidList,
-                    isContainsContestEndJudge);
+                    isContainsContestEndJudge,
+                    selectedTime);
         } else {
             contestProblemList = contestProblemEntityService.getContestProblemList(cid,
                     contest.getStartTime(),
@@ -316,19 +324,20 @@ public class ContestManager {
                     isAdmin,
                     contest.getAuthor(),
                     groupRootUidList,
-                    isContainsContestEndJudge);
+                    isContainsContestEndJudge,
+                    selectedTime);
         }
         return contestProblemList;
     }
 
-    public List<ContestProblemVO> getSynchronousProblem(Long cid, Boolean isContainsContestEndJudge)
+    public List<ContestProblemVO> getSynchronousProblem(Long cid, Boolean isContainsContestEndJudge, Long time)
             throws StatusFailException, StatusForbiddenException {
 
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
         // 同步赛数据
-        List<ContestProblemVO> contestProblemList = getContestProblem(cid, isContainsContestEndJudge);
+        List<ContestProblemVO> contestProblemList = getContestProblem(cid, isContainsContestEndJudge, null);
 
         // 是否开启同步赛
         if (contest.getAuth() == 4 || contest.getAuth() == 5) {
@@ -741,7 +750,6 @@ public class ContestManager {
         Integer limit = contestRankDto.getLimit();
         Boolean removeStar = contestRankDto.getRemoveStar();
         Boolean forceRefresh = contestRankDto.getForceRefresh();
-        Long nowtime = contestRankDto.getTime();
 
         if (cid == null) {
             throw new StatusFailException("错误：cid不能为空");
@@ -778,6 +786,11 @@ public class ContestManager {
         boolean isContainsAfterContestJudge = Objects.equals(contest.getAllowEndSubmit(), true)
                 && Objects.equals(contestRankDto.getContainsEnd(), true);
 
+        Long selectedTime = null;
+        if (!contestRankDto.getContainsEnd()) {
+            selectedTime = contestRankDto.getTime();
+        }
+
         IPage resultList;
         if (contest.getType().intValue() == Constants.Contest.TYPE_ACM.getCode()) {
             // ACM比赛
@@ -792,7 +805,7 @@ public class ContestManager {
                     limit,
                     contestRankDto.getKeyword(),
                     isContainsAfterContestJudge,
-                    nowtime);
+                    selectedTime);
 
         } else {
             // OI比赛
@@ -806,7 +819,7 @@ public class ContestManager {
                     limit,
                     contestRankDto.getKeyword(),
                     isContainsAfterContestJudge,
-                    nowtime);
+                    selectedTime);
         }
         return resultList;
     }
@@ -819,7 +832,7 @@ public class ContestManager {
         Integer limit = contestRankDto.getLimit();
         Boolean removeStar = contestRankDto.getRemoveStar();
         Boolean forceRefresh = contestRankDto.getForceRefresh();
-        Long nowtime = contestRankDto.getTime();
+        Long selectedTime = contestRankDto.getTime();
 
         if (cid == null) {
             throw new StatusFailException("错误：cid不能为空");
@@ -869,7 +882,7 @@ public class ContestManager {
                     limit,
                     contestRankDto.getKeyword(),
                     isContainsAfterContestJudge,
-                    nowtime);
+                    selectedTime);
 
         }
 
@@ -964,4 +977,12 @@ public class ContestManager {
 
     }
 
+    private static Date addSeconds(Date date, Long seconds) {
+        if (seconds != null) {
+            Instant instant = date.toInstant().plusSeconds(seconds);
+            return Date.from(instant);
+        } else {
+            return null;
+        }
+    }
 }

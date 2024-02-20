@@ -123,9 +123,11 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import { JUDGE_STATUS, RULE_TYPE } from "@/common/constants";
+import ContestRankMixin from "./contestRankMixin";
 import api from "@/common/api";
 export default {
   name: "ContestProblemList",
+  mixins: [ContestRankMixin],
   data() {
     return {
       JUDGE_STATUS: {},
@@ -140,39 +142,6 @@ export default {
     this.getContestProblems();
   },
   methods: {
-    getContestProblems() {
-      this.$store.dispatch("getContestProblems").then((res) => {
-        if (this.isAuthenticated) {
-          let isContestProblemList = true;
-          // 如果已登录，则需要查询对当前页面题目列表中各个题目的提交情况
-          let pidList = [];
-          if (this.problems && this.problems.length > 0) {
-            for (let index = 0; index < this.problems.length; index++) {
-              pidList.push(this.problems[index].pid);
-            }
-            this.isGetStatusOk = false;
-            api
-              .getUserProblemStatus(
-                pidList,
-                isContestProblemList,
-                this.$route.params.contestID,
-                null,
-                this.isContainsAfterContestJudge
-              )
-              .then((res) => {
-                let result = res.data.data;
-                for (let index = 0; index < this.problems.length; index++) {
-                  this.problems[index]["myStatus"] =
-                    result[this.problems[index].pid]["status"];
-                  this.problems[index]["score"] =
-                    result[this.problems[index].pid]["score"];
-                }
-                this.isGetStatusOk = true;
-              });
-          }
-        }
-      });
-    },
     goContestProblem(event) {
       this.$router.push({
         name: "ContestProblemDetails",
@@ -212,11 +181,17 @@ export default {
       "contestRuleType",
       "ContestRealTimePermission",
       "isContainsAfterContestJudge",
+      "selectedTime",
     ]),
   },
   watch: {
     isContainsAfterContestJudge() {
       this.getContestProblems();
+      this.getContestRankData(1);
+    },
+    selectedTime() {
+      this.getContestProblems();
+      this.getContestRankData(1);
     },
   },
 };

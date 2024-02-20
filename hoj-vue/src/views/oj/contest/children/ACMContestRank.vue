@@ -248,7 +248,7 @@
         </vxe-table-column>
         <vxe-table-column
           min-width="74"
-          v-for="problem in contestProblems"
+          v-for="(problem, index) in contestProblems"
           :key="problem.displayId"
           :field="problem.displayId"
         >
@@ -284,11 +284,11 @@
                 <div slot="content">
                   {{ problem.displayId + ". " + problem.displayTitle }}
                   <br />
-                  {{ "Accepted: " + problem.ac }}
+                  {{ "Accepted: " + getAc(index) }}
                   <br />
-                  {{ "Rejected: " + (problem.total - problem.ac) }}
+                  {{ "Rejected: " + (getTotal(index) - getAc(index)) }}
                 </div>
-                <span>({{ problem.ac }}/{{ problem.total }})</span>
+                <span>({{ getAc(index) }}/{{ getTotal(index) }})</span>
               </el-tooltip>
             </span>
           </template>
@@ -353,13 +353,12 @@
 <script>
 import Avatar from "vue-avatar";
 import moment from "moment";
-import { mapActions } from "vuex";
 const Pagination = () => import("@/components/oj/common/Pagination");
 const RankBox = () => import("@/components/oj/common/RankBox");
 import time from "@/common/time";
 import utils from "@/common/utils";
 import ContestRankMixin from "./contestRankMixin";
-import ClickRank from "@/views/oj/contest/ClickRank";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   name: "ACMContestRank",
@@ -438,6 +437,11 @@ export default {
               show: true,
               snap: true,
             },
+            axisLabel: {
+              textStyle: {
+                color: this.getAxisLabelColor(),
+              },
+            },
           },
         ],
         yAxis: [
@@ -445,30 +449,19 @@ export default {
             type: "category",
             boundaryGap: false,
             data: [0],
+            axisLabel: {
+              textStyle: {
+                color: this.getAxisLabelColor(),
+              },
+            },
           },
         ],
         series: [],
       },
-      synchronousRank: false,
-      synchronousInfo: [
-        {
-          school: "SCPC",
-          link: "",
-          authorization: "",
-        },
-        {
-          school: "NYOJ",
-          link: "",
-          authorization: "",
-        },
-      ],
-      selectAll: true,
     };
   },
   created() {
     this.initConcernedList();
-    // 开始对clickGetContestRank事件的监听
-    ClickRank.$on("clickGetContestRank", this.clickGetContestRankData);
   },
   mounted() {
     this.contestID = this.$route.params.contestID;
@@ -480,14 +473,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getContestProblems"]),
-    clickGetContestRankData(page, refresh, nowTime) {
-      // 停止自动更新
-      this.autoRefresh = false;
-      this.handleAutoRefresh(false);
-      // 查询对应的榜单
-      this.getContestRankData(page, refresh, nowTime);
-    },
     getUserACSubmit(username) {
       this.$router.push({
         name: "ContestSubmissionList",
@@ -676,6 +661,15 @@ export default {
         }`
       );
     },
+    getAxisLabelColor() {
+      return this.webTheme === "Light" ? "black" : "white";
+    },
+    getAc(index) {
+      return this.contestProblems[index]["ac"];
+    },
+    getTotal(index) {
+      return this.contestProblems[index]["total"];
+    },
   },
   watch: {
     contestProblems(newVal, OldVal) {
@@ -684,20 +678,36 @@ export default {
       }
     },
     isContainsAfterContestJudge(newVal, OldVal) {
+      this.getContestProblems();
       this.getContestRankData(this.page);
+    },
+    selectedTime(newVal, OldVal) {
+      this.getContestProblems();
+      this.getContestRankData(this.page);
+    },
+    webTheme: {
+      handler() {
+        if (this.options.xAxis && this.options.yAxis) {
+          this.options.xAxis[0].axisLabel.textStyle.color =
+            this.getAxisLabelColor();
+          this.options.yAxis[0].axisLabel.textStyle.color =
+            this.getAxisLabelColor();
+        }
+      },
+      immediate: true,
     },
   },
   computed: {
+    ...mapState({
+      contestProblems: (state) => state.contest.contestProblems,
+    }),
+    ...mapGetters(["webTheme", "isContainsAfterContestJudge", "selectedTime"]),
     contest() {
       return this.$store.state.contest.contest;
     },
     isMobileView() {
       return window.screen.width < 768;
     },
-  },
-  beforeDestroy() {
-    // 取消对clickGetContestRank事件的监听，以避免内存泄漏
-    ClickRank.$off("clickGetContestRank", this.executeFunction);
   },
 };
 </script>

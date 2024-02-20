@@ -21,7 +21,6 @@ export const m = {
   NavBar_Contest: 'Contest',
   NavBar_Status: 'Status',
   NavBar_Rank: 'Rank',
-  NEWNavBar_Rank: 'New Rank',
 
   NavBar_ACM_Rank: 'ACM Rank',
   NavBar_OI_Rank: 'OI Rank',
@@ -386,7 +385,7 @@ export const m = {
   Subtask: 'Subtask',
 
   // /views/oj/rank/ACMRank.vue
-  NEW_ACM_Ranklist: 'NEW ACM Ranklist',
+  NewAcmer: 'New',
   ACM_StatisticRank: 'ACM Rank Statistic Ranlist',
   ACM_Ranklist: 'ACM Ranklist',
   User: 'User',

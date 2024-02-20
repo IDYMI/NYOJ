@@ -5,18 +5,7 @@
         <div slot="header">
           <ul class="nav-list">
             <li>
-              <router-link to="/acm-rank" exact-active-class="selected">
-                <span class="panel-title-acm">{{ $t("m.ACM_Ranklist") }}</span>
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/new-acm-rank" exact-active-class="selected">
-                <span class="panel-title-acm">
-                  {{
-                  $t("m.NEW_ACM_Ranklist")
-                  }}
-                </span>
-              </router-link>
+              <span class="panel-title-acm">{{ $t("m.ACM_Ranklist") }}</span>
             </li>
           </ul>
         </div>
@@ -27,11 +16,24 @@
       <el-card :padding="10" style="text-align: center">
         <el-input
           :placeholder="$t('m.Rank_Search_Placeholder')"
-          v-model="searchUser"
-          @keyup.enter.native="getRankData(1)"
+          v-model="query.searchUser"
+          @keyup.enter.native="getRankData()"
         >
-          <el-button slot="append" icon="el-icon-search" class="search-btn" @click="getRankData(1)"></el-button>
+          <el-button
+            slot="append"
+            icon="el-icon-search"
+            class="search-btn"
+            @click="getRankData(currentPage)"
+          ></el-button>
         </el-input>
+        <div class="filter-right">
+          <el-switch
+            v-model="query.new"
+            @change="handleOnlyNew"
+            :active-text="$t('m.NewAcmer')"
+            :inactive-text="$t('m.All')"
+          ></el-switch>
+        </div>
       </el-card>
       <vxe-table
         :data="dataRank"
@@ -109,13 +111,12 @@
       </vxe-table>
 
       <Pagination
-        :total="total"
         :page-size.sync="limit"
-        :current.sync="page"
+        :current.sync="currentPage"
         @on-change="getRankData"
         show-sizer
-        @on-page-size-change="getRankData(1)"
-        :layout="'prev, pager, next, sizes'"
+        @on-page-size-change="getRankData(currentPage)"
+        :layout="'jumper, prev, pager, next, sizes'"
       ></Pagination>
     </el-col>
   </el-row>
@@ -136,10 +137,8 @@ export default {
   },
   data() {
     return {
-      page: 1,
+      currentPage: 1,
       limit: 30,
-      total: 0,
-      searchUser: null,
       loadingTable: false,
       screenWidth: 768,
       dataRank: [],
@@ -187,6 +186,9 @@ export default {
                   return utils.breakLongWords(value, 14);
                 }
               },
+              textStyle: {
+                color: this.getAxisLabelColor(),
+              },
             },
           },
         ],
@@ -197,6 +199,7 @@ export default {
               rotate: 50,
               textStyle: {
                 fontSize: "12em",
+                color: this.getAxisLabelColor(),
               },
             },
           },
@@ -226,9 +229,22 @@ export default {
           },
         ],
       },
+      query: {
+        new: false,
+        searchUser: null,
+        currentPage: 1,
+      },
     };
   },
   created() {
+    let route = this.$route.query;
+    let page = route.currentPage;
+    this.currentPage = parseInt(page) || 1;
+    if (page !== 1) {
+      this.query.currentPage = parseInt(page);
+    }
+    this.query.new = route.new === "true" || false;
+    this.query.searchUser = route.searchUser || null;
     this.screenWidth = window.screen.width;
     const that = this;
     window.onresize = () => {
@@ -238,21 +254,25 @@ export default {
     };
   },
   mounted() {
-    this.getRankData(1);
+    this.getRankData(this.currentPage);
   },
   methods: {
+    handleOnlyNew() {
+      this.getRankData(this.currentPage);
+    },
     getRankData(page) {
+      this.filterByChange(page);
       let bar = this.$refs.chart;
       bar.showLoading({ maskColor: "rgba(250, 250, 250, 0.8)" });
       this.loadingTable = true;
+      const type = this.query.new ? RULE_TYPE.NewACM : RULE_TYPE.ACM;
       api
-        .getUserRank(page, this.limit, RULE_TYPE.ACM, this.searchUser)
+        .getUserRank(page, this.limit, type, this.query.searchUser)
         .then((res) => {
           this.loadingTable = false;
           if (page === 1) {
             this.changeCharts(res.data.data.records.slice(0, 10));
           }
-          this.total = res.data.data.total;
           this.dataRank = res.data.data.records;
           bar.hideLoading();
         })
@@ -262,7 +282,7 @@ export default {
         });
     },
     seqMethod({ rowIndex }) {
-      return this.limit * (this.page - 1) + rowIndex + 1;
+      return this.limit * (this.currentPage - 1) + rowIndex + 1;
     },
     changeCharts(rankData) {
       let [usernames, acData, totalData] = [[], [], []];
@@ -295,9 +315,33 @@ export default {
       let index = nickname.length % 5;
       return typeArr[index];
     },
+    filterByChange(page) {
+      let query = Object.assign({}, this.query);
+      if (page !== 1) {
+        query.currentPage = this.currentPage;
+      }
+      this.$router.push({
+        name: "ACM Rank",
+        query: utils.filterEmptyValue(query),
+      });
+    },
+    getAxisLabelColor() {
+      return this.webTheme === "Light" ? "black" : "white";
+    },
   },
   computed: {
-    ...mapGetters(["isAuthenticated", "userInfo"]),
+    ...mapGetters(["isAuthenticated", "userInfo", "webTheme"]),
+  },
+  watch: {
+    webTheme: {
+      handler() {
+        this.options.xAxis[0].axisLabel.textStyle.color =
+          this.getAxisLabelColor();
+        this.options.yAxis[0].axisLabel.textStyle.color =
+          this.getAxisLabelColor();
+      },
+      immediate: true,
+    },
   },
 };
 </script>
@@ -363,5 +407,9 @@ export default {
   color: #fff !important;
   background-color: #409eff !important;
   border-color: #409eff !important;
+}
+.filter-right {
+  float: right;
+  margin-top: 15px;
 }
 </style>
