@@ -87,7 +87,7 @@ public class ProblemManager {
      * @Since 2020/10/27
      */
     public Page<ProblemVO> getProblemList(Integer limit, Integer currentPage,
-            String keyword, List<Long> tagId, Integer difficulty, String oj) {
+            String keyword, List<Long> tagId, Integer difficulty, Integer type, String oj) {
         // 页数，每页题数若为空，设置默认值
         if (currentPage == null || currentPage < 1)
             currentPage = 1;
@@ -102,7 +102,7 @@ public class ProblemManager {
             oj = "Mine";
         }
         return problemEntityService.getProblemList(limit, currentPage, null, keyword,
-                difficulty, tagId, oj);
+                difficulty, type, tagId, oj);
     }
 
     /**

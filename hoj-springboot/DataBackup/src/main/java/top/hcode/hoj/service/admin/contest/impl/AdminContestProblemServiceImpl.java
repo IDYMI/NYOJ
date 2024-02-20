@@ -30,9 +30,9 @@ public class AdminContestProblemServiceImpl implements AdminContestProblemServic
 
     @Override
     public CommonResult<HashMap<String, Object>> getProblemList(Integer limit, Integer currentPage, String keyword,
-            Long cid, Integer problemType, String oj) {
+            Long cid, Integer problemType, String oj, Integer difficulty, Integer type) {
         HashMap<String, Object> problemList = adminContestProblemManager.getProblemList(limit, currentPage, keyword,
-                cid, problemType, oj);
+                cid, problemType, oj, difficulty, type);
         return CommonResult.successResponse(problemList);
     }
 

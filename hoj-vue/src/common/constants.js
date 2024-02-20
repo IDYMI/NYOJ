@@ -161,6 +161,23 @@ export const PROBLEM_LEVEL = {
   }
 }
 
+export const PROBLEM_TYPE = {
+  '0': {
+    name: {
+      'zh-CN': 'ACM',
+      'en-US': 'ACM',
+    },
+    color: '#19be6b'
+  },
+  '1': {
+    name: {
+      'zh-CN': 'OI',
+      'en-US': 'OI',
+    },
+    color: '#2d8cf0'
+  },
+}
+
 
 export const REMOTE_OJ = [{
     name: 'HDU',

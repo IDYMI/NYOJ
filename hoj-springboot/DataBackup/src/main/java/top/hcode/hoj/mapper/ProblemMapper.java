@@ -25,6 +25,7 @@ public interface ProblemMapper extends BaseMapper<Problem> {
             @Param("pid") Long pid,
             @Param("keyword") String keyword,
             @Param("difficulty") Integer difficulty,
+            @Param("type") Integer type,
             @Param("tid") List<Long> tid,
             @Param("tagListSize") Integer tagListSize,
             @Param("oj") String oj);

@@ -44,9 +44,10 @@ public class ProblemController {
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "tagId", required = false) List<Long> tagId,
             @RequestParam(value = "difficulty", required = false) Integer difficulty,
+            @RequestParam(value = "type", required = false) Integer type,
             @RequestParam(value = "oj", required = false) String oj) {
 
-        return problemService.getProblemList(limit, currentPage, keyword, tagId, difficulty, oj);
+        return problemService.getProblemList(limit, currentPage, keyword, tagId, difficulty, type, oj);
     }
 
     /**

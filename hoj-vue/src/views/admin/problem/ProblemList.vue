@@ -62,7 +62,7 @@
             </el-select>
           </span>
 
-          <span v-if="!query.contestId">
+          <span>
             <el-select
               v-model="query.problemListAuth"
               @change="ProblemListChangeFilter"
@@ -73,6 +73,36 @@
               <el-option :label="$t('m.Public_Problem')" :value="1"></el-option>
               <el-option :label="$t('m.Private_Problem')" :value="2"></el-option>
               <el-option :label="$t('m.Contest_Problem')" :value="3"></el-option>
+            </el-select>
+          </span>
+
+          <span>
+            <el-select
+              v-model="query.type"
+              @change="ProblemListChangeFilter"
+              size="small"
+              style="width: 180px"
+            >
+              <el-option :label="$t('m.All_Problem')" :value="'All'"></el-option>
+              <el-option :label="'ACM'" :value="'0'"></el-option>
+              <el-option :label="'OI'" :value="'1'"></el-option>
+            </el-select>
+          </span>
+
+          <span>
+            <el-select
+              v-model="query.difficulty"
+              @change="ProblemListChangeFilter"
+              size="small"
+              style="width: 180px"
+            >
+              <el-option :label="$t('m.All_Problem')" :value="'All'"></el-option>
+              <el-option
+                :label="getLevelName(key)"
+                :value="key"
+                v-for="(value, key, index) in PROBLEM_LEVEL"
+                :key="index"
+              ></el-option>
             </el-select>
           </span>
         </div>
@@ -165,7 +195,18 @@
             </el-select>
           </template>
         </vxe-table-column>
-        <vxe-table-column title="Option" min-width="200">
+        <vxe-table-column min-width="60" :title="$t('m.Type')">
+          <template v-slot="{ row }">
+            <el-tag effect="dark" color="#19be6b" v-if="row.type == 0">{{ 'ACM' }}</el-tag>
+            <el-tag effect="dark" color="#409eff" v-if="row.type == 1">{{ 'OI' }}</el-tag>
+          </template>
+        </vxe-table-column>
+        <vxe-table-column min-width="50" :title="$t('m.Level')">
+          <template v-slot="{ row }">
+            <span>{{getLevelName(row.difficulty)}}</span>
+          </template>
+        </vxe-table-column>
+        <vxe-table-column :title="$t('m.Option')" min-width="200">
           <template v-slot="{ row }">
             <el-tooltip
               effect="dark"
@@ -298,7 +339,7 @@ import api from "@/common/api";
 import utils from "@/common/utils";
 import AddPublicProblem from "@/components/admin/AddPublicProblem.vue";
 import myMessage from "@/common/message";
-import { REMOTE_OJ } from "@/common/constants";
+import { REMOTE_OJ, PROBLEM_LEVEL } from "@/common/constants";
 import { mapGetters } from "vuex";
 export default {
   name: "ProblemList",
@@ -315,6 +356,8 @@ export default {
         keyword: "",
         currentPage: 1,
         contestId: null,
+        difficulty: "All",
+        type: "All",
       },
       problemList: [],
       contestProblemMap: {},
@@ -342,6 +385,7 @@ export default {
         "#1e90ff",
         "#c71585",
       ],
+      PROBLEM_LEVEL: {},
     };
   },
   mounted() {
@@ -360,6 +404,7 @@ export default {
   },
   methods: {
     init() {
+      this.PROBLEM_LEVEL = Object.assign({}, PROBLEM_LEVEL);
       this.routeName = this.$route.name;
       let query = this.$route.query;
       this.query.currentPage = query.currentPage || 1;
@@ -369,6 +414,8 @@ export default {
         ? parseInt(query.problemListAuth)
         : 0;
       this.query.oj = query.oj || "All";
+      this.query.difficulty = query.difficulty || "All";
+      this.query.type = query.type || "All";
       this.query.contestId = this.$route.params.contestId;
       this.contestProblemMap = {};
       this.getProblemList();
@@ -443,6 +490,12 @@ export default {
       };
       if (this.problemListAuth != 0) {
         params["auth"] = this.query.problemListAuth;
+      }
+      if (this.query.type !== "All") {
+        params["type"] = this.query.type;
+      }
+      if (this.query.difficulty !== "All") {
+        params["difficulty"] = this.query.difficulty;
       }
       this.loading = true;
       if (this.routeName === "admin-problem-list") {
@@ -612,6 +665,12 @@ export default {
       api.admin_setContestProblemInfo(data).then((res) => {
         myMessage.success(this.$i18n.t("m.Update_Balloon_Color_Successfully"));
       });
+    },
+    getLevelName(difficulty) {
+      return utils.getLevelName(difficulty);
+    },
+    getLevelName(difficulty) {
+      return utils.getLevelName(difficulty);
     },
   },
   watch: {

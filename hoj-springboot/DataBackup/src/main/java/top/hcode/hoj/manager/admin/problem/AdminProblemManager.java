@@ -65,7 +65,8 @@ public class AdminProblemManager {
     @Autowired
     private RemoteProblemManager remoteProblemManager;
 
-    public IPage<Problem> getProblemList(Integer limit, Integer currentPage, String keyword, Integer auth, String oj) {
+    public IPage<Problem> getProblemList(Integer limit, Integer currentPage, String keyword, Integer auth, String oj,
+            Integer difficulty, Integer type) {
         if (currentPage == null || currentPage < 1)
             currentPage = 1;
         if (limit == null || limit < 1)
@@ -88,6 +89,14 @@ public class AdminProblemManager {
 
         if (auth != null && auth != 0) {
             queryWrapper.eq("auth", auth);
+        }
+
+        if (difficulty != null) {
+            queryWrapper.eq("difficulty", difficulty);
+        }
+
+        if (type != null) {
+            queryWrapper.eq("type", type);
         }
 
         if (!StringUtils.isEmpty(keyword)) {

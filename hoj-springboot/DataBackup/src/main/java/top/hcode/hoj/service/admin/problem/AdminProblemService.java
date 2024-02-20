@@ -9,10 +9,10 @@ import top.hcode.hoj.pojo.entity.problem.Problem;
 import top.hcode.hoj.pojo.entity.problem.ProblemCase;
 import java.util.List;
 
-
 public interface AdminProblemService {
 
-    public CommonResult<IPage<Problem>> getProblemList(Integer limit, Integer currentPage, String keyword, Integer auth, String oj);
+    public CommonResult<IPage<Problem>> getProblemList(Integer limit, Integer currentPage, String keyword, Integer auth,
+            String oj, Integer difficulty, Integer type);
 
     public CommonResult<Problem> getProblem(Long pid);
 
@@ -28,7 +28,7 @@ public interface AdminProblemService {
 
     public CommonResult compileInteractive(CompileDTO compileDTO);
 
-    public CommonResult<Void> importRemoteOJProblem(String name,String problemId);
+    public CommonResult<Void> importRemoteOJProblem(String name, String problemId);
 
     public CommonResult<Void> changeProblemAuth(Problem problem);
 }

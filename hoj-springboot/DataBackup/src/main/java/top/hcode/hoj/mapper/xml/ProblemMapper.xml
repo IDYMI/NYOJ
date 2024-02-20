@@ -44,6 +44,9 @@
             <if test="difficulty != null">
                 and p.difficulty = #{difficulty}
             </if>
+            <if test="type != null">
+                and p.type = #{type}
+            </if>
             <if test="oj != null and oj !='Mine'">
                 and p.problem_id like concat(#{oj},'%') and p.is_remote=true
             </if>

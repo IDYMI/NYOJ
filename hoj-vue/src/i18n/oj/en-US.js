@@ -283,7 +283,8 @@ export const m = {
   Pick_a_random_question: 'Pick a random question',
   Touch_Get_Status: 'Please touch or hover the mouse to the designated problem line to view the submission status',
   Good_luck_to_you: 'Good luck to you!',
-
+  Problem_Type: 'Type',
+  
   // /views/oj/problem/Problem.vue
   Problem_Description: 'Problem Description',
   My_Submission: 'My Submission',

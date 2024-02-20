@@ -30,8 +30,9 @@ public class AdminProblemServiceImpl implements AdminProblemService {
 
     @Override
     public CommonResult<IPage<Problem>> getProblemList(Integer limit, Integer currentPage, String keyword, Integer auth,
-            String oj) {
-        IPage<Problem> problemList = adminProblemManager.getProblemList(limit, currentPage, keyword, auth, oj);
+            String oj, Integer difficulty, Integer type) {
+        IPage<Problem> problemList = adminProblemManager.getProblemList(limit, currentPage, keyword, auth, oj,
+                difficulty, type);
         return CommonResult.successResponse(problemList);
     }
 

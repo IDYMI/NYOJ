@@ -97,7 +97,7 @@ public class GroupContestProblemManager {
             throw new StatusForbiddenException("对不起，您无权限操作！");
         }
 
-        return adminContestProblemManager.getProblemList(limit, currentPage, keyword, cid, problemType, oj);
+        return adminContestProblemManager.getProblemList(limit, currentPage, keyword, cid, problemType, oj, null, null);
     }
 
     public Map<Object, Object> addProblem(ProblemDTO problemDto)

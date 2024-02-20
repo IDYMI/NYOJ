@@ -8,6 +8,7 @@ import {
 import myMessage from '@/common/message'
 import api from "@/common/api";
 import store from '@/store'
+import { PROBLEM_TYPE } from './constants';
 
 // function submissionMemoryFormat (memory) {
 //   if (memory === undefined || memory ===null || memory === '') return '--'
@@ -254,6 +255,32 @@ function getLevelName(difficulty) {
   }
 }
 
+function getTypeName(type) {
+  if (
+    type != undefined &&
+    type != null &&
+    PROBLEM_TYPE[type]
+  ) {
+    return PROBLEM_TYPE[type]['name'][store.getters.webLanguage];
+  } else {
+    return 'unknown [' + type + ']';
+  }
+}
+
+function getTypeColor(type) {
+  if (type != undefined && type != null) {
+    if (PROBLEM_TYPE[type]) {
+      return (
+        'color: #fff !important;background-color:' +
+        PROBLEM_TYPE[type]['color'] +
+        ' !important;'
+      );
+    } else {
+      return 'color: #fff !important;background-color: rgb(255, 153, 0)!important;';
+    }
+  }
+}
+
 function isFocusModePage(routeName) {
   for (let keyName in FOCUS_MODE_ROUTE_NAME) {
     if (keyName == routeName) {
@@ -296,6 +323,8 @@ export default {
   examplesToString: examplesToString,
   getLevelColor: getLevelColor,
   getLevelName: getLevelName,
+  getTypeName: getTypeName,
+  getTypeColor: getTypeColor,
   isFocusModePage: isFocusModePage,
   getFocusModeOriPage: getFocusModeOriPage,
   supportFocusMode: supportFocusMode,
