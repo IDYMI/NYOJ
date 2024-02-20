@@ -15,6 +15,7 @@ import top.hcode.hoj.dao.discussion.DiscussionEntityService;
 import top.hcode.hoj.dao.group.GroupEntityService;
 import top.hcode.hoj.dao.problem.ProblemEntityService;
 import top.hcode.hoj.dao.user.UserAcproblemEntityService;
+import top.hcode.hoj.manager.group.GroupManager;
 import top.hcode.hoj.pojo.entity.discussion.Discussion;
 import top.hcode.hoj.pojo.entity.group.Group;
 import top.hcode.hoj.pojo.entity.problem.Problem;
@@ -54,16 +55,18 @@ public class GroupDiscussionManager {
     @Autowired
     private CommonValidator commonValidator;
 
+    @Autowired
+    private GroupManager groupManager;
+
     public IPage<Discussion> getDiscussionList(Integer limit,
             Integer currentPage,
             Long gid,
             String pid) throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Group group = groupEntityService.getById(gid);
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (group == null || group.getStatus() == 1 && !isRoot) {
             throw new StatusNotFoundException("获取讨论列表失败，该团队不存在或已被封禁！");
@@ -96,10 +99,9 @@ public class GroupDiscussionManager {
             throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Group group = groupEntityService.getById(gid);
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (group == null || group.getStatus() == 1 && !isRoot) {
             throw new StatusNotFoundException("获取讨论列表失败，该团队不存在或已被封禁！");
@@ -134,10 +136,9 @@ public class GroupDiscussionManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Long gid = discussion.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         Group group = groupEntityService.getById(gid);
 
@@ -228,8 +229,7 @@ public class GroupDiscussionManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (group == null || group.getStatus() == 1 && !isRoot) {
             throw new StatusNotFoundException("更新失败，该团队不存在或已被封禁！");
@@ -259,12 +259,12 @@ public class GroupDiscussionManager {
             throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Discussion discussion = discussionEntityService.getById(did);
 
         Long gid = discussion.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
+
         if (gid == null) {
             throw new StatusNotFoundException("删除失败，该讨论非团队讨论！");
         }

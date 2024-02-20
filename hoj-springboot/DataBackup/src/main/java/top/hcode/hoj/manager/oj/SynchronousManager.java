@@ -21,6 +21,7 @@ import top.hcode.hoj.pojo.vo.ContestSynchronousConfigVO;
 import top.hcode.hoj.pojo.vo.JudgeVO;
 import top.hcode.hoj.pojo.vo.ContestProblemVO;
 import top.hcode.hoj.pojo.entity.problem.Problem;
+import top.hcode.hoj.utils.Constants;
 import top.hcode.hoj.utils.JsoupUtils;
 
 import java.util.ArrayList;
@@ -318,7 +319,8 @@ public class SynchronousManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        if (contest.getAuth() == 4 || contest.getAuth() == 5) {
+        if (contest.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             // 获取比赛对应的同步赛信息
             JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
             List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
@@ -360,7 +362,8 @@ public class SynchronousManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        if (contest.getAuth() == 4 || contest.getAuth() == 5) {
+        if (contest.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             // 获取比赛对应的同步赛信息
             JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
             List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);
@@ -407,7 +410,8 @@ public class SynchronousManager {
         // 获取本场比赛的状态
         Contest contest = contestEntityService.getById(cid);
 
-        if (contest.getAuth() == 4 || contest.getAuth() == 5) {
+        if (contest.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             // 获取比赛对应的同步赛信息
             JSONObject SynchronousJsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
             List<JSONObject> synchronousConfigList = SynchronousJsonObject.get("config", List.class);

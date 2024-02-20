@@ -139,7 +139,8 @@ public class AdminContestManager {
         }
 
         // 同步赛
-        if (contest.getAuth() == 4 || contest.getAuth() == 5) {
+        if (contest.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             try {
                 JSONObject jsonObject = JSONUtil.parseObj(contest.getSynchronousConfig());
                 List<ContestSynchronousConfigVO> synchronousConfigList = jsonObject.get("config", List.class);
@@ -212,7 +213,8 @@ public class AdminContestManager {
         }
 
         // 同步赛
-        if (adminContestVo.getAuth() == 4 || adminContestVo.getAuth() == 5) {
+        if (adminContestVo.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || adminContestVo.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             List<ContestSynchronousConfigVO> synchronousConfigList = adminContestVo.getSynchronousConfigList();
             JSONObject awardConfigJson = new JSONObject();
             awardConfigJson.set("config", synchronousConfigList);
@@ -220,7 +222,7 @@ public class AdminContestManager {
         }
 
         // 正式赛
-        if (adminContestVo.getAuth() == 3) {
+        if (adminContestVo.getAuth().intValue() == Constants.Contest.AUTH_OFFICIAL.getCode()) {
             contest.setSignStartTime(adminContestVo.getSignStartTime());
             contest.setSignEndTime(adminContestVo.getSignEndTime());
             contest.setSignDuration(adminContestVo.getSignDuration());
@@ -286,7 +288,8 @@ public class AdminContestManager {
         }
 
         // 同步赛
-        if (adminContestVo.getAuth() == 4 || adminContestVo.getAuth() == 5) {
+        if (adminContestVo.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || adminContestVo.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             List<ContestSynchronousConfigVO> synchronousConfigList = adminContestVo.getSynchronousConfigList();
             JSONObject awardConfigJson = new JSONObject();
             awardConfigJson.set("config", synchronousConfigList);
@@ -294,7 +297,7 @@ public class AdminContestManager {
         }
 
         // 正式赛
-        if (adminContestVo.getAuth() == 3) {
+        if (adminContestVo.getAuth().intValue() == Constants.Contest.AUTH_OFFICIAL.getCode()) {
             contest.setSignStartTime(adminContestVo.getSignStartTime());
             contest.setSignEndTime(adminContestVo.getSignEndTime());
             contest.setSignDuration(adminContestVo.getSignDuration());

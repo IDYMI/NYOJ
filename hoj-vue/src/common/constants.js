@@ -245,6 +245,7 @@ export const GROUP_TYPE = {
   PUBLIC: 1,
   PROTECTED: 2,
   PRIVATE: 3,
+  PROPOSITION: 4,
 };
 
 export const GROUP_TYPE_REVERSE = {
@@ -262,6 +263,11 @@ export const GROUP_TYPE_REVERSE = {
     name: 'Private',
     color: 'danger',
     tips: 'Group_Private_Tips',
+  },
+  '4': {
+    name: 'Proposition',
+    color: 'info',
+    tips: 'Group_Proposition_Tips',
   },
 };
 

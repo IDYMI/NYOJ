@@ -14,7 +14,11 @@ const getters = {
     return rootGetters.isAuthenticated && state.group.owner == getters.userInfo.username;
   },
   isGroupRoot: (state, getters, _, rootGetters) => {
-    return rootGetters.isAuthenticated && (state.auth === 5 || getters.isGroupOwner || rootGetters.isSuperAdmin);
+    if (state.group.auth !== GROUP_TYPE.PROPOSITION) {
+      return rootGetters.isAuthenticated && (state.auth === 5 || getters.isGroupOwner || rootGetters.isSuperAdmin);
+    } else {
+      return rootGetters.isAuthenticated && (state.auth === 5 || getters.isGroupOwner);
+    }
   },
   isGroupAdmin: (state, getters, _, rootGetters) => {
     return rootGetters.isAuthenticated && (getters.isGroupRoot || state.auth === 4);

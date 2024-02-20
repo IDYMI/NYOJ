@@ -68,7 +68,7 @@
                 }}
               </span>
             </el-tab-pane>
-            <el-tab-pane lazy name="GroupSetting" v-if="isGroupRoot">
+            <el-tab-pane lazy name="GroupSetting" v-if="isMainAdminRole">
               <span slot="label">
                 <i class="el-icon-s-tools"></i>
                 &nbsp;{{ $t("m.Group_Setting") }}
@@ -210,7 +210,7 @@
               </div>
             </div>
             <div style="text-align: center">
-              <span v-if="isSuperAdmin">
+              <span v-if="(isSuperAdmin && group.auth !== 4) || (isGroupOwner && group.auth === 4)">
                 <el-button
                   type="danger"
                   size="small"
@@ -252,7 +252,7 @@
         ref="apply"
       >
         <el-row>
-          <el-col :span="24" v-if="group.auth == 3">
+          <el-col :span="24" v-if="group.auth == 3 || group.auth == 4">
             <el-form-item :label="$t('m.Group_Code')" required prop="code">
               <el-input
                 v-model="appliaction.code"
@@ -370,7 +370,10 @@ export default {
     this.GROUP_TYPE = Object.assign({}, GROUP_TYPE);
     this.GROUP_TYPE_REVERSE = Object.assign({}, GROUP_TYPE_REVERSE);
     this.$store.dispatch("getGroup").then((res) => {
-      this.changeDomTitle({ title: res.data.data.name });
+      let title = res.data.data.name;
+      if (title !== undefined && title !== null && title !== "") {
+        this.changeDomTitle({ title });
+      }
     });
   },
   methods: {

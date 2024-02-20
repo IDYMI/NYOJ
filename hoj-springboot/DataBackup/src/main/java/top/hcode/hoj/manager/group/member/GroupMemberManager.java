@@ -11,11 +11,13 @@ import top.hcode.hoj.common.exception.StatusForbiddenException;
 import top.hcode.hoj.common.exception.StatusNotFoundException;
 import top.hcode.hoj.dao.group.GroupEntityService;
 import top.hcode.hoj.dao.group.GroupMemberEntityService;
+import top.hcode.hoj.manager.group.GroupManager;
 import top.hcode.hoj.pojo.entity.group.Group;
 import top.hcode.hoj.pojo.entity.group.GroupMember;
 import top.hcode.hoj.pojo.vo.GroupMemberVO;
 import top.hcode.hoj.shiro.AccountProfile;
 import top.hcode.hoj.validator.GroupValidator;
+import top.hcode.hoj.utils.Constants;
 
 /**
  *
@@ -34,14 +36,16 @@ public class GroupMemberManager {
     @Autowired
     private GroupValidator groupValidator;
 
+    @Autowired
+    private GroupManager groupManager;
+
     public IPage<GroupMemberVO> getMemberList(Integer limit, Integer currentPage, String keyword, Integer auth,
             Long gid) throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Group group = groupEntityService.getById(gid);
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (group == null || group.getStatus() == 1 && !isRoot) {
             throw new StatusNotFoundException("获取成员列表失败，该团队不存在或已被封禁！");
@@ -69,10 +73,9 @@ public class GroupMemberManager {
             throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Group group = groupEntityService.getById(gid);
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (group == null || group.getStatus() == 1 && !isRoot) {
             throw new StatusNotFoundException("获取失败，该团队不存在或已被封禁！");
@@ -100,24 +103,27 @@ public class GroupMemberManager {
             throws StatusFailException, StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Group group = groupEntityService.getById(gid);
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (group == null) {
             throw new StatusNotFoundException("添加成员失败，该团队不存在!");
         }
 
-        if (!isRoot && (group.getStatus() == 1 || !group.getVisible())) {
-            throw new StatusNotFoundException("添加成员失败，该团队已被封禁或未公开显示！");
+        if (!isRoot && group.getStatus() == 1) {
+            throw new StatusNotFoundException("添加成员失败，该团队已被封禁！");
         }
 
-        if (group.getAuth() == 3 && !code.equals(group.getCode())) {
+        if ((group.getAuth().intValue() == Constants.Group.PRIVATE.getAuth()
+                || group.getAuth().intValue() == Constants.Group.PROPOSITION.getAuth())
+                && !code.equals(group.getCode())) {
             throw new StatusFailException("邀请码错误，请重新尝试！");
         }
 
-        if (group.getAuth() != 1 && !StringUtils.isEmpty(reason) && (reason.length() < 5 || reason.length() > 100)) {
+        if (group.getAuth().intValue() != Constants.Group.PUBLIC.getAuth()
+                && !StringUtils.isEmpty(reason)
+                && (reason.length() < 5 || reason.length() > 100)) {
             throw new StatusFailException("申请理由的长度应为 5 到 100！");
         }
 
@@ -127,16 +133,16 @@ public class GroupMemberManager {
         GroupMember groupMember = groupMemberEntityService.getOne(groupMemberQueryWrapper);
 
         if (groupMember != null) {
-            if (groupMember.getAuth() == 1) {
+            if (groupMember.getAuth().intValue() == Constants.GroupNemberAuth.APPLYING.getAuth()) {
                 throw new StatusForbiddenException("您已申请过，请勿重复申请！");
-            } else if (groupMember.getAuth() >= 3) {
+            } else if (groupMember.getAuth().intValue() >= Constants.GroupNemberAuth.COMMON.getAuth()) {
                 throw new StatusForbiddenException("您已经加入了该团队，请勿再申请！！");
             }
         }
 
         GroupMember newGroupMember = new GroupMember();
         newGroupMember.setUid(userRolesVo.getUid()).setGid(gid).setReason(reason);
-        if (group.getAuth() == 1) {
+        if (group.getAuth().intValue() == Constants.Group.PUBLIC.getAuth()) {
             newGroupMember.setAuth(3);
         } else {
             newGroupMember.setAuth(1);
@@ -147,7 +153,7 @@ public class GroupMemberManager {
         if (!isOk) {
             throw new StatusFailException("申请失败，请重新尝试！");
         } else {
-            if (group.getAuth() == 1) {
+            if (group.getAuth().intValue() == Constants.Group.PUBLIC.getAuth()) {
                 groupMemberEntityService.addWelcomeNoticeToGroupNewMember(gid, group.getName(), userRolesVo.getUid());
             } else {
                 groupMemberEntityService.addApplyNoticeToGroupRoot(gid, group.getName(), userRolesVo.getUid());
@@ -159,10 +165,9 @@ public class GroupMemberManager {
             throws StatusFailException, StatusForbiddenException, StatusNotFoundException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Long gid = groupMemberDto.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         Group group = groupEntityService.getById(gid);
 
@@ -205,7 +210,7 @@ public class GroupMemberManager {
         if (!isOk) {
             throw new StatusFailException("更新失败，请重新尝试！");
         } else {
-            if (changeGroupMember.getAuth() <= 2) { // 之前是申请中，则之后通过审批就要发消息
+            if (changeGroupMember.getAuth().intValue() <= Constants.GroupNemberAuth.REFUSED.getAuth()) { // 之前是申请中，则之后通过审批就要发消息
                 groupMemberEntityService.addWelcomeNoticeToGroupNewMember(gid, group.getName(),
                         groupMemberDto.getUid());
             }
@@ -217,10 +222,9 @@ public class GroupMemberManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Group group = groupEntityService.getById(gid);
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (group == null || group.getStatus() == 1 && !isRoot) {
             throw new StatusNotFoundException("删除成员失败，该团队不存在或已被封禁！");
@@ -270,10 +274,9 @@ public class GroupMemberManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Group group = groupEntityService.getById(gid);
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (group == null || group.getStatus() == 1 && !isRoot) {
             throw new StatusNotFoundException("退出团队失败，该团队不存在或已被封禁！");
@@ -289,7 +292,9 @@ public class GroupMemberManager {
 
         GroupMember currentGroupMember = groupMemberEntityService.getOne(groupMemberQueryWrapper);
 
-        if (currentGroupMember == null || currentGroupMember.getAuth() == null || currentGroupMember.getAuth() <= 2) {
+        if (currentGroupMember == null
+                || currentGroupMember.getAuth() == null
+                || currentGroupMember.getAuth().intValue() <= Constants.GroupNemberAuth.REFUSED.getAuth()) {
             throw new StatusForbiddenException("对不起，您并未在当前团队，无法退出！");
         }
 

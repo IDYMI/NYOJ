@@ -12,6 +12,7 @@ import top.hcode.hoj.dao.common.AnnouncementEntityService;
 import top.hcode.hoj.dao.contest.ContestAnnouncementEntityService;
 import top.hcode.hoj.dao.contest.ContestEntityService;
 import top.hcode.hoj.dao.group.GroupEntityService;
+import top.hcode.hoj.manager.group.GroupManager;
 import top.hcode.hoj.pojo.dto.AnnouncementDTO;
 import top.hcode.hoj.pojo.entity.common.Announcement;
 import top.hcode.hoj.pojo.entity.contest.Contest;
@@ -48,12 +49,12 @@ public class GroupContestAnnouncementManager {
     @Autowired
     private CommonValidator commonValidator;
 
+    @Autowired
+    private GroupManager groupManager;
+
     public IPage<AnnouncementVO> getContestAnnouncementList(Integer limit, Integer currentPage, Long cid)
             throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
-
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
 
         Contest contest = contestEntityService.getById(cid);
 
@@ -62,6 +63,8 @@ public class GroupContestAnnouncementManager {
         }
 
         Long gid = contest.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (gid == null) {
             throw new StatusForbiddenException("获取失败，不可获取非团队内的比赛公告！");
@@ -95,9 +98,6 @@ public class GroupContestAnnouncementManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Long cid = announcementDto.getCid();
 
         Contest contest = contestEntityService.getById(cid);
@@ -107,6 +107,8 @@ public class GroupContestAnnouncementManager {
         }
 
         Long gid = contest.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (gid == null) {
             throw new StatusForbiddenException("添加失败，不可操作非团队内的比赛公告！");
@@ -144,9 +146,6 @@ public class GroupContestAnnouncementManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Long cid = announcementDto.getCid();
 
         Contest contest = contestEntityService.getById(cid);
@@ -156,6 +155,9 @@ public class GroupContestAnnouncementManager {
         }
 
         Long gid = contest.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
+
         if (gid == null) {
             throw new StatusForbiddenException("更新失败，不可操作非团队内的比赛公告！");
         }
@@ -181,9 +183,6 @@ public class GroupContestAnnouncementManager {
             throws StatusNotFoundException, StatusForbiddenException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Contest contest = contestEntityService.getById(cid);
 
         if (contest == null) {
@@ -191,6 +190,8 @@ public class GroupContestAnnouncementManager {
         }
 
         Long gid = contest.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (gid == null) {
             throw new StatusForbiddenException("删除失败，不可操作非团队内的比赛公告！");

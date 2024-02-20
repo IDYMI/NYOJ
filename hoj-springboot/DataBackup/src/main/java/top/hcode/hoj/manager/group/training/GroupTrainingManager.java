@@ -17,6 +17,7 @@ import top.hcode.hoj.dao.training.TrainingCategoryEntityService;
 import top.hcode.hoj.dao.training.TrainingEntityService;
 import top.hcode.hoj.dao.training.TrainingRegisterEntityService;
 import top.hcode.hoj.manager.admin.training.AdminTrainingRecordManager;
+import top.hcode.hoj.manager.group.GroupManager;
 import top.hcode.hoj.pojo.dto.TrainingDTO;
 import top.hcode.hoj.pojo.entity.group.Group;
 import top.hcode.hoj.pojo.entity.training.MappingTrainingCategory;
@@ -66,12 +67,14 @@ public class GroupTrainingManager {
     @Autowired
     private TrainingValidator trainingValidator;
 
+    @Autowired
+    private GroupManager groupManager;
+
     public IPage<TrainingVO> getTrainingList(Integer limit, Integer currentPage, Long gid)
             throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         Group group = groupEntityService.getById(gid);
 
@@ -95,8 +98,7 @@ public class GroupTrainingManager {
             throws StatusNotFoundException, StatusForbiddenException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         Group group = groupEntityService.getById(gid);
 
@@ -120,9 +122,6 @@ public class GroupTrainingManager {
             throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Training training = trainingEntityService.getById(tid);
 
         if (training == null) {
@@ -130,6 +129,8 @@ public class GroupTrainingManager {
         }
 
         Long gid = training.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (gid == null) {
             throw new StatusForbiddenException("获取失败，不可访问非团队内的训练！");
@@ -172,15 +173,14 @@ public class GroupTrainingManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Long gid = trainingDto.getTraining().getGid();
         if (gid == null) {
             throw new StatusForbiddenException("添加失败，训练所属的团队ID不可为空！");
         }
 
         Group group = groupEntityService.getById(gid);
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (group == null || group.getStatus() == 1 && !isRoot) {
             throw new StatusNotFoundException("添加训练失败，该团队不存在或已被封禁！");
@@ -227,9 +227,6 @@ public class GroupTrainingManager {
 
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Long tid = trainingDto.getTraining().getId();
 
         if (tid == null) {
@@ -243,6 +240,8 @@ public class GroupTrainingManager {
         }
 
         Long gid = training.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (gid == null) {
             throw new StatusForbiddenException("更新失败，不可操作非团队内的训练！");
@@ -313,9 +312,6 @@ public class GroupTrainingManager {
     public void deleteTraining(Long tid) throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Training training = trainingEntityService.getById(tid);
 
         if (training == null) {
@@ -323,6 +319,8 @@ public class GroupTrainingManager {
         }
 
         Long gid = training.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (gid == null) {
             throw new StatusForbiddenException("删除失败，不可操作非团队内的训练！");
@@ -349,9 +347,6 @@ public class GroupTrainingManager {
             throws StatusForbiddenException, StatusNotFoundException, StatusFailException {
         AccountProfile userRolesVo = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
 
-        boolean isRoot = SecurityUtils.getSubject().hasRole("root")
-                || SecurityUtils.getSubject().hasRole("admin");
-
         Training training = trainingEntityService.getById(tid);
 
         if (training == null) {
@@ -359,6 +354,8 @@ public class GroupTrainingManager {
         }
 
         Long gid = training.getGid();
+
+        boolean isRoot = groupManager.getGroupAuthAdmin(gid);
 
         if (gid == null) {
             throw new StatusForbiddenException("修改失败，不可操作非团队内的训练！");

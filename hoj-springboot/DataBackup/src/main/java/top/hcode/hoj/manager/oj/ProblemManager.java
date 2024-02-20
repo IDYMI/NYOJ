@@ -297,7 +297,7 @@ public class ProblemManager {
         if (problem == null) {
             throw new StatusNotFoundException("该题号对应的题目不存在");
         }
-        if (problem.getAuth() != 1) {
+        if (problem.getAuth().intValue() != Constants.ProblemAuth.PUBLIC.getAuth()) {
             throw new StatusForbiddenException("该题号对应题目并非公开题目，不支持访问！");
         }
 

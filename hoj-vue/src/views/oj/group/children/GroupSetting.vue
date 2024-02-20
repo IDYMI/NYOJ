@@ -147,6 +147,9 @@
               <el-tooltip :content="$t('m.Group_Private_Tips')" placement="right">
                 <el-option :label="$t('m.Group_Private')" :value="3"></el-option>
               </el-tooltip>
+              <el-tooltip :content="$t('m.Group_Proposition_Tips')" placement="right">
+                <el-option :label="$t('m.Group_Proposition')" :value="4"></el-option>
+              </el-tooltip>
             </el-select>
           </el-form-item>
         </el-col>

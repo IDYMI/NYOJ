@@ -92,7 +92,7 @@ public class BeforeDispatchInitManager {
             throw new StatusForbiddenException("错误！当前题目已不存在，不可提交！");
         }
 
-        if (problem.getAuth() == 2) {
+        if (problem.getAuth().intValue() == Constants.ProblemAuth.PRIVATE.getAuth()) {
             throw new StatusForbiddenException("错误！当前题目不可提交！");
         }
 
@@ -168,7 +168,7 @@ public class BeforeDispatchInitManager {
             throw new StatusForbiddenException("错误！当前题目已不存在，不可提交！");
         }
 
-        if (problem.getAuth() == 2) {
+        if (problem.getAuth().intValue() == Constants.ProblemAuth.PRIVATE.getAuth()) {
             throw new StatusForbiddenException("错误！当前题目已被隐藏，不可提交！");
         }
 
@@ -225,7 +225,7 @@ public class BeforeDispatchInitManager {
             throw new StatusForbiddenException("错误！当前题目已不存在，不可提交！");
         }
 
-        if (problem.getAuth() == 2) {
+        if (problem.getAuth().intValue() == Constants.ProblemAuth.PRIVATE.getAuth()) {
             throw new StatusForbiddenException("错误！当前题目不可提交！");
         }
 

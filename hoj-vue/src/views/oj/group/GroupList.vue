@@ -229,7 +229,7 @@
           </el-col>
           <el-col :md="8" :xs="24">
             <el-form-item :label="$t('m.Group_Auth')" required prop="auth">
-              <el-select v-model="group.auth">
+              <el-select v-model="group.auth" @change="handleAuthChange">
                 <el-tooltip :content="$t('m.Group_Public_Tips')" placement="right">
                   <el-option :label="$t('m.Group_Public')" :value="1"></el-option>
                 </el-tooltip>
@@ -238,6 +238,9 @@
                 </el-tooltip>
                 <el-tooltip :content="$t('m.Group_Private_Tips')" placement="right">
                   <el-option :label="$t('m.Group_Private')" :value="3"></el-option>
+                </el-tooltip>
+                <el-tooltip :content="$t('m.Group_Proposition_Tips')" placement="right">
+                  <el-option :label="$t('m.Group_Proposition')" :value="4"></el-option>
                 </el-tooltip>
               </el-select>
             </el-form-item>
@@ -527,6 +530,13 @@ export default {
           });
         }
       });
+    },
+    handleAuthChange(value) {
+      if (value === 4) {
+        this.group.visible = false;
+      } else {
+        this.group.visible = true;
+      }
     },
   },
   computed: {

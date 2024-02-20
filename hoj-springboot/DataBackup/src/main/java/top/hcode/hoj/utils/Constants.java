@@ -201,6 +201,50 @@ public class Constants {
         }
     }
 
+    public enum Group {
+        PUBLIC(1),
+        PROTECTED(2),
+        PRIVATE(3),
+        PROPOSITION(4);
+
+        private final Integer auth;
+
+        Group(Integer auth) {
+            this.auth = auth;
+        }
+
+        public Integer getAuth() {
+            return auth;
+        }
+
+        public static Group getGroup(Integer auth) {
+            for (Group group : Group.values()) {
+                if (group.getAuth().equals(auth)) {
+                    return group;
+                }
+            }
+            return null;
+        }
+    }
+
+    public enum GroupNemberAuth {
+        APPLYING(1),
+        REFUSED(2),
+        COMMON(3),
+        ADMIN(4),
+        SUPERADMIN(5);
+
+        private final Integer auth;
+
+        GroupNemberAuth(Integer auth) {
+            this.auth = auth;
+        }
+
+        public Integer getAuth() {
+            return auth;
+        }
+    }
+
     /**
      * @Description 账户相关常量
      * @Since 2021/1/8

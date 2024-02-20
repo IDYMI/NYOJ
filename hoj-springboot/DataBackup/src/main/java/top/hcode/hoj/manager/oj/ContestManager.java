@@ -333,7 +333,8 @@ public class ContestManager {
         List<ContestProblemVO> contestProblemList = getContestProblem(cid, isContainsContestEndJudge, null);
 
         // 是否开启同步赛
-        if (contest.getAuth() == 4 || contest.getAuth() == 5) {
+        if (contest.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode()) {
             List<ContestProblemVO> synchronousResultList = synchronousManager.getSynchronousContestProblemList(contest,
                     isContainsContestEndJudge);
 
@@ -464,7 +465,7 @@ public class ContestManager {
         // 查询题目详情，题目标签，题目语言，题目做题情况
         Problem problem = problemEntityService.getById(contestProblem.getPid());
 
-        if (problem.getAuth() == 2) {
+        if (problem.getAuth().intValue() == Constants.ProblemAuth.PRIVATE.getAuth()) {
             throw new StatusForbiddenException("该比赛题目当前不可访问！");
         }
 
@@ -669,7 +670,9 @@ public class ContestManager {
         IPage<JudgeVO> newContestJudgeList = new Page<>();
 
         // 是否为同步赛
-        if ((contest.getAuth() == 4 || contest.getAuth() == 5) && !onlyMine) {
+        if ((contest.getAuth().intValue() == Constants.Contest.AUTH_PUBLIC_SYNCHRONOUS.getCode()
+                || contest.getAuth().intValue() == Constants.Contest.AUTH_PRIVATE_SYNCHRONOUS.getCode())
+                && !onlyMine) {
             // 如果不是只有自己的提交
             List<JudgeVO> synchronousResultList = synchronousManager.getSynchronousSubmissionList(contest,
                     isContainsContestEndJudge, searchUsername, displayId, searchStatus);
