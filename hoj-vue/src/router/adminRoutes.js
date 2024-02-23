@@ -59,6 +59,7 @@ const adminRoutes = [
         name: 'admin-user',
         component: User,
         meta: {
+          requireSuperAdmin: true,
           title: 'User Admin',
         },
       },
